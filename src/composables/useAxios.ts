@@ -5,7 +5,7 @@ import axios, {
 } from "axios";
 import { ref } from "vue";
 
-import { ExceptionResponseDetail } from "@/interfaces/error";
+import { IExceptionResponseDetail } from "@/interfaces/error";
 import { config, Service } from "@/services";
 
 import { useAuth } from "./useAuth";
@@ -31,7 +31,7 @@ export function useAxios<
   const percent = ref<number>(0);
 
   const data = ref<Res | null>(null);
-  const error = ref<ExceptionResponseDetail | null>(null);
+  const error = ref<IExceptionResponseDetail | null>(null);
 
   function onProgress(event: AxiosProgressEvent) {
     percent.value = Math.round((event.loaded / (event.total ?? 0)) * 100);
@@ -68,7 +68,7 @@ export function useAxios<
       error.value = null;
       return data;
     } catch (exception: unknown) {
-      error.value = exception as ExceptionResponseDetail;
+      error.value = exception as IExceptionResponseDetail;
       data.value = null;
       throw exception;
     } finally {

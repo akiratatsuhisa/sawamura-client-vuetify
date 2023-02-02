@@ -72,8 +72,8 @@ import { computed, reactive, ref, watch } from "vue";
 import { useAuth } from "@/composables/useAuth";
 import { useAxios } from "@/composables/useAxios";
 import { getErrorMessage, useVuelidate } from "@/composables/useVuelidate";
-import { CreateRoomRequest } from "@/interfaces/rooms";
-import { SearchUsersRequest, UserResponse } from "@/interfaces/users";
+import { ICreateRoomRequest } from "@/interfaces/rooms";
+import { ISearchUsersRequest, IUserResponse } from "@/interfaces/users";
 import { services } from "@/services";
 
 const props = defineProps<{
@@ -82,13 +82,13 @@ const props = defineProps<{
 
 const emit = defineEmits<{
   (event: "update:modelValue", value: boolean): void;
-  (event: "submit", value: CreateRoomRequest): void;
+  (event: "submit", value: ICreateRoomRequest): void;
 }>();
 
 const { identityId } = useAuth();
 
 const form = reactive<
-  Omit<CreateRoomRequest, "members"> & { members: Array<UserResponse> }
+  Omit<ICreateRoomRequest, "members"> & { members: Array<IUserResponse> }
 >({
   name: "",
   isGroup: true,
@@ -108,7 +108,7 @@ const [v$, { handleSubmit, submitable }] = useVuelidate(
 );
 
 const onSubmit = handleSubmit((formData) => {
-  const data: CreateRoomRequest = {
+  const data: ICreateRoomRequest = {
     ...formData,
     members: [
       {
@@ -128,12 +128,12 @@ const onSubmit = handleSubmit((formData) => {
 const { excute: excuteSearchUsers } = useAxios(services.users, "getAll");
 
 const userSearch = ref<string>("");
-const usersResult = ref<Array<UserResponse>>([]);
+const usersResult = ref<Array<IUserResponse>>([]);
 
 const isLoadingSearch = ref<boolean>(false);
 
 const debounceExcuteSearchUsers = _.debounce(
-  async (params: SearchUsersRequest) => {
+  async (params: ISearchUsersRequest) => {
     usersResult.value = await excuteSearchUsers(params);
     isLoadingSearch.value = false;
   },

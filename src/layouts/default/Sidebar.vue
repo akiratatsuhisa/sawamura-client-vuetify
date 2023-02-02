@@ -64,7 +64,7 @@ import { RouteLocationNamedRaw, useRoute, useRouter } from "vue-router";
 
 import { KEYS } from "@/constants";
 
-interface Item {
+type Item = {
   icon: string;
   value: RouteLocationNamedRaw;
   handleClick(): void;
@@ -72,7 +72,7 @@ interface Item {
     title: string;
     value: RouteLocationNamedRaw;
   }>;
-}
+};
 
 const router = useRouter();
 const route = useRoute();

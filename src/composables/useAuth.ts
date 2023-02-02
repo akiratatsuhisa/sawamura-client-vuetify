@@ -6,10 +6,10 @@ import { computed } from "vue";
 
 import { Jwt } from "@/helpers/jwt";
 import {
-  AuthResponse,
   IAuthOptions,
+  IAuthResponse,
   IdentityUser,
-  LoginRequest,
+  ILoginRequest,
 } from "@/interfaces/auth";
 import { config } from "@/services";
 
@@ -39,7 +39,7 @@ export function useAuth() {
 
     if (isExpires(seconds)) {
       try {
-        const { data } = await axiosInstacne.post<AuthResponse>(
+        const { data } = await axiosInstacne.post<IAuthResponse>(
           "/auth/refreshToken",
           undefined,
           {
@@ -72,8 +72,8 @@ export function useAuth() {
     return user.value;
   }
 
-  async function login(dto: LoginRequest, config?: AxiosRequestConfig) {
-    const { data } = await axiosInstacne.post<AuthResponse>(
+  async function login(dto: ILoginRequest, config?: AxiosRequestConfig) {
+    const { data } = await axiosInstacne.post<IAuthResponse>(
       "/auth/login",
       dto,
       config
@@ -89,7 +89,7 @@ export function useAuth() {
     accessToken.value = "";
     refreshToken.value = "";
 
-    await axiosInstacne.patch<AuthResponse>(
+    await axiosInstacne.patch<IAuthResponse>(
       "/auth/refreshToken",
       {
         token,

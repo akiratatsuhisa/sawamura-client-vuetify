@@ -2,7 +2,7 @@ import { AxiosInstance } from "axios";
 import { Manager, Socket } from "socket.io-client";
 import { InjectionKey, Ref } from "vue";
 
-import { RoomMemberResponse, RoomResponse } from "./interfaces/rooms";
+import { IRoomMemberResponse, IRoomResponse } from "./interfaces/rooms";
 
 export namespace KEYS {
   export const DRAWER: InjectionKey<Ref<boolean | null>> = Symbol("drawer");
@@ -19,10 +19,10 @@ export namespace KEYS {
   }
 
   export namespace CHAT {
-    export const ROOM: InjectionKey<Ref<RoomResponse | undefined>> =
+    export const ROOM: InjectionKey<Ref<IRoomResponse | undefined>> =
       Symbol("chat:room");
     export const CURRENT_MEMBER: InjectionKey<
-      Readonly<Ref<RoomMemberResponse | undefined>>
+      Readonly<Ref<IRoomMemberResponse | undefined>>
     > = Symbol("chat:currentMember");
   }
 }

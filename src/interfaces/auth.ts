@@ -14,12 +14,12 @@ export interface IAuthOptions {
   throw?: boolean;
 }
 
-export interface LoginRequest {
+export interface ILoginRequest {
   username: string;
   password: string;
 }
 
-export interface AuthResponse {
+export interface IAuthResponse {
   accessToken: string;
   refreshToken: string;
 }

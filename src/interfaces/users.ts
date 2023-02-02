@@ -1,10 +1,10 @@
-export interface UserResponse {}
+export interface IUserResponse {}
 
-export interface SearchUsersRequest {
+export interface ISearchUsersRequest {
   search?: string;
 }
 
-export interface UserResponse {
+export interface IUserResponse {
   id: string;
   username: string;
   password: string;

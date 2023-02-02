@@ -38,7 +38,7 @@ import { useAuth } from "@/composables/useAuth";
 import { useChat } from "@/composables/useChat";
 import { useSocketEventListener } from "@/composables/useSocketEventListener";
 import { KEYS } from "@/constants";
-import { RoomRequest,RoomResponse } from "@/interfaces/rooms";
+import { IRoomRequest, IRoomResponse } from "@/interfaces/rooms";
 
 const { identityId } = useAuth();
 const socket = useChat();
@@ -55,7 +55,7 @@ const drawer = useLocalStorage<boolean>(
   !display.mobile
 );
 
-const room = ref<RoomResponse>();
+const room = ref<IRoomResponse>();
 
 provide(KEYS.CHAT.ROOM, room);
 
@@ -69,8 +69,8 @@ const currentMember = computed(() =>
 provide(KEYS.CHAT.CURRENT_MEMBER, currentMember);
 
 const { request: requestRoom, isLoading } = useSocketEventListener<
-  RoomResponse,
-  RoomRequest
+  IRoomResponse,
+  IRoomRequest
 >(socket, "read:room", {
   response(data) {
     room.value = data;

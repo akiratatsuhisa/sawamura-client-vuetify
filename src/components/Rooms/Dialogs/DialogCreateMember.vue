@@ -75,8 +75,8 @@ import {
   useVuelidate,
 } from "@/composables/useVuelidate";
 import { KEYS } from "@/constants";
-import { CreateRoomMemberRequest } from "@/interfaces/rooms";
-import { SearchUsersRequest, UserResponse } from "@/interfaces/users";
+import { ICreateRoomMemberRequest } from "@/interfaces/rooms";
+import { ISearchUsersRequest, IUserResponse } from "@/interfaces/users";
 import { services } from "@/services";
 
 const props = defineProps<{
@@ -85,15 +85,15 @@ const props = defineProps<{
 
 const emit = defineEmits<{
   (event: "update:modelValue", value: boolean): void;
-  (event: "submit", value: CreateRoomMemberRequest): void;
+  (event: "submit", value: ICreateRoomMemberRequest): void;
 }>();
 
 const room = inject(KEYS.CHAT.ROOM)!;
 
 const form = reactive<
-  Omit<CreateRoomMemberRequest, "memberId"> & {
+  Omit<ICreateRoomMemberRequest, "memberId"> & {
     role: string;
-    member: UserResponse | null;
+    member: IUserResponse | null;
   }
 >({
   member: null,
@@ -117,8 +117,8 @@ const [v$, { handleSubmit, submitable }] = useVuelidate(
 );
 
 const onSubmit = handleSubmit((formData) => {
-  console.log(formData)
-  const data: CreateRoomMemberRequest = {
+  console.log(formData);
+  const data: ICreateRoomMemberRequest = {
     roomId: formData.roomId,
     role: formData.role,
     memberId: formData.member?.id ?? "",
@@ -130,12 +130,12 @@ const onSubmit = handleSubmit((formData) => {
 const { excute: excuteSearchUsers } = useAxios(services.users, "getAll");
 
 const userSearch = ref<string>("");
-const usersResult = ref<Array<UserResponse>>([]);
+const usersResult = ref<Array<IUserResponse>>([]);
 
 const isLoadingSearch = ref<boolean>(false);
 
 const debounceExcuteSearchUsers = _.debounce(
-  async (params: SearchUsersRequest) => {
+  async (params: ISearchUsersRequest) => {
     usersResult.value = await excuteSearchUsers(params);
     isLoadingSearch.value = false;
   },

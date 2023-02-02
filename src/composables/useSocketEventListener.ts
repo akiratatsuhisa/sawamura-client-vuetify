@@ -3,12 +3,12 @@ import _ from "lodash";
 import { Socket } from "socket.io-client";
 import { isRef, onBeforeUnmount, readonly, ref, unref, watch } from "vue";
 
-import { ExceptionResponse, WsExceptionResponse } from "@/interfaces/error";
+import { IExceptionResponse, IWsExceptionResponse } from "@/interfaces/error";
 
 export function useSocketEventListener<
   WsResponse extends Record<string, any> | Array<any> = Record<string, any>,
   WsRequest extends Record<string, any> | Array<any> = Record<string, any>,
-  WsException extends ExceptionResponse = WsExceptionResponse<WsRequest>
+  WsException extends IExceptionResponse = IWsExceptionResponse<WsRequest>
 >(
   socket: MaybeRef<Socket>,
   event: string,

@@ -48,7 +48,7 @@ import { useRouter } from "vue-router";
 
 import { useAuth } from "@/composables/useAuth";
 import { getErrorMessage, useVuelidate } from "@/composables/useVuelidate";
-import { LoginRequest } from "@/interfaces/auth";
+import { ILoginRequest } from "@/interfaces/auth";
 
 const router = useRouter();
 
@@ -56,12 +56,12 @@ const showPassword = ref(false);
 
 const { login } = useAuth();
 
-const form = reactive<LoginRequest>({
+const form = reactive<ILoginRequest>({
   username: "",
   password: "",
 });
 
-const [v$, { handleSubmit, isLoading }] = useVuelidate<LoginRequest>(
+const [v$, { handleSubmit, isLoading }] = useVuelidate<ILoginRequest>(
   {
     username: {
       required: required,

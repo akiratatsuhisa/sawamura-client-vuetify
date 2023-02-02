@@ -41,7 +41,7 @@ import { inject, reactive, watch } from "vue";
 
 import { getErrorMessage, useVuelidate } from "@/composables/useVuelidate";
 import { KEYS } from "@/constants";
-import { UpdateRoomRequest } from "@/interfaces/rooms";
+import { IUpdateRoomRequest } from "@/interfaces/rooms";
 
 const props = defineProps<{
   modelValue: boolean;
@@ -49,12 +49,12 @@ const props = defineProps<{
 
 const emit = defineEmits<{
   (event: "update:modelValue", value: boolean): void;
-  (event: "submit", value: UpdateRoomRequest): void;
+  (event: "submit", value: IUpdateRoomRequest): void;
 }>();
 
 const room = inject(KEYS.CHAT.ROOM)!;
 
-const form = reactive<UpdateRoomRequest>({
+const form = reactive<IUpdateRoomRequest>({
   id: "",
   name: "",
 });
@@ -86,7 +86,7 @@ watch(
 
     form.id = room.value?.id ?? "";
     form.name = room.value?.name ?? "";
-  
+
     v$.value.$reset();
   },
   { immediate: true }

@@ -251,12 +251,12 @@ import { useChat } from "@/composables/useChat";
 import { useSocketEventListener } from "@/composables/useSocketEventListener";
 import { KEYS } from "@/constants";
 import {
-  CreateRoomMemberRequest,
-  DeleteRoomMemberRequest,
-  DeleteRoomRequest,
-  RoomResponse,
-  UpdateRoomMemberRequest,
-  UpdateRoomRequest,
+  ICreateRoomMemberRequest,
+  IDeleteRoomMemberRequest,
+  IDeleteRoomRequest,
+  IRoomResponse,
+  IUpdateRoomMemberRequest,
+  IUpdateRoomRequest,
 } from "@/interfaces/rooms";
 
 const { identityId } = useAuth();
@@ -265,13 +265,13 @@ const router = useRouter();
 const socket = useChat();
 
 const props = defineProps<{
-  modelValue?: RoomResponse;
+  modelValue?: IRoomResponse;
   drawer: boolean;
   loading?: boolean;
 }>();
 
 const emit = defineEmits<{
-  (event: "update:modelValue", value?: RoomResponse): void;
+  (event: "update:modelValue", value?: IRoomResponse): void;
   (event: "update:drawer", value: boolean): void;
 }>();
 
@@ -295,14 +295,14 @@ const roomMembers = computed(() =>
 
 const currentMember = inject(KEYS.CHAT.CURRENT_MEMBER)!;
 
-function setRoom(data: RoomResponse) {
+function setRoom(data: IRoomResponse) {
   if (data.id !== room.value?.id) {
     return false;
   }
   room.value = data;
 }
 
-function handleDeleteRoom(data: RoomResponse) {
+function handleDeleteRoom(data: IRoomResponse) {
   if (data.id !== room.value?.id) {
     return false;
   }
@@ -321,7 +321,7 @@ const dialogs = reactive({
 });
 
 const { request: requestUpdateRoom, isLoading: isLoadingUpdateRoom } =
-  useSocketEventListener<RoomResponse, UpdateRoomRequest>(
+  useSocketEventListener<IRoomResponse, IUpdateRoomRequest>(
     socket,
     "update:room",
     {
@@ -338,7 +338,7 @@ const { request: requestUpdateRoom, isLoading: isLoadingUpdateRoom } =
   );
 
 const { request: requestDeleteRoom, isLoading: isLoadingDeleteRoom } =
-  useSocketEventListener<RoomResponse, DeleteRoomRequest>(
+  useSocketEventListener<IRoomResponse, IDeleteRoomRequest>(
     socket,
     "delete:room",
     {
@@ -355,7 +355,7 @@ const { request: requestDeleteRoom, isLoading: isLoadingDeleteRoom } =
   );
 
 const { request: requestCreateMember, isLoading: isLoadingCreateMember } =
-  useSocketEventListener<RoomResponse, CreateRoomMemberRequest>(
+  useSocketEventListener<IRoomResponse, ICreateRoomMemberRequest>(
     socket,
     "create:member",
     {
@@ -372,7 +372,7 @@ const { request: requestCreateMember, isLoading: isLoadingCreateMember } =
   );
 
 const { request: requestUpdateMember, isLoading: isLoadingUpdateMember } =
-  useSocketEventListener<RoomResponse, UpdateRoomMemberRequest>(
+  useSocketEventListener<IRoomResponse, IUpdateRoomMemberRequest>(
     socket,
     "update:member",
     {
@@ -389,7 +389,7 @@ const { request: requestUpdateMember, isLoading: isLoadingUpdateMember } =
   );
 
 const { request: requestDeleteMember, isLoading: isLoadingDeleteMember } =
-  useSocketEventListener<RoomResponse, DeleteRoomMemberRequest>(
+  useSocketEventListener<IRoomResponse, IDeleteRoomMemberRequest>(
     socket,
     "delete:member",
     {

@@ -82,17 +82,17 @@ import VDialogCreateRoomGroup from "@/components/Rooms/Dialogs/DialogCreateRoomG
 import { useChat } from "@/composables/useChat";
 import { useSocketEventListener } from "@/composables/useSocketEventListener";
 import {
-  CreateRoomRequest,
-  RoomResponse,
-  SearchRoomsRequest,
+  ICreateRoomRequest,
+  IRoomResponse,
+  ISearchRoomsRequest,
 } from "@/interfaces/rooms";
 
-const rooms = ref<Array<RoomResponse>>([]);
+const rooms = ref<Array<IRoomResponse>>([]);
 
 const socket = useChat();
 
 const { request: requestRooms, isLoading: isLoadingRooms } =
-  useSocketEventListener<Array<RoomResponse>, SearchRoomsRequest>(
+  useSocketEventListener<Array<IRoomResponse>, ISearchRoomsRequest>(
     socket,
     "list:room",
     {
@@ -122,12 +122,12 @@ function fetchMore() {
 
 const dialogCreateRoom = ref(false);
 
-function handleCreateRoom(data: RoomResponse) {
+function handleCreateRoom(data: IRoomResponse) {
   rooms.value.unshift(data);
 }
 
 const { request: requestCreateRoom, isLoading: isLoadingCreateRoom } =
-  useSocketEventListener<RoomResponse, CreateRoomRequest>(
+  useSocketEventListener<IRoomResponse, ICreateRoomRequest>(
     socket,
     "create:room",
     {

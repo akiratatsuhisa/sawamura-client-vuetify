@@ -30,7 +30,7 @@ import { inject, reactive, watch } from "vue";
 
 import { useVuelidate } from "@/composables/useVuelidate";
 import { KEYS } from "@/constants";
-import { DeleteRoomRequest } from "@/interfaces/rooms";
+import { IDeleteRoomRequest } from "@/interfaces/rooms";
 
 const props = defineProps<{
   modelValue: boolean;
@@ -38,12 +38,12 @@ const props = defineProps<{
 
 const emit = defineEmits<{
   (event: "update:modelValue", value: boolean): void;
-  (event: "submit", value: DeleteRoomRequest): void;
+  (event: "submit", value: IDeleteRoomRequest): void;
 }>();
 
 const room = inject(KEYS.CHAT.ROOM)!;
 
-const form = reactive<DeleteRoomRequest>({
+const form = reactive<IDeleteRoomRequest>({
   id: "",
 });
 

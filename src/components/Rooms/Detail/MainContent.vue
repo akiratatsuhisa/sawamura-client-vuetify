@@ -90,10 +90,10 @@ import { useChat } from "@/composables/useChat";
 import { useSocketEventListener } from "@/composables/useSocketEventListener";
 import { KEYS } from "@/constants";
 import {
-  CreateRoomMessageRequest,
-  DeleteRoomMessageRequest,
-  RoomMessageResponse,
-  SearchRoomMessagesRequest,
+  ICreateRoomMessageRequest,
+  IDeleteRoomMessageRequest,
+  IRoomMessageResponse,
+  ISearchRoomMessagesRequest,
 } from "@/interfaces/rooms";
 
 const { identityId } = useAuth();
@@ -103,11 +103,11 @@ const route = useRoute();
 const roomId = computed<string>(() => route.params.roomId as string);
 const room = inject(KEYS.CHAT.ROOM)!;
 
-const messages = ref<Array<RoomMessageResponse>>([]);
+const messages = ref<Array<IRoomMessageResponse>>([]);
 
 const { request: requestMessages, isLoading } = useSocketEventListener<
-  Array<RoomMessageResponse>,
-  SearchRoomMessagesRequest
+  Array<IRoomMessageResponse>,
+  ISearchRoomMessagesRequest
 >(socket, "list:message", {
   response(data) {
     messages.value = _.uniqBy(
@@ -140,7 +140,7 @@ watch(
   { immediate: true }
 );
 
-function unshiftMessage(data: RoomMessageResponse): boolean {
+function unshiftMessage(data: IRoomMessageResponse): boolean {
   if (data.room.id !== room.value?.id) {
     return false;
   }
@@ -152,7 +152,7 @@ function unshiftMessage(data: RoomMessageResponse): boolean {
 const messageInput = ref("");
 
 const { request: requestCreateMessage, isLoading: isLoadingCreateMessage } =
-  useSocketEventListener<RoomMessageResponse, CreateRoomMessageRequest>(
+  useSocketEventListener<IRoomMessageResponse, ICreateRoomMessageRequest>(
     socket,
     "create:message",
     {
@@ -181,7 +181,7 @@ function sendMessage() {
   messageInput.value = "";
 }
 
-function updateRemoveMessage(data: RoomMessageResponse): boolean {
+function updateRemoveMessage(data: IRoomMessageResponse): boolean {
   if (data.room.id !== room.value?.id) {
     return false;
   }
@@ -199,7 +199,7 @@ function updateRemoveMessage(data: RoomMessageResponse): boolean {
 }
 
 const { request: requestDeleteMessage, isLoading: isLoadingDeleteMessage } =
-  useSocketEventListener<RoomMessageResponse, DeleteRoomMessageRequest>(
+  useSocketEventListener<IRoomMessageResponse, IDeleteRoomMessageRequest>(
     socket,
     "delete:message",
     {

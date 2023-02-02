@@ -1,18 +1,18 @@
 import { IPaginationCursor } from "./common";
 
-export interface RoomResponse {
+export interface IRoomResponse {
   id: string;
   name: string;
   isGroup: boolean;
-  roomMembers: Array<RoomMemberResponse>;
+  roomMembers: Array<IRoomMemberResponse>;
   createdAt: string;
 }
 
-export interface RoomRequest {
+export interface IRoomRequest {
   id: string;
 }
 
-export interface CreateRoomRequest {
+export interface ICreateRoomRequest {
   name: string;
   isGroup: boolean;
   members: Array<{
@@ -21,18 +21,18 @@ export interface CreateRoomRequest {
   }>;
 }
 
-export interface UpdateRoomRequest {
+export interface IUpdateRoomRequest {
   id: string;
   name: string | null;
 }
 
-export interface DeleteRoomRequest {
+export interface IDeleteRoomRequest {
   id: string;
 }
 
-export interface SearchRoomsRequest extends IPaginationCursor {}
+export interface ISearchRoomsRequest extends IPaginationCursor {}
 
-export interface RoomMemberResponse {
+export interface IRoomMemberResponse {
   id: string;
   nickName: string | null;
   role: string;
@@ -43,25 +43,25 @@ export interface RoomMemberResponse {
   createdAt: string;
 }
 
-export interface CreateRoomMemberRequest {
+export interface ICreateRoomMemberRequest {
   memberId: string;
   roomId: string;
   role?: string;
 }
 
-export interface UpdateRoomMemberRequest {
+export interface IUpdateRoomMemberRequest {
   memberId: string;
   roomId: string;
   nickName?: string | null;
   role?: string;
 }
 
-export interface DeleteRoomMemberRequest {
+export interface IDeleteRoomMemberRequest {
   memberId: string;
   roomId: string;
 }
 
-export interface RoomMessageResponse {
+export interface IRoomMessageResponse {
   id: string;
   createdAt: string;
   room: {
@@ -75,17 +75,17 @@ export interface RoomMessageResponse {
   };
 }
 
-export interface SearchRoomMessagesRequest extends IPaginationCursor {
+export interface ISearchRoomMessagesRequest extends IPaginationCursor {
   roomId: string;
 }
 
-export interface CreateRoomMessageRequest {
+export interface ICreateRoomMessageRequest {
   roomId: string;
   type?: string;
   content: string;
 }
 
-export interface DeleteRoomMessageRequest {
+export interface IDeleteRoomMessageRequest {
   id: string;
   roomId: string;
 }
