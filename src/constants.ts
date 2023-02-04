@@ -5,12 +5,20 @@ import { InjectionKey, Ref } from "vue";
 import { IRoomMemberResponse, IRoomResponse } from "./interfaces/rooms";
 
 export namespace KEYS {
-  export const DRAWER: InjectionKey<Ref<boolean | null>> = Symbol("drawer");
   export const AXIOS: InjectionKey<AxiosInstance> = Symbol("axios");
+
   export const MANAGER_SOCKETS: InjectionKey<Manager> =
     Symbol("manager:sockets");
   export const SOCKET_CHAT: InjectionKey<Ref<Socket>> = Symbol("socket:chat");
-
+  export namespace DRAWER {
+    export const SHOW: InjectionKey<Ref<boolean | null>> =
+      Symbol("drawer:show");
+    export const ROOMS: InjectionKey<Readonly<Ref<Array<IRoomResponse>>>> =
+      Symbol("drawer:rooms");
+    export const UPDATE_ROOMS: InjectionKey<
+      (data: Array<IRoomResponse>) => void
+    > = Symbol("drawer:updateRooms");
+  }
   export namespace SNACKBAR {
     export const QUEUE: InjectionKey<Array<object>> = Symbol("snackbar:queue");
     export const CURRENT: InjectionKey<Ref<object>> =

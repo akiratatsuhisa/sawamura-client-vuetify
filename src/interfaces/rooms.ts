@@ -1,4 +1,4 @@
-import { IPaginationCursor } from "./common";
+import { IPaginationCursor, IPaginationExcludeIds } from "./common";
 
 export interface IRoomResponse {
   id: string;
@@ -30,7 +30,7 @@ export interface IDeleteRoomRequest {
   id: string;
 }
 
-export interface ISearchRoomsRequest extends IPaginationCursor {}
+export interface ISearchRoomsRequest extends IPaginationExcludeIds {}
 
 export interface IRoomMemberResponse {
   id: string;

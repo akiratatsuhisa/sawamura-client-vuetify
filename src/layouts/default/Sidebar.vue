@@ -46,7 +46,7 @@
     <v-list nav @click:select="handleSelect">
       <v-list-item
         v-for="item in subItems"
-        :key="item.title"
+        :key="item?.key ?? item.title"
         rounded="xl"
         :value="item.value"
         :active="isActive(item.value)"
@@ -69,6 +69,7 @@ type Item = {
   value: RouteLocationNamedRaw;
   handleClick(): void;
   children?: Array<{
+    key?: string;
     title: string;
     value: RouteLocationNamedRaw;
   }>;
@@ -77,10 +78,12 @@ type Item = {
 const router = useRouter();
 const route = useRoute();
 
-const drawer = inject(KEYS.DRAWER);
+const darwerRooms = inject(KEYS.DRAWER.ROOMS)!;
+
+const drawer = inject(KEYS.DRAWER.SHOW);
 const subDrawer = ref<boolean>(false);
 
-const items = ref<Array<Item>>([
+const items = computed<Array<Item>>(() => [
   {
     icon: "mdi-home",
     value: { name: "Home" },
@@ -99,14 +102,11 @@ const items = ref<Array<Item>>([
         title: "General",
         value: { name: "Messages" },
       },
-      {
-        title: "Room 1",
-        value: { name: "Messages:Room", params: { roomId: "1" } },
-      },
-      {
-        title: "Room 2",
-        value: { name: "Messages:Room", params: { roomId: "2" } },
-      },
+      ..._.map(darwerRooms.value, (room) => ({
+        key: room.id,
+        title: room.name,
+        value: { name: "Messages:Room", params: { roomId: room.id } },
+      })),
     ],
   },
   {

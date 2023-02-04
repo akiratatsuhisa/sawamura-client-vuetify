@@ -3,7 +3,12 @@ export interface IPaginationOffset {
   take?: number;
 }
 
-export interface IPaginationCursor<C extends string | number = string> {
-  cursor?: C;
+export interface IPaginationCursor<Cursor extends string | number = string> {
+  cursor?: Cursor;
+  take?: number;
+}
+
+export interface IPaginationExcludeIds<Id extends string | number = string> {
+  excludeIds?: Array<Id>;
   take?: number;
 }

@@ -1,5 +1,5 @@
 import decode from "jwt-decode";
-import { first, isNil, map } from "lodash";
+import _ from "lodash";
 
 type ParseType = "string" | "number" | "boolean" | "object";
 
@@ -82,9 +82,9 @@ export namespace Jwt {
     type?: ParseType
   ) {
     const data =
-      payload[name] instanceof Array ? first(payload[name]) : payload[name];
+      payload[name] instanceof Array ? _.first(payload[name]) : payload[name];
 
-    if (isNil(data)) {
+    if (_.isNil(data)) {
       return null;
     }
 
@@ -99,10 +99,10 @@ export namespace Jwt {
     const data =
       payload[name] instanceof Array ? payload[name] : [payload[name]];
 
-    if (isNil(data)) {
+    if (_.isNil(data)) {
       return null;
     }
 
-    return map(data, (value) => parseData(value, type));
+    return _.map(data, (value) => parseData(value, type));
   }
 }

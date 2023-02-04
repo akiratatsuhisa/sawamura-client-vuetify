@@ -76,19 +76,21 @@
 
 <script lang="ts" setup>
 import _ from "lodash";
-import { computed, ref } from "vue";
+import { computed, inject, ref } from "vue";
 
 import VDialogCreateRoomGroup from "@/components/Rooms/Dialogs/DialogCreateRoomGroup.vue";
 import { useChat } from "@/composables/useChat";
 import { useSocketEventListener } from "@/composables/useSocketEventListener";
+import { KEYS } from "@/constants";
 import {
   ICreateRoomRequest,
   IRoomResponse,
   ISearchRoomsRequest,
 } from "@/interfaces/rooms";
 
-const rooms = ref<Array<IRoomResponse>>([]);
+const updateDrawerRooms = inject(KEYS.DRAWER.UPDATE_ROOMS)!;
 
+const rooms = ref<Array<IRoomResponse>>([]);
 const socket = useChat();
 
 const { request: requestRooms, isLoading: isLoadingRooms } =
@@ -98,6 +100,7 @@ const { request: requestRooms, isLoading: isLoadingRooms } =
     {
       response(data) {
         rooms.value = _.uniqBy([...rooms.value, ...data], (room) => room.id);
+        updateDrawerRooms(rooms.value);
       },
       exception(error) {
         console.error(error);
@@ -106,17 +109,17 @@ const { request: requestRooms, isLoading: isLoadingRooms } =
   );
 
 requestRooms({
-  take: 10,
+  take: 20,
 });
 
 const throttleRequestRooms = _.throttle(requestRooms, 500);
 
 function fetchMore() {
-  const cursor = rooms.value.at(-1)?.id;
+  const excludeIds = _.map(rooms.value, (room) => room.id);
 
   throttleRequestRooms({
     take: 10,
-    cursor,
+    excludeIds: excludeIds.length ? excludeIds : undefined,
   });
 }
 

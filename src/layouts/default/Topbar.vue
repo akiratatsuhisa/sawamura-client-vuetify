@@ -20,7 +20,7 @@ import { useTheme } from "vuetify";
 
 import { KEYS } from "@/constants";
 
-const drawer = inject(KEYS.DRAWER);
+const drawer = inject(KEYS.DRAWER.SHOW);
 
 const theme = useTheme();
 const toggleTheme = () =>
