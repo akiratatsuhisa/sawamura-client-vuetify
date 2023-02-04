@@ -76,7 +76,7 @@ export function useAuth() {
     const { data } = await axiosInstacne.post<IAuthResponse>(
       "/auth/login",
       dto,
-      config
+      { ...config }
     );
 
     accessToken.value = data.accessToken;
@@ -84,7 +84,8 @@ export function useAuth() {
   }
 
   async function logout(config?: AxiosRequestConfig) {
-    const token = refreshToken.value;
+    const value = refreshToken.value;
+    const token = accessToken.value;
 
     accessToken.value = "";
     refreshToken.value = "";
@@ -92,9 +93,14 @@ export function useAuth() {
     await axiosInstacne.patch<IAuthResponse>(
       "/auth/refreshToken",
       {
-        token,
+        value,
       },
-      config
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        ...config,
+      }
     );
   }
 

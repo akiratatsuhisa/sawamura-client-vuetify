@@ -31,7 +31,7 @@
               :loading="isLoading"
               variant="elevated"
               block
-              @click="onSubmit"
+              @click="onLogin"
               >Login</v-btn
             >
           </v-card-text>
@@ -53,9 +53,9 @@ import { ILoginRequest } from "@/interfaces/auth";
 const router = useRouter();
 const route = useRoute();
 
-const showPassword = ref(false);
-
 const { login } = useAuth();
+
+const showPassword = ref(false);
 
 const form = reactive<ILoginRequest>({
   username: "",
@@ -74,7 +74,7 @@ const [v$, { handleSubmit, isLoading }] = useVuelidate<ILoginRequest>(
   form
 );
 
-const onSubmit = handleSubmit(async (data) => {
+const onLogin = handleSubmit(async (data) => {
   await login(data);
 
   if (typeof route.query.redirect === "string") {
