@@ -247,7 +247,7 @@ import VDialogUpdateMember from "@/components/Rooms/Dialogs/DialogUpdateMember.v
 import VDialogUpdateMemberRole from "@/components/Rooms/Dialogs/DialogUpdateMemberRole.vue";
 import VDialogUpdateRoom from "@/components/Rooms/Dialogs/DialogUpdateRoom.vue";
 import { useAuth } from "@/composables/useAuth";
-import { useChat } from "@/composables/useChat";
+import { useSocketChat } from "@/composables/useSocketChat";
 import { useSocketEventListener } from "@/composables/useSocketEventListener";
 import { KEYS } from "@/constants";
 import {
@@ -262,7 +262,7 @@ import {
 const { identityId } = useAuth();
 const router = useRouter();
 
-const socket = useChat();
+const socket = useSocketChat();
 
 const props = defineProps<{
   modelValue?: IRoomResponse;
@@ -297,14 +297,14 @@ const currentMember = inject(KEYS.CHAT.CURRENT_MEMBER)!;
 
 function setRoom(data: IRoomResponse) {
   if (data.id !== room.value?.id) {
-    return false;
+    return;
   }
   room.value = data;
 }
 
 function handleDeleteRoom(data: IRoomResponse) {
   if (data.id !== room.value?.id) {
-    return false;
+    return;
   }
 
   router.push({ name: "Messages" });
@@ -329,7 +329,7 @@ const { request: requestUpdateRoom, isLoading: isLoadingUpdateRoom } =
       listener: setRoom,
       exception(error) {
         if (error.data.id !== room.value?.id) {
-          return false;
+          return;
         }
 
         console.error(error);
@@ -346,7 +346,7 @@ const { request: requestDeleteRoom, isLoading: isLoadingDeleteRoom } =
       listener: handleDeleteRoom,
       exception(error) {
         if (error.data.id !== room.value?.id) {
-          return false;
+          return;
         }
 
         console.error(error);
@@ -363,7 +363,7 @@ const { request: requestCreateMember, isLoading: isLoadingCreateMember } =
       listener: setRoom,
       exception(error) {
         if (error.data.roomId !== room.value?.id) {
-          return false;
+          return;
         }
 
         console.error(error);
@@ -380,7 +380,7 @@ const { request: requestUpdateMember, isLoading: isLoadingUpdateMember } =
       listener: setRoom,
       exception(error) {
         if (error.data.roomId !== room.value?.id) {
-          return false;
+          return;
         }
 
         console.error(error);
@@ -397,7 +397,7 @@ const { request: requestDeleteMember, isLoading: isLoadingDeleteMember } =
       listener: setRoom,
       exception(error) {
         if (error.data.roomId !== room.value?.id) {
-          return false;
+          return;
         }
 
         console.error(error);

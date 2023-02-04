@@ -35,13 +35,13 @@ import { useDisplay } from "vuetify";
 import VInfoSidebar from "@/components/Rooms/Detail/InfoSidebar.vue";
 import VMainContent from "@/components/Rooms/Detail/MainContent.vue";
 import { useAuth } from "@/composables/useAuth";
-import { useChat } from "@/composables/useChat";
+import { useSocketChat } from "@/composables/useSocketChat";
 import { useSocketEventListener } from "@/composables/useSocketEventListener";
 import { KEYS } from "@/constants";
 import { IRoomRequest, IRoomResponse } from "@/interfaces/rooms";
 
 const { identityId } = useAuth();
-const socket = useChat();
+const socket = useSocketChat();
 
 const router = useRouter();
 const route = useRoute();

@@ -47,7 +47,7 @@ export function initSocketChat() {
   });
 }
 
-export function useChat() {
+export function useSocketChat() {
   const socket = inject(KEYS.SOCKET_CHAT);
 
   if (!socket) {

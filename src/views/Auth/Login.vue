@@ -44,13 +44,14 @@
 <script lang="ts" setup>
 import { required } from "@vuelidate/validators";
 import { reactive, ref } from "vue";
-import { useRouter } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 
 import { useAuth } from "@/composables/useAuth";
 import { getErrorMessage, useVuelidate } from "@/composables/useVuelidate";
 import { ILoginRequest } from "@/interfaces/auth";
 
 const router = useRouter();
+const route = useRoute();
 
 const showPassword = ref(false);
 
@@ -76,6 +77,10 @@ const [v$, { handleSubmit, isLoading }] = useVuelidate<ILoginRequest>(
 const onSubmit = handleSubmit(async (data) => {
   await login(data);
 
-  router.push({ name: "Home" });
+  if (typeof route.query.redirect === "string") {
+    router.push(route.query.redirect);
+  } else {
+    router.push({ name: "Home" });
+  }
 });
 </script>

@@ -1,94 +1,87 @@
 import { MaybeRef } from "@vueuse/core";
 import _ from "lodash";
 import { Socket } from "socket.io-client";
+import { v4 as uuidv4 } from "uuid";
 import { isRef, onBeforeUnmount, readonly, ref, unref, watch } from "vue";
 
-import { IExceptionResponse, IWsExceptionResponse } from "@/interfaces/error";
+import { IWsExceptionResponse } from "@/interfaces/error";
+
+type EmitId = {
+  __emit_id__?: string;
+};
 
 export function useSocketEventListener<
-  WsResponse extends Record<string, any> | Array<any> = Record<string, any>,
-  WsRequest extends Record<string, any> | Array<any> = Record<string, any>,
-  WsException extends IExceptionResponse = IWsExceptionResponse<WsRequest>
+  WsResponse extends Record<string, any> = Record<string, any>,
+  WsRequest extends Record<string, any> = Record<string, any>,
+  WsException extends IWsExceptionResponse<WsRequest> = IWsExceptionResponse<WsRequest>
 >(
   socket: MaybeRef<Socket>,
   event: string,
   options?: {
-    response?: (data: WsResponse) => boolean | void | Promise<boolean | void>;
-    listener?: (data: WsResponse) => boolean | void | Promise<boolean | void>;
-    exception?: (
-      error: WsException
-    ) => boolean | void | Promise<boolean | void>;
+    response?: (data: WsResponse) => void | Promise<void>;
+    listener?: (data: WsResponse) => void | Promise<void>;
+    exception?: (error: WsException) => void | Promise<void>;
   }
 ) {
   const { response, exception, listener } = options ?? {};
 
+  const emitId = uuidv4();
+
   const isLoading = ref<boolean>(false);
 
-  watch(isLoading, (current) => {
-    if (current && _.isUndefined(exception)) {
-      _.delay(() => (isLoading.value = false), 5000);
-    }
-  });
-
-  const request = (data: WsRequest) => {
+  function request(data: WsRequest & EmitId) {
     if (isLoading.value) {
       return;
     }
 
     isLoading.value = true;
+    data.__emit_id__ = emitId;
     unref(socket).emit(event, data);
+  }
 
-    if (_.isUndefined(response)) {
-      isLoading.value = false;
-    }
-  };
+  function checkIsLoading(data: EmitId) {
+    return !(_.isUndefined(data.__emit_id__) || data.__emit_id__ === emitId);
+  }
 
-  const responseCallback = response
-    ? async (data: WsResponse) => {
-        isLoading.value = !((await Promise.resolve(response(data))) ?? true);
-      }
-    : undefined;
+  async function responseCallback(data: WsResponse & EmitId) {
+    await Promise.resolve(response ? response(data) : undefined);
+    isLoading.value = checkIsLoading(data);
+  }
 
-  const exceptionCallback = exception
-    ? async (error: WsException) => {
-        isLoading.value = !((await Promise.resolve(exception(error))) ?? true);
-      }
-    : undefined;
+  async function exceptionCallback(error: WsException & { data: EmitId }) {
+    await Promise.resolve(exception ? exception(error) : undefined);
+    isLoading.value = checkIsLoading(error.data);
+  }
 
-  const listenerCallback = listener
-    ? async (data: WsResponse) => {
-        await Promise.resolve(listener(data));
-      }
-    : undefined;
+  async function listenerCallback(data: WsResponse) {
+    await Promise.resolve(listener ? listener(data) : undefined);
+  }
 
   const listenerEvent = "listener:" + event;
   const exceptionEvent = "exception:" + event;
 
   if (!isRef(socket)) {
-    responseCallback && socket.on(event, responseCallback);
-    exceptionCallback && socket.on(exceptionEvent, exceptionCallback);
-    listenerCallback && socket.on(listenerEvent, listenerCallback);
+    socket.on(event, responseCallback);
+    socket.on(exceptionEvent, exceptionCallback);
+    socket.on(listenerEvent, listenerCallback);
 
     onBeforeUnmount(() => {
-      responseCallback && socket.off(event, responseCallback);
-      exceptionCallback && socket.off(exceptionEvent, exceptionCallback);
-      listenerCallback && socket.off(listenerEvent, listenerCallback);
+      socket.off(event, responseCallback);
+      socket.off(exceptionEvent, exceptionCallback);
+      socket.off(listenerEvent, listenerCallback);
     });
   } else {
     watch(
       () => socket,
       (current, _prev, onCleanup) => {
-        responseCallback && current.value.on(event, responseCallback);
-        exceptionCallback &&
-          current.value.on(exceptionEvent, exceptionCallback);
-        listenerCallback && current.value.on(listenerEvent, listenerCallback);
+        current.value.on(event, responseCallback);
+        current.value.on(exceptionEvent, exceptionCallback);
+        current.value.on(listenerEvent, listenerCallback);
 
         onCleanup(() => {
-          responseCallback && current.value.off(event, responseCallback);
-          exceptionCallback &&
-            current.value.off(exceptionEvent, exceptionCallback);
-          listenerCallback &&
-            current.value.off(listenerEvent, listenerCallback);
+          current.value.off(event, responseCallback);
+          current.value.off(exceptionEvent, exceptionCallback);
+          current.value.off(listenerEvent, listenerCallback);
         });
       },
       {

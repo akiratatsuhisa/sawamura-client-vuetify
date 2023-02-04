@@ -86,7 +86,7 @@ import { computed, inject, ref, watch } from "vue";
 import { useRoute } from "vue-router";
 
 import { useAuth } from "@/composables/useAuth";
-import { useChat } from "@/composables/useChat";
+import { useSocketChat } from "@/composables/useSocketChat";
 import { useSocketEventListener } from "@/composables/useSocketEventListener";
 import { KEYS } from "@/constants";
 import {
@@ -97,7 +97,7 @@ import {
 } from "@/interfaces/rooms";
 
 const { identityId } = useAuth();
-const socket = useChat();
+const socket = useSocketChat();
 
 const route = useRoute();
 const roomId = computed<string>(() => route.params.roomId as string);
@@ -106,10 +106,10 @@ const room = inject(KEYS.CHAT.ROOM)!;
 const messages = ref<Array<IRoomMessageResponse>>([]);
 
 const { request: requestMessages, isLoading } = useSocketEventListener<
-  Array<IRoomMessageResponse>,
+  { messages: Array<IRoomMessageResponse> },
   ISearchRoomMessagesRequest
 >(socket, "list:message", {
-  response(data) {
+  response({ messages: data }) {
     messages.value = _.uniqBy(
       [...messages.value, ...data],
       (message) => message.id
@@ -140,13 +140,12 @@ watch(
   { immediate: true }
 );
 
-function unshiftMessage(data: IRoomMessageResponse): boolean {
+function unshiftMessage(data: IRoomMessageResponse) {
   if (data.room.id !== room.value?.id) {
-    return false;
+    return;
   }
 
   messages.value = _.uniqBy([data, ...messages.value], (message) => message.id);
-  return true;
 }
 
 const messageInput = ref("");
@@ -160,7 +159,7 @@ const { request: requestCreateMessage, isLoading: isLoadingCreateMessage } =
       listener: unshiftMessage,
       exception(error) {
         if (error.data.roomId !== room.value?.id) {
-          return false;
+          return;
         }
 
         console.error(error);
@@ -181,9 +180,9 @@ function sendMessage() {
   messageInput.value = "";
 }
 
-function updateRemoveMessage(data: IRoomMessageResponse): boolean {
+function updateRemoveMessage(data: IRoomMessageResponse) {
   if (data.room.id !== room.value?.id) {
-    return false;
+    return;
   }
 
   const index = _.findIndex(
@@ -192,10 +191,9 @@ function updateRemoveMessage(data: IRoomMessageResponse): boolean {
   );
 
   if (index < 0) {
-    return false;
+    return;
   }
   messages.value.splice(index, 1, data);
-  return true;
 }
 
 const { request: requestDeleteMessage, isLoading: isLoadingDeleteMessage } =
@@ -207,7 +205,7 @@ const { request: requestDeleteMessage, isLoading: isLoadingDeleteMessage } =
       listener: updateRemoveMessage,
       exception(error) {
         if (error.data.roomId !== room.value?.id) {
-          return false;
+          return;
         }
 
         console.error(error);

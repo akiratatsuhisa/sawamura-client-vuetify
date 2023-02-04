@@ -79,7 +79,7 @@ import _ from "lodash";
 import { computed, inject, ref } from "vue";
 
 import VDialogCreateRoomGroup from "@/components/Rooms/Dialogs/DialogCreateRoomGroup.vue";
-import { useChat } from "@/composables/useChat";
+import { useSocketChat } from "@/composables/useSocketChat";
 import { useSocketEventListener } from "@/composables/useSocketEventListener";
 import { KEYS } from "@/constants";
 import {
@@ -91,14 +91,14 @@ import {
 const updateDrawerRooms = inject(KEYS.DRAWER.UPDATE_ROOMS)!;
 
 const rooms = ref<Array<IRoomResponse>>([]);
-const socket = useChat();
+const socket = useSocketChat();
 
 const { request: requestRooms, isLoading: isLoadingRooms } =
-  useSocketEventListener<Array<IRoomResponse>, ISearchRoomsRequest>(
+  useSocketEventListener<{ rooms: Array<IRoomResponse> }, ISearchRoomsRequest>(
     socket,
     "list:room",
     {
-      response(data) {
+      response({ rooms: data }) {
         rooms.value = _.uniqBy([...rooms.value, ...data], (room) => room.id);
         updateDrawerRooms(rooms.value);
       },
