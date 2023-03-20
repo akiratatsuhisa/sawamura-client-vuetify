@@ -64,12 +64,12 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, inject } from "vue";
-import { useRouter } from "vue-router";
-import { useTheme } from "vuetify";
+import { computed, inject } from 'vue';
+import { useRouter } from 'vue-router';
+import { useTheme } from 'vuetify';
 
-import { useAuth } from "@/composables/useAuth";
-import { KEYS } from "@/constants";
+import { useAuth } from '@/composables/useAuth';
+import { KEYS } from '@/constants';
 
 const drawer = inject(KEYS.DRAWER.SHOW);
 
@@ -84,13 +84,13 @@ const isDark = computed<boolean>({
     return theme.global.current.value.dark;
   },
   set(value: boolean) {
-    theme.global.name.value = value ? "dark" : "light";
+    theme.global.name.value = value ? 'dark' : 'light';
   },
 });
 
 async function onLogout() {
   await logout();
 
-  router.push({ name: "Login" });
+  router.push({ name: 'Login' });
 }
 </script>

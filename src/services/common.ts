@@ -1,4 +1,4 @@
-import { AxiosInstance, AxiosRequestConfig } from "axios";
+import { AxiosInstance, AxiosRequestConfig } from 'axios';
 
 export abstract class Service {
   protected fetcher!: AxiosInstance;

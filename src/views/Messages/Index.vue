@@ -42,7 +42,7 @@
                   </v-list-item-title>
 
                   <v-list-item-subtitle>
-                    {{ room.isGroup ? "Group" : "Private" }}
+                    {{ room.isGroup ? 'Group' : 'Private' }}
                   </v-list-item-subtitle>
 
                   <template #append>
@@ -75,18 +75,18 @@
 </template>
 
 <script lang="ts" setup>
-import _ from "lodash";
-import { computed, inject, ref } from "vue";
+import _ from 'lodash';
+import { computed, inject, ref } from 'vue';
 
-import VDialogCreateRoomGroup from "@/components/Rooms/Dialogs/DialogCreateRoomGroup.vue";
-import { useSocketChat } from "@/composables/useSocketChat";
-import { useSocketEventListener } from "@/composables/useSocketEventListener";
-import { KEYS } from "@/constants";
+import VDialogCreateRoomGroup from '@/components/Rooms/Dialogs/DialogCreateRoomGroup.vue';
+import { useSocketChat } from '@/composables/useSocketChat';
+import { useSocketEventListener } from '@/composables/useSocketEventListener';
+import { KEYS } from '@/constants';
 import {
   ICreateRoomRequest,
   IRoomResponse,
   ISearchRoomsRequest,
-} from "@/interfaces/rooms";
+} from '@/interfaces/rooms';
 
 const updateDrawerRooms = inject(KEYS.DRAWER.UPDATE_ROOMS)!;
 
@@ -96,7 +96,7 @@ const socket = useSocketChat();
 const { request: requestRooms, isLoading: isLoadingRooms } =
   useSocketEventListener<{ rooms: Array<IRoomResponse> }, ISearchRoomsRequest>(
     socket,
-    "list:room",
+    'list:room',
     {
       response({ rooms: data }) {
         rooms.value = _.uniqBy([...rooms.value, ...data], (room) => room.id);
@@ -105,7 +105,7 @@ const { request: requestRooms, isLoading: isLoadingRooms } =
       exception(error) {
         console.error(error);
       },
-    }
+    },
   );
 
 requestRooms({
@@ -132,17 +132,17 @@ function handleCreateRoom(data: IRoomResponse) {
 const { request: requestCreateRoom, isLoading: isLoadingCreateRoom } =
   useSocketEventListener<IRoomResponse, ICreateRoomRequest>(
     socket,
-    "create:room",
+    'create:room',
     {
       response: handleCreateRoom,
       listener: handleCreateRoom,
       exception(error) {
         console.error(error);
       },
-    }
+    },
   );
 
 const isLoading = computed(
-  () => isLoadingRooms.value || isLoadingCreateRoom.value
+  () => isLoadingRooms.value || isLoadingCreateRoom.value,
 );
 </script>

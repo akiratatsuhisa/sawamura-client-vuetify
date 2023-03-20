@@ -65,32 +65,32 @@
 </template>
 
 <script lang="ts" setup>
-import { required } from "@vuelidate/validators";
-import _ from "lodash";
-import { computed, reactive, ref, watch } from "vue";
+import { required } from '@vuelidate/validators';
+import _ from 'lodash';
+import { computed, reactive, ref, watch } from 'vue';
 
-import { useAuth } from "@/composables/useAuth";
-import { useAxios } from "@/composables/useAxios";
-import { getErrorMessage, useVuelidate } from "@/composables/useVuelidate";
-import { ICreateRoomRequest } from "@/interfaces/rooms";
-import { ISearchUsersRequest, IUserResponse } from "@/interfaces/users";
-import { services } from "@/services";
+import { useAuth } from '@/composables/useAuth';
+import { useAxios } from '@/composables/useAxios';
+import { getErrorMessage, useVuelidate } from '@/composables/useVuelidate';
+import { ICreateRoomRequest } from '@/interfaces/rooms';
+import { ISearchUsersRequest, IUserResponse } from '@/interfaces/users';
+import { services } from '@/services';
 
 const props = defineProps<{
   modelValue: boolean;
 }>();
 
 const emit = defineEmits<{
-  (event: "update:modelValue", value: boolean): void;
-  (event: "submit", value: ICreateRoomRequest): void;
+  (event: 'update:modelValue', value: boolean): void;
+  (event: 'submit', value: ICreateRoomRequest): void;
 }>();
 
 const { identityId } = useAuth();
 
 const form = reactive<
-  Omit<ICreateRoomRequest, "members"> & { members: Array<IUserResponse> }
+  Omit<ICreateRoomRequest, 'members'> & { members: Array<IUserResponse> }
 >({
-  name: "",
+  name: '',
   isGroup: true,
   members: [],
 });
@@ -104,7 +104,7 @@ const [v$, { handleSubmit, submitable }] = useVuelidate(
       required: required,
     },
   })),
-  form
+  form,
 );
 
 const onSubmit = handleSubmit((formData) => {
@@ -112,22 +112,22 @@ const onSubmit = handleSubmit((formData) => {
     ...formData,
     members: [
       {
-        memberId: identityId.value ?? "",
-        role: "Admin",
+        memberId: identityId.value ?? '',
+        role: 'Admin',
       },
       ...formData.members.map((value) => ({
         memberId: value.id,
-        role: "Member",
+        role: 'Member',
       })),
     ],
   };
-  emit("submit", data);
-  emit("update:modelValue", false);
+  emit('submit', data);
+  emit('update:modelValue', false);
 });
 
-const { excute: excuteSearchUsers } = useAxios(services.users, "getAll");
+const { excute: excuteSearchUsers } = useAxios(services.users, 'getAll');
 
-const userSearch = ref<string>("");
+const userSearch = ref<string>('');
 const usersResult = ref<Array<IUserResponse>>([]);
 
 const isLoadingSearch = ref<boolean>(false);
@@ -137,7 +137,7 @@ const debounceExcuteSearchUsers = _.debounce(
     usersResult.value = await excuteSearchUsers(params);
     isLoadingSearch.value = false;
   },
-  1000
+  1000,
 );
 
 watch(userSearch, (search) => {
@@ -156,14 +156,14 @@ watch(
       return;
     }
 
-    form.name = "";
+    form.name = '';
     form.members = [];
 
-    userSearch.value = "";
+    userSearch.value = '';
     usersResult.value = [];
 
     v$.value.$reset();
   },
-  { immediate: true }
+  { immediate: true },
 );
 </script>

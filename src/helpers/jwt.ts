@@ -1,7 +1,7 @@
-import decode from "jwt-decode";
-import _ from "lodash";
+import decode from 'jwt-decode';
+import _ from 'lodash';
 
-type ParseType = "string" | "number" | "boolean" | "object";
+type ParseType = 'string' | 'number' | 'boolean' | 'object';
 
 export namespace Jwt {
   export function parseUser(token?: string) {
@@ -16,14 +16,14 @@ export namespace Jwt {
     }
 
     return {
-      id: get(payload, "sub") as string | null,
-      username: get(payload, "username") as string | null,
-      email: get(payload, "email") as string | null,
-      firstName: get(payload, "firstName") as string | null,
-      lastName: get(payload, "lastName") as string | null,
-      birthDate: get(payload, "birthDate") as string | null,
-      salary: get(payload, "salary", "number") as number | null,
-      roles: getAll(payload, "roles") as Array<string> | null,
+      id: get(payload, 'sub') as string | null,
+      username: get(payload, 'username') as string | null,
+      email: get(payload, 'email') as string | null,
+      firstName: get(payload, 'firstName') as string | null,
+      lastName: get(payload, 'lastName') as string | null,
+      birthDate: get(payload, 'birthDate') as string | null,
+      salary: get(payload, 'salary', 'number') as number | null,
+      roles: getAll(payload, 'roles') as Array<string> | null,
     };
   }
 
@@ -43,13 +43,13 @@ export namespace Jwt {
 
   export function parseData(data: any, type?: ParseType) {
     switch (type) {
-      case "object": {
+      case 'object': {
         if (data instanceof Object) {
           return data;
         }
         return null;
       }
-      case "boolean": {
+      case 'boolean': {
         if (data instanceof Boolean) {
           return data;
         }
@@ -61,7 +61,7 @@ export namespace Jwt {
         }
         return null;
       }
-      case "number": {
+      case 'number': {
         if (data instanceof Number) {
           return data;
         }
@@ -70,7 +70,7 @@ export namespace Jwt {
         }
         return null;
       }
-      case "string":
+      case 'string':
       default:
         return String(data);
     }
@@ -79,7 +79,7 @@ export namespace Jwt {
   export function get(
     payload: Record<string, any>,
     name: string,
-    type?: ParseType
+    type?: ParseType,
   ) {
     const data =
       payload[name] instanceof Array ? _.first(payload[name]) : payload[name];
@@ -94,7 +94,7 @@ export namespace Jwt {
   export function getAll(
     payload: Record<string, any>,
     name: string,
-    type?: ParseType
+    type?: ParseType,
   ) {
     const data =
       payload[name] instanceof Array ? payload[name] : [payload[name]];

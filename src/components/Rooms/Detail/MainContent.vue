@@ -1,55 +1,17 @@
 <template>
   <v-sheet class="wrapper flex-grow-1 flex-shrink-1" min-height="320">
-    <v-sheet class="content overflow-y-auto d-flex flex-column-reverse pa-2">
+    <v-sheet
+      class="content overflow-y-auto overflow-x-hidden d-flex flex-column-reverse pa-2"
+    >
       <!-- messages -->
-      <div
+      <message-content
         v-for="(message, index) in messages"
         :key="message.id"
-        class="d-flex flex-nowrap mt-2"
-        :class="[
-          message.user.id === identityId ? 'flex-row-reverse' : 'flex-row',
-        ]"
-      >
-        <v-avatar
-          class="align-self-end"
-          size="28"
-          :image="`https://i.pravatar.cc/150?img=${index}`"
-        >
-        </v-avatar>
-
-        <div class="px-2 flex-shrink-1">
-          <v-card rounded="xl">
-            <v-card-text v-if="message.type === 'Text'">
-              {{ message.content }}
-            </v-card-text>
-            <v-card-text v-else class="text-grey-lighten-1">
-              Message has been deleted
-            </v-card-text>
-          </v-card>
-        </div>
-
-        <v-menu v-if="message.type !== 'None'">
-          <template v-slot:activator="{ props }">
-            <v-btn
-              class="align-self-center"
-              icon="mdi-dots-vertical"
-              variant="plain"
-              size="x-small"
-              v-bind="props"
-              :loading="isLoadingDeleteMessage"
-            ></v-btn>
-          </template>
-          <v-list>
-            <v-list-item
-              append-icon="mdi-trash-can-outline"
-              title="Delete"
-              @click="removeMessage(message.id)"
-            />
-          </v-list>
-        </v-menu>
-
-        <div class="w-25"></div>
-      </div>
+        :index="index"
+        :message="message"
+        :is-loading-action="isLoadingDeleteMessage"
+        @remove="(id) => removeMessage(id)"
+      ></message-content>
 
       <v-sheet class="text-center">
         <v-btn
@@ -60,43 +22,95 @@
         ></v-btn>
       </v-sheet>
     </v-sheet>
+
+    <emoji-picker
+      :data="emojiIndex"
+      set="twitter"
+      class="ma-2 position-absolute"
+      :class="{ 'd-none': !emojiPickerShow }"
+      @select="selectEmoji"
+      :style="{
+        right: $vuetify.display.mdAndUp ? '3.5rem' : '0',
+        bottom: '0',
+      }"
+    />
   </v-sheet>
 
   <v-divider></v-divider>
 
   <v-card variant="flat" rounded="0">
+    <div v-if="pastedImages.length">
+      <v-sheet
+        class="pa-2 images"
+        :class="[isDark ? 'bg-grey-darken-3' : 'bg-grey-lighten-5']"
+      >
+        <v-card
+          v-for="(image, index) in pastedImages"
+          :key="index"
+          class="flex-grow-0 flex-shrink-0"
+          elevation="4"
+        >
+          <img height="128" :src="image.src" class="d-block" />
+        </v-card>
+      </v-sheet>
+      <v-divider></v-divider>
+    </div>
+
     <v-card-text>
-      <v-text-field
+      <v-textarea
+        ref="messageInputRef"
         v-model="messageInput"
         variant="outlined"
         density="compact"
         placeholder="Aa"
-        append-icon="mdi-send"
-        @click:append="sendMessage"
-        @keypress.enter="sendMessage"
+        rows="1"
+        max-rows="4"
+        auto-grow
         hide-details
-      ></v-text-field>
+        append-inner-icon="mdi-emoticon-outline"
+        append-icon="mdi-send"
+        @click:append-inner="emojiPickerShow = !emojiPickerShow"
+        @click:append="sendMessage"
+        @keypress.exact.enter.prevent="sendMessage"
+        @paste="pasteMessage"
+      >
+      </v-textarea>
     </v-card-text>
   </v-card>
 </template>
 
 <script lang="ts" setup>
-import _ from "lodash";
-import { computed, inject, ref, watch } from "vue";
-import { useRoute } from "vue-router";
+import 'emoji-mart-vue-fast/css/emoji-mart.css';
 
-import { useAuth } from "@/composables/useAuth";
-import { useSocketChat } from "@/composables/useSocketChat";
-import { useSocketEventListener } from "@/composables/useSocketEventListener";
-import { KEYS } from "@/constants";
+import data from 'emoji-mart-vue-fast/data/twitter.json';
+// @ts-ignore
+import { EmojiIndex, Picker as EmojiPicker } from 'emoji-mart-vue-fast/src';
+import _ from 'lodash';
+import {
+  ComponentPublicInstance,
+  computed,
+  inject,
+  reactive,
+  ref,
+  watch,
+} from 'vue';
+import { nextTick } from 'vue';
+import { useRoute } from 'vue-router';
+import { VTextField } from 'vuetify/components';
+
+import MessageContent from '@/components/Rooms/Detail/MessageContent.vue';
+import { useSocketChat } from '@/composables/useSocketChat';
+import { useSocketEventListener } from '@/composables/useSocketEventListener';
+import { KEYS } from '@/constants';
 import {
   ICreateRoomMessageRequest,
   IDeleteRoomMessageRequest,
   IRoomMessageResponse,
   ISearchRoomMessagesRequest,
-} from "@/interfaces/rooms";
+} from '@/interfaces/rooms';
 
-const { identityId } = useAuth();
+const isDark = inject(KEYS.THEMES.IS_DARK)!;
+
 const socket = useSocketChat();
 
 const route = useRoute();
@@ -108,11 +122,11 @@ const messages = ref<Array<IRoomMessageResponse>>([]);
 const { request: requestMessages, isLoading } = useSocketEventListener<
   { messages: Array<IRoomMessageResponse> },
   ISearchRoomMessagesRequest
->(socket, "list:message", {
+>(socket, 'list:message', {
   response({ messages: data }) {
     messages.value = _.uniqBy(
       [...messages.value, ...data],
-      (message) => message.id
+      (message) => message.id,
     );
   },
   exception(error) {
@@ -137,7 +151,7 @@ watch(
       take: 10,
     });
   },
-  { immediate: true }
+  { immediate: true },
 );
 
 function unshiftMessage(data: IRoomMessageResponse) {
@@ -148,36 +162,89 @@ function unshiftMessage(data: IRoomMessageResponse) {
   messages.value = _.uniqBy([data, ...messages.value], (message) => message.id);
 }
 
-const messageInput = ref("");
+const messageInput = ref('');
+const messageInputRef = ref<ComponentPublicInstance<VTextField>>();
+const messageTextAreaElement = computed(() =>
+  (messageInputRef.value?.$el as HTMLElement).querySelector('textarea'),
+);
 
-const { request: requestCreateMessage, isLoading: isLoadingCreateMessage } =
-  useSocketEventListener<IRoomMessageResponse, ICreateRoomMessageRequest>(
-    socket,
-    "create:message",
-    {
-      response: unshiftMessage,
-      listener: unshiftMessage,
-      exception(error) {
-        if (error.data.roomId !== room.value?.id) {
-          return;
-        }
+const emojiIndex = new EmojiIndex(data);
+const emojiPickerShow = ref(false);
 
-        console.error(error);
-      },
+async function selectEmoji(params: { native: string }) {
+  messageInput.value =
+    messageInput.value.substring(
+      0,
+      messageTextAreaElement.value?.selectionStart || messageInput.value.length,
+    ) +
+    params.native +
+    messageInput.value.substring(
+      messageTextAreaElement.value?.selectionEnd || messageInput.value.length,
+      messageInput.value.length,
+    );
+
+  emojiPickerShow.value = false;
+  await nextTick();
+  messageTextAreaElement.value!.focus();
+}
+
+const pastedImages = reactive<
+  Array<{
+    src: string;
+    file: File;
+  }>
+>([]);
+
+function pasteMessage(event: ClipboardEvent) {
+  const clipboardData = event.clipboardData!;
+
+  if (clipboardData?.types.includes('text/plain')) {
+    return;
+  }
+  event.preventDefault();
+
+  const file = clipboardData?.files.item(0);
+  console.log(file?.size);
+  if (file && /^image\/(png|jpe?g|gif)$/.test(file.type)) {
+    pastedImages.push({
+      src: URL.createObjectURL(file),
+      file,
+    });
+  }
+}
+
+const { request: requestCreateMessage } = useSocketEventListener<
+  IRoomMessageResponse,
+  ICreateRoomMessageRequest
+>(socket, 'create:message', {
+  response: unshiftMessage,
+  listener: unshiftMessage,
+  exception(error) {
+    if (error.data.roomId !== room.value?.id) {
+      return;
     }
-  );
+
+    console.error(error);
+  },
+});
 
 function sendMessage() {
-  if (!messageInput.value || isLoadingCreateMessage.value) {
+  if (!messageInput.value && !pastedImages.length) {
     return;
   }
   requestCreateMessage({
     roomId: roomId.value,
-    type: "Text",
     content: messageInput.value,
+    files: !pastedImages.length
+      ? undefined
+      : _.map(pastedImages, ({ file }) => ({
+          name: file.name,
+          data: file,
+        })),
   });
 
-  messageInput.value = "";
+  pastedImages.splice(0, pastedImages.length);
+  messageInput.value = '';
 }
 
 function updateRemoveMessage(data: IRoomMessageResponse) {
@@ -187,7 +254,7 @@ function updateRemoveMessage(data: IRoomMessageResponse) {
 
   const index = _.findIndex(
     messages.value,
-    (message) => message.id === data.id
+    (message) => message.id === data.id,
   );
 
   if (index < 0) {
@@ -199,7 +266,7 @@ function updateRemoveMessage(data: IRoomMessageResponse) {
 const { request: requestDeleteMessage, isLoading: isLoadingDeleteMessage } =
   useSocketEventListener<IRoomMessageResponse, IDeleteRoomMessageRequest>(
     socket,
-    "delete:message",
+    'delete:message',
     {
       response: updateRemoveMessage,
       listener: updateRemoveMessage,
@@ -210,7 +277,7 @@ const { request: requestDeleteMessage, isLoading: isLoadingDeleteMessage } =
 
         console.error(error);
       },
-    }
+    },
   );
 
 function removeMessage(id: string) {
@@ -232,5 +299,14 @@ function removeMessage(id: string) {
     bottom: 0;
     right: 0;
   }
+}
+
+.images {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  gap: 0.5rem;
+  overflow-x: auto;
+  overflow-y: hidden;
 }
 </style>

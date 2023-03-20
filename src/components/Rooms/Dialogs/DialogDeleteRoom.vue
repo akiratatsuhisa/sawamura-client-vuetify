@@ -25,26 +25,26 @@
 </template>
 
 <script lang="ts" setup>
-import { required } from "@vuelidate/validators";
-import { inject, reactive, watch } from "vue";
+import { required } from '@vuelidate/validators';
+import { inject, reactive, watch } from 'vue';
 
-import { useVuelidate } from "@/composables/useVuelidate";
-import { KEYS } from "@/constants";
-import { IDeleteRoomRequest } from "@/interfaces/rooms";
+import { useVuelidate } from '@/composables/useVuelidate';
+import { KEYS } from '@/constants';
+import { IDeleteRoomRequest } from '@/interfaces/rooms';
 
 const props = defineProps<{
   modelValue: boolean;
 }>();
 
 const emit = defineEmits<{
-  (event: "update:modelValue", value: boolean): void;
-  (event: "submit", value: IDeleteRoomRequest): void;
+  (event: 'update:modelValue', value: boolean): void;
+  (event: 'submit', value: IDeleteRoomRequest): void;
 }>();
 
 const room = inject(KEYS.CHAT.ROOM)!;
 
 const form = reactive<IDeleteRoomRequest>({
-  id: "",
+  id: '',
 });
 
 const [v$, { handleSubmit }] = useVuelidate(
@@ -53,12 +53,12 @@ const [v$, { handleSubmit }] = useVuelidate(
       required: required,
     },
   },
-  form
+  form,
 );
 
 const onSubmit = handleSubmit((data) => {
-  emit("submit", data);
-  emit("update:modelValue", false);
+  emit('submit', data);
+  emit('update:modelValue', false);
 });
 
 watch(
@@ -68,10 +68,10 @@ watch(
       return;
     }
 
-    form.id = room.value?.id ?? "";
+    form.id = room.value?.id ?? '';
 
     v$.value.$reset();
   },
-  { immediate: true }
+  { immediate: true },
 );
 </script>

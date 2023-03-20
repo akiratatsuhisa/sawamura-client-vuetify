@@ -58,11 +58,11 @@
 </template>
 
 <script lang="ts" setup>
-import _ from "lodash";
-import { computed, inject, ref } from "vue";
-import { RouteLocationNamedRaw, useRoute, useRouter } from "vue-router";
+import _ from 'lodash';
+import { computed, inject, ref } from 'vue';
+import { RouteLocationNamedRaw, useRoute, useRouter } from 'vue-router';
 
-import { KEYS } from "@/constants";
+import { KEYS } from '@/constants';
 
 type Item = {
   icon: string;
@@ -85,62 +85,62 @@ const subDrawer = ref<boolean>(false);
 
 const items = computed<Array<Item>>(() => [
   {
-    icon: "mdi-home",
-    value: { name: "Home" },
+    icon: 'mdi-home',
+    value: { name: 'Home' },
     handleClick() {
       subDrawer.value = false;
     },
   },
   {
-    icon: "mdi-forum",
-    value: { name: "Messages" },
+    icon: 'mdi-forum',
+    value: { name: 'Messages' },
     handleClick() {
       subDrawer.value = true;
     },
     children: [
       {
-        title: "General",
-        value: { name: "Messages" },
+        title: 'General',
+        value: { name: 'Messages' },
       },
       ..._.map(darwerRooms.value, (room) => ({
         key: room.id,
         title: room.name,
-        value: { name: "Messages:Room", params: { roomId: room.id } },
+        value: { name: 'Messages:Room', params: { roomId: room.id } },
       })),
     ],
   },
   {
-    icon: "mdi-view-dashboard",
-    value: { name: "Dashboard" },
+    icon: 'mdi-view-dashboard',
+    value: { name: 'Dashboard' },
     handleClick() {
       subDrawer.value = true;
     },
     children: [
       {
-        title: "Users",
-        value: { name: "Dashboard:Users" },
+        title: 'Users',
+        value: { name: 'Dashboard:Users' },
       },
       {
-        title: "Messages",
-        value: { name: "Dashboard:Messages" },
+        title: 'Messages',
+        value: { name: 'Dashboard:Messages' },
       },
     ],
   },
 ]);
 
 const subItems = computed(() => {
-  const value = (route.name?.toString() ?? "").split(":").at(0);
+  const value = (route.name?.toString() ?? '').split(':').at(0);
 
   return value
     ? items.value.find(
-        (item) => (item.value as RouteLocationNamedRaw)?.name === value
+        (item) => (item.value as RouteLocationNamedRaw)?.name === value,
       )?.children ?? []
     : [];
 });
 
 const handleSelect = (
   event: { id: unknown; value: boolean; path: unknown[] },
-  isParent?: boolean
+  isParent?: boolean,
 ) => {
   const { id: routeLocation } = event as { id: RouteLocationNamedRaw };
 

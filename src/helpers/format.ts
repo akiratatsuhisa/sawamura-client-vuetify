@@ -1,19 +1,19 @@
-import _ from "lodash";
-import moment from "moment";
+import _ from 'lodash';
+import moment from 'moment';
 
 type localesType = undefined | string | string[];
 
 type dateTimeDataType = undefined | null | string | Date | moment.Moment;
 
-type dateTimeStyle = undefined | "full" | "long" | "medium" | "short";
+type dateTimeStyle = undefined | 'full' | 'long' | 'medium' | 'short';
 
 export namespace Format {
   export function date(
     data: dateTimeDataType,
-    options?: { locales?: localesType; dateStyle?: dateTimeStyle }
+    options?: { locales?: localesType; dateStyle?: dateTimeStyle },
   ) {
     return dateTime(data, {
-      dateStyle: options?.dateStyle ?? "long",
+      dateStyle: options?.dateStyle ?? 'long',
       timeStyle: undefined,
     });
   }
@@ -25,16 +25,16 @@ export namespace Format {
       dateStyle?: dateTimeStyle;
       timeStyle?: dateTimeStyle;
       timeZone?: string;
-    }
+    },
   ) {
     const { locales, dateStyle, timeStyle, timeZone } = options ?? {};
 
     if (
       _.isNil(data) ||
-      (_.isString(data) && _.trim(data) === "") ||
+      (_.isString(data) && _.trim(data) === '') ||
       !moment(data).isValid()
     ) {
-      return "";
+      return '';
     }
 
     data = moment(data).toDate();
@@ -48,20 +48,20 @@ export namespace Format {
 
   export function currency(
     data: unknown,
-    options?: { locales?: localesType; currency?: string }
+    options?: { locales?: localesType; currency?: string },
   ): string {
-    const { locales, currency = "USD" } = options ?? {};
+    const { locales, currency = 'USD' } = options ?? {};
 
-    if (_.isNil(data) || _.trim(String(data)) === "") {
-      return "";
+    if (_.isNil(data) || _.trim(String(data)) === '') {
+      return '';
     }
 
     if (_.isNaN(data)) {
-      return "N/a";
+      return 'N/a';
     }
 
     return new Intl.NumberFormat(locales, {
-      style: "currency",
+      style: 'currency',
       currency,
     }).format(Number(data));
   }

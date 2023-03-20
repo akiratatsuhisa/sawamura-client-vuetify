@@ -26,13 +26,13 @@
 </template>
 
 <script lang="ts" setup>
-import { required } from "@vuelidate/validators";
-import _ from "lodash";
-import { computed, inject, reactive, ref, watch } from "vue";
+import { required } from '@vuelidate/validators';
+import _ from 'lodash';
+import { computed, inject, reactive, ref, watch } from 'vue';
 
-import { useVuelidate } from "@/composables/useVuelidate";
-import { KEYS } from "@/constants";
-import { IDeleteRoomMemberRequest } from "@/interfaces/rooms";
+import { useVuelidate } from '@/composables/useVuelidate';
+import { KEYS } from '@/constants';
+import { IDeleteRoomMemberRequest } from '@/interfaces/rooms';
 
 const props = defineProps<{
   modelValue: boolean;
@@ -40,8 +40,8 @@ const props = defineProps<{
 }>();
 
 const emit = defineEmits<{
-  (event: "update:modelValue", value: boolean): void;
-  (event: "submit", value: IDeleteRoomMemberRequest): void;
+  (event: 'update:modelValue', value: boolean): void;
+  (event: 'submit', value: IDeleteRoomMemberRequest): void;
 }>();
 
 const room = inject(KEYS.CHAT.ROOM)!;
@@ -49,8 +49,8 @@ const room = inject(KEYS.CHAT.ROOM)!;
 const currentMember = inject(KEYS.CHAT.CURRENT_MEMBER)!;
 
 const form = reactive<IDeleteRoomMemberRequest>({
-  memberId: "",
-  roomId: "",
+  memberId: '',
+  roomId: '',
 });
 
 const [v$, { handleSubmit }] = useVuelidate(
@@ -62,15 +62,15 @@ const [v$, { handleSubmit }] = useVuelidate(
       required: required,
     },
   })),
-  form
+  form,
 );
 
 const onSubmit = handleSubmit((data) => {
-  emit("submit", data);
-  emit("update:modelValue", false);
+  emit('submit', data);
+  emit('update:modelValue', false);
 });
 
-const message = ref("");
+const message = ref('');
 
 watch(
   () => props.modelValue,
@@ -81,26 +81,26 @@ watch(
 
     const roomMember = _.find(
       room.value?.roomMembers,
-      (roomMember) => roomMember.member.id === props.memberId
+      (roomMember) => roomMember.member.id === props.memberId,
     );
 
     if (!roomMember) {
-      emit("update:modelValue", false);
+      emit('update:modelValue', false);
       return;
     }
 
     message.value =
       currentMember.value?.id === roomMember.id
-        ? "Do you want to out this group?"
+        ? 'Do you want to out this group?'
         : `Do you want to remove member ${
             roomMember.nickName ?? roomMember.member.username
           }?`;
 
     form.memberId = roomMember.member.id;
-    form.roomId = room.value?.id ?? "";
+    form.roomId = room.value?.id ?? '';
 
     v$.value.$reset();
   },
-  { immediate: true }
+  { immediate: true },
 );
 </script>

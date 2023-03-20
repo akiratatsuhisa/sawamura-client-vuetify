@@ -1,24 +1,24 @@
-import { useLocalStorage } from "@vueuse/core";
-import axios, { AxiosRequestConfig } from "axios";
-import _ from "lodash";
-import moment from "moment";
-import { computed } from "vue";
+import { useLocalStorage } from '@vueuse/core';
+import axios, { AxiosRequestConfig } from 'axios';
+import _ from 'lodash';
+import moment from 'moment';
+import { computed } from 'vue';
 
-import { Jwt } from "@/helpers/jwt";
+import { Jwt } from '@/helpers/jwt';
 import {
   IAuthOptions,
   IAuthResponse,
   IdentityUser,
   ILoginRequest,
-} from "@/interfaces/auth";
-import { config } from "@/services";
+} from '@/interfaces/auth';
+import { config } from '@/services';
 
 export function useAuth() {
-  const accessToken = useLocalStorage("accessToken", "");
-  const refreshToken = useLocalStorage("refreshToken", "");
+  const accessToken = useLocalStorage('accessToken', '');
+  const refreshToken = useLocalStorage('refreshToken', '');
 
   const user = computed<IdentityUser | null>(() =>
-    Jwt.parseUser(accessToken.value)
+    Jwt.parseUser(accessToken.value),
   );
   const expires = computed(() => Jwt.getExpires(accessToken.value));
 
@@ -30,7 +30,7 @@ export function useAuth() {
   function isExpires(seconds: number = 60) {
     return (
       !expires.value ||
-      moment(expires.value).subtract(seconds, "seconds").isBefore()
+      moment(expires.value).subtract(seconds, 'seconds').isBefore()
     );
   }
 
@@ -40,13 +40,13 @@ export function useAuth() {
     if (isExpires(seconds)) {
       try {
         const { data } = await axiosInstacne.post<IAuthResponse>(
-          "/auth/refreshToken",
+          '/auth/refreshToken',
           undefined,
           {
             headers: {
               refreshToken: refreshToken.value,
             },
-          }
+          },
         );
 
         accessToken.value = data.accessToken;
@@ -56,8 +56,8 @@ export function useAuth() {
           throw error;
         }
 
-        accessToken.value = "";
-        refreshToken.value = "";
+        accessToken.value = '';
+        refreshToken.value = '';
       }
     }
 
@@ -74,9 +74,9 @@ export function useAuth() {
 
   async function login(dto: ILoginRequest, config?: AxiosRequestConfig) {
     const { data } = await axiosInstacne.post<IAuthResponse>(
-      "/auth/login",
+      '/auth/login',
       dto,
-      { ...config }
+      { ...config },
     );
 
     accessToken.value = data.accessToken;
@@ -87,11 +87,11 @@ export function useAuth() {
     const value = refreshToken.value;
     const token = accessToken.value;
 
-    accessToken.value = "";
-    refreshToken.value = "";
+    accessToken.value = '';
+    refreshToken.value = '';
 
     await axiosInstacne.patch<IAuthResponse>(
-      "/auth/refreshToken",
+      '/auth/refreshToken',
       {
         value,
       },
@@ -100,7 +100,7 @@ export function useAuth() {
           Authorization: `Bearer ${token}`,
         },
         ...config,
-      }
+      },
     );
   }
 

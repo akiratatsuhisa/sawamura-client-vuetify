@@ -48,13 +48,13 @@
 </template>
 
 <script lang="ts" setup>
-import { required } from "@vuelidate/validators";
-import _ from "lodash";
-import { computed, inject, reactive, watch } from "vue";
+import { required } from '@vuelidate/validators';
+import _ from 'lodash';
+import { computed, inject, reactive, watch } from 'vue';
 
-import { getErrorMessage, useVuelidate } from "@/composables/useVuelidate";
-import { KEYS } from "@/constants";
-import { IUpdateRoomMemberRequest } from "@/interfaces/rooms";
+import { getErrorMessage, useVuelidate } from '@/composables/useVuelidate';
+import { KEYS } from '@/constants';
+import { IUpdateRoomMemberRequest } from '@/interfaces/rooms';
 
 const props = defineProps<{
   modelValue: boolean;
@@ -62,8 +62,8 @@ const props = defineProps<{
 }>();
 
 const emit = defineEmits<{
-  (event: "update:modelValue", value: boolean): void;
-  (event: "submit", value: IUpdateRoomMemberRequest): void;
+  (event: 'update:modelValue', value: boolean): void;
+  (event: 'submit', value: IUpdateRoomMemberRequest): void;
 }>();
 
 const room = inject(KEYS.CHAT.ROOM)!;
@@ -71,10 +71,10 @@ const room = inject(KEYS.CHAT.ROOM)!;
 const currentMember = inject(KEYS.CHAT.CURRENT_MEMBER)!;
 
 const form = reactive<IUpdateRoomMemberRequest & { role: string }>({
-  memberId: "",
-  roomId: "",
+  memberId: '',
+  roomId: '',
   nickName: undefined,
-  role: "",
+  role: '',
 });
 
 const [v$, { handleSubmit, submitable }] = useVuelidate(
@@ -89,12 +89,12 @@ const [v$, { handleSubmit, submitable }] = useVuelidate(
       required: required,
     },
   })),
-  form
+  form,
 );
 
 const onSubmit = handleSubmit((data) => {
-  emit("submit", data);
-  emit("update:modelValue", false);
+  emit('submit', data);
+  emit('update:modelValue', false);
 });
 
 watch(
@@ -106,20 +106,20 @@ watch(
 
     const roomMember = _.find(
       room.value?.roomMembers,
-      (roomMember) => roomMember.member.id === props.memberId
+      (roomMember) => roomMember.member.id === props.memberId,
     );
 
     if (!roomMember) {
-      emit("update:modelValue", false);
+      emit('update:modelValue', false);
       return;
     }
 
     form.memberId = roomMember.member.id;
-    form.roomId = room.value?.id ?? "";
+    form.roomId = room.value?.id ?? '';
     form.role = roomMember.role;
 
     v$.value.$reset();
   },
-  { immediate: true }
+  { immediate: true },
 );
 </script>

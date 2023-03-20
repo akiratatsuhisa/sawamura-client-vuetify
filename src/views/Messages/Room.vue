@@ -26,19 +26,19 @@
 </template>
 
 <script lang="ts" setup>
-import { useLocalStorage } from "@vueuse/core";
-import _ from "lodash";
-import { computed, provide, ref, watch } from "vue";
-import { useRoute, useRouter } from "vue-router";
-import { useDisplay } from "vuetify";
+import { useLocalStorage } from '@vueuse/core';
+import _ from 'lodash';
+import { computed, provide, ref, watch } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
+import { useDisplay } from 'vuetify';
 
-import VInfoSidebar from "@/components/Rooms/Detail/InfoSidebar.vue";
-import VMainContent from "@/components/Rooms/Detail/MainContent.vue";
-import { useAuth } from "@/composables/useAuth";
-import { useSocketChat } from "@/composables/useSocketChat";
-import { useSocketEventListener } from "@/composables/useSocketEventListener";
-import { KEYS } from "@/constants";
-import { IRoomRequest, IRoomResponse } from "@/interfaces/rooms";
+import VInfoSidebar from '@/components/Rooms/Detail/InfoSidebar.vue';
+import VMainContent from '@/components/Rooms/Detail/MainContent.vue';
+import { useAuth } from '@/composables/useAuth';
+import { useSocketChat } from '@/composables/useSocketChat';
+import { useSocketEventListener } from '@/composables/useSocketEventListener';
+import { KEYS } from '@/constants';
+import { IRoomRequest, IRoomResponse } from '@/interfaces/rooms';
 
 const { identityId } = useAuth();
 const socket = useSocketChat();
@@ -52,7 +52,7 @@ const display = useDisplay();
 
 const drawer = useLocalStorage<boolean>(
   `room:drawer:${roomId.value}`,
-  !display.mobile
+  !display.mobile,
 );
 
 const room = ref<IRoomResponse>();
@@ -62,8 +62,8 @@ provide(KEYS.CHAT.ROOM, room);
 const currentMember = computed(() =>
   _.find(
     room.value?.roomMembers,
-    (roomMember) => roomMember.member.id === identityId.value
-  )
+    (roomMember) => roomMember.member.id === identityId.value,
+  ),
 );
 
 provide(KEYS.CHAT.CURRENT_MEMBER, currentMember);
@@ -71,12 +71,12 @@ provide(KEYS.CHAT.CURRENT_MEMBER, currentMember);
 const { request: requestRoom, isLoading } = useSocketEventListener<
   IRoomResponse,
   IRoomRequest
->(socket, "read:room", {
+>(socket, 'read:room', {
   response(data) {
     room.value = data;
   },
   exception() {
-    router.push({ name: "Messages" });
+    router.push({ name: 'Messages' });
   },
 });
 
@@ -87,6 +87,6 @@ watch(
       id: roomId,
     });
   },
-  { immediate: true }
+  { immediate: true },
 );
 </script>

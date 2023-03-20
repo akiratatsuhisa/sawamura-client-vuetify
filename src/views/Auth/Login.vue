@@ -42,13 +42,13 @@
 </template>
 
 <script lang="ts" setup>
-import { required } from "@vuelidate/validators";
-import { reactive, ref } from "vue";
-import { useRoute, useRouter } from "vue-router";
+import { required } from '@vuelidate/validators';
+import { reactive, ref } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
 
-import { useAuth } from "@/composables/useAuth";
-import { getErrorMessage, useVuelidate } from "@/composables/useVuelidate";
-import { ILoginRequest } from "@/interfaces/auth";
+import { useAuth } from '@/composables/useAuth';
+import { getErrorMessage, useVuelidate } from '@/composables/useVuelidate';
+import { ILoginRequest } from '@/interfaces/auth';
 
 const router = useRouter();
 const route = useRoute();
@@ -58,8 +58,8 @@ const { login } = useAuth();
 const showPassword = ref(false);
 
 const form = reactive<ILoginRequest>({
-  username: "",
-  password: "",
+  username: '',
+  password: '',
 });
 
 const [v$, { handleSubmit, isLoading }] = useVuelidate<ILoginRequest>(
@@ -71,16 +71,16 @@ const [v$, { handleSubmit, isLoading }] = useVuelidate<ILoginRequest>(
       required: required,
     },
   },
-  form
+  form,
 );
 
 const onLogin = handleSubmit(async (data) => {
   await login(data);
 
-  if (typeof route.query.redirect === "string") {
+  if (typeof route.query.redirect === 'string') {
     router.push(route.query.redirect);
   } else {
-    router.push({ name: "Home" });
+    router.push({ name: 'Home' });
   }
 });
 </script>

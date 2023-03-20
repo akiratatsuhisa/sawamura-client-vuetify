@@ -39,13 +39,13 @@
 </template>
 
 <script lang="ts" setup>
-import { maxLength, required, requiredIf } from "@vuelidate/validators";
-import _ from "lodash";
-import { computed, inject, reactive, watch } from "vue";
+import { maxLength, required, requiredIf } from '@vuelidate/validators';
+import _ from 'lodash';
+import { computed, inject, reactive, watch } from 'vue';
 
-import { getErrorMessage, useVuelidate } from "@/composables/useVuelidate";
-import { KEYS } from "@/constants";
-import { IUpdateRoomMemberRequest } from "@/interfaces/rooms";
+import { getErrorMessage, useVuelidate } from '@/composables/useVuelidate';
+import { KEYS } from '@/constants';
+import { IUpdateRoomMemberRequest } from '@/interfaces/rooms';
 
 const props = defineProps<{
   modelValue: boolean;
@@ -53,15 +53,15 @@ const props = defineProps<{
 }>();
 
 const emit = defineEmits<{
-  (event: "update:modelValue", value: boolean): void;
-  (event: "submit", value: IUpdateRoomMemberRequest): void;
+  (event: 'update:modelValue', value: boolean): void;
+  (event: 'submit', value: IUpdateRoomMemberRequest): void;
 }>();
 
 const room = inject(KEYS.CHAT.ROOM)!;
 
 const form = reactive<IUpdateRoomMemberRequest & { nickName: string | null }>({
-  memberId: "",
-  roomId: "",
+  memberId: '',
+  roomId: '',
   nickName: null,
   role: undefined,
 });
@@ -79,12 +79,12 @@ const [v$, { handleSubmit, submitable }] = useVuelidate(
       maxLength: maxLength(255),
     },
   })),
-  form
+  form,
 );
 
 const onSubmit = handleSubmit((data) => {
-  emit("submit", data);
-  emit("update:modelValue", false);
+  emit('submit', data);
+  emit('update:modelValue', false);
 });
 
 watch(
@@ -96,20 +96,20 @@ watch(
 
     const roomMember = _.find(
       room.value?.roomMembers,
-      (roomMember) => roomMember.member.id === props.memberId
+      (roomMember) => roomMember.member.id === props.memberId,
     );
 
     if (!roomMember) {
-      emit("update:modelValue", false);
+      emit('update:modelValue', false);
       return;
     }
 
     form.memberId = roomMember.member.id;
-    form.roomId = room.value?.id ?? "";
+    form.roomId = room.value?.id ?? '';
     form.nickName = roomMember.nickName;
 
     v$.value.$reset();
   },
-  { immediate: true }
+  { immediate: true },
 );
 </script>

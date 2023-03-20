@@ -9,20 +9,20 @@
 </template>
 
 <script lang="ts" setup>
-import { useLocalStorage } from "@vueuse/core";
-import { provide, readonly, ref } from "vue";
+import { useLocalStorage } from '@vueuse/core';
+import { provide, readonly, ref } from 'vue';
 
-import { initSocketChat } from "@/composables/useSocketChat";
-import { KEYS } from "@/constants";
-import { IRoomResponse } from "@/interfaces/rooms";
+import { initSocketChat } from '@/composables/useSocketChat';
+import { KEYS } from '@/constants';
+import { IRoomResponse } from '@/interfaces/rooms';
 
-import Sidebar from "./Sidebar.vue";
-import Topbar from "./Topbar.vue";
+import Sidebar from './Sidebar.vue';
+import Topbar from './Topbar.vue';
 
 const drawer = ref<boolean | null>(null);
 provide(KEYS.DRAWER.SHOW, drawer);
 
-const drawerRooms = useLocalStorage<Array<IRoomResponse>>("drawer:rooms", []);
+const drawerRooms = useLocalStorage<Array<IRoomResponse>>('drawer:rooms', []);
 provide(KEYS.DRAWER.ROOMS, readonly(drawerRooms));
 provide(KEYS.DRAWER.UPDATE_ROOMS, (data) => {
   drawerRooms.value = data;

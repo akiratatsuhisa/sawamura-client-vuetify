@@ -1,6 +1,6 @@
-import { inject, provide, reactive } from "vue";
+import { inject, provide, reactive } from 'vue';
 
-import { KEYS } from "@/constants";
+import { KEYS } from '@/constants';
 
 export function initNotification() {
   const queue = reactive<Array<unknown>>([]);

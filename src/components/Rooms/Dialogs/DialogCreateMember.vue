@@ -64,41 +64,41 @@
 </template>
 
 <script lang="ts" setup>
-import { required } from "@vuelidate/validators";
-import _ from "lodash";
-import { computed, inject, reactive, ref, watch } from "vue";
+import { required } from '@vuelidate/validators';
+import _ from 'lodash';
+import { computed, inject, reactive, ref, watch } from 'vue';
 
-import { useAxios } from "@/composables/useAxios";
+import { useAxios } from '@/composables/useAxios';
 import {
   getErrorMessage,
   setFieldData,
   useVuelidate,
-} from "@/composables/useVuelidate";
-import { KEYS } from "@/constants";
-import { ICreateRoomMemberRequest } from "@/interfaces/rooms";
-import { ISearchUsersRequest, IUserResponse } from "@/interfaces/users";
-import { services } from "@/services";
+} from '@/composables/useVuelidate';
+import { KEYS } from '@/constants';
+import { ICreateRoomMemberRequest } from '@/interfaces/rooms';
+import { ISearchUsersRequest, IUserResponse } from '@/interfaces/users';
+import { services } from '@/services';
 
 const props = defineProps<{
   modelValue: boolean;
 }>();
 
 const emit = defineEmits<{
-  (event: "update:modelValue", value: boolean): void;
-  (event: "submit", value: ICreateRoomMemberRequest): void;
+  (event: 'update:modelValue', value: boolean): void;
+  (event: 'submit', value: ICreateRoomMemberRequest): void;
 }>();
 
 const room = inject(KEYS.CHAT.ROOM)!;
 
 const form = reactive<
-  Omit<ICreateRoomMemberRequest, "memberId"> & {
+  Omit<ICreateRoomMemberRequest, 'memberId'> & {
     role: string;
     member: IUserResponse | null;
   }
 >({
   member: null,
-  roomId: "",
-  role: "",
+  roomId: '',
+  role: '',
 });
 
 const [v$, { handleSubmit, submitable }] = useVuelidate(
@@ -113,7 +113,7 @@ const [v$, { handleSubmit, submitable }] = useVuelidate(
       required: required,
     },
   })),
-  form
+  form,
 );
 
 const onSubmit = handleSubmit((formData) => {
@@ -121,15 +121,15 @@ const onSubmit = handleSubmit((formData) => {
   const data: ICreateRoomMemberRequest = {
     roomId: formData.roomId,
     role: formData.role,
-    memberId: formData.member?.id ?? "",
+    memberId: formData.member?.id ?? '',
   };
-  emit("submit", data);
-  emit("update:modelValue", false);
+  emit('submit', data);
+  emit('update:modelValue', false);
 });
 
-const { excute: excuteSearchUsers } = useAxios(services.users, "getAll");
+const { excute: excuteSearchUsers } = useAxios(services.users, 'getAll');
 
-const userSearch = ref<string>("");
+const userSearch = ref<string>('');
 const usersResult = ref<Array<IUserResponse>>([]);
 
 const isLoadingSearch = ref<boolean>(false);
@@ -139,7 +139,7 @@ const debounceExcuteSearchUsers = _.debounce(
     usersResult.value = await excuteSearchUsers(params);
     isLoadingSearch.value = false;
   },
-  1000
+  1000,
 );
 
 watch(userSearch, (search) => {
@@ -158,7 +158,7 @@ watch(
       return;
     }
 
-    userSearch.value = "";
+    userSearch.value = '';
     usersResult.value = [];
 
     form.roomId = room.value?.id ?? setFieldData<string>(undefined);
@@ -167,6 +167,6 @@ watch(
 
     v$.value.$reset();
   },
-  { immediate: true }
+  { immediate: true },
 );
 </script>

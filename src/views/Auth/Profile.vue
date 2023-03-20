@@ -71,11 +71,11 @@
 </template>
 
 <script lang="ts" setup>
-import { onBeforeMount, ref } from "vue";
+import { onBeforeMount, ref } from 'vue';
 
-import { useAuth } from "@/composables/useAuth";
-import { Format } from "@/helpers/format";
-import { IdentityUser } from "@/interfaces/auth";
+import { useAuth } from '@/composables/useAuth';
+import { Format } from '@/helpers/format';
+import { IdentityUser } from '@/interfaces/auth';
 
 const { getUserSilently } = useAuth();
 

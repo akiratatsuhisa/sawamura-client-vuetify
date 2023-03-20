@@ -2,13 +2,13 @@ import axios, {
   AxiosHeaders,
   AxiosProgressEvent,
   AxiosRequestConfig,
-} from "axios";
-import { ref } from "vue";
+} from 'axios';
+import { ref } from 'vue';
 
-import { IExceptionResponseDetail } from "@/interfaces/error";
-import { config, Service } from "@/services";
+import { IExceptionResponseDetail } from '@/interfaces/error';
+import { config, Service } from '@/services';
 
-import { useAuth } from "./useAuth";
+import { useAuth } from './useAuth';
 
 export function useAxios<
   S extends Record<
@@ -16,9 +16,9 @@ export function useAxios<
     (config: AxiosRequestConfig, dataOrParams: any) => Promise<any>
   > &
     Service,
-  A extends Exclude<keyof S, keyof Service>
+  A extends Exclude<keyof S, keyof Service>,
 >(service: S, action: A, options?: { unauth: boolean }) {
-  type Req = Parameters<S[A]>["1"];
+  type Req = Parameters<S[A]>['1'];
   type Res = ReturnType<S[A]>;
 
   const { unauth } = options ?? {};
@@ -39,7 +39,7 @@ export function useAxios<
 
   async function excute<T extends Req>(paramsOrData: T): Promise<Res> {
     if (isLoading.value) {
-      throw new Error("on progress");
+      throw new Error('on progress');
     }
 
     try {
@@ -52,7 +52,7 @@ export function useAxios<
 
       const headers = new AxiosHeaders();
       if (token) {
-        headers.set("Authorization", `Bearer ${token}`);
+        headers.set('Authorization', `Bearer ${token}`);
       }
 
       const data = await fetcher[action](
@@ -61,7 +61,7 @@ export function useAxios<
           onUploadProgress: onProgress,
           onDownloadProgress: onProgress,
         },
-        paramsOrData
+        paramsOrData,
       );
 
       data.value = data;

@@ -1,4 +1,12 @@
-import { IPaginationCursor, IPaginationExcludeIds } from "./common";
+import { IPaginationCursor, IPaginationExcludeIds } from './common';
+
+export interface IRoomMessageFileResponse {
+  name: string;
+  uuid: string;
+  pathDisplay: string;
+  mime: string;
+  extension: string;
+}
 
 export interface IRoomResponse {
   id: string;
@@ -81,8 +89,11 @@ export interface ISearchRoomMessagesRequest extends IPaginationCursor {
 
 export interface ICreateRoomMessageRequest {
   roomId: string;
-  type?: string;
-  content: string;
+  content?: string;
+  files?: Array<{
+    name: string;
+    data: File;
+  }>;
 }
 
 export interface IDeleteRoomMessageRequest {

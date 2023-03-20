@@ -236,20 +236,20 @@
 </template>
 
 <script lang="ts" setup>
-import _ from "lodash";
-import { computed, inject, reactive } from "vue";
-import { useRouter } from "vue-router";
+import _ from 'lodash';
+import { computed, inject, reactive } from 'vue';
+import { useRouter } from 'vue-router';
 
-import VDialogCreateMember from "@/components/Rooms/Dialogs/DialogCreateMember.vue";
-import VDialogDeleteMember from "@/components/Rooms/Dialogs/DialogDeleteMember.vue";
-import VDialogDeleteRoom from "@/components/Rooms/Dialogs/DialogDeleteRoom.vue";
-import VDialogUpdateMember from "@/components/Rooms/Dialogs/DialogUpdateMember.vue";
-import VDialogUpdateMemberRole from "@/components/Rooms/Dialogs/DialogUpdateMemberRole.vue";
-import VDialogUpdateRoom from "@/components/Rooms/Dialogs/DialogUpdateRoom.vue";
-import { useAuth } from "@/composables/useAuth";
-import { useSocketChat } from "@/composables/useSocketChat";
-import { useSocketEventListener } from "@/composables/useSocketEventListener";
-import { KEYS } from "@/constants";
+import VDialogCreateMember from '@/components/Rooms/Dialogs/DialogCreateMember.vue';
+import VDialogDeleteMember from '@/components/Rooms/Dialogs/DialogDeleteMember.vue';
+import VDialogDeleteRoom from '@/components/Rooms/Dialogs/DialogDeleteRoom.vue';
+import VDialogUpdateMember from '@/components/Rooms/Dialogs/DialogUpdateMember.vue';
+import VDialogUpdateMemberRole from '@/components/Rooms/Dialogs/DialogUpdateMemberRole.vue';
+import VDialogUpdateRoom from '@/components/Rooms/Dialogs/DialogUpdateRoom.vue';
+import { useAuth } from '@/composables/useAuth';
+import { useSocketChat } from '@/composables/useSocketChat';
+import { useSocketEventListener } from '@/composables/useSocketEventListener';
+import { KEYS } from '@/constants';
 import {
   ICreateRoomMemberRequest,
   IDeleteRoomMemberRequest,
@@ -257,7 +257,7 @@ import {
   IRoomResponse,
   IUpdateRoomMemberRequest,
   IUpdateRoomRequest,
-} from "@/interfaces/rooms";
+} from '@/interfaces/rooms';
 
 const { identityId } = useAuth();
 const router = useRouter();
@@ -271,8 +271,8 @@ const props = defineProps<{
 }>();
 
 const emit = defineEmits<{
-  (event: "update:modelValue", value?: IRoomResponse): void;
-  (event: "update:drawer", value: boolean): void;
+  (event: 'update:modelValue', value?: IRoomResponse): void;
+  (event: 'update:drawer', value: boolean): void;
 }>();
 
 const drawer = computed({
@@ -280,7 +280,7 @@ const drawer = computed({
     return props.drawer;
   },
   set(value: boolean) {
-    emit("update:drawer", value);
+    emit('update:drawer', value);
   },
 });
 
@@ -289,8 +289,8 @@ const room = inject(KEYS.CHAT.ROOM)!;
 const roomMembers = computed(() =>
   _.filter(
     room.value?.roomMembers ?? [],
-    (roomMember) => roomMember.role !== "None"
-  )
+    (roomMember) => roomMember.role !== 'None',
+  ),
 );
 
 const currentMember = inject(KEYS.CHAT.CURRENT_MEMBER)!;
@@ -307,14 +307,14 @@ function handleDeleteRoom(data: IRoomResponse) {
     return;
   }
 
-  router.push({ name: "Messages" });
+  router.push({ name: 'Messages' });
 }
 
 const dialogs = reactive({
   updateRoom: false,
   deleteRoom: false,
   createMember: false,
-  memberId: "",
+  memberId: '',
   updateMember: false,
   updateMemberRole: false,
   deleteMember: false,
@@ -323,7 +323,7 @@ const dialogs = reactive({
 const { request: requestUpdateRoom, isLoading: isLoadingUpdateRoom } =
   useSocketEventListener<IRoomResponse, IUpdateRoomRequest>(
     socket,
-    "update:room",
+    'update:room',
     {
       response: setRoom,
       listener: setRoom,
@@ -334,13 +334,13 @@ const { request: requestUpdateRoom, isLoading: isLoadingUpdateRoom } =
 
         console.error(error);
       },
-    }
+    },
   );
 
 const { request: requestDeleteRoom, isLoading: isLoadingDeleteRoom } =
   useSocketEventListener<IRoomResponse, IDeleteRoomRequest>(
     socket,
-    "delete:room",
+    'delete:room',
     {
       response: handleDeleteRoom,
       listener: handleDeleteRoom,
@@ -351,13 +351,13 @@ const { request: requestDeleteRoom, isLoading: isLoadingDeleteRoom } =
 
         console.error(error);
       },
-    }
+    },
   );
 
 const { request: requestCreateMember, isLoading: isLoadingCreateMember } =
   useSocketEventListener<IRoomResponse, ICreateRoomMemberRequest>(
     socket,
-    "create:member",
+    'create:member',
     {
       response: setRoom,
       listener: setRoom,
@@ -368,13 +368,13 @@ const { request: requestCreateMember, isLoading: isLoadingCreateMember } =
 
         console.error(error);
       },
-    }
+    },
   );
 
 const { request: requestUpdateMember, isLoading: isLoadingUpdateMember } =
   useSocketEventListener<IRoomResponse, IUpdateRoomMemberRequest>(
     socket,
-    "update:member",
+    'update:member',
     {
       response: setRoom,
       listener: setRoom,
@@ -385,13 +385,13 @@ const { request: requestUpdateMember, isLoading: isLoadingUpdateMember } =
 
         console.error(error);
       },
-    }
+    },
   );
 
 const { request: requestDeleteMember, isLoading: isLoadingDeleteMember } =
   useSocketEventListener<IRoomResponse, IDeleteRoomMemberRequest>(
     socket,
-    "delete:member",
+    'delete:member',
     {
       response: setRoom,
       listener: setRoom,
@@ -402,7 +402,7 @@ const { request: requestDeleteMember, isLoading: isLoadingDeleteMember } =
 
         console.error(error);
       },
-    }
+    },
   );
 
 const isLoading = computed(
@@ -412,6 +412,6 @@ const isLoading = computed(
     isLoadingDeleteRoom.value ||
     isLoadingCreateMember.value ||
     isLoadingUpdateMember.value ||
-    isLoadingDeleteMember.value
+    isLoadingDeleteMember.value,
 );
 </script>
