@@ -39,19 +39,55 @@
   <v-divider></v-divider>
 
   <v-card variant="flat" rounded="0">
-    <div v-if="pastedImages.length">
+    <div v-if="pastedFiles.length">
       <v-sheet
-        class="pa-2 images"
+        class="pa-2 pt-3 files"
         :class="[isDark ? 'bg-grey-darken-3' : 'bg-grey-lighten-5']"
       >
-        <v-card
-          v-for="(image, index) in pastedImages"
-          :key="index"
-          class="flex-grow-0 flex-shrink-0"
-          elevation="4"
-        >
-          <img height="128" :src="image.src" class="d-block" />
-        </v-card>
+        <v-hover v-for="file in pastedFiles" :key="file.id">
+          <template v-slot:default="{ isHovering, props }">
+            <v-badge style="cursor: pointer" v-bind="props" color="primary">
+              <template #badge>
+                <v-icon icon="mdi-close" @click="removeFile(file.id)" />
+              </template>
+
+              <v-card
+                v-if="file.type === 'image'"
+                class="flex-grow-0 flex-shrink-0"
+                :elevation="isHovering ? 8 : 4"
+                rounded="lg"
+                v-bind="props"
+              >
+                <img :src="file.src" class="d-block image" />
+              </v-card>
+              <v-card
+                v-else
+                class="file"
+                :elevation="isHovering ? 8 : 4"
+                rounded="lg"
+                v-bind="props"
+              >
+                <div class="h-100 d-flex flex-column flex-nowrap">
+                  <div
+                    class="pa-2 h-100 w-100 d-flex justify-center align-center"
+                  >
+                    <div
+                      class="pa-2 rounded-circle"
+                      :class="[
+                        isDark ? 'bg-grey-darken-3' : 'bg-grey-lighten-3',
+                      ]"
+                    >
+                      <v-icon icon="mdi-file-document-plus-outline" />
+                    </div>
+                  </div>
+                  <v-card-text class="pa-2 text-no-wrap text-truncate">{{
+                    file.file.name
+                  }}</v-card-text>
+                </div>
+              </v-card>
+            </v-badge>
+          </template>
+        </v-hover>
       </v-sheet>
       <v-divider></v-divider>
     </div>
@@ -86,6 +122,7 @@ import data from 'emoji-mart-vue-fast/data/twitter.json';
 // @ts-ignore
 import { EmojiIndex, Picker as EmojiPicker } from 'emoji-mart-vue-fast/src';
 import _ from 'lodash';
+import { v4 as uuidv4 } from 'uuid';
 import {
   ComponentPublicInstance,
   computed,
@@ -101,13 +138,15 @@ import { VTextField } from 'vuetify/components';
 import MessageContent from '@/components/Rooms/Detail/MessageContent.vue';
 import { useSocketChat } from '@/composables/useSocketChat';
 import { useSocketEventListener } from '@/composables/useSocketEventListener';
-import { KEYS } from '@/constants';
+import { KEYS, MESSAGE_FILE } from '@/constants';
 import {
   ICreateRoomMessageRequest,
   IDeleteRoomMessageRequest,
   IRoomMessageResponse,
   ISearchRoomMessagesRequest,
 } from '@/interfaces/rooms';
+
+type BasicFileType = 'image' | 'audio' | 'video' | 'files';
 
 const isDark = inject(KEYS.THEMES.IS_DARK)!;
 
@@ -188,8 +227,10 @@ async function selectEmoji(params: { native: string }) {
   messageTextAreaElement.value!.focus();
 }
 
-const pastedImages = reactive<
+const pastedFiles = reactive<
   Array<{
+    id: string;
+    type: 'image' | 'audio' | 'video' | 'files';
     src: string;
     file: File;
   }>
@@ -203,14 +244,38 @@ function pasteMessage(event: ClipboardEvent) {
   }
   event.preventDefault();
 
-  const file = clipboardData?.files.item(0);
-  console.log(file?.size);
-  if (file && /^image\/(png|jpe?g|gif)$/.test(file.type)) {
-    pastedImages.push({
+  _.forEach(clipboardData?.files, (file) => {
+    if (!file || file.size > MESSAGE_FILE.MAX_FILE_SIZE) {
+      console.error(
+        `file size must be less than or equals ${MESSAGE_FILE.MAX_FILE_SIZE} bytes`,
+      );
+      return;
+    }
+
+    const type: BasicFileType | null = MESSAGE_FILE.IMAGE_MIME_TYPES.test(
+      file.type,
+    )
+      ? 'image'
+      : MESSAGE_FILE.OFFICE_MIME_TYPES.test(file.type)
+      ? 'files'
+      : null;
+
+    if (_.isNull(type)) {
+      console.error('Invalid file type');
+      return;
+    }
+
+    pastedFiles.push({
+      id: uuidv4(),
+      type,
       src: URL.createObjectURL(file),
       file,
     });
-  }
+  });
+}
+
+function removeFile(id: string) {
+  _.remove(pastedFiles, (file) => file.id === id);
 }
 
 const { request: requestCreateMessage } = useSocketEventListener<
@@ -229,21 +294,21 @@ const { request: requestCreateMessage } = useSocketEventListener<
 });
 
 function sendMessage() {
-  if (!messageInput.value && !pastedImages.length) {
+  if (!messageInput.value && !pastedFiles.length) {
     return;
   }
   requestCreateMessage({
     roomId: roomId.value,
     content: messageInput.value,
-    files: !pastedImages.length
+    files: !pastedFiles.length
       ? undefined
-      : _.map(pastedImages, ({ file }) => ({
+      : _.map(pastedFiles, ({ file }) => ({
           name: file.name,
           data: file,
         })),
   });
 
-  pastedImages.splice(0, pastedImages.length);
+  pastedFiles.splice(0, pastedFiles.length);
   messageInput.value = '';
 }
 
@@ -301,12 +366,20 @@ function removeMessage(id: string) {
   }
 }
 
-.images {
+.files {
   display: flex;
   flex-direction: row;
   flex-wrap: nowrap;
-  gap: 0.5rem;
+  column-gap: 0.75rem;
   overflow-x: auto;
   overflow-y: hidden;
+
+  .file {
+    height: 6rem;
+    width: 6rem;
+  }
+  .image {
+    height: 6rem;
+  }
 }
 </style>
