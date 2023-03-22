@@ -1,5 +1,14 @@
 import { IPaginationCursor, IPaginationExcludeIds } from './common';
 
+export type BasicFileType = 'images' | 'audios' | 'videos' | 'files';
+
+export type BasicFile = {
+  id: string;
+  type: BasicFileType;
+  src: string;
+  file: File;
+};
+
 export interface IRoomMessageFileResponse {
   name: string;
   uuid: string;

@@ -44,51 +44,14 @@
         class="pa-2 pt-3 files"
         :class="[isDark ? 'bg-grey-darken-3' : 'bg-grey-lighten-5']"
       >
-        <v-hover v-for="file in pastedFiles" :key="file.id">
-          <template v-slot:default="{ isHovering, props }">
-            <v-badge style="cursor: pointer" v-bind="props" color="primary">
-              <template #badge>
-                <v-icon icon="mdi-close" @click="removeFile(file.id)" />
-              </template>
-
-              <v-card
-                v-if="file.type === 'image'"
-                class="flex-grow-0 flex-shrink-0"
-                :elevation="isHovering ? 8 : 4"
-                rounded="lg"
-                v-bind="props"
-              >
-                <img :src="file.src" class="d-block image" />
-              </v-card>
-              <v-card
-                v-else
-                class="file"
-                :elevation="isHovering ? 8 : 4"
-                rounded="lg"
-                v-bind="props"
-              >
-                <div class="h-100 d-flex flex-column flex-nowrap">
-                  <div
-                    class="pa-2 h-100 w-100 d-flex justify-center align-center"
-                  >
-                    <div
-                      class="pa-2 rounded-circle"
-                      :class="[
-                        isDark ? 'bg-grey-darken-3' : 'bg-grey-lighten-3',
-                      ]"
-                    >
-                      <v-icon icon="mdi-file-document-plus-outline" />
-                    </div>
-                  </div>
-                  <v-card-text class="pa-2 text-no-wrap text-truncate">{{
-                    file.file.name
-                  }}</v-card-text>
-                </div>
-              </v-card>
-            </v-badge>
-          </template>
-        </v-hover>
+        <message-file-input
+          v-for="file in pastedFiles"
+          :key="file.id"
+          :file="file"
+          @remove-file="removeFile"
+        />
       </v-sheet>
+
       <v-divider></v-divider>
     </div>
 
@@ -136,17 +99,18 @@ import { useRoute } from 'vue-router';
 import { VTextField } from 'vuetify/components';
 
 import MessageContent from '@/components/Rooms/Detail/MessageContent.vue';
+import MessageFileInput from '@/components/Rooms/Detail/MessageFileInput.vue';
 import { useSocketChat } from '@/composables/useSocketChat';
 import { useSocketEventListener } from '@/composables/useSocketEventListener';
 import { KEYS, MESSAGE_FILE } from '@/constants';
 import {
+  BasicFile,
+  BasicFileType,
   ICreateRoomMessageRequest,
   IDeleteRoomMessageRequest,
   IRoomMessageResponse,
   ISearchRoomMessagesRequest,
 } from '@/interfaces/rooms';
-
-type BasicFileType = 'image' | 'audio' | 'video' | 'files';
 
 const isDark = inject(KEYS.THEMES.IS_DARK)!;
 
@@ -227,14 +191,7 @@ async function selectEmoji(params: { native: string }) {
   messageTextAreaElement.value!.focus();
 }
 
-const pastedFiles = reactive<
-  Array<{
-    id: string;
-    type: 'image' | 'audio' | 'video' | 'files';
-    src: string;
-    file: File;
-  }>
->([]);
+const pastedFiles = reactive<Array<BasicFile>>([]);
 
 function pasteMessage(event: ClipboardEvent) {
   const clipboardData = event.clipboardData!;
@@ -255,7 +212,7 @@ function pasteMessage(event: ClipboardEvent) {
     const type: BasicFileType | null = MESSAGE_FILE.IMAGE_MIME_TYPES.test(
       file.type,
     )
-      ? 'image'
+      ? 'images'
       : MESSAGE_FILE.OFFICE_MIME_TYPES.test(file.type)
       ? 'files'
       : null;
@@ -373,13 +330,5 @@ function removeMessage(id: string) {
   column-gap: 0.75rem;
   overflow-x: auto;
   overflow-y: hidden;
-
-  .file {
-    height: 6rem;
-    width: 6rem;
-  }
-  .image {
-    height: 6rem;
-  }
 }
 </style>

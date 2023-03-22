@@ -34,9 +34,9 @@
           </div>
           <div v-else-if="isFileType">
             <div v-if="files.length" class="pa-1 files">
-              <message-file
+              <message-file-content
                 v-for="file in files"
-                :key="file.name"
+                :key="file.uuid"
                 :type="message.type"
                 :file="file"
               />
@@ -85,7 +85,7 @@ import { useTimeAgo } from '@vueuse/core';
 import _ from 'lodash';
 import { computed } from 'vue';
 
-import MessageFile from '@/components/Rooms/Detail/MessageFile.vue';
+import MessageFileContent from '@/components/Rooms/Detail/MessageFileContent.vue';
 import { useAuth } from '@/composables/useAuth';
 import {
   IRoomMessageFileResponse,
