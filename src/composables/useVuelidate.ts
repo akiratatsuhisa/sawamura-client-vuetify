@@ -1,12 +1,11 @@
 import {
+  ErrorObject,
   GlobalConfig,
   useVuelidate as useDefault,
   Validation,
   ValidationArgs,
 } from '@vuelidate/core';
-import { ErrorObject } from '@vuelidate/core';
-import { computed, ComputedRef, isProxy, Ref, ref } from 'vue';
-import { unref } from 'vue';
+import { computed, ComputedRef, isProxy, Ref, ref, unref } from 'vue';
 
 export function getErrorMessage(
   field: { $errors: ErrorObject[] },

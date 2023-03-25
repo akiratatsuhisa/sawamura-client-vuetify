@@ -7,7 +7,7 @@
     "build": "vue-tsc --noEmit && vite build",
     "preview": "vite preview",
     "format": "prettier --write \"src/**/*.{ts,tsx,vue}\"",
-    "lint": "eslint \"{src,test}/**/*.ts\" --fix",
+    "lint": "eslint \"{src,test}/**/*.{ts,tsx,vue}\" --fix",
     "test:lint": "prettier --check \"src/**/*.{ts,tsx,vue}\" && eslint \"{src,test}/**/*.{ts,tsx,vue}\""
   },
   "dependencies": {
@@ -43,6 +43,7 @@
     "@vue/eslint-config-typescript": "^11.0.0",
     "eslint": "^8.22.0",
     "eslint-config-prettier": "^8.7.0",
+    "eslint-plugin-import": "^2.27.5",
     "eslint-plugin-prettier": "^4.2.1",
     "eslint-plugin-simple-import-sort": "^10.0.0",
     "eslint-plugin-vue": "^9.3.0",

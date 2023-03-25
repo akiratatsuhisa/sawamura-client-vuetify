@@ -1,5 +1,3 @@
-export interface IUserResponse {}
-
 export interface ISearchUsersRequest {
   search?: string;
 }

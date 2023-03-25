@@ -3,7 +3,7 @@
     <v-row class="h-100 align-content-center">
       <v-col class="mx-auto" md="6" lg="4">
         <v-card ref="formRef">
-          <v-card-title>Login</v-card-title>
+          <v-card-title>Register</v-card-title>
           <v-card-subtitle class="text-wrap">
             By continuing, you are setting up account and agree to our User
             Agreement and Privacy Policy.
@@ -33,41 +33,39 @@
                 @click:append-inner="showPassword = !showPassword"
               >
               </v-text-field>
-              <span>
-                Forget your
-                <router-link
-                  class="text-primary"
-                  :to="{
-                    name: 'ForgotPassword',
-                    query: { redirectUrl },
-                  }"
-                  >username</router-link
-                >
-                or
-                <router-link
-                  class="text-primary"
-                  :to="{
-                    name: 'ForgotPassword',
-                    query: { redirectUrl },
-                  }"
-                  >password</router-link
-                >?
-              </span>
+              <v-text-field
+                class="mb-3"
+                label="Confirm"
+                hint="Re-enter password"
+                persistent-hint
+                variant="outlined"
+                v-model="v$.confirmPassword.$model"
+                :error-messages="getErrorMessage(v$.confirmPassword)"
+                @blur="v$.confirmPassword.$validate"
+                clearable
+                :type="showConfirmPassword ? 'text' : 'password'"
+                :append-inner-icon="
+                  showConfirmPassword ? 'mdi-eye' : 'mdi-eye-off'
+                "
+                @click:append-inner="showConfirmPassword = !showConfirmPassword"
+              >
+              </v-text-field>
+
               <v-btn
                 type="submit"
                 :loading="isLoading"
                 variant="elevated"
                 block
-                class="my-3"
+                class="mb-3"
               >
-                Login
+                Register
               </v-btn>
               <span>
-                New to my app?
+                Already have a account?
                 <router-link
                   class="text-primary"
-                  :to="{ name: 'Register', query: { redirectUrl } }"
-                  >Register</router-link
+                  :to="{ name: 'Login', query: { redirectUrl } }"
+                  >Login</router-link
                 >
               </span>
             </form>
@@ -79,15 +77,16 @@
 </template>
 
 <script lang="ts" setup>
-import { required } from '@vuelidate/validators';
+import { required, sameAs } from '@vuelidate/validators';
 import { onKeyStroke } from '@vueuse/core';
 import _ from 'lodash';
 import { computed, reactive, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 
-import { useAuth } from '@/composables/useAuth';
+import { useAxios } from '@/composables/useAxios';
 import { getErrorMessage, useVuelidate } from '@/composables/useVuelidate';
-import { ILoginRequest } from '@/interfaces/auth';
+import { IRegisterRequest } from '@/interfaces/auth';
+import { services } from '@/services';
 
 const router = useRouter();
 const route = useRoute();
@@ -99,13 +98,17 @@ const redirectUrl = computed(() =>
 );
 
 const showPassword = ref(false);
+const showConfirmPassword = ref(false);
 
-const form = reactive<ILoginRequest>({
-  username: history.state.username ?? '',
+const form = reactive<IRegisterRequest & { confirmPassword: string }>({
+  username: '',
   password: '',
+  confirmPassword: '',
 });
 
-const [v$, { handleSubmit, isLoading }] = useVuelidate<ILoginRequest>(
+const [v$, { handleSubmit }] = useVuelidate<
+  IRegisterRequest & { confirmPassword: string }
+>(
   {
     username: {
       required: required,
@@ -113,20 +116,26 @@ const [v$, { handleSubmit, isLoading }] = useVuelidate<ILoginRequest>(
     password: {
       required: required,
     },
+    confirmPassword: {
+      required: required,
+      sameAsRef: sameAs(computed(() => form.password)),
+    },
   },
   form,
 );
 
-const { login } = useAuth();
+const { excute: register, isLoading } = useAxios(services.auth, 'register', {
+  unauth: true,
+});
 
 const onSubmit = handleSubmit(async (data) => {
-  await login(data);
+  const { username } = await register(data);
 
-  if (redirectUrl.value) {
-    router.push(redirectUrl.value);
-  } else {
-    router.push({ name: 'Home' });
-  }
+  router.push({
+    name: 'Login',
+    query: { redirectUrl: redirectUrl.value },
+    state: { username },
+  });
 });
 
 const formRef = ref();

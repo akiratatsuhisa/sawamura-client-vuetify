@@ -116,6 +116,37 @@ const routes = [
         component: () =>
           import(/* webpackChunkName: "auth" */ '@/views/Auth/Login.vue'),
       },
+      {
+        path: 'register',
+        name: 'Register',
+        // route level code-splitting
+        // this generates a separate chunk (about.[hash].js) for this route
+        // which is lazy-loaded when the route is visited.
+        component: () =>
+          import(/* webpackChunkName: "auth" */ '@/views/Auth/Register.vue'),
+      },
+      {
+        path: 'forgotPassword',
+        name: 'ForgotPassword',
+        // route level code-splitting
+        // this generates a separate chunk (about.[hash].js) for this route
+        // which is lazy-loaded when the route is visited.
+        component: () =>
+          import(
+            /* webpackChunkName: "auth" */ '@/views/Auth/ForgotPassword.vue'
+          ),
+      },
+      {
+        path: 'resetPassword',
+        name: 'ResetPassword',
+        // route level code-splitting
+        // this generates a separate chunk (about.[hash].js) for this route
+        // which is lazy-loaded when the route is visited.
+        component: () =>
+          import(
+            /* webpackChunkName: "auth" */ '@/views/Auth/ResetPassword.vue'
+          ),
+      },
     ],
   },
 ];
@@ -131,7 +162,7 @@ router.beforeEach((to) => {
   if (to.meta.requiresAuth && !isAuthenticated.value) {
     return {
       name: 'Login',
-      query: { redirect: to.fullPath },
+      query: { redirectUrl: to.fullPath },
     };
   }
 });

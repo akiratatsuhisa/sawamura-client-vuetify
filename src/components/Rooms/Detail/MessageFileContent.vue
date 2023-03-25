@@ -82,8 +82,7 @@
 
 <script lang="ts" setup>
 import _ from 'lodash';
-import { computed, onMounted, ref } from 'vue';
-import { inject } from 'vue';
+import { computed, inject, onMounted, ref } from 'vue';
 
 import { useAuth } from '@/composables/useAuth';
 import { KEYS } from '@/constants';

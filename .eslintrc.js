@@ -3,7 +3,7 @@ module.exports = {
   env: {
     node: true,
   },
-  plugins: ['@typescript-eslint/eslint-plugin', 'simple-import-sort'],
+  plugins: ['@typescript-eslint/eslint-plugin', 'simple-import-sort', 'import'],
   extends: [
     'plugin:vue/vue3-essential',
     'eslint:recommended',
@@ -15,5 +15,6 @@ module.exports = {
     '@typescript-eslint/no-unused-vars': 'warn',
     'simple-import-sort/imports': 'warn',
     'simple-import-sort/exports': 'warn',
+    'no-duplicate-imports': 'warn',
   },
 };

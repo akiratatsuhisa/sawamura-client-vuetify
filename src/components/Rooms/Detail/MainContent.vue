@@ -38,14 +38,14 @@
 
   <v-divider></v-divider>
 
-  <v-card variant="flat" rounded="0">
-    <div v-if="pastedFiles.length">
+  <v-card variant="flat" rounded="0" ref="messageZoneRef">
+    <div v-if="filesInput.length">
       <v-sheet
         class="pa-2 pt-3 files"
         :class="[isDark ? 'bg-grey-darken-3' : 'bg-grey-lighten-5']"
       >
         <message-file-input
-          v-for="file in pastedFiles"
+          v-for="file in filesInput"
           :key="file.id"
           :file="file"
           @remove-file="removeFile"
@@ -75,12 +75,23 @@
       >
       </v-textarea>
     </v-card-text>
+
+    <v-overlay
+      :model-value="isOverDropScreen"
+      contained
+      class="align-center justify-center"
+    >
+      <span class="text-h6" :class="{ 'text-primary': isOverDropMessage }">
+        Drop file(s) here!
+      </span>
+    </v-overlay>
   </v-card>
 </template>
 
 <script lang="ts" setup>
 import 'emoji-mart-vue-fast/css/emoji-mart.css';
 
+import { useDropZone } from '@vueuse/core';
 import data from 'emoji-mart-vue-fast/data/twitter.json';
 // @ts-ignore
 import { EmojiIndex, Picker as EmojiPicker } from 'emoji-mart-vue-fast/src';
@@ -90,13 +101,13 @@ import {
   ComponentPublicInstance,
   computed,
   inject,
+  nextTick,
   reactive,
   ref,
   watch,
 } from 'vue';
-import { nextTick } from 'vue';
 import { useRoute } from 'vue-router';
-import { VTextField } from 'vuetify/components';
+import { VCard, VTextField } from 'vuetify/components';
 
 import MessageContent from '@/components/Rooms/Detail/MessageContent.vue';
 import MessageFileInput from '@/components/Rooms/Detail/MessageFileInput.vue';
@@ -165,6 +176,8 @@ function unshiftMessage(data: IRoomMessageResponse) {
   messages.value = _.uniqBy([data, ...messages.value], (message) => message.id);
 }
 
+const messageZoneRef = ref();
+
 const messageInput = ref('');
 const messageInputRef = ref<ComponentPublicInstance<VTextField>>();
 const messageTextAreaElement = computed(() =>
@@ -191,17 +204,10 @@ async function selectEmoji(params: { native: string }) {
   messageTextAreaElement.value!.focus();
 }
 
-const pastedFiles = reactive<Array<BasicFile>>([]);
+const filesInput = reactive<Array<BasicFile>>([]);
 
-function pasteMessage(event: ClipboardEvent) {
-  const clipboardData = event.clipboardData!;
-
-  if (clipboardData?.types.includes('text/plain')) {
-    return;
-  }
-  event.preventDefault();
-
-  _.forEach(clipboardData?.files, (file) => {
+function selectFiles(files?: FileList | File[] | null) {
+  _.forEach(files, (file) => {
     if (!file || file.size > MESSAGE_FILE.MAX_FILE_SIZE) {
       console.error(
         `file size must be less than or equals ${MESSAGE_FILE.MAX_FILE_SIZE} bytes`,
@@ -222,7 +228,7 @@ function pasteMessage(event: ClipboardEvent) {
       return;
     }
 
-    pastedFiles.push({
+    filesInput.push({
       id: uuidv4(),
       type,
       src: URL.createObjectURL(file),
@@ -231,9 +237,26 @@ function pasteMessage(event: ClipboardEvent) {
   });
 }
 
-function removeFile(id: string) {
-  _.remove(pastedFiles, (file) => file.id === id);
+function pasteMessage(event: ClipboardEvent) {
+  const clipboardData = event.clipboardData!;
+
+  if (clipboardData?.types.includes('text/plain')) {
+    return;
+  }
+
+  event.preventDefault();
+  selectFiles(clipboardData?.files);
 }
+
+function removeFile(id: string) {
+  _.remove(filesInput, (file) => file.id === id);
+}
+
+const { isOverDropZone: isOverDropScreen } = useDropZone(document.body);
+const { isOverDropZone: isOverDropMessage } = useDropZone(
+  messageZoneRef,
+  selectFiles,
+);
 
 const { request: requestCreateMessage } = useSocketEventListener<
   IRoomMessageResponse,
@@ -251,21 +274,24 @@ const { request: requestCreateMessage } = useSocketEventListener<
 });
 
 function sendMessage() {
-  if (!messageInput.value && !pastedFiles.length) {
+  messageInput.value = messageInput.value.trim();
+
+  if (!messageInput.value && !filesInput.length) {
     return;
   }
+
   requestCreateMessage({
     roomId: roomId.value,
     content: messageInput.value,
-    files: !pastedFiles.length
+    files: !filesInput.length
       ? undefined
-      : _.map(pastedFiles, ({ file }) => ({
+      : _.map(filesInput, ({ file }) => ({
           name: file.name,
           data: file,
         })),
   });
 
-  pastedFiles.splice(0, pastedFiles.length);
+  filesInput.splice(0, filesInput.length);
   messageInput.value = '';
 }
 
