@@ -37,4 +37,28 @@ export class AuthService extends Service {
       data,
     });
   }
+
+  updatePhoto(config: AxiosRequestConfig, data: { image: File }) {
+    const formData = new FormData();
+    formData.append('image', data.image);
+
+    return this.fetch<void>({
+      ...config,
+      url: 'auth/photo',
+      method: 'PATCH',
+      data: formData,
+    });
+  }
+
+  updateCover(config: AxiosRequestConfig, data: { image: File }) {
+    const formData = new FormData();
+    formData.append('image', data.image);
+
+    return this.fetch<void>({
+      ...config,
+      url: 'auth/cover',
+      method: 'PATCH',
+      data: formData,
+    });
+  }
 }

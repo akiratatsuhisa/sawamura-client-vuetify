@@ -22,6 +22,7 @@ export interface IRoomResponse {
   name: string;
   isGroup: boolean;
   roomMembers: Array<IRoomMemberResponse>;
+  photoUrl: string | null;
   createdAt: string;
 }
 
@@ -49,14 +50,17 @@ export interface IDeleteRoomRequest {
 
 export interface ISearchRoomsRequest extends IPaginationExcludeIds {}
 
+export interface IRoomUserResponse {
+  id: string;
+  username: string;
+  photoUrl: string | null;
+}
+
 export interface IRoomMemberResponse {
   id: string;
   nickName: string | null;
   role: string;
-  member: {
-    id: string;
-    username: string;
-  };
+  member: IRoomUserResponse;
   createdAt: string;
 }
 
@@ -83,13 +87,11 @@ export interface IRoomMessageResponse {
   createdAt: string;
   room: {
     id: string;
+    roomMembers: Array<{ memberId: string }>;
   };
   type: string;
   content: any;
-  user: {
-    id: string;
-    username: string;
-  };
+  user: IRoomUserResponse;
 }
 
 export interface ISearchRoomMessagesRequest extends IPaginationCursor {

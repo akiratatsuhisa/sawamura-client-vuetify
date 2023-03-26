@@ -41,6 +41,8 @@ export function initSocketChat() {
   });
 
   onBeforeUnmount(async () => {
+    socket.value.disconnect();
+
     socket.value.off('connect', connect);
     socket.value.off('disconnect', disconnect);
     socket.value.off('authenticate', authenticate);

@@ -1,7 +1,7 @@
 <template>
   <v-hover :key="file.id">
     <template v-slot:default="{ isHovering, props }">
-      <v-badge style="cursor: pointer" v-bind="props" color="primary">
+      <v-badge v-bind="props" color="primary" class="cursor-pointer">
         <template #badge>
           <v-icon icon="mdi-close" @click="emit('remove-file', file.id)" />
         </template>

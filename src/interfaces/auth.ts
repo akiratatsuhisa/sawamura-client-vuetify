@@ -7,6 +7,8 @@ export type IdentityUser = {
   birthDate: string | null;
   salary: number | null;
   roles: string[] | null;
+  photoUrl: string | null;
+  coverUrl: string | null;
 };
 
 export interface IAuthOptions {

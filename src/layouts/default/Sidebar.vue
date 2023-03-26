@@ -6,13 +6,19 @@
     floating
     v-model="drawer"
   >
-    <v-list-item
-      nav
-      prepend-avatar="https://randomuser.me/api/portraits/men/85.jpg"
-      @click="router.push({ name: 'Profile' })"
-    ></v-list-item>
+    <template #prepend>
+      <v-list-item nav @click="router.push({ name: 'Profile' })">
+        <template #prepend>
+          <v-avatar
+            color="primary"
+            class="elevation-6"
+            :image="photoUrl"
+          ></v-avatar>
+        </template>
+      </v-list-item>
 
-    <v-divider></v-divider>
+      <v-divider></v-divider>
+    </template>
 
     <v-list density="compact" nav @click:select="handleSelect($event, true)">
       <v-list-item
@@ -31,17 +37,19 @@
     :model-value="subItems.length > 0 && drawer && subDrawer"
     @update:model-value="subDrawer = $event"
   >
-    <v-list-item nav>
-      <template v-slot:append>
-        <v-btn
-          variant="text"
-          icon="mdi-chevron-left"
-          @click="subDrawer = !subDrawer"
-        ></v-btn>
-      </template>
-    </v-list-item>
+    <template #prepend>
+      <v-list-item nav>
+        <template v-slot:append>
+          <v-btn
+            variant="text"
+            icon="mdi-chevron-left"
+            @click="subDrawer = !subDrawer"
+          ></v-btn>
+        </template>
+      </v-list-item>
 
-    <v-divider></v-divider>
+      <v-divider></v-divider>
+    </template>
 
     <v-list nav @click:select="handleSelect">
       <v-list-item
@@ -62,6 +70,7 @@ import _ from 'lodash';
 import { computed, inject, ref } from 'vue';
 import { RouteLocationNamedRaw, useRoute, useRouter } from 'vue-router';
 
+import { useAuth } from '@/composables/useAuth';
 import { KEYS } from '@/constants';
 
 type Item = {
@@ -74,6 +83,8 @@ type Item = {
     value: RouteLocationNamedRaw;
   }>;
 };
+
+const { photoUrl } = useAuth();
 
 const router = useRouter();
 const route = useRoute();

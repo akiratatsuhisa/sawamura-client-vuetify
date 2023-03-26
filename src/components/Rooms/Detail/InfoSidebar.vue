@@ -4,24 +4,33 @@
     location="right"
     :width="$vuetify.display.smAndDown ? $vuetify.display.width : '320'"
   >
-    <v-toolbar color="surface" v-if="$vuetify.display.smAndDown">
-      <v-app-bar-nav-icon icon="mdi-arrow-left" @click="drawer = !drawer">
-      </v-app-bar-nav-icon>
-    </v-toolbar>
-    <v-sheet class="pa-4 text-center">
-      <v-avatar
-        image="https://cdn.vuetifyjs.com/images/parallax/material.jpg"
-        size="80"
-      ></v-avatar>
-      <h3>{{ room?.name }}</h3>
-    </v-sheet>
+    <template #prepend>
+      <v-toolbar color="surface" v-if="$vuetify.display.smAndDown">
+        <v-app-bar-nav-icon icon="mdi-arrow-left" @click="drawer = !drawer">
+        </v-app-bar-nav-icon>
+      </v-toolbar>
+      <v-sheet class="pa-4 text-center">
+        <v-avatar
+          color="primary"
+          class="elevation-6"
+          :image="roomPhotoUrl"
+          size="80"
+        ></v-avatar>
+        <h3>{{ room?.name }}</h3>
+      </v-sheet>
+
+      <v-divider></v-divider>
+    </template>
 
     <v-expansion-panels multiple>
       <v-expansion-panel elevation="0" rounded="0">
         <v-expansion-panel-title>Basics Information</v-expansion-panel-title>
         <v-expansion-panel-text>
           <v-list class="mx-md-n6">
-            <v-list-item @click="dialogs.updateRoom = true">
+            <v-list-item
+              v-if="room?.isGroup && currentMember?.role !== 'Member'"
+              @click="dialogs.updateRoom = true"
+            >
               <template #prepend>
                 <v-avatar
                   :color="
@@ -35,6 +44,24 @@
               </template>
 
               <v-list-item-title> Edit name </v-list-item-title>
+            </v-list-item>
+            <v-list-item
+              v-if="room?.isGroup && currentMember?.role !== 'Member'"
+              @click="dialogs.updateRoomPhoto = true"
+            >
+              <template #prepend>
+                <v-avatar
+                  :color="
+                    $vuetify.theme.current.dark
+                      ? 'grey-darken-3'
+                      : 'grey-lighten-3'
+                  "
+                >
+                  <v-icon icon="mdi-image-edit"></v-icon>
+                </v-avatar>
+              </template>
+
+              <v-list-item-title> Edit photo </v-list-item-title>
             </v-list-item>
             <v-list-item
               v-if="room?.isGroup && currentMember?.role === 'Admin'"
@@ -110,14 +137,13 @@
               <v-list-item-title> Add Member </v-list-item-title>
             </v-list-item>
 
-            <v-list-item
-              v-for="(roomMember, index) in roomMembers"
-              :key="roomMember.id"
-            >
+            <v-list-item v-for="roomMember in roomMembers" :key="roomMember.id">
               <template #prepend>
                 <v-avatar
+                  color="primary"
+                  class="elevation-6"
                   tag="button"
-                  :image="`https://i.pravatar.cc/150?img=${index}`"
+                  :image="getPhotoUrlByRoomUser(roomMember.member)"
                   @click="
                     $router.push({
                       name: 'Users:Detail',
@@ -209,6 +235,10 @@
     v-model="dialogs.updateRoom"
     @submit="requestUpdateRoom"
   />
+  <v-dialog-update-room-photo
+    v-model="dialogs.updateRoomPhoto"
+    @submit="() => true"
+  />
   <v-dialog-delete-room
     v-model="dialogs.deleteRoom"
     @submit="requestDeleteRoom"
@@ -237,7 +267,8 @@
 
 <script lang="ts" setup>
 import _ from 'lodash';
-import { computed, inject, reactive } from 'vue';
+import moment from 'moment';
+import { computed, inject, reactive, ref } from 'vue';
 import { useRouter } from 'vue-router';
 
 import VDialogCreateMember from '@/components/Rooms/Dialogs/DialogCreateMember.vue';
@@ -246,6 +277,7 @@ import VDialogDeleteRoom from '@/components/Rooms/Dialogs/DialogDeleteRoom.vue';
 import VDialogUpdateMember from '@/components/Rooms/Dialogs/DialogUpdateMember.vue';
 import VDialogUpdateMemberRole from '@/components/Rooms/Dialogs/DialogUpdateMemberRole.vue';
 import VDialogUpdateRoom from '@/components/Rooms/Dialogs/DialogUpdateRoom.vue';
+import VDialogUpdateRoomPhoto from '@/components/Rooms/Dialogs/DialogUpdateRoomPhoto.vue';
 import { useAuth } from '@/composables/useAuth';
 import { useSocketChat } from '@/composables/useSocketChat';
 import { useSocketEventListener } from '@/composables/useSocketEventListener';
@@ -255,6 +287,7 @@ import {
   IDeleteRoomMemberRequest,
   IDeleteRoomRequest,
   IRoomResponse,
+  IRoomUserResponse,
   IUpdateRoomMemberRequest,
   IUpdateRoomRequest,
 } from '@/interfaces/rooms';
@@ -293,7 +326,22 @@ const roomMembers = computed(() =>
   ),
 );
 
+const updatedPhoto = ref('');
+
+const roomPhotoUrl = computed(() =>
+  room.value?.photoUrl
+    ? `${import.meta.env.VITE_API_URL}/rooms/${room.value.id}/photo` +
+      (updatedPhoto.value ? `?updated=${updatedPhoto.value}` : '')
+    : import.meta.env.VITE_NO_BACKGROUND_URL,
+);
+
 const currentMember = inject(KEYS.CHAT.CURRENT_MEMBER)!;
+
+function getPhotoUrlByRoomUser(user: IRoomUserResponse) {
+  return user.photoUrl
+    ? `${import.meta.env.VITE_API_URL}/auth/photo?username=${user.username}`
+    : import.meta.env.VITE_NO_AVATAR_URL;
+}
 
 function setRoom(data: IRoomResponse) {
   if (data.id !== room.value?.id) {
@@ -312,12 +360,23 @@ function handleDeleteRoom(data: IRoomResponse) {
 
 const dialogs = reactive({
   updateRoom: false,
+  updateRoomPhoto: false,
   deleteRoom: false,
   createMember: false,
   memberId: '',
   updateMember: false,
   updateMemberRole: false,
   deleteMember: false,
+});
+
+useSocketEventListener<IRoomResponse>(socket, 'update:room:photo', {
+  listener(data) {
+    if (data.id !== room.value?.id) {
+      return;
+    }
+    room.value = data;
+    updatedPhoto.value = moment().unix().toString();
+  },
 });
 
 const { request: requestUpdateRoom, isLoading: isLoadingUpdateRoom } =

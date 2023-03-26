@@ -34,31 +34,37 @@ export function useAuth() {
     );
   }
 
+  async function fetchAccessToken(options?: IAuthOptions) {
+    const { throw: throwError = true } = options ?? {};
+
+    try {
+      const { data } = await axiosInstacne.post<IAuthResponse>(
+        '/auth/refreshToken',
+        undefined,
+        {
+          headers: {
+            refreshToken: refreshToken.value,
+          },
+        },
+      );
+
+      accessToken.value = data.accessToken;
+      refreshToken.value = data.refreshToken;
+    } catch (error) {
+      if (throwError) {
+        throw error;
+      }
+
+      accessToken.value = '';
+      refreshToken.value = '';
+    }
+  }
+
   async function getAccessTokenSilently(options?: IAuthOptions) {
-    const { seconds, throw: throwError = true } = options ?? {};
+    const { seconds } = options ?? {};
 
     if (isExpires(seconds)) {
-      try {
-        const { data } = await axiosInstacne.post<IAuthResponse>(
-          '/auth/refreshToken',
-          undefined,
-          {
-            headers: {
-              refreshToken: refreshToken.value,
-            },
-          },
-        );
-
-        accessToken.value = data.accessToken;
-        refreshToken.value = data.refreshToken;
-      } catch (error) {
-        if (throwError) {
-          throw error;
-        }
-
-        accessToken.value = '';
-        refreshToken.value = '';
-      }
+      await fetchAccessToken(options);
     }
 
     return accessToken.value;
@@ -104,6 +110,37 @@ export function useAuth() {
     );
   }
 
+  const updatedImages = useLocalStorage('images', {
+    photo: '',
+    cover: '',
+  });
+
+  const photoUrl = computed(() =>
+    user.value?.photoUrl
+      ? `${import.meta.env.VITE_API_URL}/auth/photo?username=${
+          user.value.username
+        }` +
+        (updatedImages.value.photo
+          ? `&updated=${updatedImages.value.photo}`
+          : '')
+      : import.meta.env.VITE_NO_AVATAR_URL,
+  );
+
+  const coverUrl = computed(() =>
+    user.value?.coverUrl
+      ? `${import.meta.env.VITE_API_URL}/auth/cover?username=${
+          user.value.username
+        }` +
+        (updatedImages.value.cover
+          ? `&updated=${updatedImages.value.cover}`
+          : '')
+      : import.meta.env.VITE_NO_BACKGROUND_URL,
+  );
+
+  function updateImage(type: 'photo' | 'cover') {
+    updatedImages.value[type] = moment().unix().toString();
+  }
+
   return {
     isAuthenticated,
     expires,
@@ -111,7 +148,11 @@ export function useAuth() {
     identityId,
     login,
     logout,
+    fetchAccessToken,
     getAccessTokenSilently,
     getUserSilently,
+    photoUrl,
+    coverUrl,
+    updateImage,
   };
 }

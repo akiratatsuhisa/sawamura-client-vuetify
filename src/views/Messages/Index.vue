@@ -26,10 +26,15 @@
             <v-list lines="one">
               <v-list-subheader tag="h2">Rooms</v-list-subheader>
 
-              <template v-for="(room, index) in rooms" :key="room.id">
-                <v-list-item
-                  :prependAvatar="`https://i.pravatar.cc/150?img=${index}`"
-                >
+              <template v-for="room in rooms" :key="room.id">
+                <v-list-item>
+                  <template #prepend>
+                    <v-avatar
+                      color="primary"
+                      class="elevation-6"
+                      :image="getPhotoUrlByRoom(room)"
+                    ></v-avatar>
+                  </template>
                   <v-list-item-title>
                     <v-icon
                       :color="room.isGroup ? 'info' : 'warning'"
@@ -92,6 +97,12 @@ const updateDrawerRooms = inject(KEYS.DRAWER.UPDATE_ROOMS)!;
 
 const rooms = ref<Array<IRoomResponse>>([]);
 const socket = useSocketChat();
+
+function getPhotoUrlByRoom(room: IRoomResponse) {
+  return room.photoUrl
+    ? `${import.meta.env.VITE_API_URL}/rooms/${room.id}/photo`
+    : import.meta.env.VITE_NO_BACKGROUND_URL;
+}
 
 const { request: requestRooms, isLoading: isLoadingRooms } =
   useSocketEventListener<{ rooms: Array<IRoomResponse> }, ISearchRoomsRequest>(

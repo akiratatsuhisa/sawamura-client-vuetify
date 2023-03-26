@@ -19,7 +19,7 @@ export function useAxios<
   A extends Exclude<keyof S, keyof Service>,
 >(service: S, action: A, options?: { unauth: boolean }) {
   type Req = Parameters<S[A]>['1'];
-  type Res = ReturnType<S[A]>;
+  type Res = Awaited<ReturnType<S[A]>>;
 
   const { unauth } = options ?? {};
 
@@ -55,7 +55,7 @@ export function useAxios<
         headers.set('Authorization', `Bearer ${token}`);
       }
 
-      const data = await fetcher[action](
+      const result = await fetcher[action](
         {
           headers,
           onUploadProgress: onProgress,
@@ -64,9 +64,9 @@ export function useAxios<
         paramsOrData,
       );
 
-      data.value = data;
       error.value = null;
-      return data;
+      data.value = result === '' ? null : result;
+      return result;
     } catch (exception: unknown) {
       error.value = exception as IExceptionResponseDetail;
       data.value = null;
