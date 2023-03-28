@@ -9,7 +9,7 @@
   >
     <template #title>Profile Photo</template>
 
-    <v-btn color="info" @click="open">Choose image</v-btn>
+    <v-btn variant="tonal" color="info" @click="open">Choose image</v-btn>
 
     <v-divider class="my-3"></v-divider>
 

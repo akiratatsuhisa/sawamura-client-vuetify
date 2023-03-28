@@ -6,7 +6,7 @@ import { useAuth } from '@/composables/useAuth';
 const routes: Array<RouteRecordRaw> = [
   {
     path: '/',
-    component: () => import('@/layouts/default/Index.vue'),
+    component: () => import('@/layouts/Default/Index.vue'),
     children: [
       {
         path: '',
@@ -27,7 +27,7 @@ const routes: Array<RouteRecordRaw> = [
             meta: { requiresAuth: true },
             component: () =>
               import(
-                /* webpackChunkName: "messages" */ '@/views/Messages/Index.vue'
+                /* webpackChunkName: "messages" */ '@/views/Messages/RoomList.vue'
               ),
           },
           {
@@ -36,7 +36,7 @@ const routes: Array<RouteRecordRaw> = [
             meta: { requiresAuth: true },
             component: () =>
               import(
-                /* webpackChunkName: "messages" */ '@/views/Messages/Room.vue'
+                /* webpackChunkName: "messages" */ '@/views/Messages/RoomContent.vue'
               ),
           },
         ],
@@ -44,7 +44,13 @@ const routes: Array<RouteRecordRaw> = [
       {
         path: 'dashboard',
         name: 'Dashboard',
-        meta: { requiresAuth: true },
+        meta: {
+          requiresAuth: true,
+          breadcrumb: {
+            title: 'Dashboard',
+            to: { name: 'Dashboard' },
+          },
+        },
         component: () =>
           import(
             /* webpackChunkName: "dashboard" */ '@/views/Dashboard/Index.vue'
@@ -53,7 +59,13 @@ const routes: Array<RouteRecordRaw> = [
           {
             path: 'users',
             name: 'Dashboard:Users',
-            meta: { requiresAuth: true },
+            meta: {
+              requiresAuth: true,
+              breadcrumb: {
+                title: 'Users',
+                to: { name: 'Dashboard:Users' },
+              },
+            },
             component: () =>
               import(
                 /* webpackChunkName: "dashboard" */ '@/views/Dashboard/Users.vue'
@@ -62,7 +74,13 @@ const routes: Array<RouteRecordRaw> = [
           {
             path: 'messages',
             name: 'Dashboard:Messages',
-            meta: { requiresAuth: true },
+            meta: {
+              requiresAuth: true,
+              breadcrumb: {
+                title: 'Messages',
+                to: { name: 'Dashboard:Messages' },
+              },
+            },
             component: () =>
               import(
                 /* webpackChunkName: "dashboard" */ '@/views/Dashboard/Messages.vue'
@@ -102,7 +120,7 @@ const routes: Array<RouteRecordRaw> = [
   },
   {
     path: '/',
-    component: () => import('@/layouts/auth/Index.vue'),
+    component: () => import('@/layouts/Auth/Index.vue'),
     children: [
       {
         path: 'login',

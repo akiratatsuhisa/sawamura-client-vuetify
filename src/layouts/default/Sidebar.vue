@@ -1,6 +1,6 @@
 <template>
   <v-navigation-drawer
-    :color="`pink-${$vuetify.theme.current.dark ? 'darken' : 'lighten'}-4`"
+    color="primary"
     rail
     :permanent="subItems.length > 0 && subDrawer"
     floating
@@ -23,12 +23,12 @@
     <v-list density="compact" nav @click:select="handleSelect($event, true)">
       <v-list-item
         v-for="item in items"
-        :key="item.icon"
+        :key="item.key"
         rounded="xl"
         :prepend-icon="item.icon"
         :value="item.value"
         :active="isActive(item.value, true)"
-        @click="item.handleClick"
+        @click="item.onClick"
       ></v-list-item>
     </v-list>
   </v-navigation-drawer>
@@ -52,37 +52,28 @@
     </template>
 
     <v-list nav @click:select="handleSelect">
-      <v-list-item
-        v-for="item in subItems"
-        :key="item?.key ?? item.title"
-        rounded="xl"
-        :value="item.value"
-        :active="isActive(item.value)"
-      >
-        <v-list-item-title class="px-2">{{ item.title }}</v-list-item-title>
-      </v-list-item>
+      <template v-for="item in subItems" :key="item.key">
+        <title-menu-item v-if="item.type === 'title'" :item="item" />
+        <icon-menu-item v-else-if="item.type === 'icon'" :item="item" />
+        <avatar-menu-item v-else-if="item.type === 'avatar'" :item="item" />
+        <room-menu-item v-else-if="item.type === 'room'" :item="item" />
+      </template>
     </v-list>
   </v-navigation-drawer>
 </template>
 
 <script lang="ts" setup>
 import _ from 'lodash';
-import { computed, inject, ref } from 'vue';
+import { computed, inject, provide, ref } from 'vue';
 import { RouteLocationNamedRaw, useRoute, useRouter } from 'vue-router';
 
 import { useAuth } from '@/composables/useAuth';
 import { KEYS } from '@/constants';
-
-type Item = {
-  icon: string;
-  value: RouteLocationNamedRaw;
-  handleClick(): void;
-  children?: Array<{
-    key?: string;
-    title: string;
-    value: RouteLocationNamedRaw;
-  }>;
-};
+import { IRoomMenuItem, IRootMenuItem } from '@/interfaces/menus';
+import AvatarMenuItem from '@/layouts/Default/Menus/AvatarMenuItem.vue';
+import IconMenuItem from '@/layouts/Default/Menus/IconMenuItem.vue';
+import RoomMenuItem from '@/layouts/Default/Menus/RoomMenuItem.vue';
+import TitleMenuItem from '@/layouts/Default/Menus/TitleMenuItem.vue';
 
 const { photoUrl } = useAuth();
 
@@ -94,46 +85,63 @@ const darwerRooms = inject(KEYS.DRAWER.ROOMS)!;
 const drawer = inject(KEYS.DRAWER.SHOW);
 const subDrawer = ref<boolean>(false);
 
-const items = computed<Array<Item>>(() => [
+const items = computed<Array<IRootMenuItem>>(() => [
   {
-    icon: 'mdi-home',
+    key: 'Home',
     value: { name: 'Home' },
-    handleClick() {
+    icon: 'mdi-home',
+    onClick() {
       subDrawer.value = false;
     },
   },
   {
-    icon: 'mdi-forum',
+    key: 'Messages',
     value: { name: 'Messages' },
-    handleClick() {
+    icon: 'mdi-forum',
+    onClick() {
       subDrawer.value = true;
     },
     children: [
       {
-        title: 'General',
+        type: 'icon',
+        key: 'Messages:List',
         value: { name: 'Messages' },
+        icon: 'mdi-forum-outline',
+        title: 'Room List',
       },
-      ..._.map(darwerRooms.value, (room) => ({
-        key: room.id,
-        title: room.name,
-        value: { name: 'Messages:Room', params: { roomId: room.id } },
-      })),
+      ..._.map(
+        darwerRooms.value,
+        (room) =>
+          ({
+            type: 'room',
+            key: `Messages:Room:${room.id}`,
+            value: { name: 'Messages:Room', params: { roomId: room.id } },
+            room: room,
+          } satisfies IRoomMenuItem),
+      ),
     ],
   },
   {
-    icon: 'mdi-view-dashboard',
+    key: 'Dashboard',
     value: { name: 'Dashboard' },
-    handleClick() {
+    icon: 'mdi-view-dashboard',
+    onClick() {
       subDrawer.value = true;
     },
     children: [
       {
-        title: 'Users',
+        type: 'icon',
+        key: 'Dashboard:Users',
         value: { name: 'Dashboard:Users' },
+        icon: 'mdi-table-account',
+        title: 'Users',
       },
       {
-        title: 'Messages',
+        type: 'icon',
+        key: 'Dashboard:Messages',
         value: { name: 'Dashboard:Messages' },
+        icon: 'mdi-gauge',
+        title: 'Messages',
       },
     ],
   },
@@ -149,10 +157,10 @@ const subItems = computed(() => {
     : [];
 });
 
-const handleSelect = (
+function handleSelect(
   event: { id: unknown; value: boolean; path: unknown[] },
   isParent?: boolean,
-) => {
+) {
   const { id: routeLocation } = event as { id: RouteLocationNamedRaw };
 
   if (
@@ -165,9 +173,9 @@ const handleSelect = (
     return;
   }
   router.push(routeLocation);
-};
+}
 
-const isActive = (item: RouteLocationNamedRaw, prefix: boolean = false) => {
+function isActive(item: RouteLocationNamedRaw, prefix: boolean = false) {
   if (!route.name || !item.name) {
     return false;
   }
@@ -180,5 +188,7 @@ const isActive = (item: RouteLocationNamedRaw, prefix: boolean = false) => {
     : _.isEmpty(route.params)
     ? routeName === itemName
     : routeName === itemName && _.isEqual(route.params, item.params);
-};
+}
+
+provide(KEYS.DRAWER.IS_ACTIVE, isActive);
 </script>

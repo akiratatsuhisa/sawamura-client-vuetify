@@ -70,7 +70,7 @@
                 </v-btn>
                 <v-btn
                   append-icon="mdi-account-edit-outline"
-                  variant="elevated"
+                  variant="tonal"
                   size="small"
                 >
                   Edit profile

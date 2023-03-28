@@ -16,7 +16,9 @@
           :image="roomPhotoUrl"
           size="80"
         ></v-avatar>
-        <h3>{{ room?.name }}</h3>
+        <h3>
+          {{ displayName }}
+        </h3>
       </v-sheet>
 
       <v-divider></v-divider>
@@ -266,9 +268,7 @@
 </template>
 
 <script lang="ts" setup>
-import _ from 'lodash';
-import moment from 'moment';
-import { computed, inject, reactive, ref } from 'vue';
+import { computed, inject, reactive } from 'vue';
 import { useRouter } from 'vue-router';
 
 import VDialogCreateMember from '@/components/Rooms/Dialogs/DialogCreateMember.vue';
@@ -279,6 +279,7 @@ import VDialogUpdateMemberRole from '@/components/Rooms/Dialogs/DialogUpdateMemb
 import VDialogUpdateRoom from '@/components/Rooms/Dialogs/DialogUpdateRoom.vue';
 import VDialogUpdateRoomPhoto from '@/components/Rooms/Dialogs/DialogUpdateRoomPhoto.vue';
 import { useAuth } from '@/composables/useAuth';
+import { useRoom } from '@/composables/useRoom';
 import { useSocketChat } from '@/composables/useSocketChat';
 import { useSocketEventListener } from '@/composables/useSocketEventListener';
 import { KEYS } from '@/constants';
@@ -287,7 +288,6 @@ import {
   IDeleteRoomMemberRequest,
   IDeleteRoomRequest,
   IRoomResponse,
-  IRoomUserResponse,
   IUpdateRoomMemberRequest,
   IUpdateRoomRequest,
 } from '@/interfaces/rooms';
@@ -319,29 +319,14 @@ const drawer = computed({
 
 const room = inject(KEYS.CHAT.ROOM)!;
 
-const roomMembers = computed(() =>
-  _.filter(
-    room.value?.roomMembers ?? [],
-    (roomMember) => roomMember.role !== 'None',
-  ),
-);
-
-const updatedPhoto = ref('');
-
-const roomPhotoUrl = computed(() =>
-  room.value?.photoUrl
-    ? `${import.meta.env.VITE_API_URL}/rooms/${room.value.id}/photo` +
-      (updatedPhoto.value ? `?updated=${updatedPhoto.value}` : '')
-    : import.meta.env.VITE_NO_BACKGROUND_URL,
-);
-
-const currentMember = inject(KEYS.CHAT.CURRENT_MEMBER)!;
-
-function getPhotoUrlByRoomUser(user: IRoomUserResponse) {
-  return user.photoUrl
-    ? `${import.meta.env.VITE_API_URL}/auth/photo?username=${user.username}`
-    : import.meta.env.VITE_NO_AVATAR_URL;
-}
+const {
+  roomMembers,
+  currentMember,
+  displayName,
+  roomPhotoUrl,
+  updatePhotoUrl,
+  getPhotoUrlByRoomUser,
+} = useRoom(room);
 
 function setRoom(data: IRoomResponse) {
   if (data.id !== room.value?.id) {
@@ -375,7 +360,7 @@ useSocketEventListener<IRoomResponse>(socket, 'update:room:photo', {
       return;
     }
     room.value = data;
-    updatedPhoto.value = moment().unix().toString();
+    updatePhotoUrl();
   },
 });
 

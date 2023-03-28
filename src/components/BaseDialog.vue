@@ -26,8 +26,14 @@
         <slot></slot>
       </v-card-text>
 
-      <v-card-actions>
-        <v-btn type="submit" color="primary" block :disabled="disabledSubmit">
+      <v-card-actions class="px-6">
+        <v-btn
+          type="submit"
+          variant="tonal"
+          color="primary"
+          block
+          :disabled="disabledSubmit"
+        >
           <slot name="action"></slot>
         </v-btn>
       </v-card-actions>

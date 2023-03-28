@@ -14,6 +14,7 @@
               <v-card-title tag="h1">Messages</v-card-title>
               <v-spacer></v-spacer>
               <v-btn
+                variant="tonal"
                 class="ma-4"
                 prepend-icon="mdi-account-group"
                 @click="dialogCreateRoom = true"
@@ -27,41 +28,7 @@
               <v-list-subheader tag="h2">Rooms</v-list-subheader>
 
               <template v-for="room in rooms" :key="room.id">
-                <v-list-item>
-                  <template #prepend>
-                    <v-avatar
-                      color="primary"
-                      class="elevation-6"
-                      :image="getPhotoUrlByRoom(room)"
-                    ></v-avatar>
-                  </template>
-                  <v-list-item-title>
-                    <v-icon
-                      :color="room.isGroup ? 'info' : 'warning'"
-                      size="16"
-                      :icon="
-                        room.isGroup ? 'mdi-account-group' : 'mdi-account-key'
-                      "
-                    ></v-icon>
-                    {{ room.name }}
-                  </v-list-item-title>
-
-                  <v-list-item-subtitle>
-                    {{ room.isGroup ? 'Group' : 'Private' }}
-                  </v-list-item-subtitle>
-
-                  <template #append>
-                    <v-btn
-                      color="grey-lighten-1"
-                      icon="mdi-login-variant"
-                      variant="text"
-                      :to="{
-                        name: 'Messages:Room',
-                        params: { roomId: room.id },
-                      }"
-                    ></v-btn>
-                  </template>
-                </v-list-item>
+                <room-item :room="room"></room-item>
 
                 <v-divider inset></v-divider>
               </template>
@@ -92,17 +59,13 @@ import {
   IRoomResponse,
   ISearchRoomsRequest,
 } from '@/interfaces/rooms';
+import RoomItem from '@/views/Messages/RoomItem.vue';
+
+const socket = useSocketChat();
 
 const updateDrawerRooms = inject(KEYS.DRAWER.UPDATE_ROOMS)!;
 
 const rooms = ref<Array<IRoomResponse>>([]);
-const socket = useSocketChat();
-
-function getPhotoUrlByRoom(room: IRoomResponse) {
-  return room.photoUrl
-    ? `${import.meta.env.VITE_API_URL}/rooms/${room.id}/photo`
-    : import.meta.env.VITE_NO_BACKGROUND_URL;
-}
 
 const { request: requestRooms, isLoading: isLoadingRooms } =
   useSocketEventListener<{ rooms: Array<IRoomResponse> }, ISearchRoomsRequest>(

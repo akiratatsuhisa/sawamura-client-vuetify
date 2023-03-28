@@ -13,7 +13,7 @@
         @remove="(id) => removeMessage(id)"
       ></message-content>
 
-      <v-sheet class="text-center">
+      <v-sheet class="text-center mb-auto">
         <v-btn
           variant="plain"
           icon="mdi-arrow-up"
@@ -66,8 +66,10 @@
         max-rows="4"
         auto-grow
         hide-details
+        prepend-icon="mdi-file-send"
         append-inner-icon="mdi-emoticon-outline"
         append-icon="mdi-send"
+        @click:prepend="openFileDialog"
         @click:append-inner="emojiPickerShow = !emojiPickerShow"
         @click:append="sendMessage"
         @keypress.exact.enter.prevent="sendMessage"
@@ -91,7 +93,7 @@
 <script lang="ts" setup>
 import 'emoji-mart-vue-fast/css/emoji-mart.css';
 
-import { useDropZone } from '@vueuse/core';
+import { useDropZone, useFileDialog } from '@vueuse/core';
 import data from 'emoji-mart-vue-fast/data/twitter.json';
 // @ts-ignore
 import { EmojiIndex, Picker as EmojiPicker } from 'emoji-mart-vue-fast/src';
@@ -257,6 +259,18 @@ const { isOverDropZone: isOverDropMessage } = useDropZone(
   messageZoneRef,
   selectFiles,
 );
+
+const { files: selectFileDialog, open: openFileDialog } = useFileDialog({
+  multiple: true,
+});
+
+watch(selectFileDialog, (files) => {
+  if (!files?.length) {
+    return;
+  }
+
+  selectFiles(files);
+});
 
 const { request: requestCreateMessage } = useSocketEventListener<
   IRoomMessageResponse,
