@@ -5,14 +5,14 @@ import { KEYS } from '@/constants';
 
 import { useAuth } from './useAuth';
 
-export function initSocketChat() {
+export function initSocketDashboard() {
   const manager = inject(KEYS.MANAGER_SOCKETS)!;
 
   const { getAccessTokenSilently } = useAuth();
 
-  const socket = ref<Socket>(manager.socket('/chat'));
+  const socket = ref<Socket>(manager.socket('/dashboard'));
 
-  provide(KEYS.SOCKET_CHAT, socket);
+  provide(KEYS.SOCKET_DASHBOARD, socket);
 
   function connect() {
     console.debug(`client(${socket.value.id}) connected`);
@@ -51,11 +51,11 @@ export function initSocketChat() {
   return socket as Ref<Socket>;
 }
 
-export function useSocketChat() {
-  const socket = inject(KEYS.SOCKET_CHAT);
+export function useSocketDashboard() {
+  const socket = inject(KEYS.SOCKET_DASHBOARD);
 
   if (!socket) {
-    throw new Error('Socket chat has not been initialized');
+    throw new Error('Socket dashboard has not been initialized');
   }
 
   return socket;

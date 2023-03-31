@@ -122,6 +122,5 @@ function onOpen() {
 .cropper-wrapper {
   width: 100%;
   height: calc(100vh - 220px);
-  background: #ddd;
 }
 </style>

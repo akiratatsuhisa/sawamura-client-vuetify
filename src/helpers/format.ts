@@ -97,10 +97,18 @@ export namespace Format {
   }
 
   export function binaryUnit(
-    input: Decimal.Value,
+    data?: Decimal.Value,
     options?: { outputUnit?: BinaryUnit; inputUnit?: BinaryUnit },
   ): string {
-    const bytes = new Decimal(input);
+    if (_.isNil(data) || _.trim(String(data)) === '') {
+      return '';
+    }
+
+    if (_.isNaN(data)) {
+      return 'N/a';
+    }
+
+    const bytes = new Decimal(data);
 
     const { outputUnit = BinaryUnit.Byte, inputUnit = BinaryUnit.Byte } =
       options ?? {};

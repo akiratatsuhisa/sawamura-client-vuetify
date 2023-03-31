@@ -12,6 +12,9 @@ export namespace KEYS {
     Symbol('manager:sockets');
 
   export const SOCKET_CHAT: InjectionKey<Ref<Socket>> = Symbol('socket:chat');
+
+  export const SOCKET_DASHBOARD: InjectionKey<Ref<Socket>> =
+    Symbol('socket:dashboard');
   export namespace THEMES {
     export const IS_DARK: InjectionKey<ComputedRef<boolean>> =
       Symbol('theme:isDark');

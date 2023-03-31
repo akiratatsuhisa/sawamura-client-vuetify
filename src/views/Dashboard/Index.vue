@@ -24,22 +24,42 @@
 
       <v-row class="my-3">
         <v-col cols="12" sm="6" md="3">
-          <info-card v-bind="statisticalData.revenue">
-            <div class="text-h5 my-auto">
-              {{
-                Format.currency(statisticalData.revenue.value, {
-                  currency: 'VND',
+          <info-card v-bind="statisticalData.dropbox">
+            <v-progress-linear
+              height="24"
+              :model-value="statisticalData.dropbox.value"
+              :max="statisticalData.dropbox.max as number"
+              rounded="pill"
+              class="my-auto"
+            >
+              <template v-slot:default="{ value }">
+                <strong class="text-black text-overline">
+                  {{ value.toFixed(2) }} %
+                </strong>
+              </template>
+            </v-progress-linear>
+            <span class="text-caption text-end"
+              >{{
+                Format.binaryUnit(statisticalData.dropbox.value, {
+                  outputUnit: BinaryUnit.Gibibyte,
                 })
               }}
-            </div>
+              |
+              {{
+                Format.binaryUnit(statisticalData.dropbox.max as number, {
+                  outputUnit: BinaryUnit.Gibibyte,
+                })
+              }}</span
+            >
           </info-card>
         </v-col>
+
         <v-col cols="12" sm="6" md="3">
           <info-card v-bind="statisticalData.cache">
             <v-progress-linear
               height="24"
               :model-value="statisticalData.cache.value"
-              :max="MAX_CACHE"
+              :max="statisticalData.cache.max as number"
               rounded="pill"
               class="my-auto"
             >
@@ -57,18 +77,20 @@
               }}
               |
               {{
-                Format.binaryUnit(MAX_CACHE, {
+                Format.binaryUnit(statisticalData.cache.max as number, {
                   outputUnit: BinaryUnit.Gibibyte,
                 })
               }}</span
             >
           </info-card>
         </v-col>
+
+        <v-col cols="12" sm="6" md="3">
+          <info-card v-bind="statisticalData.posts"></info-card>
+        </v-col>
+
         <v-col cols="12" sm="6" md="3">
           <info-card v-bind="statisticalData.users"></info-card>
-        </v-col>
-        <v-col cols="12" sm="6" md="3">
-          <info-card v-bind="statisticalData.emails"></info-card>
         </v-col>
       </v-row>
 
@@ -82,16 +104,23 @@
 </template>
 
 <script lang="ts" setup>
+import { useIntervalFn } from '@vueuse/core';
 import _ from 'lodash';
 import { computed, reactive } from 'vue';
 import { useRoute } from 'vue-router';
 
+import { initSocketDashboard } from '@/composables/useSocketDashboard';
+import { useSocketEventListener } from '@/composables/useSocketEventListener';
 import { BinaryUnit, Format } from '@/helpers/format';
+import {
+  ICountUsersRequest,
+  ICountUsersResponse,
+  IStorageDropboxRequest,
+  IStorageDropboxResponse,
+} from '@/interfaces/dashboard';
 import InfoCard, { InfoCardProps } from '@/views/Dashboard/InfoCard.vue';
 
 import DefaultComponent from './Default.vue';
-
-const MAX_CACHE = 8_589_934_592;
 
 const route = useRoute();
 
@@ -102,34 +131,69 @@ const breadcrumbs = computed(() =>
     .value(),
 );
 
+const socket = initSocketDashboard();
+
 const statisticalData = reactive<
-  Record<'revenue' | 'cache' | 'users' | 'emails', InfoCardProps>
+  Record<
+    'dropbox' | 'cache' | 'posts' | 'users',
+    InfoCardProps & Record<string, unknown>
+  >
 >({
-  revenue: {
-    color: 'red',
-    icon: 'mdi-cash-multiple',
-    name: 'Revenue',
-    value: 100000000,
+  dropbox: {
+    color: 'blue',
+    icon: 'mdi-dropbox',
+    name: 'Dropbox Storage',
+    value: 0,
+    max: 0,
   },
   cache: {
     color: 'purple',
     icon: 'mdi-server',
-    name: 'Cache Files',
-    value: 4_294_967_296,
+    name: 'Cache Storage',
+    value: 0,
+    max: 8_589_934_592,
+  },
+  posts: {
+    color: 'yellow',
+    icon: 'mdi-post',
+    name: 'Posts',
+    value: 0,
   },
   users: {
     color: 'green',
     icon: 'mdi-account-group',
     name: 'Users',
-    value: 4544012,
-  },
-  emails: {
-    color: 'blue',
-    icon: 'mdi-email-multiple',
-    name: 'Sendgrid E-mail',
-    value: 53121,
+    value: 0,
   },
 });
+
+const { request: requestStorageDropbox } = useSocketEventListener<
+  IStorageDropboxResponse,
+  IStorageDropboxRequest
+>(socket, 'read:storage:dropbox', {
+  response(data) {
+    statisticalData.dropbox.value = data.used;
+    statisticalData.dropbox.max = data.allocated;
+  },
+});
+
+const { request: requestCountUsers } = useSocketEventListener<
+  ICountUsersResponse,
+  ICountUsersRequest
+>(socket, 'read:count:users', {
+  response(data) {
+    statisticalData.users.value = data.count;
+  },
+});
+
+useIntervalFn(
+  () => {
+    requestStorageDropbox({ data: null });
+    requestCountUsers({ data: null });
+  },
+  300000,
+  { immediateCallback: true },
+);
 </script>
 
 <style lang="scss" scoped>

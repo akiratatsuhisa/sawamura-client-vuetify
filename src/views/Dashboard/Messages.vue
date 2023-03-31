@@ -9,21 +9,39 @@
       <v-card>
         <v-toolbar density="compact" color="surface" elevation="1" class="mb-3">
           <v-app-bar-nav-icon
-            icon="mdi-chart-line"
-            @click="randomSeries"
+            :icon="isActive ? 'mdi-chart-line' : 'mdi-pause-circle-outline'"
+            @click="isActive ? pause() : resume()"
           ></v-app-bar-nav-icon>
-          <v-toolbar-title> Chart </v-toolbar-title>
+          <v-toolbar-title>Chart Messages</v-toolbar-title>
+          <v-progress-linear
+            v-if="isLoadingChartMessages"
+            absolute
+            location="bottom"
+            color="primary"
+            indeterminate
+          ></v-progress-linear>
         </v-toolbar>
-        <apexchart :options="options" :series="series"></apexchart>
+
+        <apexchart height="500" :options="options" :series="series"></apexchart>
       </v-card>
     </v-col>
   </v-row>
 </template>
 
 <script lang="ts" setup>
+import { useIntervalFn } from '@vueuse/core';
 import { ApexOptions } from 'apexcharts';
+import _ from 'lodash';
+import moment from 'moment';
 import { computed, ref } from 'vue';
 import { useTheme } from 'vuetify';
+
+import { useSocketDashboard } from '@/composables/useSocketDashboard';
+import { useSocketEventListener } from '@/composables/useSocketEventListener';
+import {
+  IChartMessgesRequest,
+  IChartMessgesResponse,
+} from '@/interfaces/dashboard';
 
 const theme = useTheme();
 
@@ -38,6 +56,7 @@ const options = computed<ApexOptions>(() => ({
   plotOptions: {
     bar: {
       horizontal: true,
+      borderRadius: 4,
       dataLabels: {
         position: 'center',
       },
@@ -47,31 +66,53 @@ const options = computed<ApexOptions>(() => ({
     theme.current.value.colors.primary,
     theme.current.value.colors.secondary,
   ],
-  dataLabels: {
-    style: {
-      colors: ['#fff'],
-    },
-  },
-  xaxis: {
-    categories: [2001, 2002, 2003, 2004, 2005, 2006, 2007],
+  stroke: {
+    show: true,
+    width: 1,
+    colors: [theme.current.value.dark ? 'dark' : 'light'],
   },
 }));
 
-const series = ref<Array<{ name: string; data: Array<number> }>>([
-  {
-    name: 'messages',
-    data: [44, 55, 41, 64, 22, 43, 21],
-  },
-  {
-    name: 'files',
-    data: [53, 32, 33, 52, 13, 44, 32],
-  },
-]);
+const series = ref<
+  Array<{ name: string; data: Array<{ x: string; y: number }> }>
+>([]);
 
-function randomSeries() {
-  series.value = series.value.map(({ name, data }) => ({
-    name: name,
-    data: data.map(() => Math.ceil(Math.random() * 100)),
-  }));
-}
+const socket = useSocketDashboard();
+
+const { isLoading: isLoadingChartMessages, request: requestChartMessages } =
+  useSocketEventListener<IChartMessgesResponse, IChartMessgesRequest>(
+    socket,
+    'chart:messages',
+    {
+      response({ records }) {
+        series.value = [
+          {
+            name: 'messages',
+            data: _.map(records, (data) => ({
+              x: data.label,
+              y: data.countMessages,
+            })),
+          },
+          {
+            name: 'files',
+            data: _.map(records, (data) => ({
+              x: data.label,
+              y: data.countFiles,
+            })),
+          },
+        ];
+      },
+    },
+  );
+
+const { isActive, pause, resume } = useIntervalFn(
+  () => {
+    requestChartMessages({
+      fromDate: moment().subtract(11, 'months').startOf('month').toISOString(),
+      toDate: moment().endOf('month').toISOString(),
+    });
+  },
+  300000,
+  { immediateCallback: true },
+);
 </script>

@@ -9,10 +9,17 @@
       <v-card>
         <v-toolbar density="compact" color="surface" elevation="1" class="mb-3">
           <v-app-bar-nav-icon
-            icon="mdi-chart-line"
-            @click="randomSeries"
+            :icon="isActive ? 'mdi-chart-donut' : 'mdi-pause-circle-outline'"
+            @click="isActive ? pause() : resume()"
           ></v-app-bar-nav-icon>
-          <v-toolbar-title> Chart </v-toolbar-title>
+          <v-toolbar-title>Chart User Roles</v-toolbar-title>
+          <v-progress-linear
+            v-if="isLoadingChartUserRoles"
+            absolute
+            location="bottom"
+            color="primary"
+            indeterminate
+          ></v-progress-linear>
         </v-toolbar>
         <apexchart :options="options" :series="series"></apexchart>
       </v-card>
@@ -21,44 +28,57 @@
 </template>
 
 <script lang="ts" setup>
+import { useIntervalFn } from '@vueuse/core';
 import { ApexOptions } from 'apexcharts';
+import _ from 'lodash';
 import { computed, ref } from 'vue';
 import { useTheme } from 'vuetify';
 
+import { useSocketDashboard } from '@/composables/useSocketDashboard';
+import { useSocketEventListener } from '@/composables/useSocketEventListener';
+import {
+  IChartUserRolesRequest,
+  IChartUserRolesResponse,
+} from '@/interfaces/dashboard';
+
 const theme = useTheme();
+
+const labels = ref<Array<string>>([]);
 
 const options = computed<ApexOptions>(() => ({
   chart: {
-    type: 'line',
+    type: 'donut',
     background: theme.current.value.colors.surface,
   },
   theme: {
     mode: theme.current.value.dark ? 'dark' : 'light',
   },
-  colors: [
-    theme.current.value.colors.secondary,
-    theme.current.value.colors.tertiary,
-  ],
-  xaxis: {
-    categories: [1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998],
-  },
+  labels: labels.value,
 }));
 
-const series = ref<Array<{ name: string; data: Array<number> }>>([
-  {
-    name: 'messages',
-    data: [44, 55, 41, 64, 22, 43, 21],
-  },
-  {
-    name: 'files',
-    data: [53, 32, 33, 52, 13, 44, 32],
-  },
-]);
+const series = ref<Array<number>>([]);
 
-function randomSeries() {
-  series.value = series.value.map(({ name, data }) => ({
-    name: name,
-    data: data.map(() => Math.ceil(Math.random() * 100)),
-  }));
-}
+const socket = useSocketDashboard();
+
+const { isLoading: isLoadingChartUserRoles, request: requestChartUserRoles } =
+  useSocketEventListener<IChartUserRolesResponse, IChartUserRolesRequest>(
+    socket,
+    'chart:userRoles',
+    {
+      response({ records }) {
+        labels.value = _.map(records, 'name');
+        series.value = _.map(records, 'count');
+      },
+    },
+  );
+
+const { isActive, pause, resume } = useIntervalFn(
+  () => {
+    requestChartUserRoles({
+      data: null,
+    });
+  },
+  300000,
+  { immediateCallback: true },
+);
 </script>
