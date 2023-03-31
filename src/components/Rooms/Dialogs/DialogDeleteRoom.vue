@@ -1,38 +1,28 @@
 <template>
-  <v-dialog
-    :width="$vuetify.display.smAndDown ? undefined : 500"
+  <base-dialog
+    mobile-width="500"
     :model-value="modelValue"
     @update:model-value="emit('update:modelValue', $event)"
-    :fullscreen="$vuetify.display.smAndDown"
+    @submit="onSubmit"
+    @open="onOpen"
   >
-    <v-card>
-      <v-toolbar color="surface" elevation="2">
-        <v-app-bar-nav-icon
-          :icon="$vuetify.display.smAndDown ? 'mdi-arrow-left' : 'mdi-close'"
-          @click="emit('update:modelValue', false)"
-        >
-        </v-app-bar-nav-icon>
+    <template #title>Room</template>
 
-        <v-toolbar-title>Room</v-toolbar-title>
-      </v-toolbar>
+    <span>Delete this room</span>
 
-      <v-card-text> Delete this room </v-card-text>
-      <v-card-actions>
-        <v-btn color="primary" block @click="onSubmit"> Delete </v-btn>
-      </v-card-actions>
-    </v-card>
-  </v-dialog>
+    <template #action>Delete</template>
+  </base-dialog>
 </template>
 
 <script lang="ts" setup>
 import { required } from '@vuelidate/validators';
-import { inject, reactive, watch } from 'vue';
+import { inject, reactive } from 'vue';
 
 import { useVuelidate } from '@/composables/useVuelidate';
 import { KEYS } from '@/constants';
 import { IDeleteRoomRequest } from '@/interfaces/rooms';
 
-const props = defineProps<{
+defineProps<{
   modelValue: boolean;
 }>();
 
@@ -61,17 +51,9 @@ const onSubmit = handleSubmit((data) => {
   emit('update:modelValue', false);
 });
 
-watch(
-  () => props.modelValue,
-  (current) => {
-    if (!current) {
-      return;
-    }
+function onOpen() {
+  form.id = room.value?.id ?? '';
 
-    form.id = room.value?.id ?? '';
-
-    v$.value.$reset();
-  },
-  { immediate: true },
-);
+  v$.value.$reset();
+}
 </script>

@@ -4,9 +4,10 @@
     :class="[isCurrentUserMessage ? 'flex-row-reverse' : 'flex-row']"
   >
     <v-avatar
-      class="align-self-end"
+      color="primary"
+      class="align-self-end elevation-4"
       size="28"
-      :image="`https://i.pravatar.cc/150?img=${index}`"
+      :image="photoUrl"
     >
     </v-avatar>
 
@@ -33,7 +34,11 @@
             {{ message.content }}
           </div>
           <div v-else-if="isFileType">
-            <div v-if="files.length" class="pa-1 files">
+            <div
+              v-if="files.length"
+              class="pa-1 files"
+              :class="[isCurrentUserMessage ? 'justify-end' : 'justify-start']"
+            >
               <message-file-content
                 v-for="file in files"
                 :key="file.uuid"
@@ -108,6 +113,14 @@ const isCurrentUserMessage = computed(
   () => identityId.value === props.message.user.id,
 );
 
+const photoUrl = computed(() =>
+  props.message.user.photoUrl
+    ? `${import.meta.env.VITE_API_URL}/auth/photo?username=${
+        props.message.user.username
+      }`
+    : import.meta.env.VITE_NO_AVATAR_URL,
+);
+
 const timeAgo = useTimeAgo(props.message.createdAt);
 
 const isFileType = computed(
@@ -147,6 +160,5 @@ const files = computed(() =>
   flex-direction: row;
   flex-wrap: wrap;
   gap: 0.5rem;
-  justify-content: end;
 }
 </style>

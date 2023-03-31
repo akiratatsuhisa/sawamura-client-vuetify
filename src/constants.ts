@@ -1,6 +1,7 @@
 import { AxiosInstance } from 'axios';
 import { Manager, Socket } from 'socket.io-client';
 import { ComputedRef, InjectionKey, Ref } from 'vue';
+import { RouteLocationNamedRaw } from 'vue-router';
 
 import { IRoomMemberResponse, IRoomResponse } from './interfaces/rooms';
 
@@ -11,6 +12,9 @@ export namespace KEYS {
     Symbol('manager:sockets');
 
   export const SOCKET_CHAT: InjectionKey<Ref<Socket>> = Symbol('socket:chat');
+
+  export const SOCKET_DASHBOARD: InjectionKey<Ref<Socket>> =
+    Symbol('socket:dashboard');
   export namespace THEMES {
     export const IS_DARK: InjectionKey<ComputedRef<boolean>> =
       Symbol('theme:isDark');
@@ -19,6 +23,9 @@ export namespace KEYS {
   export namespace DRAWER {
     export const SHOW: InjectionKey<Ref<boolean | null>> =
       Symbol('drawer:show');
+    export const IS_ACTIVE: InjectionKey<
+      (item: RouteLocationNamedRaw, prefix?: boolean) => boolean
+    > = Symbol('drawer:isActive');
     export const ROOMS: InjectionKey<Readonly<Ref<Array<IRoomResponse>>>> =
       Symbol('drawer:rooms');
     export const UPDATE_ROOMS: InjectionKey<
@@ -33,11 +40,13 @@ export namespace KEYS {
   }
 
   export namespace CHAT {
-    export const ROOM: InjectionKey<Ref<IRoomResponse | undefined>> =
-      Symbol('chat:room');
+    export const ROOM: InjectionKey<Ref<IRoomResponse>> = Symbol('chat:room');
     export const CURRENT_MEMBER: InjectionKey<
       Readonly<Ref<IRoomMemberResponse | undefined>>
     > = Symbol('chat:currentMember');
+    export const TARGET_MEMBER: InjectionKey<
+      Readonly<Ref<IRoomMemberResponse | undefined>>
+    > = Symbol('chat:targetMember');
   }
 }
 

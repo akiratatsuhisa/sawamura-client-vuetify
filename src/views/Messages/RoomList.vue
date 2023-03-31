@@ -14,6 +14,7 @@
               <v-card-title tag="h1">Messages</v-card-title>
               <v-spacer></v-spacer>
               <v-btn
+                variant="tonal"
                 class="ma-4"
                 prepend-icon="mdi-account-group"
                 @click="dialogCreateRoom = true"
@@ -26,37 +27,8 @@
             <v-list lines="one">
               <v-list-subheader tag="h2">Rooms</v-list-subheader>
 
-              <template v-for="(room, index) in rooms" :key="room.id">
-                <v-list-item
-                  :prependAvatar="`https://i.pravatar.cc/150?img=${index}`"
-                >
-                  <v-list-item-title>
-                    <v-icon
-                      :color="room.isGroup ? 'info' : 'warning'"
-                      size="16"
-                      :icon="
-                        room.isGroup ? 'mdi-account-group' : 'mdi-account-key'
-                      "
-                    ></v-icon>
-                    {{ room.name }}
-                  </v-list-item-title>
-
-                  <v-list-item-subtitle>
-                    {{ room.isGroup ? 'Group' : 'Private' }}
-                  </v-list-item-subtitle>
-
-                  <template #append>
-                    <v-btn
-                      color="grey-lighten-1"
-                      icon="mdi-login-variant"
-                      variant="text"
-                      :to="{
-                        name: 'Messages:Room',
-                        params: { roomId: room.id },
-                      }"
-                    ></v-btn>
-                  </template>
-                </v-list-item>
+              <template v-for="room in rooms" :key="room.id">
+                <room-item :room="room"></room-item>
 
                 <v-divider inset></v-divider>
               </template>
@@ -87,11 +59,13 @@ import {
   IRoomResponse,
   ISearchRoomsRequest,
 } from '@/interfaces/rooms';
+import RoomItem from '@/views/Messages/RoomItem.vue';
+
+const socket = useSocketChat();
 
 const updateDrawerRooms = inject(KEYS.DRAWER.UPDATE_ROOMS)!;
 
 const rooms = ref<Array<IRoomResponse>>([]);
-const socket = useSocketChat();
 
 const { request: requestRooms, isLoading: isLoadingRooms } =
   useSocketEventListener<{ rooms: Array<IRoomResponse> }, ISearchRoomsRequest>(

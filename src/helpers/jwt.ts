@@ -24,6 +24,8 @@ export namespace Jwt {
       birthDate: get(payload, 'birthDate') as string | null,
       salary: get(payload, 'salary', 'number') as number | null,
       roles: getAll(payload, 'roles') as Array<string> | null,
+      photoUrl: get(payload, 'photoUrl') as string | null,
+      coverUrl: get(payload, 'coverUrl') as string | null,
     };
   }
 

@@ -1,34 +1,23 @@
 <template>
-  <v-dialog
-    :width="$vuetify.display.smAndDown ? undefined : 500"
+  <base-dialog
+    mobile-width="500"
     :model-value="modelValue"
     @update:model-value="emit('update:modelValue', $event)"
-    :fullscreen="$vuetify.display.smAndDown"
+    @submit="onSubmit"
+    @open="onOpen"
   >
-    <v-card>
-      <v-toolbar color="surface" elevation="2">
-        <v-app-bar-nav-icon
-          :icon="$vuetify.display.smAndDown ? 'mdi-arrow-left' : 'mdi-close'"
-          @click="emit('update:modelValue', false)"
-        >
-        </v-app-bar-nav-icon>
+    <template #title>Room Member</template>
 
-        <v-toolbar-title>Room Member</v-toolbar-title>
-      </v-toolbar>
+    <span>{{ message }}</span>
 
-      <v-card-text> {{ message }} </v-card-text>
-
-      <v-card-actions>
-        <v-btn color="primary" block @click="onSubmit"> Delete </v-btn>
-      </v-card-actions>
-    </v-card>
-  </v-dialog>
+    <template #action>Delete</template>
+  </base-dialog>
 </template>
 
 <script lang="ts" setup>
 import { required } from '@vuelidate/validators';
 import _ from 'lodash';
-import { computed, inject, reactive, ref, watch } from 'vue';
+import { computed, inject, reactive, ref } from 'vue';
 
 import { useVuelidate } from '@/composables/useVuelidate';
 import { KEYS } from '@/constants';
@@ -43,6 +32,8 @@ const emit = defineEmits<{
   (event: 'update:modelValue', value: boolean): void;
   (event: 'submit', value: IDeleteRoomMemberRequest): void;
 }>();
+
+const message = ref('');
 
 const room = inject(KEYS.CHAT.ROOM)!;
 
@@ -70,37 +61,27 @@ const onSubmit = handleSubmit((data) => {
   emit('update:modelValue', false);
 });
 
-const message = ref('');
+function onOpen() {
+  const roomMember = _.find(
+    room.value?.roomMembers,
+    (roomMember) => roomMember.member.id === props.memberId,
+  );
 
-watch(
-  () => props.modelValue,
-  (current) => {
-    if (!current) {
-      return;
-    }
+  if (!roomMember) {
+    emit('update:modelValue', false);
+    return;
+  }
 
-    const roomMember = _.find(
-      room.value?.roomMembers,
-      (roomMember) => roomMember.member.id === props.memberId,
-    );
+  message.value =
+    currentMember.value?.id === roomMember.id
+      ? 'Do you want to out this group?'
+      : `Do you want to remove member ${
+          roomMember.nickName ?? roomMember.member.username
+        }?`;
 
-    if (!roomMember) {
-      emit('update:modelValue', false);
-      return;
-    }
+  form.memberId = roomMember.member.id;
+  form.roomId = room.value?.id ?? '';
 
-    message.value =
-      currentMember.value?.id === roomMember.id
-        ? 'Do you want to out this group?'
-        : `Do you want to remove member ${
-            roomMember.nickName ?? roomMember.member.username
-          }?`;
-
-    form.memberId = roomMember.member.id;
-    form.roomId = room.value?.id ?? '';
-
-    v$.value.$reset();
-  },
-  { immediate: true },
-);
+  v$.value.$reset();
+}
 </script>

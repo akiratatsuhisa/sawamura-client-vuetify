@@ -6,5 +6,9 @@ declare module 'vue-router' {
   interface RouteMeta {
     requiresAuth?: boolean;
     requiresRoles?: Array<string>;
+    breadcrumb?: {
+      title: string;
+      to: RouteLocationNamedRaw;
+    };
   }
 }

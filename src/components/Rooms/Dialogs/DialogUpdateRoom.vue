@@ -1,49 +1,36 @@
 <template>
-  <v-dialog
-    :width="$vuetify.display.smAndDown ? undefined : 500"
+  <base-dialog
+    mobile-width="500"
     :model-value="modelValue"
     @update:model-value="emit('update:modelValue', $event)"
-    :fullscreen="$vuetify.display.smAndDown"
+    :disabled-submit="!submitable"
+    @submit="onSubmit"
+    @open="onOpen"
   >
-    <v-card>
-      <v-toolbar color="surface" elevation="2">
-        <v-app-bar-nav-icon
-          :icon="$vuetify.display.smAndDown ? 'mdi-arrow-left' : 'mdi-close'"
-          @click="emit('update:modelValue', false)"
-        >
-        </v-app-bar-nav-icon>
+    <template #title>Room</template>
 
-        <v-toolbar-title>Room</v-toolbar-title>
-      </v-toolbar>
+    <v-text-field
+      class="mt-3"
+      label="Room name"
+      variant="outlined"
+      v-model="v$.name.$model"
+      :error-messages="getErrorMessage(v$.name)"
+      @blur="v$.name.$validate"
+    ></v-text-field>
 
-      <v-card-text>
-        <v-text-field
-          class="mt-3"
-          label="Room name"
-          variant="outlined"
-          v-model="v$.name.$model"
-          :error-messages="getErrorMessage(v$.name)"
-          @blur="v$.name.$validate"
-        ></v-text-field>
-      </v-card-text>
-      <v-card-actions>
-        <v-btn color="primary" block @click="onSubmit" :disabled="!submitable">
-          Edit
-        </v-btn>
-      </v-card-actions>
-    </v-card>
-  </v-dialog>
+    <template #action>Edit</template>
+  </base-dialog>
 </template>
 
 <script lang="ts" setup>
 import { maxLength, required } from '@vuelidate/validators';
-import { inject, reactive, watch } from 'vue';
+import { inject, reactive } from 'vue';
 
 import { getErrorMessage, useVuelidate } from '@/composables/useVuelidate';
 import { KEYS } from '@/constants';
 import { IUpdateRoomRequest } from '@/interfaces/rooms';
 
-const props = defineProps<{
+defineProps<{
   modelValue: boolean;
 }>();
 
@@ -77,18 +64,10 @@ const onSubmit = handleSubmit((data) => {
   emit('update:modelValue', false);
 });
 
-watch(
-  () => props.modelValue,
-  (current) => {
-    if (!current) {
-      return;
-    }
+function onOpen() {
+  form.id = room.value?.id ?? '';
+  form.name = room.value?.name ?? '';
 
-    form.id = room.value?.id ?? '';
-    form.name = room.value?.name ?? '';
-
-    v$.value.$reset();
-  },
-  { immediate: true },
-);
+  v$.value.$reset();
+}
 </script>

@@ -1,47 +1,33 @@
 <template>
-  <v-dialog
-    :width="$vuetify.display.smAndDown ? undefined : 500"
+  <base-dialog
+    mobile-width="500"
     :model-value="modelValue"
     @update:model-value="emit('update:modelValue', $event)"
-    :fullscreen="$vuetify.display.smAndDown"
+    :disabled-submit="!submitable"
+    @submit="onSubmit"
+    @open="onOpen"
   >
-    <v-card>
-      <v-toolbar color="surface" elevation="2">
-        <v-app-bar-nav-icon
-          :icon="$vuetify.display.smAndDown ? 'mdi-arrow-left' : 'mdi-close'"
-          @click="emit('update:modelValue', false)"
-        >
-        </v-app-bar-nav-icon>
+    <template #title>Room Member</template>
 
-        <v-toolbar-title>Room Member</v-toolbar-title>
-      </v-toolbar>
+    <v-text-field
+      class="mt-3"
+      label="Nickname"
+      variant="outlined"
+      v-model="v$.nickName.$model"
+      hint="click clear icon to clear nickname"
+      :error-messages="getErrorMessage(v$.nickName)"
+      @blur="v$.nickName.$validate"
+      clearable
+    ></v-text-field>
 
-      <v-card-text>
-        <v-text-field
-          class="mt-3"
-          label="Nickname"
-          variant="outlined"
-          v-model="v$.nickName.$model"
-          hint="click clear icon to clear nickname"
-          :error-messages="getErrorMessage(v$.nickName)"
-          @blur="v$.nickName.$validate"
-          clearable
-        ></v-text-field>
-      </v-card-text>
-
-      <v-card-actions>
-        <v-btn color="primary" block @click="onSubmit" :disabled="!submitable">
-          Edit
-        </v-btn>
-      </v-card-actions>
-    </v-card>
-  </v-dialog>
+    <template #action>Edit</template>
+  </base-dialog>
 </template>
 
 <script lang="ts" setup>
 import { maxLength, required, requiredIf } from '@vuelidate/validators';
 import _ from 'lodash';
-import { computed, inject, reactive, watch } from 'vue';
+import { computed, inject, reactive } from 'vue';
 
 import { getErrorMessage, useVuelidate } from '@/composables/useVuelidate';
 import { KEYS } from '@/constants';
@@ -87,29 +73,21 @@ const onSubmit = handleSubmit((data) => {
   emit('update:modelValue', false);
 });
 
-watch(
-  () => props.modelValue,
-  (current) => {
-    if (!current) {
-      return;
-    }
+function onOpen() {
+  const roomMember = _.find(
+    room.value?.roomMembers,
+    (roomMember) => roomMember.member.id === props.memberId,
+  );
 
-    const roomMember = _.find(
-      room.value?.roomMembers,
-      (roomMember) => roomMember.member.id === props.memberId,
-    );
+  if (!roomMember) {
+    emit('update:modelValue', false);
+    return;
+  }
 
-    if (!roomMember) {
-      emit('update:modelValue', false);
-      return;
-    }
+  form.memberId = roomMember.member.id;
+  form.roomId = room.value?.id ?? '';
+  form.nickName = roomMember.nickName;
 
-    form.memberId = roomMember.member.id;
-    form.roomId = room.value?.id ?? '';
-    form.nickName = roomMember.nickName;
-
-    v$.value.$reset();
-  },
-  { immediate: true },
-);
+  v$.value.$reset();
+}
 </script>

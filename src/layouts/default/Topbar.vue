@@ -6,14 +6,25 @@
 
     <v-menu :close-on-content-click="false">
       <template v-slot:activator="{ props }">
-        <v-btn icon="mdi-account-circle" v-bind="props"></v-btn>
+        <v-btn icon v-bind="props">
+          <v-avatar
+            color="primary"
+            class="elevation-6"
+            :image="photoUrl"
+            v-bind="props"
+          ></v-avatar>
+        </v-btn>
       </template>
 
       <v-list>
-        <v-list-item
-          prepend-avatar="https://randomuser.me/api/portraits/men/85.jpg"
-          @click="router.push({ name: 'Profile' })"
-        >
+        <v-list-item @click="router.push({ name: 'Profile' })">
+          <template #prepend>
+            <v-avatar
+              color="primary"
+              class="elevation-6"
+              :image="photoUrl"
+            ></v-avatar>
+          </template>
           <v-list-item-title v-if="user?.lastName || user?.lastName">
             {{ user?.lastName }} {{ user?.firstName }}
           </v-list-item-title>
@@ -27,7 +38,7 @@
 
         <v-divider class="my-2"></v-divider>
 
-        <v-list-item @click="isDark = !isDark">
+        <v-list-item>
           <v-list-item-title>
             <v-switch
               color="primary"
@@ -75,7 +86,7 @@ const drawer = inject(KEYS.DRAWER.SHOW);
 
 const router = useRouter();
 
-const { logout, user } = useAuth();
+const { logout, user, photoUrl } = useAuth();
 
 const theme = useTheme();
 

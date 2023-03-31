@@ -1,66 +1,45 @@
 <template>
-  <v-dialog
-    :width="$vuetify.display.smAndDown ? undefined : 500"
+  <base-dialog
+    mobile-width="500"
     :model-value="modelValue"
     @update:model-value="emit('update:modelValue', $event)"
-    :fullscreen="$vuetify.display.smAndDown"
+    :disabled-submit="!submitable"
+    @submit="onSubmit"
+    @open="onOpen"
   >
-    <v-card>
-      <v-toolbar color="surface" elevation="2">
-        <v-app-bar-nav-icon
-          :icon="$vuetify.display.smAndDown ? 'mdi-arrow-left' : 'mdi-close'"
-          @click="emit('update:modelValue', false)"
-        >
-        </v-app-bar-nav-icon>
+    <template #title>Room Member</template>
 
-        <v-toolbar-title>Room Member</v-toolbar-title>
-      </v-toolbar>
+    <v-autocomplete
+      class="mt-3"
+      v-model="v$.member.$model"
+      v-model:search="userSearch"
+      :loading="isLoadingSearch"
+      variant="outlined"
+      label="Member"
+      :items="usersResult"
+      item-title="username"
+      return-object
+      hide-no-data
+      :error-messages="getErrorMessage(v$.member)"
+      @blur="v$.member.$validate"
+    >
+      <template v-slot:item="{ props, item }">
+        <v-list-item v-bind="props" :title="item?.raw?.username"></v-list-item>
+      </template>
+    </v-autocomplete>
 
-      <v-card-text>
-        <v-autocomplete
-          class="mt-3"
-          v-model="v$.member.$model"
-          v-model:search="userSearch"
-          :loading="isLoadingSearch"
-          variant="outlined"
-          label="Member"
-          :items="usersResult"
-          item-title="username"
-          return-object
-          hide-no-data
-          :error-messages="getErrorMessage(v$.member)"
-          @blur="v$.member.$validate"
-        >
-          <template v-slot:item="{ props, item }">
-            <v-list-item
-              v-bind="props"
-              :title="item?.raw?.username"
-            ></v-list-item>
-          </template>
-        </v-autocomplete>
+    <v-radio-group
+      label="Role"
+      v-model="v$.role.$model"
+      :error-messages="getErrorMessage(v$.role)"
+      @blur="v$.role.$validate"
+    >
+      <v-radio label="Moderator" value="Moderator" :error="v$.role.$error" />
+      <v-radio label="Member" value="Member" :error="v$.role.$error" />
+    </v-radio-group>
 
-        <v-radio-group
-          label="Role"
-          v-model="v$.role.$model"
-          :error-messages="getErrorMessage(v$.role)"
-          @blur="v$.role.$validate"
-        >
-          <v-radio
-            label="Moderator"
-            value="Moderator"
-            :error="v$.role.$error"
-          />
-          <v-radio label="Member" value="Member" :error="v$.role.$error" />
-        </v-radio-group>
-      </v-card-text>
-
-      <v-card-actions>
-        <v-btn color="primary" block @click="onSubmit" :disabled="!submitable">
-          Add
-        </v-btn>
-      </v-card-actions>
-    </v-card>
-  </v-dialog>
+    <template #action>Add</template>
+  </base-dialog>
 </template>
 
 <script lang="ts" setup>
@@ -79,7 +58,7 @@ import { ICreateRoomMemberRequest } from '@/interfaces/rooms';
 import { ISearchUsersRequest, IUserResponse } from '@/interfaces/users';
 import { services } from '@/services';
 
-const props = defineProps<{
+defineProps<{
   modelValue: boolean;
 }>();
 
@@ -117,12 +96,12 @@ const [v$, { handleSubmit, submitable }] = useVuelidate(
 );
 
 const onSubmit = handleSubmit((formData) => {
-  console.log(formData);
   const data: ICreateRoomMemberRequest = {
     roomId: formData.roomId,
     role: formData.role,
     memberId: formData.member?.id ?? '',
   };
+
   emit('submit', data);
   emit('update:modelValue', false);
 });
@@ -151,22 +130,14 @@ watch(userSearch, (search) => {
   debounceExcuteSearchUsers({ search });
 });
 
-watch(
-  () => props.modelValue,
-  (current) => {
-    if (!current) {
-      return;
-    }
+function onOpen() {
+  userSearch.value = '';
+  usersResult.value = [];
 
-    userSearch.value = '';
-    usersResult.value = [];
+  form.roomId = room.value?.id ?? setFieldData<string>(undefined);
+  form.member = null;
+  form.role = setFieldData<string>(undefined);
 
-    form.roomId = room.value?.id ?? setFieldData<string>(undefined);
-    form.member = null;
-    form.role = setFieldData<string>(undefined);
-
-    v$.value.$reset();
-  },
-  { immediate: true },
-);
+  v$.value.$reset();
+}
 </script>

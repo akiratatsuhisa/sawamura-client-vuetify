@@ -1,12 +1,12 @@
 // Composables
-import { createRouter, createWebHistory } from 'vue-router';
+import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router';
 
 import { useAuth } from '@/composables/useAuth';
 
-const routes = [
+const routes: Array<RouteRecordRaw> = [
   {
     path: '/',
-    component: () => import('@/layouts/default/Index.vue'),
+    component: () => import('@/layouts/Default/Index.vue'),
     children: [
       {
         path: '',
@@ -14,46 +14,43 @@ const routes = [
         // route level code-splitting
         // this generates a separate chunk (about.[hash].js) for this route
         // which is lazy-loaded when the route is visited.
+        meta: { requiresAuth: true },
         component: () =>
           import(/* webpackChunkName: "home" */ '@/views/Home.vue'),
-        meta: { requiresAuth: true },
       },
       {
         path: 'messages',
-        template: '<route-view></route-view>',
         children: [
           {
             path: '',
             name: 'Messages',
-            // route level code-splitting
-            // this generates a separate chunk (about.[hash].js) for this route
-            // which is lazy-loaded when the route is visited.
+            meta: { requiresAuth: true },
             component: () =>
               import(
-                /* webpackChunkName: "messages" */ '@/views/Messages/Index.vue'
+                /* webpackChunkName: "messages" */ '@/views/Messages/RoomList.vue'
               ),
-            meta: { requiresAuth: true },
           },
           {
             path: ':roomId',
             name: 'Messages:Room',
-            // route level code-splitting
-            // this generates a separate chunk (about.[hash].js) for this route
-            // which is lazy-loaded when the route is visited.
+            meta: { requiresAuth: true },
             component: () =>
               import(
-                /* webpackChunkName: "messages" */ '@/views/Messages/Room.vue'
+                /* webpackChunkName: "messages" */ '@/views/Messages/RoomContent.vue'
               ),
-            meta: { requiresAuth: true },
           },
         ],
       },
       {
         path: 'dashboard',
         name: 'Dashboard',
-        // route level code-splitting
-        // this generates a separate chunk (about.[hash].js) for this route
-        // which is lazy-loaded when the route is visited.
+        meta: {
+          requiresAuth: true,
+          breadcrumb: {
+            title: 'Dashboard',
+            to: { name: 'Dashboard' },
+          },
+        },
         component: () =>
           import(
             /* webpackChunkName: "dashboard" */ '@/views/Dashboard/Index.vue'
@@ -62,75 +59,84 @@ const routes = [
           {
             path: 'users',
             name: 'Dashboard:Users',
-            // route level code-splitting
-            // this generates a separate chunk (about.[hash].js) for this route
-            // which is lazy-loaded when the route is visited.
+            meta: {
+              requiresAuth: true,
+              breadcrumb: {
+                title: 'Users',
+                to: { name: 'Dashboard:Users' },
+              },
+            },
             component: () =>
               import(
                 /* webpackChunkName: "dashboard" */ '@/views/Dashboard/Users.vue'
               ),
-            meta: { requiresAuth: true },
           },
           {
             path: 'messages',
             name: 'Dashboard:Messages',
-            // route level code-splitting
-            // this generates a separate chunk (about.[hash].js) for this route
-            // which is lazy-loaded when the route is visited.
+            meta: {
+              requiresAuth: true,
+              breadcrumb: {
+                title: 'Messages',
+                to: { name: 'Dashboard:Messages' },
+              },
+            },
             component: () =>
               import(
                 /* webpackChunkName: "dashboard" */ '@/views/Dashboard/Messages.vue'
               ),
-            meta: { requiresAuth: true },
           },
         ],
       },
       {
         path: 'profile',
         name: 'Profile',
-        // route level code-splitting
-        // this generates a separate chunk (about.[hash].js) for this route
-        // which is lazy-loaded when the route is visited.
+        meta: { requiresAuth: true },
+        component: () =>
+          import(/* webpackChunkName: "auth" */ '@/views/Auth/Profile.vue'),
+      },
+      {
+        path: 'profile/photo',
+        name: 'Profile:Photo',
+        meta: { requiresAuth: true },
+        component: () =>
+          import(/* webpackChunkName: "auth" */ '@/views/Auth/Profile.vue'),
+      },
+      {
+        path: 'profile/cover',
+        name: 'Profile:Cover',
+        meta: { requiresAuth: true },
         component: () =>
           import(/* webpackChunkName: "auth" */ '@/views/Auth/Profile.vue'),
       },
       {
         path: 'users/:id',
         name: 'Users:Detail',
+        meta: { requiresAuth: true },
         component: () =>
           import(/* webpackChunkName: "users" */ '@/views/Users/Detail.vue'),
-        meta: { requiresAuth: true },
       },
     ],
   },
   {
     path: '/',
-    component: () => import('@/layouts/auth/Index.vue'),
+    component: () => import('@/layouts/Auth/Index.vue'),
     children: [
       {
         path: 'login',
         name: 'Login',
-        // route level code-splitting
-        // this generates a separate chunk (about.[hash].js) for this route
-        // which is lazy-loaded when the route is visited.
         component: () =>
           import(/* webpackChunkName: "auth" */ '@/views/Auth/Login.vue'),
       },
       {
         path: 'register',
         name: 'Register',
-        // route level code-splitting
-        // this generates a separate chunk (about.[hash].js) for this route
-        // which is lazy-loaded when the route is visited.
         component: () =>
           import(/* webpackChunkName: "auth" */ '@/views/Auth/Register.vue'),
       },
       {
         path: 'forgotPassword',
         name: 'ForgotPassword',
-        // route level code-splitting
-        // this generates a separate chunk (about.[hash].js) for this route
-        // which is lazy-loaded when the route is visited.
         component: () =>
           import(
             /* webpackChunkName: "auth" */ '@/views/Auth/ForgotPassword.vue'
@@ -139,9 +145,6 @@ const routes = [
       {
         path: 'resetPassword',
         name: 'ResetPassword',
-        // route level code-splitting
-        // this generates a separate chunk (about.[hash].js) for this route
-        // which is lazy-loaded when the route is visited.
         component: () =>
           import(
             /* webpackChunkName: "auth" */ '@/views/Auth/ResetPassword.vue'
