@@ -7,12 +7,28 @@
     </v-col>
     <v-col cols="12" sm="12" md="5" lg="4">
       <v-card>
-        <v-toolbar density="compact" color="surface" elevation="1" class="mb-3">
-          <v-app-bar-nav-icon
+        <v-toolbar
+          density="compact"
+          color="surface"
+          elevation="3"
+          :class="[isExpand && 'mb-3']"
+        >
+          <v-btn
+            size="small"
             :icon="isActive ? 'mdi-chart-donut' : 'mdi-pause-circle-outline'"
             @click="isActive ? pause() : resume()"
-          ></v-app-bar-nav-icon>
+          ></v-btn>
+
           <v-toolbar-title>Chart User Roles</v-toolbar-title>
+
+          <v-spacer></v-spacer>
+
+          <v-btn
+            size="small"
+            :icon="isExpand ? 'mdi-chevron-down' : 'mdi-chevron-up'"
+            @click="isExpand = !isExpand"
+          ></v-btn>
+
           <v-progress-linear
             v-if="isLoadingChartUserRoles"
             absolute
@@ -21,7 +37,12 @@
             indeterminate
           ></v-progress-linear>
         </v-toolbar>
-        <apexchart :options="options" :series="series"></apexchart>
+
+        <apexchart
+          v-if="isExpand"
+          :options="options"
+          :series="series"
+        ></apexchart>
       </v-card>
     </v-col>
   </v-row>
@@ -42,6 +63,8 @@ import {
 } from '@/interfaces/dashboard';
 
 const theme = useTheme();
+
+const isExpand = ref<boolean>(true);
 
 const labels = ref<Array<string>>([]);
 
