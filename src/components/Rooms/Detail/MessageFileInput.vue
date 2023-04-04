@@ -3,7 +3,7 @@
     <template v-slot:default="{ isHovering, props }">
       <v-badge v-bind="props" color="primary" class="cursor-pointer">
         <template #badge>
-          <v-icon icon="mdi-close" @click="emit('remove-file', file.id)" />
+          <v-icon icon="mdi-close" @click="emit('removeFile', file.id)" />
         </template>
 
         <v-card
