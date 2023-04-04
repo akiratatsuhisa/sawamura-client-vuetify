@@ -15,6 +15,11 @@ export namespace KEYS {
 
   export const SOCKET_DASHBOARD: InjectionKey<Ref<Socket>> =
     Symbol('socket:dashboard');
+
+  export const SOCKET_NOTIFICATIONS: InjectionKey<Ref<Socket>> = Symbol(
+    'socket:notifications',
+  );
+
   export namespace THEMES {
     export const IS_DARK: InjectionKey<ComputedRef<boolean>> =
       Symbol('theme:isDark');

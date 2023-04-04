@@ -85,10 +85,7 @@ export interface IDeleteRoomMemberRequest {
 export interface IRoomMessageResponse {
   id: string;
   createdAt: string;
-  room: {
-    id: string;
-    roomMembers: Array<{ memberId: string }>;
-  };
+  room: IRoomResponse;
   type: string;
   content: any;
   user: IRoomUserResponse;

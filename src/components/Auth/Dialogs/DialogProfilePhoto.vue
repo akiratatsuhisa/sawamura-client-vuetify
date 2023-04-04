@@ -69,6 +69,8 @@ const { fetchAccessToken, updateImage } = useAuth();
 
 const submitable = ref(false);
 
+const imageCropperSrc = ref<string | null>(null);
+
 const {
   files: selectFiles,
   open,
@@ -86,8 +88,6 @@ watch(selectFiles, (files) => {
 
   imageCropperSrc.value = URL.createObjectURL(file);
 });
-
-const imageCropperSrc = ref<string | null>(null);
 
 const cropperRef = ref<InstanceType<typeof Cropper>>();
 
