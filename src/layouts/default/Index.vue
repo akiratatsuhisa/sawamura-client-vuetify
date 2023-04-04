@@ -13,6 +13,7 @@ import { useLocalStorage } from '@vueuse/core';
 import { provide, readonly, ref } from 'vue';
 
 import { initSocketChat } from '@/composables/useSocketChat';
+import { initSocketNotifications } from '@/composables/useSocketNotifications';
 import { KEYS } from '@/constants';
 import { IRoomResponse } from '@/interfaces/rooms';
 
@@ -29,4 +30,5 @@ provide(KEYS.DRAWER.UPDATE_ROOMS, (data) => {
 });
 
 initSocketChat();
+initSocketNotifications();
 </script>

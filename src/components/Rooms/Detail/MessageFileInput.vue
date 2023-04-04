@@ -45,7 +45,7 @@ import { KEYS } from '@/constants';
 import { BasicFile } from '@/interfaces/rooms';
 
 defineProps<{ file: BasicFile }>();
-const emit = defineEmits<{ (event: 'remove-file', id: string): void }>();
+const emit = defineEmits<{ (event: 'removeFile', id: string): void }>();
 
 const isDark = inject(KEYS.THEMES.IS_DARK)!;
 </script>

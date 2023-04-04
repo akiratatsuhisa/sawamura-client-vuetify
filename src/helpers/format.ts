@@ -21,16 +21,6 @@ export enum BinaryUnit {
 }
 
 export namespace Format {
-  export function date(
-    data: dateTimeDataType,
-    options?: { locales?: localesType; dateStyle?: dateTimeStyle },
-  ) {
-    return dateTime(data, {
-      dateStyle: options?.dateStyle ?? 'long',
-      timeStyle: undefined,
-    });
-  }
-
   export function dateTime(
     data: dateTimeDataType,
     options?: {
@@ -57,6 +47,16 @@ export namespace Format {
       timeStyle,
       timeZone,
     }).format(data);
+  }
+
+  export function date(
+    data: dateTimeDataType,
+    options?: { locales?: localesType; dateStyle?: dateTimeStyle },
+  ) {
+    return dateTime(data, {
+      dateStyle: options?.dateStyle ?? 'long',
+      timeStyle: undefined,
+    });
   }
 
   export function number(

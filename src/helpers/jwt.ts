@@ -4,31 +4,6 @@ import _ from 'lodash';
 type ParseType = 'string' | 'number' | 'boolean' | 'object';
 
 export namespace Jwt {
-  export function parseUser(token?: string) {
-    if (!token) {
-      return null;
-    }
-
-    const payload = decode(token) as Record<string, unknown>;
-
-    if (!payload) {
-      return null;
-    }
-
-    return {
-      id: get(payload, 'sub') as string | null,
-      username: get(payload, 'username') as string | null,
-      email: get(payload, 'email') as string | null,
-      firstName: get(payload, 'firstName') as string | null,
-      lastName: get(payload, 'lastName') as string | null,
-      birthDate: get(payload, 'birthDate') as string | null,
-      salary: get(payload, 'salary', 'number') as number | null,
-      roles: getAll(payload, 'roles') as Array<string> | null,
-      photoUrl: get(payload, 'photoUrl') as string | null,
-      coverUrl: get(payload, 'coverUrl') as string | null,
-    };
-  }
-
   export function getExpires(token?: string) {
     if (!token) {
       return null;
@@ -106,5 +81,30 @@ export namespace Jwt {
     }
 
     return _.map(data, (value) => parseData(value, type));
+  }
+
+  export function parseUser(token?: string) {
+    if (!token) {
+      return null;
+    }
+
+    const payload = decode(token) as Record<string, unknown>;
+
+    if (!payload) {
+      return null;
+    }
+
+    return {
+      id: get(payload, 'sub') as string | null,
+      username: get(payload, 'username') as string | null,
+      email: get(payload, 'email') as string | null,
+      firstName: get(payload, 'firstName') as string | null,
+      lastName: get(payload, 'lastName') as string | null,
+      birthDate: get(payload, 'birthDate') as string | null,
+      salary: get(payload, 'salary', 'number') as number | null,
+      roles: getAll(payload, 'roles') as Array<string> | null,
+      photoUrl: get(payload, 'photoUrl') as string | null,
+      coverUrl: get(payload, 'coverUrl') as string | null,
+    };
   }
 }
