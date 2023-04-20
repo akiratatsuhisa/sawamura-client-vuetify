@@ -104,8 +104,8 @@ import {
   computed,
   inject,
   nextTick,
-  reactive,
   ref,
+  shallowReactive,
   watch,
 } from 'vue';
 import { useRoute } from 'vue-router';
@@ -206,7 +206,7 @@ async function selectEmoji(params: { native: string }) {
   messageTextAreaElement.value!.focus();
 }
 
-const filesInput = reactive<Array<BasicFile>>([]);
+const filesInput = shallowReactive<Array<BasicFile>>([]);
 
 function selectFiles(files?: FileList | File[] | null) {
   _.forEach(files, (file) => {
@@ -251,6 +251,13 @@ function pasteMessage(event: ClipboardEvent) {
 }
 
 function removeFile(id: string) {
+  const file = _.find(filesInput, (file) => file.id === id);
+
+  if (!file) {
+    return;
+  }
+
+  URL.revokeObjectURL(file.src);
   _.remove(filesInput, (file) => file.id === id);
 }
 
@@ -260,7 +267,11 @@ const { isOverDropZone: isOverDropMessage } = useDropZone(
   selectFiles,
 );
 
-const { files: selectFileDialog, open: openFileDialog } = useFileDialog({
+const {
+  files: selectFileDialog,
+  open: openFileDialog,
+  reset: resetFileDialog,
+} = useFileDialog({
   multiple: true,
 });
 
@@ -270,6 +281,7 @@ watch(selectFileDialog, (files) => {
   }
 
   selectFiles(files);
+  resetFileDialog();
 });
 
 const { request: requestCreateMessage } = useSocketEventListener<
@@ -305,6 +317,9 @@ function sendMessage() {
         })),
   });
 
+  if (filesInput.length) {
+    _.forEach(filesInput, (file) => URL.revokeObjectURL(file.src));
+  }
   filesInput.splice(0, filesInput.length);
   messageInput.value = '';
 }

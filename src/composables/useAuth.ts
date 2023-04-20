@@ -1,4 +1,4 @@
-import { useLocalStorage } from '@vueuse/core';
+import { createSharedComposable, useLocalStorage } from '@vueuse/core';
 import axios, { AxiosRequestConfig } from 'axios';
 import _ from 'lodash';
 import moment from 'moment';
@@ -13,7 +13,7 @@ import {
 } from '@/interfaces/auth';
 import { config } from '@/services';
 
-export function useAuth() {
+export const useAuth = createSharedComposable(() => {
   const accessToken = useLocalStorage('accessToken', '');
   const refreshToken = useLocalStorage('refreshToken', '');
 
@@ -155,4 +155,4 @@ export function useAuth() {
     coverUrl,
     updateImage,
   };
-}
+});

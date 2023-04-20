@@ -1,15 +1,8 @@
-import { inject, provide, reactive } from 'vue';
+import { createSharedComposable } from '@vueuse/core';
+import { reactive } from 'vue';
 
-import { KEYS } from '@/constants';
-
-export function initNotification() {
+export const useNotification = createSharedComposable(() => {
   const queue = reactive<Array<unknown>>([]);
-
-  provide(KEYS.SNACKBAR.QUEUE, queue);
-}
-
-export function useNotification() {
-  const queue = inject(KEYS.SNACKBAR.QUEUE)!;
 
   function enqueue() {}
 
@@ -20,4 +13,4 @@ export function useNotification() {
     enqueue,
     dequeue,
   };
-}
+});

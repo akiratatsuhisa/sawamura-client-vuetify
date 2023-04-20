@@ -17,7 +17,7 @@
           :key="notification.id"
           :item="notification"
           @update="(payload) => requestUpdateNotification(payload)"
-          @delete="(payload) => requestDeleteNotification(payload)"
+          @delete="(payload) => (selectedId = payload.id)"
         >
         </notification-list-item>
       </v-list>
@@ -29,11 +29,21 @@
       </v-card-actions>
     </v-card>
   </v-menu>
+
+  <v-dialog :model-value="hasSelectedId" width="auto" persistent>
+    <v-card>
+      <v-card-text>Do you want to delete this notification?</v-card-text>
+      <v-card-actions class="justify-end">
+        <v-btn color="primary" @click="selectedId = undefined">Cancel</v-btn>
+        <v-btn color="primary" @click="onSubmitDelete">Agree</v-btn>
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
 </template>
 
 <script lang="ts" setup>
 import _ from 'lodash';
-import { inject, ref, watch } from 'vue';
+import { computed, inject, ref, watch } from 'vue';
 
 import { useSocketEventListener } from '@/composables/useSocketEventListener';
 import { useSocketNotifications } from '@/composables/useSocketNotifications';
@@ -128,4 +138,14 @@ watch(
   },
   { immediate: true, deep: true },
 );
+
+const selectedId = ref<string>();
+const hasSelectedId = computed(() => !_.isUndefined(selectedId.value));
+
+function onSubmitDelete() {
+  if (!_.isUndefined(selectedId.value)) {
+    requestDeleteNotification({ id: selectedId.value });
+  }
+  selectedId.value = undefined;
+}
 </script>

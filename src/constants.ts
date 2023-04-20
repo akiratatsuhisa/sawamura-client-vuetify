@@ -37,12 +37,6 @@ export namespace KEYS {
       (data: Array<IRoomResponse>) => void
     > = Symbol('drawer:updateRooms');
   }
-  export namespace SNACKBAR {
-    export const QUEUE: InjectionKey<Array<object>> = Symbol('snackbar:queue');
-    export const CURRENT: InjectionKey<Ref<object>> =
-      Symbol('snackbar:current');
-    export const SHOW: InjectionKey<Ref<boolean>> = Symbol('snackbar:show');
-  }
 
   export namespace CHAT {
     export const ROOM: InjectionKey<Ref<IRoomResponse>> = Symbol('chat:room');

@@ -19,7 +19,7 @@
           ></v-progress-circular>
         </div>
         <div
-          v-else-if="!isLoading && !src"
+          v-else-if="!isLoading && !fileBlob"
           class="h-100 d-flex justify-center align-center"
           :class="[isDark ? 'bg-grey-darken-3' : 'bg-grey-lighten-3']"
         >
@@ -33,10 +33,15 @@
           />
         </div>
         <template v-else>
-          <a hidden :href="src" :download="file.name" ref="linkDownloadRef"></a>
+          <a
+            hidden
+            :href="fileSrc"
+            :download="file.name"
+            ref="linkDownloadRef"
+          ></a>
 
           <template v-if="isImage">
-            <img :src="src" class="d-block" />
+            <img :src="fileSrc" class="d-block" />
 
             <v-overlay
               :model-value="isHovering"
@@ -81,8 +86,9 @@
 </template>
 
 <script lang="ts" setup>
+import { useObjectUrl } from '@vueuse/core';
 import _ from 'lodash';
-import { computed, inject, onMounted, ref } from 'vue';
+import { computed, inject, onMounted, ref, shallowRef } from 'vue';
 
 import { useAuth } from '@/composables/useAuth';
 import { KEYS } from '@/constants';
@@ -99,13 +105,14 @@ const props = defineProps<{
 const isDark = inject(KEYS.THEMES.IS_DARK)!;
 
 const isLoading = ref(true);
-const src = ref('');
+const fileBlob = shallowRef<Blob>();
+const fileSrc = useObjectUrl(fileBlob);
+
+const fileType = computed(() => 'file-' + _.lowerCase(props.type));
 
 const isImage = computed(() =>
   _.some(['Image', 'Images'], (type) => props.type === type),
 );
-
-const fileType = computed(() => 'file-' + _.lowerCase(props.type));
 
 onMounted(async () => {
   if (!props.file.mime || !props.file.pathDisplay) {
@@ -124,10 +131,9 @@ onMounted(async () => {
       },
     });
 
-    const blob = new Blob([data], { type: mime });
-    src.value = URL.createObjectURL(blob);
+    fileBlob.value = new Blob([data], { type: mime });
   } catch {
-    src.value = '';
+    fileBlob.value = undefined;
   } finally {
     isLoading.value = false;
   }

@@ -42,8 +42,8 @@
 import 'vue-advanced-cropper/dist/style.css';
 import 'vue-advanced-cropper/dist/theme.compact.css';
 
-import { useFileDialog } from '@vueuse/core';
-import { ref, watch } from 'vue';
+import { useFileDialog, useObjectUrl } from '@vueuse/core';
+import { ref, shallowRef, watch } from 'vue';
 import { Cropper, RectangleStencil } from 'vue-advanced-cropper';
 
 import { useAuth } from '@/composables/useAuth';
@@ -64,7 +64,8 @@ const { fetchAccessToken, updateImage } = useAuth();
 
 const submitable = ref(false);
 
-const imageCropperSrc = ref<string | null>(null);
+const imageFile = shallowRef<File>();
+const imageCropperSrc = useObjectUrl(imageFile);
 
 const {
   files: selectFiles,
@@ -81,7 +82,7 @@ watch(selectFiles, (files) => {
     return;
   }
 
-  imageCropperSrc.value = URL.createObjectURL(file);
+  imageFile.value = file;
 });
 
 const cropperRef = ref<InstanceType<typeof Cropper>>();
@@ -113,7 +114,7 @@ async function onSubmit() {
 
 function onOpen() {
   reset();
-  imageCropperSrc.value = null;
+  imageFile.value = undefined;
   submitable.value = false;
 }
 </script>
