@@ -15,9 +15,11 @@
 
 ## About
 
-This repository made for the purpose of learning, and practicing coding.
+This repository is intended for learning and practicing coding. However, please note that this application may contain bugs, and I advise against using it for commercial or personal purposes, as it has not been secured and tested.
 
-This applications may have many potential bugs, and I advise you not to use it for commercial or personal purposes, as it hasn't been secured and tested.
+The project utilizes a web API from [first-nestjs-app](https://github.com/akiratatsuhisa/first-nestjs-app).
+
+This front-end app is modeled after Facebook's messenger and offers a variety of features to facilitate communication between users. It supports both one-on-one and group chats, and users can customize their chat rooms by changing the chat room's image and chat name. Group chat's member have additional control over the chat, including the ability to invite or remove members, update member roles, and change nicknames. Furthermore, the app enables users to share files by allowing uploads and downloads within chat conversations. With these features, users can easily communicate and share information with friends.
 
 ## Development
 
@@ -30,13 +32,13 @@ For installation instructions, please use the following ways.
 
 ### Prerequisites
 
-**Node.js (18.x.x+)**
+**Node.js (v18 or higher)**
 
 See the [official Node.js installation documentation](https://nodejs.org/).
 
 ### Installation
 
-Clone the repository, and install dependencies.
+To install the application, clone the repository and install the required dependencies:
 
 ```bash
 $ git clone https://github.com/akiratatsuhisa/vuetify-app.git
@@ -48,9 +50,14 @@ Install Dependencies for client app, open new terminal.
 $ npm install
 ```
 
-Create an `.env` file and add all below values.
+Next, create an `.env` file with the following contents:
 
-...
+| KEY                    | DESCRIPTION                                                                        | EXAMPLE VALUE             |
+| ---------------------- | ---------------------------------------------------------------------------------- | ------------------------- |
+| VITE_WS_URL            | WebSockets URL used for connecting to the backend server.                          | ws://localhost:4000       |
+| VITE_API_URL           | URL for making API requests to the backend server.                                 | http://localhost:4000     |
+| VITE_NO_AVATAR_URL     | URL for a default avatar image when a user does not have a profile picture.        | /images/no-avatar.png     |
+| VITE_NO_BACKGROUND_URL | URL for a default background image when a image does not have a custom background. | /images/no-background.png |
 
 ## Running the app
 
@@ -66,19 +73,17 @@ $ npm run dev
 
 ### Prerequisites
 
-**Docker (20.x.x+)**
+**Docker (v20 or higher)**
 
-See the [official Docker installation documentation](https://docs.docker.com/get-docker/).
+Please see the [official Docker installation documentation](https://docs.docker.com/get-docker/) for installation instructions.
 
 ### Installation
 
-Clone the repository, and create `.env` files same as [above](#local-installation).
-
-Create an `.env` file in root repository folder and add all below values.
+To install the application using Docker, clone the repository and create an .env file with the same contents as for [Local Installation](#local-installation).
 
 ### Running
 
-To run the containers, open terminal at root repository folder and run these **commands**:
+To run the application in a Docker container, use the following commands:
 
 ```bash
 # Dockerfile hasn't been create
@@ -86,4 +91,4 @@ To run the containers, open terminal at root repository folder and run these **c
 
 ## License
 
-Released under the [Released under the MIT license.](LICENSE)
+This application is released under the [MIT license](LICENSE).
