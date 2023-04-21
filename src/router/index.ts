@@ -2,6 +2,9 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router';
 
 import { useAuth } from '@/composables/useAuth';
+import AccessDenied from '@/views/Errors/AccessDenied.vue';
+import InternalServer from '@/views/Errors/InternalServer.vue';
+import NotFound from '@/views/Errors/NotFound.vue';
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -24,7 +27,6 @@ const routes: Array<RouteRecordRaw> = [
           {
             path: '',
             name: 'Messages',
-            meta: { requiresAuth: true },
             component: () =>
               import(
                 /* webpackChunkName: "messages" */ '@/views/Messages/RoomList.vue'
@@ -33,7 +35,6 @@ const routes: Array<RouteRecordRaw> = [
           {
             path: ':roomId',
             name: 'Messages:Room',
-            meta: { requiresAuth: true },
             component: () =>
               import(
                 /* webpackChunkName: "messages" */ '@/views/Messages/RoomContent.vue'
@@ -46,6 +47,7 @@ const routes: Array<RouteRecordRaw> = [
         name: 'Dashboard',
         meta: {
           requiresAuth: true,
+          requiresRoles: ['Administrator'],
           breadcrumb: {
             title: 'Dashboard',
             to: { name: 'Dashboard' },
@@ -60,7 +62,6 @@ const routes: Array<RouteRecordRaw> = [
             path: 'users',
             name: 'Dashboard:Users',
             meta: {
-              requiresAuth: true,
               breadcrumb: {
                 title: 'Users',
                 to: { name: 'Dashboard:Users' },
@@ -70,12 +71,26 @@ const routes: Array<RouteRecordRaw> = [
               import(
                 /* webpackChunkName: "dashboard" */ '@/views/Dashboard/Users.vue'
               ),
+            children: [
+              {
+                path: 'roles',
+                name: 'Dashboard:Users:Roles',
+                meta: {
+                  breadcrumb: {
+                    title: 'Roles',
+                    to: { name: 'Dashboard:Users:Roles' },
+                  },
+                },
+                component: import(
+                  /* webpackChunkName: "dashboard" */ '@/views/Dashboard/Users/Roles.vue'
+                ),
+              },
+            ],
           },
           {
             path: 'messages',
             name: 'Dashboard:Messages',
             meta: {
-              requiresAuth: true,
               breadcrumb: {
                 title: 'Messages',
                 to: { name: 'Dashboard:Messages' },
@@ -115,6 +130,24 @@ const routes: Array<RouteRecordRaw> = [
         meta: { requiresAuth: true },
         component: () =>
           import(/* webpackChunkName: "users" */ '@/views/Users/Detail.vue'),
+      },
+      {
+        path: '/access-denied',
+        name: 'AccessDenied',
+        meta: { requiresAuth: true },
+        component: AccessDenied,
+      },
+      {
+        path: '/internal-server',
+        name: 'InternalServer',
+        meta: { requiresAuth: true },
+        component: InternalServer,
+      },
+      {
+        path: '/:pathMatch(.*)*',
+        name: 'NotFound',
+        meta: { requiresAuth: true },
+        component: NotFound,
       },
     ],
   },
@@ -159,13 +192,29 @@ const router = createRouter({
   routes,
 });
 
-const { isAuthenticated } = useAuth();
+const { isAuthenticated, user, getAccessTokenSilently } = useAuth();
 
-router.beforeEach((to) => {
-  if (to.meta.requiresAuth && !isAuthenticated.value) {
+router.beforeEach(async (to, from) => {
+  const { requiresAuth, requiresRoles } = to.meta;
+
+  if (requiresAuth || requiresRoles?.length) {
+    await getAccessTokenSilently({ throw: false });
+  }
+
+  if (requiresAuth && !isAuthenticated.value) {
     return {
       name: 'Login',
       query: { redirectUrl: to.fullPath },
+    };
+  }
+
+  if (
+    requiresRoles?.length &&
+    !user.value?.roles?.some((role) => requiresRoles.includes(role))
+  ) {
+    return {
+      name: 'AccessDenied',
+      query: { redirectUrl: from.fullPath },
     };
   }
 });

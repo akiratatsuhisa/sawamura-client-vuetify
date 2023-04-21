@@ -1,10 +1,34 @@
 <template>
-  <v-row>
+  <v-row class="flex-column-reverse flex-md-row">
     <v-col cols="12" sm="12" md="7" lg="8">
       <v-card>
-        <v-card-title>Infomation</v-card-title>
+        <v-tabs
+          bg-color="transparent"
+          :model-value="tab"
+          @update:model-value="(value) => router.push({ name: value as string })"
+          grow
+        >
+          <v-tab v-for="tab in tabs" :key="tab.title" :value="tab.name">
+            {{ tab.title }}
+          </v-tab>
+        </v-tabs>
+
+        <v-window :model-value="tab">
+          <v-window-item :value="tabs.Information.name">
+            <index-view></index-view>
+          </v-window-item>
+          <v-window-item :value="tabs.Roles.name">
+            <router-view v-slot="{ route, Component }">
+              <component
+                v-if="route.name === tabs.Roles.name"
+                :is="Component"
+              />
+            </router-view>
+          </v-window-item>
+        </v-window>
       </v-card>
     </v-col>
+
     <v-col cols="12" sm="12" md="5" lg="4">
       <v-card>
         <v-toolbar
@@ -53,6 +77,7 @@ import { useIntervalFn } from '@vueuse/core';
 import { ApexOptions } from 'apexcharts';
 import _ from 'lodash';
 import { computed, ref } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
 import { useTheme } from 'vuetify';
 
 import { useSocketDashboard } from '@/composables/useSocketDashboard';
@@ -61,8 +86,24 @@ import {
   IChartUserRolesRequest,
   IChartUserRolesResponse,
 } from '@/interfaces/dashboard';
+import IndexView from '@/views/Dashboard/Users/Index.vue';
 
 const theme = useTheme();
+
+const router = useRouter();
+const route = useRoute();
+
+const tabs = ref({
+  Information: {
+    title: 'Information',
+    name: 'Dashboard:Users',
+  },
+  Roles: {
+    title: 'Roles',
+    name: 'Dashboard:Users:Roles',
+  },
+});
+const tab = computed(() => route.name);
 
 const isExpand = ref<boolean>(true);
 
