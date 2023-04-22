@@ -1,8 +1,14 @@
 <template>
-  <v-row>
+  <v-row class="flex-column-reverse flex-md-row">
     <v-col cols="12" sm="12" md="7" lg="8">
       <v-card>
         <v-card-title>Infomation</v-card-title>
+        <v-card-text>
+          Lorem ipsum dolor sit amet consectetur adipisicing elit. Reiciendis,
+          et totam? Doloremque dolorem id nobis, unde beatae explicabo
+          reiciendis iure soluta ipsa! Perferendis fugit laboriosam debitis
+          eligendi, velit quod quam.
+        </v-card-text>
       </v-card>
     </v-col>
     <v-col cols="12" sm="12" md="5" lg="4">

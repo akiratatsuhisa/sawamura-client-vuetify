@@ -95,12 +95,12 @@ import { KEYS } from '@/constants';
 import { IRoomMessageFileResponse } from '@/interfaces/rooms';
 import { axiosInstacne } from '@/services';
 
-const { getAccessTokenSilently } = useAuth();
-
 const props = defineProps<{
   type: string;
   file: IRoomMessageFileResponse;
 }>();
+
+const { getAccessTokenSilently } = useAuth();
 
 const isDark = inject(KEYS.THEMES.IS_DARK)!;
 

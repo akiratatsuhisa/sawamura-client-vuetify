@@ -83,6 +83,21 @@
 
               <v-list-item-title> Delete chat </v-list-item-title>
             </v-list-item>
+            <v-list-item @click="dialogs.selectReactionIcon = true">
+              <template #prepend>
+                <v-avatar
+                  :color="
+                    $vuetify.theme.current.dark
+                      ? 'grey-darken-3'
+                      : 'grey-lighten-3'
+                  "
+                >
+                  <v-icon icon="mdi-hand-okay"></v-icon>
+                </v-avatar>
+              </template>
+
+              <v-list-item-title> Reaction Icon </v-list-item-title>
+            </v-list-item>
           </v-list>
         </v-expansion-panel-text>
       </v-expansion-panel>
@@ -265,6 +280,11 @@
     :member-id="dialogs.memberId"
     @submit="requestDeleteMember"
   />
+  <v-dialog-select-reaction-icon
+    v-model="dialogs.selectReactionIcon"
+    :value="reactionIcon"
+    @submit="onSelectReactionIcon"
+  />
 </template>
 
 <script lang="ts" setup>
@@ -274,6 +294,7 @@ import { useRouter } from 'vue-router';
 import VDialogCreateMember from '@/components/Rooms/Dialogs/DialogCreateMember.vue';
 import VDialogDeleteMember from '@/components/Rooms/Dialogs/DialogDeleteMember.vue';
 import VDialogDeleteRoom from '@/components/Rooms/Dialogs/DialogDeleteRoom.vue';
+import VDialogSelectReactionIcon from '@/components/Rooms/Dialogs/DialogSelectReactionIcon.vue';
 import VDialogUpdateMember from '@/components/Rooms/Dialogs/DialogUpdateMember.vue';
 import VDialogUpdateMemberRole from '@/components/Rooms/Dialogs/DialogUpdateMemberRole.vue';
 import VDialogUpdateRoom from '@/components/Rooms/Dialogs/DialogUpdateRoom.vue';
@@ -291,11 +312,6 @@ import {
   IUpdateRoomMemberRequest,
   IUpdateRoomRequest,
 } from '@/interfaces/rooms';
-
-const { identityId } = useAuth();
-const router = useRouter();
-
-const socket = useSocketChat();
 
 const props = defineProps<{
   modelValue?: IRoomResponse;
@@ -316,6 +332,12 @@ const drawer = computed({
     emit('update:drawer', value);
   },
 });
+
+const { identityId } = useAuth();
+
+const router = useRouter();
+
+const socket = useSocketChat();
 
 const room = inject(KEYS.CHAT.ROOM)!;
 
@@ -352,6 +374,7 @@ const dialogs = reactive({
   updateMember: false,
   updateMemberRole: false,
   deleteMember: false,
+  selectReactionIcon: false,
 });
 
 useSocketEventListener<IRoomResponse>(socket, 'update:room:photo', {
@@ -458,4 +481,10 @@ const isLoading = computed(
     isLoadingUpdateMember.value ||
     isLoadingDeleteMember.value,
 );
+
+const reactionIcon = inject(KEYS.CHAT.REACTION_ICON)!;
+
+function onSelectReactionIcon(data: { value: string }) {
+  reactionIcon.value = data.value;
+}
 </script>

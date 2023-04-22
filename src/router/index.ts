@@ -81,9 +81,7 @@ const routes: Array<RouteRecordRaw> = [
                     to: { name: 'Dashboard:Users:Roles' },
                   },
                 },
-                component: import(
-                  /* webpackChunkName: "dashboard" */ '@/views/Dashboard/Users/Roles.vue'
-                ),
+                component: { template: '' },
               },
             ],
           },

@@ -1,7 +1,8 @@
 <template>
   <v-sheet class="wrapper flex-grow-1 flex-shrink-1" min-height="320">
-    <v-sheet
-      class="content overflow-y-auto overflow-x-hidden d-flex flex-column-reverse pa-2"
+    <div
+      ref="messagesRef"
+      class="content overflow-y-auto overflow-x-hidden d-flex flex-column-reverse pa-2 scroll-smooth"
     >
       <!-- messages -->
       <message-content
@@ -13,14 +14,28 @@
         @remove="(id) => removeMessage(id)"
       ></message-content>
 
-      <v-sheet class="text-center mb-auto">
+      <v-sheet v-intersect="onIntersect" class="text-center mb-auto">
         <v-btn
           variant="plain"
+          size="small"
           icon="mdi-arrow-up"
           @click="fetchMoreMessages"
           :loading="isLoading"
         ></v-btn>
       </v-sheet>
+    </div>
+
+    <v-sheet position="absolute" location="bottom center" class="pa-2">
+      <v-fab-transition>
+        <v-btn
+          v-if="scrollMessages < -120"
+          variant="elevated"
+          elevation="6"
+          size="small"
+          icon="mdi-arrow-down"
+          @click="gotoLastMessage"
+        ></v-btn>
+      </v-fab-transition>
     </v-sheet>
 
     <emoji-picker
@@ -68,13 +83,24 @@
         hide-details
         prepend-icon="mdi-file-send"
         append-inner-icon="mdi-emoticon-outline"
-        append-icon="mdi-send"
         @click:prepend="openFileDialog"
         @click:append-inner="emojiPickerShow = !emojiPickerShow"
-        @click:append="sendMessage"
         @keypress.exact.enter.prevent="sendMessage"
         @paste="pasteMessage"
       >
+        <template #append>
+          <v-fab-transition mode="out-in">
+            <span
+              class="v-icon notranslate v-theme--light v-icon--size-default v-icon--clickable reaction-icon"
+              v-if="isDisplayReactionIcon"
+              @click="sendMessage"
+            >
+              {{ reactionIcon || '👌' }}
+            </span>
+
+            <v-icon v-else icon="mdi-send" @click="sendMessage"></v-icon>
+          </v-fab-transition>
+        </template>
       </v-textarea>
     </v-card-text>
 
@@ -93,7 +119,7 @@
 <script lang="ts" setup>
 import 'emoji-mart-vue-fast/css/emoji-mart.css';
 
-import { useDropZone, useFileDialog } from '@vueuse/core';
+import { useDropZone, useFileDialog, useScroll } from '@vueuse/core';
 import data from 'emoji-mart-vue-fast/data/twitter.json';
 // @ts-ignore
 import { EmojiIndex, Picker as EmojiPicker } from 'emoji-mart-vue-fast/src';
@@ -109,7 +135,7 @@ import {
   watch,
 } from 'vue';
 import { useRoute } from 'vue-router';
-import { VCard, VTextField } from 'vuetify/components';
+import { VTextField } from 'vuetify/components';
 
 import MessageContent from '@/components/Rooms/Detail/MessageContent.vue';
 import MessageFileInput from '@/components/Rooms/Detail/MessageFileInput.vue';
@@ -135,6 +161,8 @@ const room = inject(KEYS.CHAT.ROOM)!;
 
 const messages = ref<Array<IRoomMessageResponse>>([]);
 
+const isAllMessagesLoaded = ref<boolean>(false);
+
 const { request: requestMessages, isLoading } = useSocketEventListener<
   { messages: Array<IRoomMessageResponse> },
   ISearchRoomMessagesRequest
@@ -144,6 +172,10 @@ const { request: requestMessages, isLoading } = useSocketEventListener<
       [...messages.value, ...data],
       (message) => message.id,
     );
+
+    if (!data.length) {
+      isAllMessagesLoaded.value = true;
+    }
   },
   exception(error) {
     console.error(error);
@@ -162,12 +194,44 @@ watch(
   roomId,
   (roomId) => {
     messages.value = [];
+    isAllMessagesLoaded.value = false;
     requestMessages({
       roomId,
       take: 10,
     });
   },
   { immediate: true },
+);
+
+const isIntersecting = ref<boolean>(false);
+
+function onIntersect(
+  current: boolean,
+  _entries: Array<IntersectionObserverEntry>,
+  _observer: IntersectionObserver,
+) {
+  isIntersecting.value = current;
+}
+
+const messagesRef = ref<HTMLDivElement>();
+
+const { y: scrollMessages } = useScroll(messagesRef);
+
+function gotoLastMessage() {
+  if (!messagesRef.value) {
+    return;
+  }
+
+  messagesRef.value.scrollTop = 0;
+}
+
+watch(
+  [isIntersecting, isLoading, isAllMessagesLoaded],
+  ([intersecting, loading, allMessagesLoaded]) => {
+    if (intersecting && !loading && !allMessagesLoaded) {
+      fetchMoreMessages();
+    }
+  },
 );
 
 function unshiftMessage(data: IRoomMessageResponse) {
@@ -299,11 +363,19 @@ const { request: requestCreateMessage } = useSocketEventListener<
   },
 });
 
+const reactionIcon = inject(KEYS.CHAT.REACTION_ICON)!;
+
+const isDisplayReactionIcon = computed(
+  () => !messageInput.value && !filesInput.length,
+);
+
 function sendMessage() {
+  gotoLastMessage();
+
   messageInput.value = messageInput.value.trim();
 
-  if (!messageInput.value && !filesInput.length) {
-    return;
+  if (isDisplayReactionIcon.value) {
+    messageInput.value = reactionIcon.value || '👌';
   }
 
   requestCreateMessage({
@@ -321,6 +393,7 @@ function sendMessage() {
     _.forEach(filesInput, (file) => URL.revokeObjectURL(file.src));
   }
   filesInput.splice(0, filesInput.length);
+
   messageInput.value = '';
 }
 
@@ -366,6 +439,9 @@ function removeMessage(id: string) {
 </script>
 
 <style lang="scss" scoped>
+.reaction-icon {
+  opacity: 1;
+}
 .wrapper {
   position: relative;
 

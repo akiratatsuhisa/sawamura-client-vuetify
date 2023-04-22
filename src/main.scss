@@ -9,6 +9,11 @@
         pointer progress row-resize s-resize se-resize sw-resize text url
         w-resize wait zoom-in zoom-out,
     ),
+    'scroll': (
+      property: scroll-behavior,
+      class: scroll,
+      values: smooth auto,
+    ),
   )
 );
 

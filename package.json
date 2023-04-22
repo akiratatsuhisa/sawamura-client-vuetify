@@ -32,6 +32,7 @@
     "vue-advanced-cropper": "^2.8.8",
     "vue-router": "^4.0.0",
     "vue3-apexcharts": "^1.4.1",
+    "vuedraggable": "^4.1.0",
     "vuetify": "^3.1.12",
     "webfontloader": "^1.0.0",
     "yup": "^0.32.11"
