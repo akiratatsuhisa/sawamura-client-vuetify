@@ -18,12 +18,9 @@
             <index-view></index-view>
           </v-window-item>
           <v-window-item :value="tabs.Roles.name">
-            <router-view v-slot="{ route, Component }">
-              <component
-                v-if="route.name === tabs.Roles.name"
-                :is="Component"
-              />
-            </router-view>
+            <v-fade-transition>
+              <role-list v-if="route.name === tabs.Roles.name"></role-list>
+            </v-fade-transition>
           </v-window-item>
         </v-window>
       </v-card>
@@ -80,13 +77,14 @@ import { computed, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useTheme } from 'vuetify';
 
+import IndexView from '@/components/Dashboard/Users/Index.vue';
+import RoleList from '@/components/Dashboard/Users/RoleList.vue';
 import { useSocketDashboard } from '@/composables/useSocketDashboard';
 import { useSocketEventListener } from '@/composables/useSocketEventListener';
 import {
   IChartUserRolesRequest,
   IChartUserRolesResponse,
 } from '@/interfaces/dashboard';
-import IndexView from '@/views/Dashboard/Users/Index.vue';
 
 const theme = useTheme();
 

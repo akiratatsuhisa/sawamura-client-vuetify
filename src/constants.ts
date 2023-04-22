@@ -1,6 +1,6 @@
 import { AxiosInstance } from 'axios';
 import { Manager, Socket } from 'socket.io-client';
-import { ComputedRef, InjectionKey, Ref } from 'vue';
+import { ComputedRef, InjectionKey, Ref, WritableComputedRef } from 'vue';
 import { RouteLocationNamedRaw } from 'vue-router';
 
 import { IRoomMemberResponse, IRoomResponse } from './interfaces/rooms';
@@ -46,6 +46,8 @@ export namespace KEYS {
     export const TARGET_MEMBER: InjectionKey<
       Readonly<Ref<IRoomMemberResponse | undefined>>
     > = Symbol('chat:targetMember');
+    export const REACTION_ICON: InjectionKey<WritableComputedRef<string>> =
+      Symbol('chat:reactionIcon');
   }
 }
 

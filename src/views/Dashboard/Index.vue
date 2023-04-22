@@ -109,6 +109,8 @@ import _ from 'lodash';
 import { computed, reactive } from 'vue';
 import { useRoute } from 'vue-router';
 
+import DefaultComponent from '@/components/Dashboard/Default.vue';
+import InfoCard, { InfoCardProps } from '@/components/Dashboard/InfoCard.vue';
 import { initSocketDashboard } from '@/composables/useSocketDashboard';
 import { useSocketEventListener } from '@/composables/useSocketEventListener';
 import { BinaryUnit, Format } from '@/helpers/format';
@@ -118,9 +120,6 @@ import {
   IStorageDropboxRequest,
   IStorageDropboxResponse,
 } from '@/interfaces/dashboard';
-import InfoCard, { InfoCardProps } from '@/views/Dashboard/InfoCard.vue';
-
-import DefaultComponent from './Default.vue';
 
 const route = useRoute();
 

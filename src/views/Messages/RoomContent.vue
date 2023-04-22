@@ -29,7 +29,6 @@
 import { useLocalStorage } from '@vueuse/core';
 import { computed, provide, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import { useDisplay } from 'vuetify';
 
 import VInfoSidebar from '@/components/Rooms/Detail/InfoSidebar.vue';
 import VMainContent from '@/components/Rooms/Detail/MainContent.vue';
@@ -46,12 +45,32 @@ const route = useRoute();
 
 const roomId = computed<string>(() => route.params.roomId as string);
 
-const display = useDisplay();
-
-const drawer = useLocalStorage<boolean>(
-  `room:drawer:${roomId.value}`,
-  !display.mobile,
+const drawerRooms = useLocalStorage<Record<string, boolean>>(
+  'list:room:drawer',
+  {},
 );
+
+const drawer = computed<boolean>({
+  get() {
+    return drawerRooms.value[roomId.value];
+  },
+  set(value) {
+    drawerRooms.value[roomId.value] = value;
+  },
+});
+
+const iconRooms = useLocalStorage<Record<string, string>>('list:room:icon', {});
+
+const reactionIcon = computed<string>({
+  get() {
+    return iconRooms.value[roomId.value];
+  },
+  set(value) {
+    iconRooms.value[roomId.value] = value;
+  },
+});
+
+provide(KEYS.CHAT.REACTION_ICON, reactionIcon);
 
 const room = ref<IRoomResponse>({
   id: '',

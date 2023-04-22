@@ -68,13 +68,24 @@
         hide-details
         prepend-icon="mdi-file-send"
         append-inner-icon="mdi-emoticon-outline"
-        append-icon="mdi-send"
         @click:prepend="openFileDialog"
         @click:append-inner="emojiPickerShow = !emojiPickerShow"
-        @click:append="sendMessage"
         @keypress.exact.enter.prevent="sendMessage"
         @paste="pasteMessage"
       >
+        <template #append>
+          <v-fade-transition mode="out-in">
+            <span
+              class="v-icon notranslate v-theme--light v-icon--size-default v-icon--clickable reaction-icon"
+              v-if="isDisplayReactionIcon"
+              @click="sendMessage"
+            >
+              {{ reactionIcon || '👌' }}
+            </span>
+
+            <v-icon v-else icon="mdi-send" @click="sendMessage"></v-icon>
+          </v-fade-transition>
+        </template>
       </v-textarea>
     </v-card-text>
 
@@ -299,11 +310,17 @@ const { request: requestCreateMessage } = useSocketEventListener<
   },
 });
 
+const reactionIcon = inject(KEYS.CHAT.REACTION_ICON)!;
+
+const isDisplayReactionIcon = computed(
+  () => !messageInput.value && !filesInput.length,
+);
+
 function sendMessage() {
   messageInput.value = messageInput.value.trim();
 
-  if (!messageInput.value && !filesInput.length) {
-    return;
+  if (isDisplayReactionIcon.value) {
+    messageInput.value = reactionIcon.value || '👌';
   }
 
   requestCreateMessage({
@@ -366,6 +383,9 @@ function removeMessage(id: string) {
 </script>
 
 <style lang="scss" scoped>
+.reaction-icon {
+  opacity: 1;
+}
 .wrapper {
   position: relative;
 
