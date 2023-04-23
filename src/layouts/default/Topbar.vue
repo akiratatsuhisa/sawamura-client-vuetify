@@ -1,6 +1,14 @@
 <template>
   <v-app-bar elevation="4">
-    <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
+    <v-app-bar-nav-icon @click="drawer = !drawer">
+      <v-fab-transition mode="out-in">
+        <v-icon
+          icon="mdi-arrow-left"
+          v-if="$vuetify.display.smAndDown && drawer"
+        ></v-icon>
+        <v-icon icon="mdi-menu" v-else></v-icon>
+      </v-fab-transition>
+    </v-app-bar-nav-icon>
 
     <v-spacer></v-spacer>
 

@@ -4,14 +4,24 @@
   <v-main class="fill-height">
     <div class="d-flex flex-column h-100">
       <v-toolbar color="surface">
-        <v-app-bar-nav-icon
-          :icon="room?.isGroup ? 'mdi-account-group' : 'mdi-account-key'"
-        >
-        </v-app-bar-nav-icon>
+        <v-tooltip :text="disyplayLastActivatedAgo" location="bottom left">
+          <template v-slot:activator="{ props }">
+            <v-app-bar-nav-icon
+              :color="room?.isGroup ? 'tertiary' : 'secondary'"
+              :icon="room?.isGroup ? 'mdi-account-group' : 'mdi-account-key'"
+              v-bind="props"
+            >
+            </v-app-bar-nav-icon>
+          </template>
+        </v-tooltip>
 
         <v-toolbar-title>{{ room?.name }}</v-toolbar-title>
 
         <v-spacer></v-spacer>
+
+        <v-card-subtitle v-if="$vuetify.display.mdAndUp">
+          {{ disyplayLastActivatedAgo }}
+        </v-card-subtitle>
 
         <v-btn icon @click="drawer = !drawer">
           <v-icon>mdi-information</v-icon>
@@ -78,10 +88,11 @@ const room = ref<IRoomResponse>({
   isGroup: false,
   roomMembers: [],
   photoUrl: null,
+  lastActivatedAt: null,
   createdAt: '',
 });
 
-const { currentMember, targetMember } = useRoom(room);
+const { currentMember, targetMember, disyplayLastActivatedAgo } = useRoom(room);
 
 provide(KEYS.CHAT.ROOM, room);
 

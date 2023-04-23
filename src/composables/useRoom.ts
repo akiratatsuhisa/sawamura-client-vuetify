@@ -1,4 +1,4 @@
-import { MaybeRef } from '@vueuse/core';
+import { MaybeRef, useTimeAgo } from '@vueuse/core';
 import _ from 'lodash';
 import moment from 'moment';
 import { computed, ref, unref } from 'vue';
@@ -77,11 +77,22 @@ export function useRoom(room: MaybeRef<IRoomResponse>) {
       : import.meta.env.VITE_NO_AVATAR_URL;
   }
 
+  const lastActivatedAgo = useTimeAgo(
+    computed(() => unref(room).lastActivatedAt ?? ''),
+  );
+
+  const disyplayLastActivatedAgo = computed(() => {
+    return unref(room).lastActivatedAt == null
+      ? ''
+      : `Last activated: ${lastActivatedAgo.value}`;
+  });
+
   return {
     roomMembers,
     currentMember,
     targetMember,
     displayName,
+    disyplayLastActivatedAgo,
     roomPhotoUrl,
     updatePhotoUrl,
     getPhotoUrlByRoomUser,

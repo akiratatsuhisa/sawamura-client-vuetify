@@ -23,6 +23,7 @@ export interface IRoomResponse {
   isGroup: boolean;
   roomMembers: Array<IRoomMemberResponse>;
   photoUrl: string | null;
+  lastActivatedAt: string | null;
   createdAt: string;
 }
 

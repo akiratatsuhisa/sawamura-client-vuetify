@@ -13,7 +13,7 @@
 
     <v-tooltip
       :text="timeAgo"
-      :location="isCurrentUserMessage ? 'left' : 'right'"
+      :location="isCurrentUserMessage ? 'left center' : 'right center'"
     >
       <template v-slot:activator="{ props: tooltipProps }">
         <div class="px-2 flex-shrink-1" v-bind="tooltipProps">
@@ -61,7 +61,10 @@
       </template>
     </v-tooltip>
 
-    <v-menu v-if="message.type !== 'None'">
+    <v-menu
+      v-if="message.type !== 'None'"
+      :location="isCurrentUserMessage ? 'left center' : 'right center'"
+    >
       <template v-slot:activator="{ props }">
         <v-btn
           class="align-self-center"
