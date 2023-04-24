@@ -82,7 +82,7 @@ export function useRoom(room: MaybeRef<IRoomResponse>) {
   );
 
   const disyplayLastActivatedAgo = computed(() => {
-    return unref(room).lastActivatedAt == null
+    return lastActivatedAgo.value === ''
       ? ''
       : `Last activated: ${lastActivatedAgo.value}`;
   });

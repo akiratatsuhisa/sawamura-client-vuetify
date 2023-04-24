@@ -39,7 +39,7 @@
               class="pa-1 files"
               :class="[isCurrentUserMessage ? 'justify-end' : 'justify-start']"
             >
-              <message-file-content
+              <message-content-file
                 v-for="file in files"
                 :key="file.uuid"
                 :type="message.type"
@@ -79,7 +79,7 @@
         <v-list-item
           append-icon="mdi-trash-can-outline"
           title="Delete"
-          @click="emit('remove', message.id)"
+          @click="removeMessage"
         />
       </v-list>
     </v-menu>
@@ -93,9 +93,10 @@ import { useTimeAgo } from '@vueuse/core';
 import _ from 'lodash';
 import { computed } from 'vue';
 
-import MessageFileContent from '@/components/Rooms/Detail/MessageFileContent.vue';
+import MessageContentFile from '@/components/Rooms/Detail/MessageContentFile.vue';
 import { useAuth } from '@/composables/useAuth';
 import {
+  IDeleteRoomMessageRequest,
   IRoomMessageFileResponse,
   IRoomMessageResponse,
 } from '@/interfaces/rooms';
@@ -107,7 +108,7 @@ const props = defineProps<{
 }>();
 
 const emit = defineEmits<{
-  (event: 'remove', value: string): void;
+  (event: 'removeMessage', data: IDeleteRoomMessageRequest): void;
 }>();
 
 const { identityId } = useAuth();
@@ -155,6 +156,13 @@ const files = computed(() =>
     ? _.filter(props.message.content, isValidFile)
     : [],
 );
+
+function removeMessage() {
+  emit('removeMessage', {
+    id: props.message.id,
+    roomId: props.message.room.id,
+  });
+}
 </script>
 
 <style lang="scss" scoped>

@@ -39,6 +39,7 @@
 import { useLocalStorage } from '@vueuse/core';
 import { computed, provide, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
+import { useDisplay } from 'vuetify/lib/framework.mjs';
 
 import VInfoSidebar from '@/components/Rooms/Detail/InfoSidebar.vue';
 import VMainContent from '@/components/Rooms/Detail/MainContent.vue';
@@ -47,6 +48,8 @@ import { useSocketChat } from '@/composables/useSocketChat';
 import { useSocketEventListener } from '@/composables/useSocketEventListener';
 import { KEYS } from '@/constants';
 import { IRoomRequest, IRoomResponse } from '@/interfaces/rooms';
+
+const display = useDisplay();
 
 const socket = useSocketChat();
 
@@ -81,6 +84,28 @@ const reactionIcon = computed<string>({
 });
 
 provide(KEYS.CHAT.REACTION_ICON, reactionIcon);
+
+watch(
+  roomId,
+  (id, _id, onCleanup) => {
+    if (!id) {
+      return;
+    }
+
+    if (drawer.value === undefined) {
+      drawer.value = !display.mobile.value;
+    } else if (display.mobile.value) {
+      drawer.value = false;
+    }
+
+    socket.value.emit('join:room', { id });
+
+    onCleanup(() => {
+      socket.value.emit('leave:room', { id });
+    });
+  },
+  { immediate: true },
+);
 
 const room = ref<IRoomResponse>({
   id: '',

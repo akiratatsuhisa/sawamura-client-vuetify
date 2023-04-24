@@ -48,6 +48,8 @@ export namespace KEYS {
     > = Symbol('chat:targetMember');
     export const REACTION_ICON: InjectionKey<WritableComputedRef<string>> =
       Symbol('chat:reactionIcon');
+    export const SELECT_MESSAGE_IMAGE_SRC: InjectionKey<(src: string) => void> =
+      Symbol('chat:selectMessageImageSrc');
   }
 }
 

@@ -1,9 +1,15 @@
 <template>
-  <v-sheet class="wrapper flex-grow-1 flex-shrink-1" min-height="320">
+  <v-sheet
+    id="chat-main"
+    class="wrapper flex-grow-1 flex-shrink-1"
+    min-height="320"
+  >
     <div
       ref="messagesRef"
       class="content overflow-y-auto overflow-x-hidden d-flex flex-column-reverse pa-2 scroll-smooth"
     >
+      <typing-users ref="typingUsersRef" />
+
       <!-- messages -->
       <message-content
         v-for="(message, index) in messages"
@@ -11,10 +17,13 @@
         :index="index"
         :message="message"
         :is-loading-action="isLoadingDeleteMessage"
-        @remove="(id) => removeMessage(id)"
+        @remove-message="requestDeleteMessage"
       ></message-content>
 
-      <v-sheet v-intersect="onIntersect" class="text-center mb-auto">
+      <v-sheet
+        v-intersect="onIntersect"
+        class="text-center mb-auto bg-transparent"
+      >
         <v-btn
           variant="plain"
           size="small"
@@ -25,10 +34,14 @@
       </v-sheet>
     </div>
 
-    <v-sheet position="absolute" location="bottom center" class="pa-2">
+    <v-sheet
+      position="absolute"
+      location="bottom center"
+      class="pa-2 bg-transparent"
+    >
       <v-fab-transition>
         <v-btn
-          v-if="scrollMessages < -120"
+          v-if="isDisplayGotoLastMessage"
           variant="elevated"
           elevation="6"
           size="small"
@@ -51,114 +64,65 @@
     />
   </v-sheet>
 
-  <v-divider></v-divider>
+  <message-input
+    ref="messageInputRef"
+    v-model:emoji-picker-show="emojiPickerShow"
+    @unshift-message="unshiftMessage"
+    @goto-last-message="gotoLastMessage"
+    @typing="onTyping"
+  />
 
-  <v-card variant="flat" rounded="0" ref="messageZoneRef">
-    <div v-if="filesInput.length">
-      <v-sheet
-        class="pa-2 pt-3 files"
-        :class="[isDark ? 'bg-grey-darken-3' : 'bg-grey-lighten-5']"
-      >
-        <message-file-input
-          v-for="file in filesInput"
-          :key="file.id"
-          :file="file"
-          @remove-file="removeFile"
-        />
-      </v-sheet>
-
-      <v-divider></v-divider>
+  <v-overlay
+    :model-value="!!selectedMessageImageSrc"
+    class="align-center justify-center"
+    persistent
+  >
+    <v-btn
+      position="absolute"
+      icon="mdi-close"
+      location="top right"
+      size="x-small"
+      variant="flat"
+      class="ma-2"
+      @click="selectedMessageImageSrc = undefined"
+    ></v-btn>
+    <div class="wrapper-image" @click="selectedMessageImageSrc = undefined">
+      <v-img :src="selectedMessageImageSrc" />
     </div>
-
-    <v-card-text>
-      <v-textarea
-        ref="messageInputRef"
-        v-model="messageInput"
-        variant="outlined"
-        density="compact"
-        placeholder="Aa"
-        rows="1"
-        max-rows="4"
-        auto-grow
-        hide-details
-        prepend-icon="mdi-file-send"
-        append-inner-icon="mdi-emoticon-outline"
-        @click:prepend="openFileDialog"
-        @click:append-inner="emojiPickerShow = !emojiPickerShow"
-        @keypress.exact.enter.prevent="sendMessage"
-        @paste="pasteMessage"
-      >
-        <template #append>
-          <v-fab-transition mode="out-in">
-            <span
-              class="v-icon notranslate v-theme--light v-icon--size-default v-icon--clickable reaction-icon"
-              v-if="isDisplayReactionIcon"
-              @click="sendMessage"
-            >
-              {{ reactionIcon || '👌' }}
-            </span>
-
-            <v-icon v-else icon="mdi-send" @click="sendMessage"></v-icon>
-          </v-fab-transition>
-        </template>
-      </v-textarea>
-    </v-card-text>
-
-    <v-overlay
-      :model-value="isOverDropScreen"
-      contained
-      class="align-center justify-center"
-    >
-      <span class="text-h6" :class="{ 'text-primary': isOverDropMessage }">
-        Drop file(s) here!
-      </span>
-    </v-overlay>
-  </v-card>
+  </v-overlay>
 </template>
 
 <script lang="ts" setup>
 import 'emoji-mart-vue-fast/css/emoji-mart.css';
 
-import { useDropZone, useFileDialog, useScroll } from '@vueuse/core';
+import { useScroll } from '@vueuse/core';
 import data from 'emoji-mart-vue-fast/data/twitter.json';
 // @ts-ignore
 import { EmojiIndex, Picker as EmojiPicker } from 'emoji-mart-vue-fast/src';
 import _ from 'lodash';
-import { v4 as uuidv4 } from 'uuid';
-import {
-  ComponentPublicInstance,
-  computed,
-  inject,
-  nextTick,
-  ref,
-  shallowReactive,
-  watch,
-} from 'vue';
+import { computed, inject, provide, ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
-import { VTextField } from 'vuetify/components';
 
 import MessageContent from '@/components/Rooms/Detail/MessageContent.vue';
-import MessageFileInput from '@/components/Rooms/Detail/MessageFileInput.vue';
+import MessageInput from '@/components/Rooms/Detail/MessageInput.vue';
+import TypingUsers from '@/components/Rooms/Detail/TypingUsers.vue';
 import { useSocketChat } from '@/composables/useSocketChat';
 import { useSocketEventListener } from '@/composables/useSocketEventListener';
-import { KEYS, MESSAGE_FILE } from '@/constants';
+import { KEYS } from '@/constants';
 import {
-  BasicFile,
-  BasicFileType,
-  ICreateRoomMessageRequest,
   IDeleteRoomMessageRequest,
   IRoomMessageResponse,
   ISearchRoomMessagesRequest,
 } from '@/interfaces/rooms';
 
-const isDark = inject(KEYS.THEMES.IS_DARK)!;
-
 const socket = useSocketChat();
 
 const route = useRoute();
+
 const roomId = computed<string>(() => route.params.roomId as string);
 const room = inject(KEYS.CHAT.ROOM)!;
 
+const messagesRef = ref<HTMLDivElement>();
 const messages = ref<Array<IRoomMessageResponse>>([]);
 
 const isAllMessagesLoaded = ref<boolean>(false);
@@ -213,9 +177,9 @@ function onIntersect(
   isIntersecting.value = current;
 }
 
-const messagesRef = ref<HTMLDivElement>();
-
 const { y: scrollMessages } = useScroll(messagesRef);
+
+const isDisplayGotoLastMessage = computed(() => scrollMessages.value < -120);
 
 function gotoLastMessage() {
   if (!messagesRef.value) {
@@ -234,170 +198,25 @@ watch(
   },
 );
 
-function unshiftMessage(data: IRoomMessageResponse) {
-  if (data.room.id !== room.value?.id) {
-    return;
-  }
-
-  messages.value = _.uniqBy([data, ...messages.value], (message) => message.id);
-}
-
-const messageZoneRef = ref();
-
-const messageInput = ref('');
-const messageInputRef = ref<ComponentPublicInstance<VTextField>>();
-const messageTextAreaElement = computed(() =>
-  (messageInputRef.value?.$el as HTMLElement).querySelector('textarea'),
-);
+const messageInputRef = ref<InstanceType<typeof MessageInput>>();
 
 const emojiIndex = new EmojiIndex(data);
 const emojiPickerShow = ref(false);
 
 async function selectEmoji(params: { native: string }) {
-  messageInput.value =
-    messageInput.value.substring(
-      0,
-      messageTextAreaElement.value?.selectionStart || messageInput.value.length,
-    ) +
-    params.native +
-    messageInput.value.substring(
-      messageTextAreaElement.value?.selectionEnd || messageInput.value.length,
-      messageInput.value.length,
-    );
-
-  emojiPickerShow.value = false;
-  await nextTick();
-  messageTextAreaElement.value!.focus();
+  messageInputRef.value?.selectEmoji(params.native);
 }
 
-const filesInput = shallowReactive<Array<BasicFile>>([]);
-
-function selectFiles(files?: FileList | File[] | null) {
-  _.forEach(files, (file) => {
-    if (!file || file.size > MESSAGE_FILE.MAX_FILE_SIZE) {
-      console.error(
-        `file size must be less than or equals ${MESSAGE_FILE.MAX_FILE_SIZE} bytes`,
-      );
-      return;
-    }
-
-    const type: BasicFileType | null = MESSAGE_FILE.IMAGE_MIME_TYPES.test(
-      file.type,
-    )
-      ? 'images'
-      : MESSAGE_FILE.OFFICE_MIME_TYPES.test(file.type)
-      ? 'files'
-      : null;
-
-    if (_.isNull(type)) {
-      console.error('Invalid file type');
-      return;
-    }
-
-    filesInput.push({
-      id: uuidv4(),
-      type,
-      src: URL.createObjectURL(file),
-      file,
-    });
-  });
-}
-
-function pasteMessage(event: ClipboardEvent) {
-  const clipboardData = event.clipboardData!;
-
-  if (clipboardData?.types.includes('text/plain')) {
+function unshiftMessage(data: IRoomMessageResponse) {
+  if (data.room.id !== room.value?.id) {
     return;
   }
 
-  event.preventDefault();
-  selectFiles(clipboardData?.files);
+  room.value.lastActivatedAt = data.room.lastActivatedAt;
+  messages.value = _.uniqBy([data, ...messages.value], (message) => message.id);
 }
 
-function removeFile(id: string) {
-  const file = _.find(filesInput, (file) => file.id === id);
-
-  if (!file) {
-    return;
-  }
-
-  URL.revokeObjectURL(file.src);
-  _.remove(filesInput, (file) => file.id === id);
-}
-
-const { isOverDropZone: isOverDropScreen } = useDropZone(document.body);
-const { isOverDropZone: isOverDropMessage } = useDropZone(
-  messageZoneRef,
-  selectFiles,
-);
-
-const {
-  files: selectFileDialog,
-  open: openFileDialog,
-  reset: resetFileDialog,
-} = useFileDialog({
-  multiple: true,
-});
-
-watch(selectFileDialog, (files) => {
-  if (!files?.length) {
-    return;
-  }
-
-  selectFiles(files);
-  resetFileDialog();
-});
-
-const { request: requestCreateMessage } = useSocketEventListener<
-  IRoomMessageResponse,
-  ICreateRoomMessageRequest
->(socket, 'create:message', {
-  response: unshiftMessage,
-  listener: unshiftMessage,
-  exception(error) {
-    if (error.data.roomId !== room.value?.id) {
-      return;
-    }
-
-    console.error(error);
-  },
-});
-
-const reactionIcon = inject(KEYS.CHAT.REACTION_ICON)!;
-
-const isDisplayReactionIcon = computed(
-  () => !messageInput.value && !filesInput.length,
-);
-
-function sendMessage() {
-  gotoLastMessage();
-
-  messageInput.value = messageInput.value.trim();
-
-  if (isDisplayReactionIcon.value) {
-    messageInput.value = reactionIcon.value || '👌';
-  }
-
-  requestCreateMessage({
-    roomId: roomId.value,
-    content: messageInput.value,
-    files: !filesInput.length
-      ? undefined
-      : _.map(filesInput, ({ file }) => ({
-          name: file.name,
-          data: file,
-        })),
-  });
-
-  if (filesInput.length) {
-    _.forEach(filesInput, (file) => URL.revokeObjectURL(file.src));
-  }
-  filesInput.splice(0, filesInput.length);
-
-  messageInput.value = '';
-}
-
-function updateRemoveMessage(data: IRoomMessageResponse) {
+function removeMessage(data: IRoomMessageResponse) {
   if (data.room.id !== room.value?.id) {
     return;
   }
@@ -418,8 +237,8 @@ const { request: requestDeleteMessage, isLoading: isLoadingDeleteMessage } =
     socket,
     'delete:message',
     {
-      response: updateRemoveMessage,
-      listener: updateRemoveMessage,
+      response: removeMessage,
+      listener: removeMessage,
       exception(error) {
         if (error.data.roomId !== room.value?.id) {
           return;
@@ -430,18 +249,26 @@ const { request: requestDeleteMessage, isLoading: isLoadingDeleteMessage } =
     },
   );
 
-function removeMessage(id: string) {
-  requestDeleteMessage({
-    id,
-    roomId: roomId.value,
-  });
+const typingUsersRef = ref<InstanceType<typeof TypingUsers>>();
+
+function onTyping(event: KeyboardEvent) {
+  if (event.code === '13') {
+    return;
+  }
+
+  typingUsersRef.value?.onTyping();
 }
+
+const selectedMessageImageSrc = ref<string>();
+
+function selectMessageImageSrc(src: string) {
+  selectedMessageImageSrc.value = src;
+}
+
+provide(KEYS.CHAT.SELECT_MESSAGE_IMAGE_SRC, selectMessageImageSrc);
 </script>
 
 <style lang="scss" scoped>
-.reaction-icon {
-  opacity: 1;
-}
 .wrapper {
   position: relative;
 
@@ -454,12 +281,15 @@ function removeMessage(id: string) {
   }
 }
 
-.files {
+.wrapper-image {
   display: flex;
-  flex-direction: row;
-  flex-wrap: nowrap;
-  column-gap: 0.75rem;
-  overflow-x: auto;
-  overflow-y: hidden;
+  align-items: center;
+  justify-content: center;
+  padding-top: 4.5rem;
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+  padding-bottom: 1.5rem;
+  height: calc(100vh);
+  width: calc(100vw);
 }
 </style>

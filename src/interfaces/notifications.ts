@@ -39,6 +39,7 @@ export interface INotificationResponse {
   readAt: string | null;
   createdAt: string;
   updatedAt: string;
+  reference: any;
 }
 
 export interface ISearchNotificationRequest extends IPaginationExcludeIds {}

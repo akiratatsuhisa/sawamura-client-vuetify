@@ -46,7 +46,8 @@
             <v-overlay
               :model-value="isHovering"
               contained
-              class="align-center justify-center"
+              class="align-center justify-center cursor-pointer"
+              @click="selectMessageImageSrc(fileSrc!)"
             >
               <v-avatar color="primary">
                 <v-icon icon="mdi-image"></v-icon>
@@ -113,6 +114,8 @@ const fileType = computed(() => 'file-' + _.lowerCase(props.type));
 const isImage = computed(() =>
   _.some(['Image', 'Images'], (type) => props.type === type),
 );
+
+const selectMessageImageSrc = inject(KEYS.CHAT.SELECT_MESSAGE_IMAGE_SRC)!;
 
 onMounted(async () => {
   if (!props.file.mime || !props.file.pathDisplay) {

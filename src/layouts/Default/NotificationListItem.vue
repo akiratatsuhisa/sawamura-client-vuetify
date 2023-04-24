@@ -1,11 +1,5 @@
 <template>
-  <v-list-item
-    class="pa-1"
-    @click="
-      item.status !== NotificationStatus.Archived &&
-        emit('update', { id: item.id, status: NotificationStatus.Read })
-    "
-  >
+  <v-list-item class="pa-1" @click="onClick">
     <template #prepend>
       <v-avatar color="secondary" :image="photoUrl"></v-avatar>
     </template>
@@ -41,9 +35,11 @@
 
 <script lang="ts" setup>
 import { computed } from 'vue';
+import { RouteLocationRaw, useRouter } from 'vue-router';
 
 import {
   INotificationResponse,
+  NotificationEntityName,
   NotificationStatus,
 } from '@/interfaces/notifications';
 
@@ -69,6 +65,8 @@ const emit = defineEmits<{
   ): void;
 }>();
 
+const router = useRouter();
+
 const photoUrl = computed(() =>
   props.item.sourceUser?.photoUrl
     ? `${import.meta.env.VITE_API_URL}/auth/photo?username=${
@@ -76,6 +74,33 @@ const photoUrl = computed(() =>
       }`
     : import.meta.env.VITE_NO_AVATAR_URL,
 );
+
+const redirectUrl = computed<RouteLocationRaw | undefined>(() => {
+  switch (props.item.entity) {
+    case NotificationEntityName.RoomMessage:
+      return {
+        name: 'Messages:Room',
+        params: { roomId: (props.item.reference as any).roomId },
+      };
+    case NotificationEntityName.Room:
+      return {
+        name: 'Messages:Room',
+        params: { roomId: (props.item.reference as any).id },
+      };
+    default:
+      return undefined;
+  }
+});
+
+function onClick() {
+  if (props.item.status !== NotificationStatus.Archived) {
+    emit('update', { id: props.item.id, status: NotificationStatus.Read });
+  }
+
+  if (redirectUrl.value) {
+    router.push(redirectUrl.value);
+  }
+}
 
 function update() {
   const status =
