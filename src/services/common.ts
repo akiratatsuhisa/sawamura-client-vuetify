@@ -1,4 +1,4 @@
-import { AxiosInstance, AxiosRequestConfig } from 'axios';
+import { AxiosError, AxiosInstance, AxiosRequestConfig } from 'axios';
 
 export abstract class Service {
   protected fetcher!: AxiosInstance;
@@ -9,8 +9,13 @@ export abstract class Service {
   }
 
   protected fetch<Response>(config: AxiosRequestConfig): Promise<Response> {
-    return this.fetcher.request<Response>(config).then((response) => {
-      return response.data;
-    });
+    return this.fetcher
+      .request<Response>(config)
+      .then((response) => {
+        return Promise.resolve(response.data);
+      })
+      .catch((exception: AxiosError) => {
+        return Promise.reject(exception.response?.data);
+      });
   }
 }

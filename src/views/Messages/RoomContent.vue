@@ -139,6 +139,10 @@ const { request: requestRoom, isLoading } = useSocketEventListener<
 watch(
   roomId,
   (roomId) => {
+    if (!roomId) {
+      return;
+    }
+
     requestRoom({
       id: roomId,
     });

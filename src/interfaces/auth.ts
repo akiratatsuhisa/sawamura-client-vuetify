@@ -13,13 +13,13 @@ export type IdentityUser = {
 
 export interface IAuthOptions {
   seconds?: number;
-  throw?: boolean;
 }
 
 export interface ILoginRequest {
   username: string;
   password: string;
 }
+
 export interface IAuthResponse {
   accessToken: string;
   refreshToken: string;
@@ -27,16 +27,27 @@ export interface IAuthResponse {
 
 export interface IRegisterRequest {
   username: string;
+  email: string;
   password: string;
 }
+
 export interface IRegisterResponse {
   id: string;
+  username: string;
+}
+
+export interface IConfirmEmailRequest {
+  token: string;
+}
+
+export interface IConfirmEmailResponse {
   username: string;
 }
 
 export interface IForgotPasswordRequest {
   username: string;
 }
+
 export interface IForgotPasswordResponse {
   email: string;
 }
@@ -45,6 +56,7 @@ export interface IResetPasswordRequest {
   token: string;
   password: string;
 }
+
 export interface IResetPasswordResponse {
   username: string;
 }

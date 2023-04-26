@@ -22,6 +22,16 @@
               </v-text-field>
               <v-text-field
                 class="mb-3"
+                label="Email"
+                variant="outlined"
+                v-model="v$.email.$model"
+                :error-messages="getErrorMessage(v$.email)"
+                @blur="v$.email.$validate"
+                clearable
+              >
+              </v-text-field>
+              <v-text-field
+                class="mb-3"
                 label="Password"
                 variant="outlined"
                 v-model="v$.password.$model"
@@ -77,7 +87,7 @@
 </template>
 
 <script lang="ts" setup>
-import { required, sameAs } from '@vuelidate/validators';
+import { email, required, sameAs } from '@vuelidate/validators';
 import { onKeyStroke } from '@vueuse/core';
 import _ from 'lodash';
 import { computed, reactive, ref } from 'vue';
@@ -102,6 +112,7 @@ const showConfirmPassword = ref(false);
 
 const form = reactive<IRegisterRequest & { confirmPassword: string }>({
   username: '',
+  email: '',
   password: '',
   confirmPassword: '',
 });
@@ -112,6 +123,9 @@ const [v$, { handleSubmit }] = useVuelidate<
   {
     username: {
       required: required,
+    },
+    email: {
+      email: email,
     },
     password: {
       required: required,

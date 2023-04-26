@@ -9,7 +9,7 @@
             </v-card-text>
             <v-card-title tag="h1">
               <span class="text-info">404</span>
-              Access Denied
+              Not Found
             </v-card-title>
             <v-card-subtitle tag="h2">
               Sorry, the page you visited does not exist.

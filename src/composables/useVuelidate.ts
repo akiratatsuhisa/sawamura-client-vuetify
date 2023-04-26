@@ -5,6 +5,7 @@ import {
   Validation,
   ValidationArgs,
 } from '@vuelidate/core';
+import _ from 'lodash';
 import { computed, ComputedRef, isProxy, Ref, ref, unref } from 'vue';
 
 export function getErrorMessage(
@@ -59,6 +60,17 @@ export function useVuelidate<
 
   const vuelidate = useDefault(validationsArgs, state, globalConfig);
 
+  function transform(state: Record<string | number, any>) {
+    for (const [key, value] of _.entries(state)) {
+      if (typeof value === 'string' && value === '') {
+        state[key] = null;
+      } else if (_.isObject(value) || _.isArray(value)) {
+        state[key] = transform(value);
+      }
+    }
+    return state;
+  }
+
   function handleSubmit(callback: (data: T) => void | Promise<void>) {
     return async () => {
       try {
@@ -67,7 +79,9 @@ export function useVuelidate<
         }
         isLoading.value = true;
 
-        await Promise.resolve(callback(unref(state)));
+        await Promise.resolve(
+          callback(transform(_.cloneDeep(unref(state))) as T),
+        );
       } finally {
         isLoading.value = false;
       }

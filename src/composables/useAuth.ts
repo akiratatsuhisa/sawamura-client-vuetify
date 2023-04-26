@@ -34,9 +34,7 @@ export const useAuth = createSharedComposable(() => {
     );
   }
 
-  async function fetchAccessToken(options?: IAuthOptions) {
-    const { throw: throwError = true } = options ?? {};
-
+  async function fetchAccessToken() {
     try {
       const { data } = await axiosInstacne.post<IAuthResponse>(
         '/auth/refreshToken',
@@ -51,10 +49,6 @@ export const useAuth = createSharedComposable(() => {
       accessToken.value = data.accessToken;
       refreshToken.value = data.refreshToken;
     } catch (error) {
-      if (throwError) {
-        throw error;
-      }
-
       accessToken.value = '';
       refreshToken.value = '';
     }
@@ -64,7 +58,7 @@ export const useAuth = createSharedComposable(() => {
     const { seconds } = options ?? {};
 
     if (isExpires(seconds)) {
-      await fetchAccessToken(options);
+      await fetchAccessToken();
     }
 
     return accessToken.value;
@@ -96,18 +90,20 @@ export const useAuth = createSharedComposable(() => {
     accessToken.value = '';
     refreshToken.value = '';
 
-    await axiosInstacne.patch<IAuthResponse>(
-      '/auth/refreshToken',
-      {
-        value,
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
+    await axiosInstacne
+      .patch<IAuthResponse>(
+        '/auth/refreshToken',
+        {
+          value,
         },
-        ...config,
-      },
-    );
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          ...config,
+        },
+      )
+      .catch(() => undefined);
   }
 
   const updatedImages = useLocalStorage('images', {

@@ -1,6 +1,8 @@
 import { AxiosRequestConfig } from 'axios';
 
 import {
+  IConfirmEmailRequest,
+  IConfirmEmailResponse,
   IForgotPasswordRequest,
   IForgotPasswordResponse,
   IRegisterRequest,
@@ -15,6 +17,15 @@ export class AuthService extends Service {
     return this.fetch<IRegisterResponse>({
       ...config,
       url: 'auth/register',
+      method: 'POST',
+      data,
+    });
+  }
+
+  confirmEmail(config: AxiosRequestConfig, data: IConfirmEmailRequest) {
+    return this.fetch<IConfirmEmailResponse>({
+      ...config,
+      url: 'auth/confirmEmail',
       method: 'POST',
       data,
     });

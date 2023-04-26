@@ -41,14 +41,14 @@ export function initSocket(options: {
 
   async function authenticate() {
     console.debug(`socket:${options.namespace}`, 'on authenticate');
-    const token = await getAccessTokenSilently({ throw: false });
+    const token = await getAccessTokenSilently();
     socket.value.emit(`socket:${options.namespace}`, `authenticate ${token}`);
   }
 
   onMounted(async () => {
     manager.opts.autoConnect = false;
     manager.opts.extraHeaders = {
-      authorization: `Bearer ${await getAccessTokenSilently({ throw: false })}`,
+      authorization: `Bearer ${await getAccessTokenSilently()}`,
     };
     socket.value.connect();
 

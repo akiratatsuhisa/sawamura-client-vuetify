@@ -174,6 +174,14 @@ const routes: Array<RouteRecordRaw> = [
           ),
       },
       {
+        path: 'confirmEmail',
+        name: 'ConfirmEmail',
+        component: () =>
+          import(
+            /* webpackChunkName: "auth" */ '@/views/Auth/ConfirmEmail.vue'
+          ),
+      },
+      {
         path: 'resetPassword',
         name: 'ResetPassword',
         component: () =>
@@ -190,13 +198,13 @@ const router = createRouter({
   routes,
 });
 
-const { isAuthenticated, user, getAccessTokenSilently } = useAuth();
-
 router.beforeEach(async (to, from) => {
   const { requiresAuth, requiresRoles } = to.meta;
 
+  const { isAuthenticated, user, getAccessTokenSilently } = useAuth();
+
   if (requiresAuth || requiresRoles?.length) {
-    await getAccessTokenSilently({ throw: false });
+    await getAccessTokenSilently();
   }
 
   if (requiresAuth && !isAuthenticated.value) {

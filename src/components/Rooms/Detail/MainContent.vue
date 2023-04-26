@@ -157,6 +157,10 @@ function fetchMoreMessages() {
 watch(
   roomId,
   (roomId) => {
+    if (!roomId) {
+      return;
+    }
+
     messages.value = [];
     isAllMessagesLoaded.value = false;
     requestMessages({
