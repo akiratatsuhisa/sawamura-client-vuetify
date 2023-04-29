@@ -72,4 +72,13 @@ export class AuthService extends Service {
       data: formData,
     });
   }
+
+  exportProfilePdf(config: AxiosRequestConfig, _params: {}) {
+    return this.fetch<Blob>({
+      ...config,
+      responseType: 'blob',
+      url: 'auth/profile/pdf',
+      method: 'GET',
+    });
+  }
 }

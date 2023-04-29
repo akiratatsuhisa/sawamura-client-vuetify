@@ -103,6 +103,10 @@
                   </v-list-item>
                 </v-list>
               </v-card-text>
+
+              <v-card-actions class="justify-end">
+                <export-pdf-btn />
+              </v-card-actions>
             </v-sheet>
           </v-card>
         </v-col>
@@ -121,24 +125,22 @@
 </template>
 
 <script lang="ts" setup>
-import { onBeforeMount, ref } from 'vue';
+import { onBeforeMount } from 'vue';
 import { useRoute } from 'vue-router';
 
 import DialogProfileCover from '@/components/Auth/Dialogs/DialogProfileCover.vue';
 import DialogProfilePhoto from '@/components/Auth/Dialogs/DialogProfilePhoto.vue';
+import ExportPdfBtn from '@/components/Auth/Profile/ExportPdf.vue';
 import { useAuth } from '@/composables/useAuth';
 import { Format } from '@/helpers/format';
-import { IdentityUser } from '@/interfaces/auth';
 
 const LAZY_BACKGROUND = import.meta.env.VITE_NO_BACKGROUND_URL;
 
-const { photoUrl, coverUrl, getUserSilently } = useAuth();
+const { user, photoUrl, coverUrl, getUserSilently } = useAuth();
 
 const route = useRoute();
 
-const user = ref<IdentityUser | null>(null);
-
 onBeforeMount(async () => {
-  user.value = await getUserSilently();
+  await getUserSilently();
 });
 </script>

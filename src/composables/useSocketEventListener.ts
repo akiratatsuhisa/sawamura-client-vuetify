@@ -10,6 +10,20 @@ type EmitId = {
   __emit_id__?: string;
 };
 
+export type UseSocketEventListenerOptions<D, R, E> = {
+  response?: (data: D) => void | Promise<void>;
+  listener?: (data: D) => void | Promise<void>;
+  exception?: (error: E) => void | Promise<void>;
+} & (
+  | {
+      immediate: true;
+      paramsOrData: R;
+    }
+  | {
+      immediate?: false;
+    }
+);
+
 export function useSocketEventListener<
   WsResponse extends Record<string, any> = Record<string, any>,
   WsRequest extends Record<string, any> = Record<string, any>,
@@ -17,11 +31,7 @@ export function useSocketEventListener<
 >(
   socket: MaybeRef<Socket>,
   event: string,
-  options?: {
-    response?: (data: WsResponse) => void | Promise<void>;
-    listener?: (data: WsResponse) => void | Promise<void>;
-    exception?: (error: WsException) => void | Promise<void>;
-  },
+  options?: UseSocketEventListenerOptions<WsResponse, WsRequest, WsException>,
 ) {
   const { response, exception, listener } = options ?? {};
 
@@ -94,6 +104,10 @@ export function useSocketEventListener<
         immediate: true,
       },
     );
+  }
+
+  if (options?.immediate) {
+    request(options.paramsOrData);
   }
 
   return {

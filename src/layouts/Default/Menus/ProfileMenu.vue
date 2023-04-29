@@ -1,5 +1,5 @@
 <template>
-  <v-menu :close-on-content-click="false">
+  <v-menu :close-on-content-click="false" width="320px" location="bottom">
     <template v-slot:activator="{ props }">
       <v-btn icon v-bind="props">
         <v-avatar
@@ -46,7 +46,11 @@
         </v-list-item-title>
 
         <template #append>
-          <v-avatar :color="isDark ? 'grey-darken-3' : 'grey-lighten-3'">
+          <v-avatar
+            :color="isDark ? 'grey-darken-3' : 'grey-lighten-3'"
+            class="cursor-pointer"
+            @click.stop="isDark = !isDark"
+          >
             <v-icon
               :icon="isDark ? 'mdi-weather-night' : 'mdi-weather-sunny'"
             ></v-icon>

@@ -10,6 +10,16 @@ import { config, Service } from '@/services';
 
 import { useAuth } from './useAuth';
 
+export type UseAxiosOptions<T> = { unauth?: boolean } & (
+  | {
+      immediate: true;
+      paramsOrData: T;
+    }
+  | {
+      immediate?: false;
+    }
+);
+
 export function useAxios<
   S extends Record<
     A,
@@ -17,9 +27,9 @@ export function useAxios<
   > &
     Service,
   A extends Exclude<keyof S, keyof Service>,
->(service: S, action: A, options?: { unauth: boolean }) {
+>(service: S, action: A, options?: UseAxiosOptions<Parameters<S[A]>['1']>) {
   type Req = Parameters<S[A]>['1'];
-  type Res = Awaited<ReturnType<S[A]>>;
+  type Res = Awaited<ReturnType<S[A]>>['data'];
 
   const { unauth } = options ?? {};
 
@@ -28,10 +38,10 @@ export function useAxios<
   const axiosInstacne = axios.create(config);
 
   const isLoading = ref<boolean>(false);
-  const percent = ref<number>(0);
+  const percent = ref<number>();
 
-  const data = ref<Res | null>(null);
-  const error = ref<IExceptionResponseDetail | null>(null);
+  const data = ref<Res>();
+  const error = ref<IExceptionResponseDetail>();
 
   function onProgress(event: AxiosProgressEvent) {
     percent.value = Math.round((event.loaded / (event.total ?? 0)) * 100);
@@ -42,10 +52,10 @@ export function useAxios<
       throw new Error('on progress');
     }
 
-    try {
-      isLoading.value = true;
-      percent.value = 0;
+    isLoading.value = true;
+    percent.value = 0;
 
+    try {
       const token = unauth ? undefined : await getAccessTokenSilently();
 
       const fetcher = service.setFetcher(axiosInstacne);
@@ -55,7 +65,7 @@ export function useAxios<
         headers.set('Authorization', `Bearer ${token}`);
       }
 
-      const result = await fetcher[action](
+      const response = await fetcher[action](
         {
           headers,
           onUploadProgress: onProgress,
@@ -64,16 +74,24 @@ export function useAxios<
         paramsOrData,
       );
 
-      error.value = null;
-      data.value = result === '' ? null : result;
-      return result;
-    } catch (exception: unknown) {
-      error.value = exception as IExceptionResponseDetail;
-      data.value = null;
+      error.value = undefined;
+      data.value = response.data === '' ? undefined : response.data;
+
+      return response.data;
+    } catch (exception: any) {
+      percent.value = undefined;
+
+      error.value = exception.response.data as IExceptionResponseDetail;
+      data.value = undefined;
+
       throw exception;
     } finally {
       isLoading.value = false;
     }
+  }
+
+  if (options?.immediate) {
+    excute(options.paramsOrData);
   }
 
   return {

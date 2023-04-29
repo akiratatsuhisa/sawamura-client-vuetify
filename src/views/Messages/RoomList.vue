@@ -79,12 +79,10 @@ const { request: requestRooms, isLoading: isLoadingRooms } =
       exception(error) {
         console.error(error);
       },
+      immediate: true,
+      paramsOrData: { take: 20 },
     },
   );
-
-requestRooms({
-  take: 20,
-});
 
 const throttleRequestRooms = _.throttle(requestRooms, 500);
 

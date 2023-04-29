@@ -10,7 +10,7 @@
       </v-btn>
     </template>
 
-    <v-card min-width="300">
+    <v-card width="300">
       <v-list height="350">
         <notification-list-item
           v-for="notification in notifications"
@@ -76,6 +76,8 @@ const { request: requestNotifications } = useSocketEventListener<
       (notification) => notification.id,
     );
   },
+  immediate: true,
+  paramsOrData: { take: 10 },
 });
 
 const { request: requestDeleteNotification } = useSocketEventListener<
@@ -99,6 +101,7 @@ const { request: requestUpdateNotification } = useSocketEventListener<
     notifications.value.splice(index, 1, data);
   },
 });
+
 useSocketEventListener<INotificationResponse>(socket, 'create:notification', {
   response(data) {
     notifications.value = _.uniqBy(
@@ -107,8 +110,6 @@ useSocketEventListener<INotificationResponse>(socket, 'create:notification', {
     );
   },
 });
-
-requestNotifications({ take: 10 });
 
 const throttleRequestRooms = _.throttle(requestNotifications, 500);
 

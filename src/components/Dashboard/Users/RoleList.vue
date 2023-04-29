@@ -3,7 +3,7 @@
     <v-card-text class="d-flex justify-space-between align-baseline">
       <h3 class="text-subtitle-1 d-inline">
         Total roles:
-        <strong class="text-tertiary">{{ roles.length ?? 0 }}</strong>
+        <strong class="text-tertiary">{{ roles?.length ?? 0 }}</strong>
       </h3>
 
       <v-btn
@@ -60,7 +60,7 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, onMounted, ref } from 'vue';
+import { computed, ref } from 'vue';
 import draggable from 'vuedraggable';
 
 import DialogCreateRole from '@/components/Dashboard/Dialogs/DialogCreateRole.vue';
@@ -73,9 +73,12 @@ import { useSocketEventListener } from '@/composables/useSocketEventListener';
 import { IRoleResponse } from '@/interfaces/roles';
 import { services } from '@/services';
 
-const roles = ref<Array<IRoleResponse>>([]);
-
 const socket = useSocketDashboard();
+
+const { data: roles } = useAxios(services.roles, 'getAll', {
+  immediate: true,
+  paramsOrData: {},
+});
 
 useSocketEventListener<{ roles: Array<IRoleResponse> }>(socket, 'list:role', {
   listener({ roles: data }) {
@@ -83,18 +86,12 @@ useSocketEventListener<{ roles: Array<IRoleResponse> }>(socket, 'list:role', {
   },
 });
 
-const { excute: requestRoles } = useAxios(services.roles, 'getAll');
 const { excute: requestSortRole } = useAxios(services.roles, 'sort');
-
-onMounted(async () => {
-  const data = await requestRoles({});
-  roles.value = data;
-});
 
 const draggedRole = ref<IRoleResponse>();
 
 function onStart({ oldIndex }: { oldIndex: number }) {
-  draggedRole.value = roles.value[oldIndex];
+  draggedRole.value = roles.value?.[oldIndex];
 }
 
 function onEnd({ newIndex }: { newIndex: number }) {
