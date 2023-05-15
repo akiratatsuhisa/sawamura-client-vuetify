@@ -14,7 +14,6 @@
               <v-card-title tag="h1">Messages</v-card-title>
               <v-spacer></v-spacer>
               <v-btn
-                variant="tonal"
                 class="ma-4"
                 prepend-icon="mdi-account-group"
                 @click="dialogCreateRoom = true"

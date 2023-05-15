@@ -1,12 +1,9 @@
 <template>
   <v-divider></v-divider>
 
-  <v-card variant="flat" rounded="0" ref="messageZoneRef">
+  <v-sheet ref="messageZoneRef">
     <div v-if="filesInput.length">
-      <v-sheet
-        class="pa-2 pt-3 files"
-        :class="[isDark ? 'bg-grey-darken-3' : 'bg-grey-lighten-5']"
-      >
+      <v-sheet class="pa-2 pt-3 files bg-surface-variant">
         <message-input-file
           v-for="file in filesInput"
           :key="file.id"
@@ -62,7 +59,7 @@
         Drop file(s) here!
       </span>
     </v-overlay>
-  </v-card>
+  </v-sheet>
 </template>
 
 <script lang="ts" setup>
@@ -93,8 +90,6 @@ const emit = defineEmits<{
 }>();
 
 const room = inject(KEYS.CHAT.ROOM)!;
-
-const isDark = inject(KEYS.THEMES.IS_DARK)!;
 
 const socket = useSocketChat();
 

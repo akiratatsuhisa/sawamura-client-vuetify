@@ -1,5 +1,5 @@
 <template>
-  <base-dialog
+  <v-base-dialog
     mobile-width="700"
     :model-value="modelValue"
     @update:model-value="emit('update:modelValue', $event)"
@@ -9,7 +9,7 @@
   >
     <template #title>Profile Photo</template>
 
-    <v-btn variant="tonal" color="info" @click="open">Choose image</v-btn>
+    <v-btn color="secondary-container" @click="open">Choose image</v-btn>
 
     <v-divider class="my-3"></v-divider>
 
@@ -40,7 +40,7 @@
     </div>
 
     <template #action>Change</template>
-  </base-dialog>
+  </v-base-dialog>
 </template>
 
 <script lang="ts" setup>

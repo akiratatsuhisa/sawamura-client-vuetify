@@ -10,6 +10,8 @@
       </v-fab-transition>
     </v-app-bar-nav-icon>
 
+    <v-app-bar-title>Vue App</v-app-bar-title>
+
     <v-spacer></v-spacer>
 
     <notification-list />

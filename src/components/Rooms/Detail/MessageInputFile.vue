@@ -18,13 +18,14 @@
           </template>
 
           <template v-else>
-            <div class="h-100 d-flex flex-column flex-nowrap">
+            <div class="h-100 d-flex flex-column flex-nowrap bg-surface">
               <div class="h-100 d-flex justify-center align-center">
-                <v-avatar
-                  :color="isDark ? 'grey-darken-3' : 'grey-lighten-3'"
-                  size="large"
-                >
-                  <v-icon icon="mdi-file-document-outline" size="large" />
+                <v-avatar color="secondary-container" size="large">
+                  <v-icon
+                    color="on-secondary-container"
+                    icon="mdi-file-document-outline"
+                    size="large"
+                  />
                 </v-avatar>
               </div>
               <div class="px-2 pb-2 text-truncate">
@@ -39,15 +40,10 @@
 </template>
 
 <script lang="ts" setup>
-import { inject } from 'vue';
-
-import { KEYS } from '@/constants';
 import { BasicFile } from '@/interfaces/rooms';
 
 defineProps<{ file: BasicFile }>();
 const emit = defineEmits<{ (event: 'removeFile', id: string): void }>();
-
-const isDark = inject(KEYS.THEMES.IS_DARK)!;
 </script>
 
 <style lang="scss" scoped>

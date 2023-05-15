@@ -1,5 +1,5 @@
 <template>
-  <base-dialog
+  <v-base-dialog
     mobile-width="500"
     :model-value="modelValue"
     :disabled-submit="!submitable"
@@ -29,7 +29,7 @@
     />
 
     <template #action>Select</template>
-  </base-dialog>
+  </v-base-dialog>
 </template>
 
 <script lang="ts" setup>

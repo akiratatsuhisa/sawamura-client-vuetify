@@ -1,5 +1,5 @@
 <template>
-  <base-dialog
+  <v-base-dialog
     mobile-width="500"
     :model-value="modelValue"
     @update:model-value="emit('update:modelValue', $event)"
@@ -44,7 +44,7 @@
     </v-autocomplete>
 
     <template #action>Create</template>
-  </base-dialog>
+  </v-base-dialog>
 </template>
 
 <script lang="ts" setup>

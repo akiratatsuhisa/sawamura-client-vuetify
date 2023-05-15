@@ -3,18 +3,18 @@
     <template v-slot:activator="{ props }">
       <v-btn icon v-bind="props">
         <v-avatar
-          color="primary"
+          color="secondary-container"
           class="elevation-6"
           :image="photoUrl"
         ></v-avatar>
       </v-btn>
     </template>
 
-    <v-list>
+    <v-list class="bg-surface-variant text-on-surface-variant">
       <v-list-item @click="router.push({ name: 'Profile' })">
         <template #prepend>
           <v-avatar
-            color="primary"
+            color="secondary-container"
             class="elevation-6"
             :image="photoUrl"
           ></v-avatar>
@@ -47,7 +47,7 @@
 
         <template #append>
           <v-avatar
-            :color="isDark ? 'grey-darken-3' : 'grey-lighten-3'"
+            color="tertiary-container"
             class="cursor-pointer"
             @click.stop="isDark = !isDark"
           >
@@ -62,7 +62,7 @@
         <v-list-item-title> Logout </v-list-item-title>
 
         <template #append>
-          <v-avatar :color="isDark ? 'grey-darken-3' : 'grey-lighten-3'">
+          <v-avatar color="tertiary-container">
             <v-icon icon="mdi-logout"></v-icon>
           </v-avatar>
         </template>

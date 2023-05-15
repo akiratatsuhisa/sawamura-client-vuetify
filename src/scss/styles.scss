@@ -19,7 +19,7 @@
 
 .cropper-wrapper {
   width: 100%;
-  background: #dddddd;
+  background: rgb(var(--v-theme-surface-variant));
   overflow: hidden;
   position: relative;
 
@@ -41,5 +41,28 @@
     background-size: cover;
     background-position: 50%;
     filter: blur(5px);
+  }
+}
+
+.emoji-mart {
+  background: rgb(var(--v-theme-surface-variant)) !important;
+  color: rgb(var(--v-theme-on-surface-variant)) !important;
+  border: 1px solid rgb(var(--v-theme-surface)) !important;
+
+  .emoji-mart-bar-anchors {
+    border-bottom: 1px solid rgb(var(--v-theme-surface)) !important;
+  }
+
+  .emoji-mart-bar-preview {
+    border-top: 1px solid rgb(var(--v-theme-surface)) !important;
+  }
+
+  .emoji-mart-category-label {
+    background: rgb(var(--v-theme-surface-variant)) !important;
+    color: rgb(var(--v-theme-on-surface-variant)) !important;
+  }
+
+  .emoji-mart-search input {
+    border: 1px solid rgb(var(--v-theme-surface)) !important;
   }
 }

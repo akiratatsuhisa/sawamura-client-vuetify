@@ -13,8 +13,10 @@
             >
             </v-img>
 
-            <v-sheet>
-              <v-sheet class="d-flex">
+            <v-sheet class="bg-surface-variant text-on-surface-variant">
+              <v-sheet
+                class="d-flex bg-surface-variant text-on-surface-variant"
+              >
                 <v-hover>
                   <template v-slot="{ isHovering, props }">
                     <v-avatar
@@ -24,7 +26,7 @@
                       v-bind="props"
                     >
                       <v-avatar
-                        color="primary"
+                        color="secondary-container"
                         class="elevation-6 cursor-none"
                         size="96"
                         :image="photoUrl"
@@ -37,7 +39,7 @@
                         class="align-center justify-center"
                       >
                         <v-avatar
-                          color="primary"
+                          color="secondary-container"
                           @click="$router.push({ name: 'Profile:Photo' })"
                         >
                           <v-icon icon="mdi-image-edit" size="28" />
@@ -56,26 +58,29 @@
                 Username - {{ user?.username }}
               </v-card-subtitle>
 
-              <v-card-actions>
+              <v-card-text class="d-flex">
                 <h3 class="text-body-1 font-weight-medium mx-4">Info</h3>
+
                 <v-spacer></v-spacer>
 
                 <v-btn
                   append-icon="mdi-image-edit"
                   variant="outlined"
                   size="small"
+                  class="mr-1"
                   @click="$router.push({ name: 'Profile:Cover' })"
                 >
                   Change Cover
                 </v-btn>
+
                 <v-btn
                   append-icon="mdi-account-edit-outline"
-                  variant="tonal"
+                  variant="elevated"
                   size="small"
                 >
                   Edit profile
                 </v-btn>
-              </v-card-actions>
+              </v-card-text>
 
               <v-divider></v-divider>
 

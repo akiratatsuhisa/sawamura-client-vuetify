@@ -11,7 +11,7 @@
       </v-toolbar>
       <v-sheet class="pa-4 text-center">
         <v-avatar
-          color="primary"
+          color="secondary-container"
           class="elevation-6"
           :image="roomPhotoUrl"
           size="80"
@@ -34,13 +34,7 @@
               @click="dialogs.updateRoom = true"
             >
               <template #prepend>
-                <v-avatar
-                  :color="
-                    $vuetify.theme.current.dark
-                      ? 'grey-darken-3'
-                      : 'grey-lighten-3'
-                  "
-                >
+                <v-avatar color="secondary-container">
                   <v-icon icon="mdi-pencil"></v-icon>
                 </v-avatar>
               </template>
@@ -52,13 +46,7 @@
               @click="dialogs.updateRoomPhoto = true"
             >
               <template #prepend>
-                <v-avatar
-                  :color="
-                    $vuetify.theme.current.dark
-                      ? 'grey-darken-3'
-                      : 'grey-lighten-3'
-                  "
-                >
+                <v-avatar color="secondary-container">
                   <v-icon icon="mdi-image-edit"></v-icon>
                 </v-avatar>
               </template>
@@ -70,13 +58,7 @@
               @click="dialogs.deleteRoom = true"
             >
               <template #prepend>
-                <v-avatar
-                  :color="
-                    $vuetify.theme.current.dark
-                      ? 'grey-darken-3'
-                      : 'grey-lighten-3'
-                  "
-                >
+                <v-avatar color="secondary-container">
                   <v-icon icon="mdi-trash-can"></v-icon>
                 </v-avatar>
               </template>
@@ -85,13 +67,7 @@
             </v-list-item>
             <v-list-item @click="dialogs.selectReactionIcon = true">
               <template #prepend>
-                <v-avatar
-                  :color="
-                    $vuetify.theme.current.dark
-                      ? 'grey-darken-3'
-                      : 'grey-lighten-3'
-                  "
-                >
+                <v-avatar color="secondary-container">
                   <v-icon icon="mdi-hand-okay"></v-icon>
                 </v-avatar>
               </template>
@@ -115,13 +91,7 @@
               "
             >
               <template #prepend>
-                <v-avatar
-                  :color="
-                    $vuetify.theme.current.dark
-                      ? 'grey-darken-3'
-                      : 'grey-lighten-3'
-                  "
-                >
+                <v-avatar color="secondary-container">
                   <v-icon icon="mdi-logout"></v-icon>
                 </v-avatar>
               </template>
@@ -140,13 +110,7 @@
               @click="dialogs.createMember = true"
             >
               <template #prepend>
-                <v-avatar
-                  :color="
-                    $vuetify.theme.current.dark
-                      ? 'grey-darken-3'
-                      : 'grey-lighten-3'
-                  "
-                >
+                <v-avatar color="secondary-container">
                   <v-icon icon="mdi-account-plus"></v-icon>
                 </v-avatar>
               </template>
@@ -157,7 +121,7 @@
             <v-list-item v-for="roomMember in roomMembers" :key="roomMember.id">
               <template #prepend>
                 <v-avatar
-                  color="primary"
+                  color="secondary-container"
                   class="elevation-6"
                   tag="button"
                   :image="getPhotoUrlByRoomUser(roomMember.member)"
@@ -191,7 +155,8 @@
                       :loading="isLoading"
                     ></v-btn>
                   </template>
-                  <v-list>
+
+                  <v-list class="bg-surface-variant text-on-surface-variant">
                     <v-list-item
                       append-icon="mdi-account-edit-outline"
                       title="Change nickname"

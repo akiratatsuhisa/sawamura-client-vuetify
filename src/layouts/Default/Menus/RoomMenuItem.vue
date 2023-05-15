@@ -1,10 +1,9 @@
 <template>
-  <v-list-item
-    rounded="xl"
-    :value="item.value"
-    :prepend-avatar="roomPhotoUrl"
-    :active="isActive(item.value)"
-  >
+  <v-list-item rounded="xl" :value="item.value" :active="isActive(item.value)">
+    <template #prepend>
+      <v-avatar :image="roomPhotoUrl" color="secondary-container" />
+    </template>
+
     <v-list-item-title class="px-2">{{ displayName }}</v-list-item-title>
   </v-list-item>
 </template>

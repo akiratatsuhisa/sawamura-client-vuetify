@@ -1,7 +1,11 @@
 <template>
   <v-main>
     <v-container fluid>
-      <v-sheet elevation="2" rounded="lg">
+      <v-sheet
+        elevation="2"
+        rounded="lg"
+        class="bg-surface-variant text-on-surface-variant"
+      >
         <div>
           <v-breadcrumbs :items="breadcrumbs">
             <template v-slot:divider>
@@ -12,11 +16,7 @@
 
         <v-divider></v-divider>
         <div class="pa-2 text-end">
-          <v-btn
-            variant="tonal"
-            size="small"
-            append-icon="mdi-table-arrow-left"
-          >
+          <v-btn size="small" append-icon="mdi-table-arrow-left">
             Import CSV
           </v-btn>
         </div>

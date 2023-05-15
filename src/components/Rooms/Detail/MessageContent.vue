@@ -4,7 +4,7 @@
     :class="[isCurrentUserMessage ? 'flex-row-reverse' : 'flex-row']"
   >
     <v-avatar
-      color="primary"
+      color="secondary-container"
       class="align-self-end elevation-4"
       size="28"
       :image="photoUrl"
@@ -52,10 +52,8 @@
               </v-card-text>
             </v-card>
           </div>
-          <v-card v-else rounded="xl">
-            <v-card-text class="text-grey-lighten-1">
-              Message has been deleted
-            </v-card-text>
+          <v-card v-else rounded="xl" class="bg-secondary-container">
+            <v-card-text>Message has been deleted</v-card-text>
           </v-card>
         </div>
       </template>
@@ -75,7 +73,8 @@
           :loading="isLoadingAction"
         ></v-btn>
       </template>
-      <v-list>
+
+      <v-list class="bg-surface-variant text-on-surface-variant">
         <v-list-item
           append-icon="mdi-trash-can-outline"
           title="Delete"

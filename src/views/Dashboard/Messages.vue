@@ -12,7 +12,7 @@
       </v-card>
     </v-col>
     <v-col cols="12" sm="12" md="5" lg="4">
-      <v-card>
+      <v-card class="bg-surface text-on-surface">
         <v-toolbar
           density="compact"
           color="surface"
@@ -77,7 +77,7 @@ const isExpand = ref<boolean>(true);
 const options = computed<ApexOptions>(() => ({
   chart: {
     type: 'bar',
-    background: theme.current.value.colors.surface,
+    background: theme.current.value.colors['surface'],
   },
   theme: {
     mode: theme.current.value.dark ? 'dark' : 'light',

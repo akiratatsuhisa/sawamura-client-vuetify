@@ -13,6 +13,8 @@ import {
 } from '@/interfaces/auth';
 import { config } from '@/services';
 
+import { useSnackbar } from './useSnackbar';
+
 export const useAuth = createSharedComposable(() => {
   const accessToken = useLocalStorage('accessToken', '');
   const refreshToken = useLocalStorage('refreshToken', '');
@@ -36,15 +38,13 @@ export const useAuth = createSharedComposable(() => {
 
   async function fetchAccessToken() {
     try {
-      const { data } = await axiosInstacne.post<IAuthResponse>(
-        '/auth/refreshToken',
-        undefined,
-        {
-          headers: {
-            refreshToken: refreshToken.value,
-          },
+      const { data } = await axiosInstacne.request<IAuthResponse>({
+        url: '/auth/refreshToken',
+        method: 'POST',
+        headers: {
+          refreshToken: refreshToken.value,
         },
-      );
+      });
 
       accessToken.value = data.accessToken;
       refreshToken.value = data.refreshToken;
@@ -72,38 +72,53 @@ export const useAuth = createSharedComposable(() => {
     return user.value;
   }
 
-  async function login(dto: ILoginRequest, config?: AxiosRequestConfig) {
-    const { data } = await axiosInstacne.post<IAuthResponse>(
-      '/auth/login',
-      dto,
-      { ...config },
-    );
+  const { create: createSnackbar } = useSnackbar();
 
-    accessToken.value = data.accessToken;
-    refreshToken.value = data.refreshToken;
+  async function login(dto: ILoginRequest, config?: AxiosRequestConfig) {
+    try {
+      const { data } = await axiosInstacne.request<IAuthResponse>({
+        url: '/auth/login',
+        method: 'POST',
+        data: dto,
+        ...config,
+      });
+
+      accessToken.value = data.accessToken;
+      refreshToken.value = data.refreshToken;
+
+      createSnackbar('Login Successfully', { color: 'success', isOnce: true });
+    } catch (error: any) {
+      createSnackbar(error?.response?.data?.message ?? 'Error', {
+        color: 'error',
+        isOnce: true,
+      });
+    }
   }
 
   async function logout(config?: AxiosRequestConfig) {
-    const value = refreshToken.value;
-    const token = accessToken.value;
+    try {
+      createSnackbar('Logout Successfully', { color: 'success', isOnce: true });
 
-    accessToken.value = '';
-    refreshToken.value = '';
-
-    await axiosInstacne
-      .patch<IAuthResponse>(
-        '/auth/refreshToken',
-        {
-          value,
+      await axiosInstacne.request<IAuthResponse>({
+        url: '/auth/refreshToken',
+        method: 'PATCH',
+        data: {
+          value: refreshToken.value,
         },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-          ...config,
+        headers: {
+          Authorization: `Bearer ${accessToken.value}`,
         },
-      )
-      .catch(() => undefined);
+        ...config,
+      });
+    } catch (error: any) {
+      createSnackbar(error?.response?.data?.message ?? 'Error', {
+        color: 'error',
+        isOnce: true,
+      });
+    } finally {
+      accessToken.value = '';
+      refreshToken.value = '';
+    }
   }
 
   const updatedImages = useLocalStorage('images', {

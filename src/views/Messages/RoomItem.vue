@@ -2,14 +2,14 @@
   <v-list-item>
     <template #prepend>
       <v-avatar
-        color="primary"
+        color="secondary-container"
         class="elevation-6"
         :image="roomPhotoUrl"
       ></v-avatar>
     </template>
     <v-list-item-title>
       <v-icon
-        :color="room.isGroup ? 'info' : 'warning'"
+        :color="room.isGroup ? 'tertiary' : 'secondary'"
         size="16"
         :icon="room.isGroup ? 'mdi-account-group' : 'mdi-account-key'"
       ></v-icon>

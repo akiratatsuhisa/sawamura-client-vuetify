@@ -33,7 +33,7 @@
     "vue-router": "^4.0.0",
     "vue3-apexcharts": "^1.4.1",
     "vuedraggable": "^4.1.0",
-    "vuetify": "^3.1.12",
+    "vuetify": "^3.3.0",
     "webfontloader": "^1.0.0",
     "yup": "^0.32.11"
   },

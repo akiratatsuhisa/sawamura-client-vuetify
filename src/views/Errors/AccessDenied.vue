@@ -15,7 +15,7 @@
               Sorry, you are not authorized to access this page.
             </v-card-subtitle>
             <v-card-text>
-              <v-btn variant="tonal" :to="{ name: 'Home' }">Back Home</v-btn>
+              <v-btn :to="{ name: 'Home' }">Back Home</v-btn>
             </v-card-text>
           </v-card>
         </v-col>

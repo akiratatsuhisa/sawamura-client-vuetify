@@ -3,7 +3,7 @@
     <template #prepend>
       <v-avatar
         :image="item.avatar"
-        :color="item.color ?? isDark ? 'grey-darken-2' : 'grey-lighten-2'"
+        :color="item.color ?? 'secondary-container'"
       />
     </template>
 
@@ -20,8 +20,6 @@ import { IAvatarMenuItem } from '@/interfaces/menus';
 defineProps<{
   item: IAvatarMenuItem;
 }>();
-
-const isDark = inject(KEYS.THEMES.IS_DARK)!;
 
 const isActive = inject(KEYS.DRAWER.IS_ACTIVE)!;
 </script>

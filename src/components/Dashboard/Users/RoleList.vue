@@ -7,7 +7,6 @@
       </h3>
 
       <v-btn
-        variant="tonal"
         prepend-icon="mdi-content-save"
         :loading="isLoading"
         @click="action = { mode: 'create' }"
@@ -123,16 +122,19 @@ function closeDialog() {
 const { excute: requestCreateRole, isLoading: isLoadingCreateRole } = useAxios(
   services.roles,
   'create',
+  { message: 'Create Role Completed' },
 );
 
 const { excute: requestUpdateRole, isLoading: isLoadingUpdateRole } = useAxios(
   services.roles,
   'update',
+  { message: 'Update Role Completed' },
 );
 
 const { excute: requestDeleteRole, isLoading: isLoadingDeleteRole } = useAxios(
   services.roles,
   'delete',
+  { message: 'Delete Role Completed' },
 );
 
 const isLoading = computed(

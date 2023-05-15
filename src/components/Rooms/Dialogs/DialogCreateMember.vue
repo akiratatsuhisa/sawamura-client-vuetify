@@ -1,5 +1,5 @@
 <template>
-  <base-dialog
+  <v-base-dialog
     mobile-width="500"
     :model-value="modelValue"
     @update:model-value="emit('update:modelValue', $event)"
@@ -39,7 +39,7 @@
     </v-radio-group>
 
     <template #action>Add</template>
-  </base-dialog>
+  </v-base-dialog>
 </template>
 
 <script lang="ts" setup>

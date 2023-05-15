@@ -1,16 +1,15 @@
 <template>
   <v-navigation-drawer
-    color="primary"
+    color="surface-variant"
     rail
     :permanent="subItems.length > 0 && subDrawer"
-    floating
     v-model="drawer"
   >
     <template #prepend>
       <v-list-item nav @click="router.push({ name: 'Profile' })">
         <template #prepend>
           <v-avatar
-            color="primary"
+            color="secondary-container"
             class="elevation-6"
             :image="photoUrl"
           ></v-avatar>
@@ -34,6 +33,7 @@
   </v-navigation-drawer>
 
   <v-navigation-drawer
+    color="surface-variant"
     :model-value="subItems.length > 0 && drawer && subDrawer"
     @update:model-value="subDrawer = $event"
   >

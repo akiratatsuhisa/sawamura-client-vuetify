@@ -1,5 +1,5 @@
 <template>
-  <v-list-item tag="div" class="bg-surface">
+  <v-list-item tag="div">
     <template #prepend>
       <v-icon icon="mdi-menu" class="handle cursor-move" />
     </template>
@@ -23,7 +23,8 @@
             :loading="loading"
           ></v-btn>
         </template>
-        <v-list>
+
+        <v-list class="bg-surface-variant text-on-surface-variant">
           <v-list-item
             append-icon="mdi-pencil-outline"
             title="Update"

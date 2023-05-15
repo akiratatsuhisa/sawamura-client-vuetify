@@ -1,16 +1,21 @@
+import { MaybeRef } from '@vueuse/core';
 import axios, {
   AxiosHeaders,
   AxiosProgressEvent,
   AxiosRequestConfig,
 } from 'axios';
-import { ref } from 'vue';
+import { Component, ref, unref } from 'vue';
 
 import { IExceptionResponseDetail } from '@/interfaces/error';
 import { config, Service } from '@/services';
 
 import { useAuth } from './useAuth';
+import { useSnackbar } from './useSnackbar';
 
-export type UseAxiosOptions<T> = { unauth?: boolean } & (
+export type UseAxiosOptions<T> = {
+  unauth?: boolean;
+  message?: MaybeRef<Component | string>;
+} & (
   | {
       immediate: true;
       paramsOrData: T;
@@ -31,9 +36,11 @@ export function useAxios<
   type Req = Parameters<S[A]>['1'];
   type Res = Awaited<ReturnType<S[A]>>['data'];
 
-  const { unauth } = options ?? {};
+  const { unauth, message } = options ?? {};
 
   const { getAccessTokenSilently } = useAuth();
+
+  const { create: createSnackbar } = useSnackbar();
 
   const axiosInstacne = axios.create(config);
 
@@ -77,12 +84,21 @@ export function useAxios<
       error.value = undefined;
       data.value = response.data === '' ? undefined : response.data;
 
+      const content = unref(message);
+      if (content) {
+        createSnackbar(content, { color: 'success', isOnce: true });
+      }
+
       return response.data;
     } catch (exception: any) {
       percent.value = undefined;
 
       error.value = exception.response.data as IExceptionResponseDetail;
       data.value = undefined;
+
+      if (error.value.message) {
+        createSnackbar(error.value.message, { color: 'error', isOnce: true });
+      }
 
       throw exception;
     } finally {

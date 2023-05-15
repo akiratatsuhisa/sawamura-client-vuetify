@@ -27,22 +27,19 @@ export function initSocket(options: {
 
   function connect() {
     console.debug(
-      `socket:${options.namespace}`,
-      `client(${socket.value.id}) connected`,
+      `socket:${options.namespace} connected`,
+      `client(${socket.value.id})`,
     );
   }
 
   function disconnect() {
-    console.debug(
-      `socket:${options.namespace}`,
-      `client(${socket.value.id}) disconnected`,
-    );
+    console.debug(`socket:${options.namespace} disconnected`);
   }
 
   async function authenticate() {
     console.debug(`socket:${options.namespace}`, 'on authenticate');
     const token = await getAccessTokenSilently();
-    socket.value.emit(`socket:${options.namespace}`, `authenticate ${token}`);
+    socket.value.emit('authenticate', token);
   }
 
   onMounted(async () => {

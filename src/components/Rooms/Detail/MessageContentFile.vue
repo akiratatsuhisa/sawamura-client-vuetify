@@ -8,11 +8,7 @@
         class="flex-grow-0 flex-shrink-0"
         :class="[fileType]"
       >
-        <div
-          v-if="isLoading"
-          class="h-100 d-flex justify-center align-center"
-          :class="[isDark ? 'bg-grey-darken-3' : 'bg-grey-lighten-3']"
-        >
+        <div v-if="isLoading" class="h-100 d-flex justify-center align-center">
           <v-progress-circular
             indeterminate
             color="primary"
@@ -21,7 +17,6 @@
         <div
           v-else-if="!isLoading && !fileBlob"
           class="h-100 d-flex justify-center align-center"
-          :class="[isDark ? 'bg-grey-darken-3' : 'bg-grey-lighten-3']"
         >
           <v-icon
             :icon="
@@ -49,7 +44,7 @@
               class="align-center justify-center cursor-pointer"
               @click="selectMessageImageSrc(fileSrc!)"
             >
-              <v-avatar color="primary">
+              <v-avatar color="secondary-container">
                 <v-icon icon="mdi-image"></v-icon>
               </v-avatar>
             </v-overlay>
@@ -58,11 +53,11 @@
           <template v-else>
             <div class="h-100 d-flex flex-column flex-nowrap">
               <div class="h-100 d-flex justify-center align-center">
-                <v-avatar
-                  :color="isDark ? 'grey-darken-3' : 'grey-lighten-3'"
-                  size="small"
-                >
-                  <v-icon icon="mdi-file-document-outline" />
+                <v-avatar color="secondary-container" size="small">
+                  <v-icon
+                    color="on-secondary-container"
+                    icon="mdi-file-document-outline"
+                  />
                 </v-avatar>
               </div>
               <div class="px-2 pb-2 text-truncate">
@@ -75,7 +70,7 @@
               contained
               class="align-center justify-center"
             >
-              <v-avatar color="primary" @click="downloadFile">
+              <v-avatar color="secondary-container" @click="downloadFile">
                 <v-icon icon="mdi-download"></v-icon>
               </v-avatar>
             </v-overlay>
@@ -102,8 +97,6 @@ const props = defineProps<{
 }>();
 
 const { getAccessTokenSilently } = useAuth();
-
-const isDark = inject(KEYS.THEMES.IS_DARK)!;
 
 const isLoading = ref(true);
 const fileBlob = shallowRef<Blob>();

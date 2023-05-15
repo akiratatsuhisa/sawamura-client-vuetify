@@ -15,7 +15,7 @@
               Sorry, something went wrong.
             </v-card-subtitle>
             <v-card-text>
-              <v-btn variant="tonal" :to="{ name: 'Home' }">Back Home</v-btn>
+              <v-btn :to="{ name: 'Home' }">Back Home</v-btn>
             </v-card-text>
           </v-card>
         </v-col>

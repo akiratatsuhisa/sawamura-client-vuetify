@@ -1,6 +1,5 @@
 <template>
   <v-btn
-    size="small"
     color="tertiary"
     variant="tonal"
     :loading="isLoading"

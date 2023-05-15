@@ -8,7 +8,7 @@
         <v-tooltip :text="name" location="top center">
           <template v-slot:activator="{ props }">
             <v-avatar
-              color="primary"
+              color="secondary-container"
               class="avatar"
               :image="photoUrl"
               v-bind="props"

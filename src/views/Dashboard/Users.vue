@@ -5,7 +5,7 @@
         <v-tabs
           bg-color="transparent"
           :model-value="tab"
-          @update:model-value="(value) => router.push({ name: value as string })"
+          @update:model-value="(value:any) => router.push({ name: value as string })"
           grow
         >
           <v-tab v-for="tab in tabs" :key="tab.title" :value="tab.name">
@@ -27,7 +27,7 @@
     </v-col>
 
     <v-col cols="12" sm="12" md="5" lg="4">
-      <v-card>
+      <v-card class="bg-surface text-on-surface">
         <v-toolbar
           density="compact"
           color="surface"
@@ -110,7 +110,7 @@ const labels = ref<Array<string>>([]);
 const options = computed<ApexOptions>(() => ({
   chart: {
     type: 'donut',
-    background: theme.current.value.colors.surface,
+    background: theme.current.value.colors['surface'],
   },
   theme: {
     mode: theme.current.value.dark ? 'dark' : 'light',

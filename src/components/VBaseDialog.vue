@@ -9,6 +9,7 @@
       tag="form"
       :rounded="fullscreen ? '0' : 'lg'"
       @submit.prevent="emit('submit')"
+      class="bg-surface text-on-surface"
     >
       <v-toolbar color="surface" elevation="2">
         <v-app-bar-nav-icon

@@ -8,7 +8,7 @@
 import type { App } from 'vue';
 import VueApexCharts from 'vue3-apexcharts';
 
-import BaseDialog from '@/components/BaseDialog.vue';
+import VBaseDialog from '@/components/VBaseDialog.vue';
 
 import router from '../router';
 import pinia from '../store';
@@ -27,5 +27,5 @@ export function registerPlugins(app: App) {
     .use(pinia)
     .use(VueApexCharts);
 
-  app.component('BaseDialog', BaseDialog);
+  app.component('VBaseDialog', VBaseDialog);
 }

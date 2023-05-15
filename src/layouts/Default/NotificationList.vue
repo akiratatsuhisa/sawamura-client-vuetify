@@ -3,14 +3,14 @@
     <template v-slot:activator="{ props }">
       <v-btn icon v-bind="props">
         <v-avatar
-          :color="isDark ? 'grey-darken-3' : 'grey-lighten-3'"
+          color="secondary-container"
           class="elevation-6"
           icon="mdi-bell"
         ></v-avatar>
       </v-btn>
     </template>
 
-    <v-card width="300">
+    <v-card width="300" class="bg-surface-variant text-on-surface-variant">
       <v-list height="350">
         <notification-list-item
           v-for="notification in notifications"
@@ -43,11 +43,10 @@
 
 <script lang="ts" setup>
 import _ from 'lodash';
-import { computed, inject, ref, watch } from 'vue';
+import { computed, ref, watch } from 'vue';
 
 import { useSocketEventListener } from '@/composables/useSocketEventListener';
 import { useSocketNotifications } from '@/composables/useSocketNotifications';
-import { KEYS } from '@/constants';
 import {
   IDeleteNotificationRequest,
   INotificationResponse,
@@ -57,8 +56,6 @@ import {
 } from '@/interfaces/notifications';
 
 import NotificationListItem from './NotificationListItem.vue';
-
-const isDark = inject(KEYS.THEMES.IS_DARK)!;
 
 const notifications = ref<Array<INotificationResponse>>([]);
 

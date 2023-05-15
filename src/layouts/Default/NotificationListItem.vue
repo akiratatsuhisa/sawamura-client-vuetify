@@ -8,7 +8,13 @@
     <v-list-item-subtitle>{{ item.sourceUser.username }}</v-list-item-subtitle>
 
     <template #append>
-      <v-btn size="small" variant="text" icon @click.stop="update">
+      <v-btn
+        size="small"
+        variant="plain"
+        color="secondary"
+        icon
+        @click.stop="update"
+      >
         <v-icon
           size="x-large"
           :icon="
@@ -21,7 +27,7 @@
       <v-btn
         size="small"
         variant="plain"
-        color="secondary"
+        color="tertiary"
         icon
         @click.stop="emit('delete', { id: item.id })"
       >
@@ -30,7 +36,7 @@
     </template>
   </v-list-item>
 
-  <v-divider inset></v-divider>
+  <v-divider></v-divider>
 </template>
 
 <script lang="ts" setup>
