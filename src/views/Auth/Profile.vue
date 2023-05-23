@@ -15,7 +15,7 @@
 
             <v-sheet class="bg-surface-variant text-on-surface-variant">
               <v-sheet
-                class="d-flex bg-surface-variant text-on-surface-variant"
+                class="mb-3 d-flex bg-surface-variant text-on-surface-variant"
               >
                 <v-hover>
                   <template v-slot="{ isHovering, props }">
@@ -49,7 +49,7 @@
                   </template>
                 </v-hover>
 
-                <v-card-title tag="h2" class="flex-grow-1">
+                <v-card-title tag="h2" class="flex-grow-1 pl-0">
                   {{ user?.lastName }} {{ user?.firstName }}
                 </v-card-title>
               </v-sheet>
@@ -58,27 +58,39 @@
                 Username - {{ user?.username }}
               </v-card-subtitle>
 
-              <v-card-text class="d-flex">
+              <v-card-text class="d-flex flex-column-reverse flex-md-row">
                 <h3 class="text-body-1 font-weight-medium mx-4">Info</h3>
 
                 <v-spacer></v-spacer>
 
                 <v-btn
-                  append-icon="mdi-image-edit"
-                  variant="outlined"
+                  prepend-icon="mdi-account-edit-outline"
+                  variant="elevated"
                   size="small"
-                  class="mr-1"
-                  @click="$router.push({ name: 'Profile:Cover' })"
+                  class="mr-md-2 mb-2 mb-md-0"
+                  @click="$router.push({ name: 'Profile:Edit' })"
                 >
-                  Change Cover
+                  Edit Profile
                 </v-btn>
 
                 <v-btn
-                  append-icon="mdi-account-edit-outline"
+                  prepend-icon="mdi-palette"
                   variant="elevated"
                   size="small"
+                  class="mr-md-2 mb-2 mb-md-0"
+                  @click="$router.push({ name: 'Profile:Theme' })"
                 >
-                  Edit profile
+                  Select Theme
+                </v-btn>
+
+                <v-btn
+                  prepend-icon="mdi-image-edit"
+                  variant="elevated"
+                  size="small"
+                  class="mb-2 mb-md-0"
+                  @click="$router.push({ name: 'Profile:Cover' })"
+                >
+                  Change Cover
                 </v-btn>
               </v-card-text>
 
@@ -110,7 +122,7 @@
               </v-card-text>
 
               <v-card-actions class="justify-end">
-                <export-pdf-btn />
+                <v-export-pdf-btn />
               </v-card-actions>
             </v-sheet>
           </v-card>
@@ -119,25 +131,45 @@
     </v-container>
   </v-main>
 
-  <dialog-profile-photo
+  <v-dialog-profile-photo
     :model-value="route.name === 'Profile:Photo'"
     @update:model-value="$router.push({ name: 'Profile' })"
   />
-  <dialog-profile-cover
+  <v-dialog-profile-cover
     :model-value="route.name === 'Profile:Cover'"
+    @update:model-value="$router.push({ name: 'Profile' })"
+  />
+  <v-dialog-profile-theme
+    :model-value="route.name === 'Profile:Theme'"
+    @update:model-value="$router.push({ name: 'Profile' })"
+  />
+  <v-dialog-profile-edit
+    :model-value="route.name === 'Profile:Edit'"
     @update:model-value="$router.push({ name: 'Profile' })"
   />
 </template>
 
 <script lang="ts" setup>
-import { onBeforeMount } from 'vue';
+import { useStyleTag } from '@vueuse/core';
+import { computed, defineAsyncComponent, onBeforeMount } from 'vue';
 import { useRoute } from 'vue-router';
 
-import DialogProfileCover from '@/components/Auth/Dialogs/DialogProfileCover.vue';
-import DialogProfilePhoto from '@/components/Auth/Dialogs/DialogProfilePhoto.vue';
-import ExportPdfBtn from '@/components/Auth/Profile/ExportPdf.vue';
+import VExportPdfBtn from '@/components/Auth/Profile/ExportPdf.vue';
 import { useAuth } from '@/composables/useAuth';
 import { Format } from '@/helpers/format';
+
+const VDialogProfileCover = defineAsyncComponent(
+  () => import('@/components/Auth/Dialogs/DialogProfileCover.vue'),
+);
+const VDialogProfileEdit = defineAsyncComponent(
+  () => import('@/components/Auth/Dialogs/DialogProfileEdit.vue'),
+);
+const VDialogProfilePhoto = defineAsyncComponent(
+  () => import('@/components/Auth/Dialogs/DialogProfilePhoto.vue'),
+);
+const VDialogProfileTheme = defineAsyncComponent(
+  () => import('@/components/Auth/Dialogs/DialogProfileTheme.vue'),
+);
 
 const LAZY_BACKGROUND = import.meta.env.VITE_NO_BACKGROUND_URL;
 
@@ -148,4 +180,9 @@ const route = useRoute();
 onBeforeMount(async () => {
   await getUserSilently();
 });
+
+useStyleTag(
+  computed(() => user.value?.themeStyle ?? ''),
+  { id: 'vuetify-auth-profile-style' },
+);
 </script>

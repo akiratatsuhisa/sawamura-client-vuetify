@@ -27,12 +27,11 @@
         <slot></slot>
       </v-card-text>
 
-      <v-card-actions class="px-6">
+      <v-card-actions class="px-6 justify-end">
         <v-btn
           type="submit"
-          variant="tonal"
           color="primary"
-          block
+          :block="fullscreen"
           :disabled="disabledSubmit"
         >
           <slot name="action"></slot>

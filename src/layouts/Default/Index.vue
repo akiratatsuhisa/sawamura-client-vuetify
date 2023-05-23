@@ -1,8 +1,8 @@
 <template>
   <v-app>
-    <topbar></topbar>
+    <v-topbar />
 
-    <sidebar></sidebar>
+    <v-sidebar />
 
     <router-view />
   </v-app>
@@ -16,9 +16,8 @@ import { initSocketChat } from '@/composables/useSocketChat';
 import { initSocketNotifications } from '@/composables/useSocketNotifications';
 import { KEYS } from '@/constants';
 import { IRoomResponse } from '@/interfaces/rooms';
-
-import Sidebar from './Sidebar.vue';
-import Topbar from './Topbar.vue';
+import VSidebar from '@/layouts/Default/Sidebar.vue';
+import VTopbar from '@/layouts/Default/Topbar.vue';
 
 const drawer = ref<boolean | null>(null);
 provide(KEYS.DRAWER.SHOW, drawer);

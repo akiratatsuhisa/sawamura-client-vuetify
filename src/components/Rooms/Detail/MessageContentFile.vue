@@ -17,6 +17,9 @@
         <div
           v-else-if="!isLoading && !fileBlob"
           class="h-100 d-flex justify-center align-center"
+          :class="[
+            isCurrentUserMessage ? 'bg-tertiary' : 'bg-tertiary-container',
+          ]"
         >
           <v-icon
             :icon="
@@ -44,18 +47,30 @@
               class="align-center justify-center cursor-pointer"
               @click="selectMessageImageSrc(fileSrc!)"
             >
-              <v-avatar color="secondary-container">
+              <v-avatar color="secondary">
                 <v-icon icon="mdi-image"></v-icon>
               </v-avatar>
             </v-overlay>
           </template>
 
           <template v-else>
-            <div class="h-100 d-flex flex-column flex-nowrap">
+            <div
+              class="h-100 d-flex flex-column flex-nowrap"
+              :class="[
+                isCurrentUserMessage ? 'bg-primary' : 'bg-primary-container',
+              ]"
+            >
               <div class="h-100 d-flex justify-center align-center">
-                <v-avatar color="secondary-container" size="small">
+                <v-avatar
+                  :color="
+                    isCurrentUserMessage ? 'primary-container' : 'primary'
+                  "
+                  size="small"
+                >
                   <v-icon
-                    color="on-secondary-container"
+                    :color="
+                      isCurrentUserMessage ? 'primary' : 'primary-container'
+                    "
                     icon="mdi-file-document-outline"
                   />
                 </v-avatar>
@@ -70,7 +85,7 @@
               contained
               class="align-center justify-center"
             >
-              <v-avatar color="secondary-container" @click="downloadFile">
+              <v-avatar color="secondary" @click="downloadFile">
                 <v-icon icon="mdi-download"></v-icon>
               </v-avatar>
             </v-overlay>
@@ -94,6 +109,7 @@ import { axiosInstacne } from '@/services';
 const props = defineProps<{
   type: string;
   file: IRoomMessageFileResponse;
+  isCurrentUserMessage: boolean;
 }>();
 
 const { getAccessTokenSilently } = useAuth();

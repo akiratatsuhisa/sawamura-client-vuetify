@@ -18,27 +18,21 @@ const routes: Array<RouteRecordRaw> = [
         // this generates a separate chunk (about.[hash].js) for this route
         // which is lazy-loaded when the route is visited.
         meta: { requiresAuth: true },
-        component: () =>
-          import(/* webpackChunkName: "home" */ '@/views/Home.vue'),
+        component: () => import('@/views/Home.vue'),
       },
       {
         path: 'messages',
+        meta: { requiresAuth: true },
         children: [
           {
             path: '',
             name: 'Messages',
-            component: () =>
-              import(
-                /* webpackChunkName: "messages" */ '@/views/Messages/RoomList.vue'
-              ),
+            component: () => import('@/views/Messages/RoomList.vue'),
           },
           {
             path: ':roomId',
             name: 'Messages:Room',
-            component: () =>
-              import(
-                /* webpackChunkName: "messages" */ '@/views/Messages/RoomContent.vue'
-              ),
+            component: () => import('@/views/Messages/RoomContent.vue'),
           },
         ],
       },
@@ -53,10 +47,7 @@ const routes: Array<RouteRecordRaw> = [
             to: { name: 'Dashboard' },
           },
         },
-        component: () =>
-          import(
-            /* webpackChunkName: "dashboard" */ '@/views/Dashboard/Index.vue'
-          ),
+        component: () => import('@/views/Dashboard/Index.vue'),
         children: [
           {
             path: 'users',
@@ -67,10 +58,7 @@ const routes: Array<RouteRecordRaw> = [
                 to: { name: 'Dashboard:Users' },
               },
             },
-            component: () =>
-              import(
-                /* webpackChunkName: "dashboard" */ '@/views/Dashboard/Users.vue'
-              ),
+            component: () => import('@/views/Dashboard/Users.vue'),
             children: [
               {
                 path: 'roles',
@@ -94,10 +82,7 @@ const routes: Array<RouteRecordRaw> = [
                 to: { name: 'Dashboard:Messages' },
               },
             },
-            component: () =>
-              import(
-                /* webpackChunkName: "dashboard" */ '@/views/Dashboard/Messages.vue'
-              ),
+            component: () => import('@/views/Dashboard/Messages.vue'),
           },
         ],
       },
@@ -105,29 +90,37 @@ const routes: Array<RouteRecordRaw> = [
         path: 'profile',
         name: 'Profile',
         meta: { requiresAuth: true },
-        component: () =>
-          import(/* webpackChunkName: "auth" */ '@/views/Auth/Profile.vue'),
+        component: () => import('@/views/Auth/Profile.vue'),
       },
       {
         path: 'profile/photo',
         name: 'Profile:Photo',
         meta: { requiresAuth: true },
-        component: () =>
-          import(/* webpackChunkName: "auth" */ '@/views/Auth/Profile.vue'),
+        component: () => import('@/views/Auth/Profile.vue'),
       },
       {
         path: 'profile/cover',
         name: 'Profile:Cover',
         meta: { requiresAuth: true },
-        component: () =>
-          import(/* webpackChunkName: "auth" */ '@/views/Auth/Profile.vue'),
+        component: () => import('@/views/Auth/Profile.vue'),
+      },
+      {
+        path: 'profile/theme',
+        name: 'Profile:Theme',
+        meta: { requiresAuth: true },
+        component: () => import('@/views/Auth/Profile.vue'),
+      },
+      {
+        path: 'profile/edit',
+        name: 'Profile:Edit',
+        meta: { requiresAuth: true },
+        component: () => import('@/views/Auth/Profile.vue'),
       },
       {
         path: 'users/:id',
         name: 'Users:Detail',
         meta: { requiresAuth: true },
-        component: () =>
-          import(/* webpackChunkName: "users" */ '@/views/Users/Detail.vue'),
+        component: () => import('@/views/Users/Detail.vue'),
       },
       {
         path: '/access-denied',
@@ -156,38 +149,27 @@ const routes: Array<RouteRecordRaw> = [
       {
         path: 'login',
         name: 'Login',
-        component: () =>
-          import(/* webpackChunkName: "auth" */ '@/views/Auth/Login.vue'),
+        component: () => import('@/views/Auth/Login.vue'),
       },
       {
         path: 'register',
         name: 'Register',
-        component: () =>
-          import(/* webpackChunkName: "auth" */ '@/views/Auth/Register.vue'),
+        component: () => import('@/views/Auth/Register.vue'),
       },
       {
         path: 'forgotPassword',
         name: 'ForgotPassword',
-        component: () =>
-          import(
-            /* webpackChunkName: "auth" */ '@/views/Auth/ForgotPassword.vue'
-          ),
+        component: () => import('@/views/Auth/ForgotPassword.vue'),
       },
       {
         path: 'confirmEmail',
         name: 'ConfirmEmail',
-        component: () =>
-          import(
-            /* webpackChunkName: "auth" */ '@/views/Auth/ConfirmEmail.vue'
-          ),
+        component: () => import('@/views/Auth/ConfirmEmail.vue'),
       },
       {
         path: 'resetPassword',
         name: 'ResetPassword',
-        component: () =>
-          import(
-            /* webpackChunkName: "auth" */ '@/views/Auth/ResetPassword.vue'
-          ),
+        component: () => import('@/views/Auth/ResetPassword.vue'),
       },
     ],
   },

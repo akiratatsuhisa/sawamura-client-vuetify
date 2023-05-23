@@ -4,7 +4,7 @@
   <v-sheet ref="messageZoneRef">
     <div v-if="filesInput.length">
       <v-sheet class="pa-2 pt-3 files bg-surface-variant">
-        <message-input-file
+        <v-message-input-file
           v-for="file in filesInput"
           :key="file.id"
           :file="file"
@@ -69,7 +69,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { computed, inject, nextTick, ref, shallowReactive, watch } from 'vue';
 import { VTextField } from 'vuetify/components';
 
-import MessageInputFile from '@/components/Rooms/Detail/MessageInputFile.vue';
+import VMessageInputFile from '@/components/Rooms/Detail/MessageInputFile.vue';
 import { useSocketChat } from '@/composables/useSocketChat';
 import { useSocketEventListener } from '@/composables/useSocketEventListener';
 import { KEYS, MESSAGE_FILE } from '@/constants';

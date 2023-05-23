@@ -1,7 +1,7 @@
 <template>
   <v-list-item rounded="xl" :value="item.value" :active="isActive(item.value)">
     <template #prepend>
-      <v-avatar :icon="item.icon" :color="item.color ?? 'primary'" />
+      <v-avatar :icon="item.icon" :color="item.color ?? 'secondary'" />
     </template>
 
     <v-list-item-title class="px-2">{{ item.title }}</v-list-item-title>

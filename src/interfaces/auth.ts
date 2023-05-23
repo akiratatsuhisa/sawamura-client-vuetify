@@ -9,6 +9,8 @@ export type IdentityUser = {
   roles: string[] | null;
   photoUrl: string | null;
   coverUrl: string | null;
+  themeSource: number | null;
+  themeStyle: string | null;
 };
 
 export interface IAuthOptions {

@@ -47,11 +47,41 @@
             >
               <template #prepend>
                 <v-avatar color="secondary-container">
+                  <v-icon icon="mdi-image-sync"></v-icon>
+                </v-avatar>
+              </template>
+
+              <v-list-item-title> Change photo </v-list-item-title>
+            </v-list-item>
+            <v-list-item
+              v-if="currentMember?.role !== 'Member'"
+              @click="dialogs.updateRoomCover = true"
+            >
+              <template #prepend>
+                <v-avatar color="secondary-container">
                   <v-icon icon="mdi-image-edit"></v-icon>
                 </v-avatar>
               </template>
 
-              <v-list-item-title> Edit photo </v-list-item-title>
+              <v-list-item-title> Change cover </v-list-item-title>
+            </v-list-item>
+            <v-list-item
+              v-if="currentMember?.role !== 'Member'"
+              @click="dialogs.updateRoomTheme = true"
+            >
+              <template #prepend>
+                <v-avatar color="secondary-container">
+                  <v-avatar
+                    v-if="room.themeSource"
+                    :color="displayThemeColor"
+                    size="x-small"
+                    class="elevation-4"
+                  ></v-avatar>
+                  <v-icon icon="mdi-palette" v-else></v-icon>
+                </v-avatar>
+              </template>
+
+              <v-list-item-title> Choose Theme </v-list-item-title>
             </v-list-item>
             <v-list-item
               v-if="room?.isGroup && currentMember?.role === 'Admin'"
@@ -217,10 +247,9 @@
     v-model="dialogs.updateRoom"
     @submit="requestUpdateRoom"
   />
-  <v-dialog-update-room-photo
-    v-model="dialogs.updateRoomPhoto"
-    @submit="() => true"
-  />
+  <v-dialog-update-room-photo v-model="dialogs.updateRoomPhoto" />
+  <v-dialog-update-room-cover v-model="dialogs.updateRoomCover" />
+  <v-dialog-update-room-theme v-model="dialogs.updateRoomTheme" />
   <v-dialog-delete-room
     v-model="dialogs.deleteRoom"
     @submit="requestDeleteRoom"
@@ -253,18 +282,11 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, inject, reactive } from 'vue';
+import { computed, defineAsyncComponent, inject, reactive } from 'vue';
 import { useRouter } from 'vue-router';
 
-import VDialogCreateMember from '@/components/Rooms/Dialogs/DialogCreateMember.vue';
-import VDialogDeleteMember from '@/components/Rooms/Dialogs/DialogDeleteMember.vue';
-import VDialogDeleteRoom from '@/components/Rooms/Dialogs/DialogDeleteRoom.vue';
-import VDialogSelectReactionIcon from '@/components/Rooms/Dialogs/DialogSelectReactionIcon.vue';
-import VDialogUpdateMember from '@/components/Rooms/Dialogs/DialogUpdateMember.vue';
-import VDialogUpdateMemberRole from '@/components/Rooms/Dialogs/DialogUpdateMemberRole.vue';
-import VDialogUpdateRoom from '@/components/Rooms/Dialogs/DialogUpdateRoom.vue';
-import VDialogUpdateRoomPhoto from '@/components/Rooms/Dialogs/DialogUpdateRoomPhoto.vue';
 import { useAuth } from '@/composables/useAuth';
+import { useDisplayThemeColor } from '@/composables/useColor';
 import { useRoom } from '@/composables/useRoom';
 import { useSocketChat } from '@/composables/useSocketChat';
 import { useSocketEventListener } from '@/composables/useSocketEventListener';
@@ -277,6 +299,37 @@ import {
   IUpdateRoomMemberRequest,
   IUpdateRoomRequest,
 } from '@/interfaces/rooms';
+
+const VDialogCreateMember = defineAsyncComponent(
+  () => import('@/components/Rooms/Dialogs/DialogCreateMember.vue'),
+);
+const VDialogDeleteMember = defineAsyncComponent(
+  () => import('@/components/Rooms/Dialogs/DialogDeleteMember.vue'),
+);
+const VDialogDeleteRoom = defineAsyncComponent(
+  () => import('@/components/Rooms/Dialogs/DialogDeleteRoom.vue'),
+);
+const VDialogSelectReactionIcon = defineAsyncComponent(
+  () => import('@/components/Rooms/Dialogs/DialogSelectReactionIcon.vue'),
+);
+const VDialogUpdateMember = defineAsyncComponent(
+  () => import('@/components/Rooms/Dialogs/DialogUpdateMember.vue'),
+);
+const VDialogUpdateMemberRole = defineAsyncComponent(
+  () => import('@/components/Rooms/Dialogs/DialogUpdateMemberRole.vue'),
+);
+const VDialogUpdateRoom = defineAsyncComponent(
+  () => import('@/components/Rooms/Dialogs/DialogUpdateRoom.vue'),
+);
+const VDialogUpdateRoomCover = defineAsyncComponent(
+  () => import('@/components/Rooms/Dialogs/DialogUpdateRoomCover.vue'),
+);
+const VDialogUpdateRoomPhoto = defineAsyncComponent(
+  () => import('@/components/Rooms/Dialogs/DialogUpdateRoomPhoto.vue'),
+);
+const VDialogUpdateRoomTheme = defineAsyncComponent(
+  () => import('@/components/Rooms/Dialogs/DialogUpdateRoomTheme.vue'),
+);
 
 const props = defineProps<{
   modelValue?: IRoomResponse;
@@ -306,12 +359,22 @@ const socket = useSocketChat();
 
 const room = inject(KEYS.CHAT.ROOM)!;
 
+const displayThemeColor = useDisplayThemeColor(
+  computed(() => room.value.themeSource),
+);
+
+const reactionIcon = inject(KEYS.CHAT.REACTION_ICON)!;
+
+function onSelectReactionIcon(data: { value: string }) {
+  reactionIcon.value = data.value;
+}
+
 const {
   roomMembers,
   currentMember,
   displayName,
   roomPhotoUrl,
-  updatePhotoUrl,
+  updateImage,
   getPhotoUrlByRoomUser,
 } = useRoom(room);
 
@@ -332,7 +395,9 @@ function handleDeleteRoom(data: IRoomResponse) {
 
 const dialogs = reactive({
   updateRoom: false,
+  updateRoomCover: false,
   updateRoomPhoto: false,
+  updateRoomTheme: false,
   deleteRoom: false,
   createMember: false,
   memberId: '',
@@ -348,7 +413,17 @@ useSocketEventListener<IRoomResponse>(socket, 'update:room:photo', {
       return;
     }
     room.value = data;
-    updatePhotoUrl();
+    updateImage('photo');
+  },
+});
+
+useSocketEventListener<IRoomResponse>(socket, 'update:room:cover', {
+  listener(data) {
+    if (data.id !== room.value?.id) {
+      return;
+    }
+    room.value = data;
+    updateImage('cover');
   },
 });
 
@@ -446,10 +521,4 @@ const isLoading = computed(
     isLoadingUpdateMember.value ||
     isLoadingDeleteMember.value,
 );
-
-const reactionIcon = inject(KEYS.CHAT.REACTION_ICON)!;
-
-function onSelectReactionIcon(data: { value: string }) {
-  reactionIcon.value = data.value;
-}
 </script>

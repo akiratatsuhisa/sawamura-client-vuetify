@@ -15,14 +15,46 @@ export namespace IMAGE_FILE {
 export namespace FileHelper {
   export type DimensionsType = { width: number; height: number };
 
+  export function resizeImage(
+    width: number,
+    height: number,
+    maxWidth: number,
+    maxHeight: number,
+  ) {
+    // Calculate the aspect ratio of the original image
+    const aspectRatio = width / height;
+
+    // Check if resizing is required
+    if (width <= maxWidth && height <= maxHeight) {
+      // Image dimensions are already within the desired limits
+      return { width, height };
+    }
+
+    // Calculate the new dimensions while maintaining the aspect ratio
+    if (width > height) {
+      // Landscape image
+      width = Math.min(maxWidth, width);
+      height = Math.round(width / aspectRatio);
+    } else {
+      // Portrait or square image
+      height = Math.min(maxHeight, height);
+      width = Math.round(height * aspectRatio);
+    }
+
+    return { width, height };
+  }
+
   export async function convertCanvasToFile(
     canvas: HTMLCanvasElement,
     options: {
-      dimensions: DimensionsType;
+      dimensions?: DimensionsType;
       mimeType: string;
     },
   ) {
-    const { dimensions, mimeType } = options;
+    const {
+      dimensions = { width: canvas.width, height: canvas.height },
+      mimeType,
+    } = options;
 
     const clonedCanvas = document.createElement('canvas');
     clonedCanvas.width = dimensions.width;
@@ -35,6 +67,6 @@ export namespace FileHelper {
       clonedCanvas!.toBlob((blob) => resolve(blob!), mimeType),
     );
 
-    return new File([blob], 'image.png', { type: mimeType });
+    return new File([blob], 'image.jpg', { type: mimeType });
   }
 }

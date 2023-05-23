@@ -7,10 +7,19 @@
     @submit="onSubmit"
     @open="onOpen"
   >
-    <template #title>Profile Photo</template>
+    <template #title>Room Cover</template>
 
     <div class="d-flex mb-3">
       <v-btn color="primary" @click="open">Choose image</v-btn>
+
+      <v-spacer></v-spacer>
+      <v-btn
+        v-if="room.coverUrl"
+        color="secondary"
+        @click="dialogConfirm = true"
+      >
+        Delete
+      </v-btn>
     </div>
 
     <div>
@@ -29,7 +38,9 @@
     <div class="d-flex justify-center align-center">
       <div
         class="d-flex justify-center align-center cropper-wrapper"
-        :style="{ height: $vuetify.display.smAndDown ? '' : '400px' }"
+        :style="{
+          height: $vuetify.display.smAndDown ? '' : '400px',
+        }"
       >
         <div
           :style="{ backgroundImage: 'url(' + imageCropperSrc + ')' }"
@@ -39,13 +50,8 @@
           ref="cropperRef"
           class="cropper elevation-1"
           background-class="cropper-background"
-          :stencil-component="CircleStencil"
+          :stencil-component="RectangleStencil"
           :src="imageCropperSrc"
-          :stencil-props="{
-            aspectRatio: 1 / 1,
-            width: IMAGE_FILE.PHOTO_DIMENSIONS.WIDTH,
-            height: IMAGE_FILE.PHOTO_DIMENSIONS.WIDTH,
-          }"
           @ready="submitable = true"
           @error="submitable = false"
         />
@@ -54,6 +60,16 @@
 
     <template #action>Change</template>
   </v-base-dialog>
+
+  <v-dialog v-model="dialogConfirm" width="auto" persistent>
+    <v-card>
+      <v-card-text>Do you want to delete room cover?</v-card-text>
+      <v-card-actions class="justify-end">
+        <v-btn color="primary" @click="dialogConfirm = false">Cancel</v-btn>
+        <v-btn color="primary" @click="onSubmitDelete">Agree</v-btn>
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
 </template>
 
 <script lang="ts" setup>
@@ -61,11 +77,11 @@ import 'vue-advanced-cropper/dist/style.css';
 import 'vue-advanced-cropper/dist/theme.compact.css';
 
 import { useFileDialog, useObjectUrl } from '@vueuse/core';
-import { ref, shallowRef, watch } from 'vue';
-import { CircleStencil, Cropper as VCropper } from 'vue-advanced-cropper';
+import { computed, inject, ref, shallowRef, watch } from 'vue';
+import { Cropper as VCropper, RectangleStencil } from 'vue-advanced-cropper';
 
-import { useAuth } from '@/composables/useAuth';
 import { useAxios } from '@/composables/useAxios';
+import { KEYS } from '@/constants';
 import { FileHelper, IMAGE_FILE } from '@/helpers/file';
 import { services } from '@/services';
 
@@ -78,7 +94,7 @@ const emit = defineEmits<{
   (event: 'submit', data: any): void;
 }>();
 
-const { fetchAccessToken, updateImage } = useAuth();
+const room = inject(KEYS.CHAT.ROOM)!;
 
 const submitable = ref(false);
 
@@ -106,9 +122,18 @@ watch(selectFiles, (files) => {
 
 const cropperRef = ref<InstanceType<typeof VCropper>>();
 
-const { isLoading, excute: updatePhoto } = useAxios(
-  services.auth,
-  'updatePhoto',
+const { isLoading: isLoadingUpdateCover, excute: updateCover } = useAxios(
+  services.rooms,
+  'updateCover',
+);
+
+const { isLoading: isLoadingDeleteCover, excute: deleteCover } = useAxios(
+  services.rooms,
+  'deleteCover',
+);
+
+const isLoading = computed(
+  () => isLoadingUpdateCover.value || isLoadingDeleteCover.value,
 );
 
 async function onSubmit() {
@@ -116,18 +141,25 @@ async function onSubmit() {
 
   const image = await FileHelper.convertCanvasToFile(result.canvas!, {
     mimeType: IMAGE_FILE.MIME_TYPE,
-    dimensions: {
-      width: IMAGE_FILE.PHOTO_DIMENSIONS.WIDTH,
-      height: IMAGE_FILE.PHOTO_DIMENSIONS.HEIGHT,
-    },
+    dimensions: FileHelper.resizeImage(
+      result.canvas!.width,
+      result.canvas!.height,
+      IMAGE_FILE.PHOTO_DIMENSIONS.WIDTH,
+      IMAGE_FILE.PHOTO_DIMENSIONS.HEIGHT,
+    ),
   });
 
-  (async () => {
-    await updatePhoto({ image, theme: theme.value });
-    await fetchAccessToken();
-    updateImage('photo');
-  })();
+  updateCover({ id: room.value!.id, image, theme: theme.value });
 
+  emit('update:modelValue', false);
+}
+
+const dialogConfirm = ref(false);
+
+async function onSubmitDelete() {
+  deleteCover({ id: room.value!.id });
+
+  dialogConfirm.value = false;
   emit('update:modelValue', false);
 }
 

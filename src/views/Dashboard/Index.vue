@@ -24,7 +24,7 @@
 
       <v-row class="mt-3">
         <v-col cols="12" sm="6" md="3">
-          <info-card v-bind="statisticalData.dropbox">
+          <v-info-card v-bind="statisticalData.dropbox">
             <v-progress-linear
               height="24"
               :model-value="statisticalData.dropbox.value"
@@ -51,11 +51,11 @@
                 })
               }}</span
             >
-          </info-card>
+          </v-info-card>
         </v-col>
 
         <v-col cols="12" sm="6" md="3">
-          <info-card v-bind="statisticalData.cache">
+          <v-info-card v-bind="statisticalData.cache">
             <v-progress-linear
               height="24"
               :model-value="statisticalData.cache.value"
@@ -82,21 +82,21 @@
                 })
               }}</span
             >
-          </info-card>
+          </v-info-card>
         </v-col>
 
         <v-col cols="12" sm="6" md="3">
-          <info-card v-bind="statisticalData.posts"></info-card>
+          <v-info-card v-bind="statisticalData.posts"></v-info-card>
         </v-col>
 
         <v-col cols="12" sm="6" md="3">
-          <info-card v-bind="statisticalData.users"></info-card>
+          <v-info-card v-bind="statisticalData.users"></v-info-card>
         </v-col>
       </v-row>
 
       <router-view v-slot="{ Component }">
         <transition name="fade" mode="out-in">
-          <component :is="Component ? Component : DefaultComponent" />
+          <component :is="Component ? Component : VDefaultComponent" />
         </transition>
       </router-view>
     </v-container>
@@ -109,8 +109,8 @@ import _ from 'lodash';
 import { computed, reactive } from 'vue';
 import { useRoute } from 'vue-router';
 
-import DefaultComponent from '@/components/Dashboard/Default.vue';
-import InfoCard, { InfoCardProps } from '@/components/Dashboard/InfoCard.vue';
+import VDefaultComponent from '@/components/Dashboard/Default.vue';
+import VInfoCard, { InfoCardProps } from '@/components/Dashboard/InfoCard.vue';
 import { initSocketDashboard } from '@/composables/useSocketDashboard';
 import { useSocketEventListener } from '@/composables/useSocketEventListener';
 import { BinaryUnit, Format } from '@/helpers/format';

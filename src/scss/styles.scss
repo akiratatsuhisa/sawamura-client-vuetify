@@ -66,3 +66,25 @@
     border: 1px solid rgb(var(--v-theme-surface)) !important;
   }
 }
+
+html {
+  overflow: auto;
+}
+
+*::-webkit-scrollbar {
+  width: 0.75rem;
+}
+
+*::-webkit-scrollbar-track {
+  background-color: rgb(var(--v-theme-surface-variant));
+}
+
+*::-webkit-scrollbar-thumb {
+  border-radius: 9999px;
+  border: 3px solid rgb(var(--v-theme-surface-variant));
+  background-color: rgb(var(--v-theme-primary), 0.5);
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background-color: rgb(var(--v-theme-primary), 0.75);
+}

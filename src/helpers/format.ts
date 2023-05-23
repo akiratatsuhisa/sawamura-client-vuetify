@@ -29,7 +29,7 @@ export namespace Format {
       timeStyle?: dateTimeStyle;
       timeZone?: string;
     },
-  ) {
+  ): string {
     const { locales, dateStyle, timeStyle, timeZone } = options ?? {};
 
     if (
@@ -52,7 +52,7 @@ export namespace Format {
   export function date(
     data: dateTimeDataType,
     options?: { locales?: localesType; dateStyle?: dateTimeStyle },
-  ) {
+  ): string {
     return dateTime(data, {
       dateStyle: options?.dateStyle ?? 'long',
       timeStyle: undefined,
@@ -126,4 +126,54 @@ export namespace Format {
 
     return `${result} ${outputUnit}`;
   }
+}
+
+type RGBColor = { r: number; g: number; b: number };
+
+type ARGBColor = { a: number; r: number; g: number; b: number };
+
+/**
+ * @param {number} value must be a number like 4278928261 (0xFF0B4385 with FF: alpha, 0B: red, green: 43, blue: 85)
+ * @returns {RGBColor | ARGBColor}
+ */
+export function numberToRgb(value: number, alpha: true): ARGBColor;
+export function numberToRgb(value: number, alpha?: false): RGBColor;
+export function numberToRgb(value: number, alpha?: any): any {
+  value = Number(value);
+
+  const a = (value >> 24) & 255;
+  const r = (value >> 16) & 255;
+  const g = (value >> 8) & 255;
+  const b = value & 255;
+
+  return alpha
+    ? ({
+        a,
+        r,
+        g,
+        b,
+      } as ARGBColor)
+    : ({
+        r,
+        g,
+        b,
+      } as RGBColor);
+}
+
+/**
+ * @param {RGBColor | ARGBColor} rgb
+ * @returns {number}
+ */
+export function rgbToNumber(value: RGBColor | ARGBColor): number {
+  return (
+    ((value as ARGBColor)?.a ?? 255) * (1 << 24) +
+    (value.r << 16) +
+    (value.g << 8) +
+    (value.b << 0)
+  );
+}
+
+export function addPrefixToCSS(css: string, prefix: string): string {
+  const selectorRegex = /(\.v-theme--\w[\w-]*)/g;
+  return css.replace(selectorRegex, `${prefix} $1`);
 }

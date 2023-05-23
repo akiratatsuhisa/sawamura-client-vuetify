@@ -1,7 +1,7 @@
-import BaseDialog from '@/components/BaseDialog.vue';
+import VBaseDialog from '@/components/BaseDialog.vue';
 
 declare module '@vue/runtime-core' {
   export interface GlobalComponents {
-    BaseDialog: typeof BaseDialog;
+    BaseDialog: typeof VBaseDialog;
   }
 }

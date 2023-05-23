@@ -15,11 +15,11 @@
 
         <v-window :model-value="tab">
           <v-window-item :value="tabs.Information.name">
-            <index-view></index-view>
+            <v-index-view></v-index-view>
           </v-window-item>
           <v-window-item :value="tabs.Roles.name">
             <v-fade-transition>
-              <role-list v-if="route.name === tabs.Roles.name"></role-list>
+              <v-role-list v-if="route.name === tabs.Roles.name" />
             </v-fade-transition>
           </v-window-item>
         </v-window>
@@ -77,8 +77,8 @@ import { computed, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useTheme } from 'vuetify';
 
-import IndexView from '@/components/Dashboard/Users/Index.vue';
-import RoleList from '@/components/Dashboard/Users/RoleList.vue';
+import VIndexView from '@/components/Dashboard/Users/Index.vue';
+import VRoleList from '@/components/Dashboard/Users/RoleList.vue';
 import { useSocketDashboard } from '@/composables/useSocketDashboard';
 import { useSocketEventListener } from '@/composables/useSocketEventListener';
 import {

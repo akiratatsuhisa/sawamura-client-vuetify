@@ -27,7 +27,7 @@
               <v-list-subheader tag="h2">Rooms</v-list-subheader>
 
               <template v-for="room in rooms" :key="room.id">
-                <room-item :room="room"></room-item>
+                <v-room-item :room="room" />
 
                 <v-divider inset></v-divider>
               </template>
@@ -47,9 +47,8 @@
 
 <script lang="ts" setup>
 import _ from 'lodash';
-import { computed, inject, ref } from 'vue';
+import { computed, defineAsyncComponent, inject, ref } from 'vue';
 
-import VDialogCreateRoomGroup from '@/components/Rooms/Dialogs/DialogCreateRoomGroup.vue';
 import { useSocketChat } from '@/composables/useSocketChat';
 import { useSocketEventListener } from '@/composables/useSocketEventListener';
 import { KEYS } from '@/constants';
@@ -58,7 +57,11 @@ import {
   IRoomResponse,
   ISearchRoomsRequest,
 } from '@/interfaces/rooms';
-import RoomItem from '@/views/Messages/RoomItem.vue';
+import VRoomItem from '@/views/Messages/RoomItem.vue';
+
+const VDialogCreateRoomGroup = defineAsyncComponent(
+  () => import('@/components/Rooms/Dialogs/DialogCreateRoomGroup.vue'),
+);
 
 const socket = useSocketChat();
 

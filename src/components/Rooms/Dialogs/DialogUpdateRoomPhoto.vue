@@ -7,9 +7,22 @@
     @submit="onSubmit"
     @open="onOpen"
   >
-    <template #title>Profile Photo</template>
+    <template #title>Room Photo</template>
 
-    <v-btn color="secondary-container" @click="open">Choose image</v-btn>
+    <div class="d-flex mb-3">
+      <v-btn color="primary" @click="open">Choose image</v-btn>
+    </div>
+
+    <div>
+      <v-switch
+        v-model="theme"
+        density="compact"
+        color="tertiary"
+        label="Generate theme from uploaded image"
+        inset
+        hide-details
+      ></v-switch>
+    </div>
 
     <v-divider class="my-3"></v-divider>
 
@@ -22,7 +35,7 @@
           :style="{ backgroundImage: 'url(' + imageCropperSrc + ')' }"
           class="image-background"
         ></div>
-        <cropper
+        <v-cropper
           ref="cropperRef"
           class="cropper elevation-1"
           background-class="cropper-background"
@@ -49,7 +62,7 @@ import 'vue-advanced-cropper/dist/theme.compact.css';
 
 import { useFileDialog, useObjectUrl } from '@vueuse/core';
 import { inject, ref, shallowRef, watch } from 'vue';
-import { CircleStencil, Cropper } from 'vue-advanced-cropper';
+import { CircleStencil, Cropper as VCropper } from 'vue-advanced-cropper';
 
 import { useAxios } from '@/composables/useAxios';
 import { KEYS } from '@/constants';
@@ -69,6 +82,7 @@ const room = inject(KEYS.CHAT.ROOM)!;
 
 const submitable = ref(false);
 
+const theme = ref<boolean>(false);
 const imageFile = shallowRef<File>();
 const imageCropperSrc = useObjectUrl(imageFile);
 
@@ -90,7 +104,7 @@ watch(selectFiles, (files) => {
   imageFile.value = file;
 });
 
-const cropperRef = ref<InstanceType<typeof Cropper>>();
+const cropperRef = ref<InstanceType<typeof VCropper>>();
 
 const { isLoading, excute: updatePhoto } = useAxios(
   services.rooms,
@@ -108,7 +122,7 @@ async function onSubmit() {
     },
   });
 
-  updatePhoto({ id: room.value!.id, image });
+  updatePhoto({ id: room.value!.id, image, theme: theme.value });
 
   emit('update:modelValue', false);
 }
@@ -123,6 +137,6 @@ function onOpen() {
 <style lang="scss" scoped>
 .cropper-wrapper {
   width: 100%;
-  height: calc(100vh - 220px);
+  height: calc(100vh - 270px);
 }
 </style>

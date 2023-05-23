@@ -21,6 +21,9 @@
             v-if="message.type === 'Text'"
             rounded="xl"
             class="text-pre-wrap text-break"
+            :class="[
+              isCurrentUserMessage ? 'bg-primary' : 'bg-primary-container',
+            ]"
           >
             <v-card-text>
               {{ message.content }}
@@ -39,20 +42,31 @@
               class="pa-1 files"
               :class="[isCurrentUserMessage ? 'justify-end' : 'justify-start']"
             >
-              <message-content-file
+              <v-message-content-file
                 v-for="file in files"
                 :key="file.uuid"
                 :type="message.type"
                 :file="file"
+                :is-current-user-message="isCurrentUserMessage"
               />
             </div>
-            <v-card v-else rounded="xl">
-              <v-card-text class="text-grey-lighten-1">
-                File(s) has error
-              </v-card-text>
+            <v-card
+              v-else
+              rounded="xl"
+              :class="[
+                isCurrentUserMessage ? 'bg-tertiary' : 'bg-tertiary-container',
+              ]"
+            >
+              <v-card-text>File(s) has error</v-card-text>
             </v-card>
           </div>
-          <v-card v-else rounded="xl" class="bg-secondary-container">
+          <v-card
+            v-else
+            rounded="xl"
+            :class="[
+              isCurrentUserMessage ? 'bg-tertiary' : 'bg-tertiary-container',
+            ]"
+          >
             <v-card-text>Message has been deleted</v-card-text>
           </v-card>
         </div>
@@ -92,7 +106,7 @@ import { useTimeAgo } from '@vueuse/core';
 import _ from 'lodash';
 import { computed } from 'vue';
 
-import MessageContentFile from '@/components/Rooms/Detail/MessageContentFile.vue';
+import VMessageContentFile from '@/components/Rooms/Detail/MessageContentFile.vue';
 import { useAuth } from '@/composables/useAuth';
 import {
   IDeleteRoomMessageRequest,

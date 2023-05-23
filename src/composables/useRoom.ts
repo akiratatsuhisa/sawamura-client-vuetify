@@ -1,7 +1,7 @@
-import { MaybeRef, useTimeAgo } from '@vueuse/core';
+import { MaybeRef, useLocalStorage, useTimeAgo } from '@vueuse/core';
 import _ from 'lodash';
 import moment from 'moment';
-import { computed, ref, unref } from 'vue';
+import { computed, unref } from 'vue';
 
 import { IRoomResponse, IRoomUserResponse } from '@/interfaces/rooms';
 
@@ -39,7 +39,9 @@ export function useRoom(room: MaybeRef<IRoomResponse>) {
         );
   });
 
-  const updatedPhoto = ref('');
+  const updatedImages = useLocalStorage<{
+    [key: string]: { photo: string; cover: string };
+  }>('list:room:images', {});
 
   const roomPhotoUrl = computed(() => {
     const unwrapRoom = unref(room);
@@ -54,13 +56,30 @@ export function useRoom(room: MaybeRef<IRoomResponse>) {
 
     return unwrapRoom.photoUrl
       ? `${import.meta.env.VITE_API_URL}/rooms/${unwrapRoom.id}/photo` +
-          (updatedPhoto.value ? `?updated=${updatedPhoto.value}` : '')
+          (updatedImages.value[unwrapRoom.id]?.photo
+            ? `?updated=${updatedImages.value[unwrapRoom.id].photo}`
+            : '')
       : import.meta.env.VITE_NO_BACKGROUND_URL;
   });
 
-  function updatePhotoUrl() {
-    updatedPhoto.value = moment().unix().toString();
+  function updateImage(type: 'photo' | 'cover') {
+    if (!updatedImages.value[unref(room).id]) {
+      updatedImages.value[unref(room).id] = { photo: '', cover: '' };
+    }
+
+    updatedImages.value[unref(room).id][type] = moment().unix().toString();
   }
+
+  const roomCoverUrl = computed(() => {
+    const unwrapRoom = unref(room);
+
+    return unwrapRoom.coverUrl
+      ? `${import.meta.env.VITE_API_URL}/rooms/${unwrapRoom.id}/cover` +
+          (updatedImages.value[unwrapRoom.id]?.cover
+            ? `?updated=${updatedImages.value[unwrapRoom.id].cover}`
+            : '')
+      : '';
+  });
 
   const displayName = computed(() => {
     const unwrapRoom = unref(room);
@@ -94,7 +113,8 @@ export function useRoom(room: MaybeRef<IRoomResponse>) {
     displayName,
     disyplayLastActivatedAgo,
     roomPhotoUrl,
-    updatePhotoUrl,
+    roomCoverUrl,
+    updateImage,
     getPhotoUrlByRoomUser,
   };
 }

@@ -15,16 +15,16 @@
     <v-col cols="12" md="6">
       <v-row>
         <v-col cols="12" sm="6">
-          <info-card v-bind="statisticalData.print"></info-card>
+          <v-info-card v-bind="statisticalData.print"></v-info-card>
         </v-col>
         <v-col cols="12" sm="6">
-          <info-card v-bind="statisticalData.report"></info-card>
+          <v-info-card v-bind="statisticalData.report"></v-info-card>
         </v-col>
         <v-col cols="12" sm="6">
-          <info-card v-bind="statisticalData.bugs"></info-card>
+          <v-info-card v-bind="statisticalData.bugs"></v-info-card>
         </v-col>
         <v-col cols="12" sm="6">
-          <info-card v-bind="statisticalData.revenue"></info-card>
+          <v-info-card v-bind="statisticalData.revenue"></v-info-card>
         </v-col>
       </v-row>
     </v-col>
@@ -34,7 +34,7 @@
 <script lang="ts" setup>
 import { reactive } from 'vue';
 
-import InfoCard, { InfoCardProps } from '@/components/Dashboard/InfoCard.vue';
+import VInfoCard, { InfoCardProps } from '@/components/Dashboard/InfoCard.vue';
 
 const statisticalData = reactive<
   Record<

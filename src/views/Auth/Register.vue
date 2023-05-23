@@ -13,7 +13,6 @@
               <v-text-field
                 class="mb-3"
                 label="Username"
-                variant="outlined"
                 v-model="v$.username.$model"
                 :error-messages="getErrorMessage(v$.username)"
                 @blur="v$.username.$validate"
@@ -23,7 +22,6 @@
               <v-text-field
                 class="mb-3"
                 label="Email"
-                variant="outlined"
                 v-model="v$.email.$model"
                 :error-messages="getErrorMessage(v$.email)"
                 @blur="v$.email.$validate"
@@ -33,7 +31,6 @@
               <v-text-field
                 class="mb-3"
                 label="Password"
-                variant="outlined"
                 v-model="v$.password.$model"
                 :error-messages="getErrorMessage(v$.password)"
                 @blur="v$.password.$validate"
@@ -46,13 +43,12 @@
               <v-text-field
                 class="mb-3"
                 label="Confirm"
-                hint="Re-enter password"
-                persistent-hint
-                variant="outlined"
                 v-model="v$.confirmPassword.$model"
                 :error-messages="getErrorMessage(v$.confirmPassword)"
                 @blur="v$.confirmPassword.$validate"
                 clearable
+                persistent-hint
+                hint="Re-enter password"
                 :type="showConfirmPassword ? 'text' : 'password'"
                 :append-inner-icon="
                   showConfirmPassword ? 'mdi-eye' : 'mdi-eye-off'

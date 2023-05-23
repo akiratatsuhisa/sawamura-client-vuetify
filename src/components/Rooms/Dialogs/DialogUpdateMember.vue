@@ -12,12 +12,11 @@
     <v-text-field
       class="mt-3"
       label="Nickname"
-      variant="outlined"
       v-model="v$.nickName.$model"
-      hint="click clear icon to clear nickname"
       :error-messages="getErrorMessage(v$.nickName)"
       @blur="v$.nickName.$validate"
       clearable
+      hint="Click clear icon to clear nickname"
     ></v-text-field>
 
     <template #action>Edit</template>

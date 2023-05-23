@@ -53,10 +53,10 @@
 
     <v-list nav @click:select="handleSelect">
       <template v-for="item in subItems" :key="item.key">
-        <title-menu-item v-if="item.type === 'title'" :item="item" />
-        <icon-menu-item v-else-if="item.type === 'icon'" :item="item" />
-        <avatar-menu-item v-else-if="item.type === 'avatar'" :item="item" />
-        <room-menu-item v-else-if="item.type === 'room'" :item="item" />
+        <v-title-menu-item v-if="item.type === 'title'" :item="item" />
+        <v-icon-menu-item v-else-if="item.type === 'icon'" :item="item" />
+        <v-avatar-menu-item v-else-if="item.type === 'avatar'" :item="item" />
+        <v-room-menu-item v-else-if="item.type === 'room'" :item="item" />
       </template>
     </v-list>
   </v-navigation-drawer>
@@ -70,10 +70,10 @@ import { RouteLocationNamedRaw, useRoute, useRouter } from 'vue-router';
 import { useAuth } from '@/composables/useAuth';
 import { KEYS } from '@/constants';
 import { IRoomMenuItem, IRootMenuItem } from '@/interfaces/menus';
-import AvatarMenuItem from '@/layouts/Default/Menus/AvatarMenuItem.vue';
-import IconMenuItem from '@/layouts/Default/Menus/IconMenuItem.vue';
-import RoomMenuItem from '@/layouts/Default/Menus/RoomMenuItem.vue';
-import TitleMenuItem from '@/layouts/Default/Menus/TitleMenuItem.vue';
+import VAvatarMenuItem from '@/layouts/Default/Menus/AvatarMenuItem.vue';
+import VIconMenuItem from '@/layouts/Default/Menus/IconMenuItem.vue';
+import VRoomMenuItem from '@/layouts/Default/Menus/RoomMenuItem.vue';
+import VTitleMenuItem from '@/layouts/Default/Menus/TitleMenuItem.vue';
 
 const { photoUrl } = useAuth();
 

@@ -49,27 +49,44 @@ export class AuthService extends Service {
     });
   }
 
-  updatePhoto(config: AxiosRequestConfig, data: { image: File }) {
+  updatePhoto(
+    config: AxiosRequestConfig,
+    data: { image: File; theme: boolean },
+  ) {
     const formData = new FormData();
     formData.append('image', data.image);
 
     return this.fetch<void>({
       ...config,
       url: 'auth/photo',
-      method: 'PATCH',
+      method: 'PUT',
       data: formData,
+      params: { theme: data.theme },
     });
   }
 
-  updateCover(config: AxiosRequestConfig, data: { image: File }) {
+  updateCover(
+    config: AxiosRequestConfig,
+    data: { image: File; theme: boolean },
+  ) {
     const formData = new FormData();
     formData.append('image', data.image);
 
     return this.fetch<void>({
       ...config,
       url: 'auth/cover',
-      method: 'PATCH',
+      method: 'PUT',
       data: formData,
+      params: { theme: data.theme },
+    });
+  }
+
+  updateTheme(config: AxiosRequestConfig, data: { source: number | null }) {
+    return this.fetch<void>({
+      ...config,
+      url: 'auth/theme',
+      method: 'PATCH',
+      data,
     });
   }
 

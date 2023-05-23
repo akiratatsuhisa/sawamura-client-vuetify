@@ -17,39 +17,32 @@
 
     <v-divider></v-divider>
 
-    <v-list lines="one">
-      <draggable
-        v-model="roles"
-        item-key="id"
-        handle=".handle"
-        ghost-class="elevation-6"
-        @end="onEnd"
-        @start="onStart"
+    <v-list lines="one" ref="sortableRef">
+      <v-role-item
+        v-for="role in roles"
+        :key="role.id"
+        :value="role"
+        :loading="isLoading"
+        @action="(value) => (action = value)"
       >
-        <template #item="{ element }">
-          <role-item
-            :value="element"
-            :loading="isLoading"
-            @action="(value) => (action = value)"
-          ></role-item>
-        </template>
-      </draggable>
+        {{ role.name }}
+      </v-role-item>
     </v-list>
 
-    <dialog-create-role
+    <v-dialog-create-role
       :model-value="action?.mode === 'create'"
       @update:model-value="closeDialog"
       @submit="requestCreateRole"
     />
 
-    <dialog-update-role
+    <v-dialog-update-role
       :value="action?.value"
       :model-value="action?.mode === 'update'"
       @update:model-value="closeDialog"
       @submit="requestUpdateRole"
     />
 
-    <dialog-delete-role
+    <v-dialog-delete-role
       :value="action?.value"
       :model-value="action?.mode === 'delete'"
       @update:model-value="closeDialog"
@@ -59,25 +52,33 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, ref } from 'vue';
-import draggable from 'vuedraggable';
+import { useSortable } from '@vueuse/integrations/useSortable';
+import { computed, defineAsyncComponent, onMounted, ref } from 'vue';
 
-import DialogCreateRole from '@/components/Dashboard/Dialogs/DialogCreateRole.vue';
-import DialogDeleteRole from '@/components/Dashboard/Dialogs/DialogDeleteRole.vue';
-import DialogUpdateRole from '@/components/Dashboard/Dialogs/DialogUpdateRole.vue';
-import RoleItem from '@/components/Dashboard/Users/RoleItem.vue';
+import VRoleItem from '@/components/Dashboard/Users/RoleItem.vue';
 import { useAxios } from '@/composables/useAxios';
 import { useSocketDashboard } from '@/composables/useSocketDashboard';
 import { useSocketEventListener } from '@/composables/useSocketEventListener';
 import { IRoleResponse } from '@/interfaces/roles';
 import { services } from '@/services';
 
+const VDialogCreateRole = defineAsyncComponent(
+  () => import('@/components/Dashboard/Dialogs/DialogCreateRole.vue'),
+);
+const VDialogDeleteRole = defineAsyncComponent(
+  () => import('@/components/Dashboard/Dialogs/DialogDeleteRole.vue'),
+);
+const VDialogUpdateRole = defineAsyncComponent(
+  () => import('@/components/Dashboard/Dialogs/DialogUpdateRole.vue'),
+);
+
 const socket = useSocketDashboard();
 
-const { data: roles } = useAxios(services.roles, 'getAll', {
-  immediate: true,
-  paramsOrData: {},
-});
+const roles = ref<Array<IRoleResponse>>([]);
+
+const { excute: requestRoles } = useAxios(services.roles, 'getAll');
+
+onMounted(async () => (roles.value = await requestRoles({})));
 
 useSocketEventListener<{ roles: Array<IRoleResponse> }>(socket, 'list:role', {
   listener({ roles: data }) {
@@ -103,6 +104,14 @@ function onEnd({ newIndex }: { newIndex: number }) {
 
   draggedRole.value = undefined;
 }
+
+const sortableRef = ref<HTMLDivElement>();
+
+useSortable(sortableRef, roles, {
+  handle: '.handle',
+  onStart,
+  onEnd,
+});
 
 const action = ref<
   | {

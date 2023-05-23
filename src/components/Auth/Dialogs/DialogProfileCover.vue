@@ -9,7 +9,20 @@
   >
     <template #title>Profile Photo</template>
 
-    <v-btn color="secondary-container" @click="open">Choose image</v-btn>
+    <div class="d-flex mb-3">
+      <v-btn color="primary" @click="open">Choose image</v-btn>
+    </div>
+
+    <div>
+      <v-switch
+        v-model="theme"
+        density="compact"
+        color="tertiary"
+        label="Generate theme from uploaded image"
+        inset
+        hide-details
+      ></v-switch>
+    </div>
 
     <v-divider class="my-3"></v-divider>
 
@@ -18,7 +31,7 @@
         :style="{ backgroundImage: 'url(' + imageCropperSrc + ')' }"
         class="image-background"
       ></div>
-      <cropper
+      <v-cropper
         ref="cropperRef"
         class="cropper elevation-1"
         background-class="cropper-background"
@@ -44,7 +57,7 @@ import 'vue-advanced-cropper/dist/theme.compact.css';
 
 import { useFileDialog, useObjectUrl } from '@vueuse/core';
 import { ref, shallowRef, watch } from 'vue';
-import { Cropper, RectangleStencil } from 'vue-advanced-cropper';
+import { Cropper as VCropper, RectangleStencil } from 'vue-advanced-cropper';
 
 import { useAuth } from '@/composables/useAuth';
 import { useAxios } from '@/composables/useAxios';
@@ -64,6 +77,7 @@ const { fetchAccessToken, updateImage } = useAuth();
 
 const submitable = ref(false);
 
+const theme = ref<boolean>(false);
 const imageFile = shallowRef<File>();
 const imageCropperSrc = useObjectUrl(imageFile);
 
@@ -85,7 +99,7 @@ watch(selectFiles, (files) => {
   imageFile.value = file;
 });
 
-const cropperRef = ref<InstanceType<typeof Cropper>>();
+const cropperRef = ref<InstanceType<typeof VCropper>>();
 
 const { isLoading, excute: updateCover } = useAxios(
   services.auth,
@@ -104,7 +118,7 @@ async function onSubmit() {
   });
 
   (async () => {
-    await updateCover({ image });
+    await updateCover({ image, theme: theme.value });
     await fetchAccessToken();
     updateImage('cover');
   })();
@@ -122,6 +136,6 @@ function onOpen() {
 <style lang="scss" scoped>
 .cropper-wrapper {
   width: 100%;
-  height: calc(100vh - 220px);
+  height: calc(100vh - 270px);
 }
 </style>

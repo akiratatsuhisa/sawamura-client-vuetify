@@ -16,8 +16,8 @@ import { config } from '@/services';
 import { useSnackbar } from './useSnackbar';
 
 export const useAuth = createSharedComposable(() => {
-  const accessToken = useLocalStorage('accessToken', '');
-  const refreshToken = useLocalStorage('refreshToken', '');
+  const accessToken = useLocalStorage('auth:profile:accessToken', '');
+  const refreshToken = useLocalStorage('auth:profile:refreshToken', '');
 
   const user = computed<IdentityUser | null>(() =>
     Jwt.parseUser(accessToken.value),
@@ -42,7 +42,7 @@ export const useAuth = createSharedComposable(() => {
         url: '/auth/refreshToken',
         method: 'POST',
         headers: {
-          refreshToken: refreshToken.value,
+          ['Refresh-Token']: refreshToken.value,
         },
       });
 
@@ -121,7 +121,7 @@ export const useAuth = createSharedComposable(() => {
     }
   }
 
-  const updatedImages = useLocalStorage('images', {
+  const updatedImages = useLocalStorage('auth:profile:images', {
     photo: '',
     cover: '',
   });

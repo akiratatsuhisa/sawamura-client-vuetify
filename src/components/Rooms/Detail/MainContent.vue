@@ -3,22 +3,27 @@
     id="chat-main"
     class="wrapper flex-grow-1 flex-shrink-1"
     min-height="320"
+    :style="{
+      'background-image': roomCoverUrl ? `url(${roomCoverUrl})` : undefined,
+    }"
   >
+    <div v-if="roomCoverUrl" class="bg-filter"></div>
+
     <div
       ref="messagesRef"
       class="content overflow-y-auto overflow-x-hidden d-flex flex-column-reverse pa-2 scroll-smooth"
     >
-      <typing-users ref="typingUsersRef" />
+      <v-typing-users ref="typingUsersRef" />
 
       <!-- messages -->
-      <message-content
+      <v-message-content
         v-for="(message, index) in messages"
         :key="message.id"
         :index="index"
         :message="message"
         :is-loading-action="isLoadingDeleteMessage"
         @remove-message="requestDeleteMessage"
-      ></message-content>
+      />
 
       <v-sheet
         v-intersect="onIntersect"
@@ -64,7 +69,7 @@
     />
   </v-sheet>
 
-  <message-input
+  <v-message-input
     ref="messageInputRef"
     v-model:emoji-picker-show="emojiPickerShow"
     @unshift-message="unshiftMessage"
@@ -103,9 +108,10 @@ import _ from 'lodash';
 import { computed, inject, provide, ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
 
-import MessageContent from '@/components/Rooms/Detail/MessageContent.vue';
-import MessageInput from '@/components/Rooms/Detail/MessageInput.vue';
-import TypingUsers from '@/components/Rooms/Detail/TypingUsers.vue';
+import VMessageContent from '@/components/Rooms/Detail/MessageContent.vue';
+import VMessageInput from '@/components/Rooms/Detail/MessageInput.vue';
+import VTypingUsers from '@/components/Rooms/Detail/TypingUsers.vue';
+import { useRoom } from '@/composables/useRoom';
 import { useSocketChat } from '@/composables/useSocketChat';
 import { useSocketEventListener } from '@/composables/useSocketEventListener';
 import { KEYS } from '@/constants';
@@ -121,6 +127,8 @@ const route = useRoute();
 
 const roomId = computed<string>(() => route.params.roomId as string);
 const room = inject(KEYS.CHAT.ROOM)!;
+
+const { roomCoverUrl } = useRoom(room);
 
 const messagesRef = ref<HTMLDivElement>();
 const messages = ref<Array<IRoomMessageResponse>>([]);
@@ -202,7 +210,7 @@ watch(
   },
 );
 
-const messageInputRef = ref<InstanceType<typeof MessageInput>>();
+const messageInputRef = ref<InstanceType<typeof VMessageInput>>();
 
 const emojiIndex = new EmojiIndex(data);
 const emojiPickerShow = ref(false);
@@ -253,7 +261,7 @@ const { request: requestDeleteMessage, isLoading: isLoadingDeleteMessage } =
     },
   );
 
-const typingUsersRef = ref<InstanceType<typeof TypingUsers>>();
+const typingUsersRef = ref<InstanceType<typeof VTypingUsers>>();
 
 function onTyping(event: KeyboardEvent) {
   if (event.code === '13') {
@@ -276,12 +284,24 @@ provide(KEYS.CHAT.SELECT_MESSAGE_IMAGE_SRC, selectMessageImageSrc);
 .wrapper {
   position: relative;
 
-  .content {
+  .content,
+  .bg-filter {
     position: absolute;
     top: 0;
     left: 0;
     bottom: 0;
     right: 0;
+  }
+
+  &:has(.bg-filter) {
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center center;
+  }
+
+  .bg-filter {
+    background-color: rgb(var(--v-theme-surface-variant), 0.6);
+    backdrop-filter: blur(0.5px);
   }
 }
 

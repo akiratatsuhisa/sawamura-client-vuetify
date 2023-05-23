@@ -13,7 +13,6 @@
               <v-text-field
                 class="mb-3"
                 label="Username"
-                variant="outlined"
                 v-model="v$.username.$model"
                 :error-messages="getErrorMessage(v$.username)"
                 @blur="v$.username.$validate"
@@ -23,7 +22,6 @@
               <v-text-field
                 class="mb-3"
                 label="Password"
-                variant="outlined"
                 v-model="v$.password.$model"
                 :error-messages="getErrorMessage(v$.password)"
                 @blur="v$.password.$validate"

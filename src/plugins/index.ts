@@ -9,13 +9,12 @@ import type { App } from 'vue';
 import VueApexCharts from 'vue3-apexcharts';
 
 import VBaseDialog from '@/components/VBaseDialog.vue';
-
-import router from '../router';
-import pinia from '../store';
-import axios from './axios';
-import socket from './socket';
-import vuetify from './vuetify';
-import { loadFonts } from './webfontloader';
+import axios from '@/plugins/axios';
+import socket from '@/plugins/socket';
+import vuetify from '@/plugins/vuetify';
+import { loadFonts } from '@/plugins/webfontloader';
+import router from '@/router';
+import pinia from '@/store';
 
 export function registerPlugins(app: App) {
   loadFonts();

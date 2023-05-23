@@ -12,7 +12,6 @@
     <v-text-field
       class="mt-3"
       label="Room name"
-      variant="outlined"
       v-model="v$.name.$model"
       :error-messages="getErrorMessage(v$.name)"
       @blur="v$.name.$validate"

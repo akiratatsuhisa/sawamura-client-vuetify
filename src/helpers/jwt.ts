@@ -1,6 +1,8 @@
 import decode from 'jwt-decode';
 import _ from 'lodash';
 
+import { IdentityUser } from '@/interfaces/auth';
+
 type ParseType = 'string' | 'number' | 'boolean' | 'object';
 
 export namespace Jwt {
@@ -105,6 +107,8 @@ export namespace Jwt {
       roles: getAll(payload, 'roles') as Array<string> | null,
       photoUrl: get(payload, 'photoUrl') as string | null,
       coverUrl: get(payload, 'coverUrl') as string | null,
-    };
+      themeSource: get(payload, 'themeSource') as string | null,
+      themeStyle: get(payload, 'themeStyle') as string | null,
+    } as IdentityUser;
   }
 }

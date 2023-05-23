@@ -36,7 +36,7 @@
 </template>
 
 <script lang="ts" setup>
-import { useLocalStorage } from '@vueuse/core';
+import { useLocalStorage, useStyleTag } from '@vueuse/core';
 import { computed, provide, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useDisplay } from 'vuetify/lib/framework.mjs';
@@ -113,8 +113,11 @@ const room = ref<IRoomResponse>({
   isGroup: false,
   roomMembers: [],
   photoUrl: null,
+  coverUrl: null,
   lastActivatedAt: null,
   createdAt: '',
+  themeSource: null,
+  themeStyle: null,
 });
 
 const { currentMember, targetMember, disyplayLastActivatedAgo } = useRoom(room);
@@ -148,5 +151,10 @@ watch(
     });
   },
   { immediate: true },
+);
+
+useStyleTag(
+  computed(() => room.value.themeStyle ?? ''),
+  { id: 'vuetify-room-style' },
 );
 </script>

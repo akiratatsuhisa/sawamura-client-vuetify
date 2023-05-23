@@ -12,14 +12,13 @@
 
     <v-card width="300" class="bg-surface-variant text-on-surface-variant">
       <v-list height="350">
-        <notification-list-item
+        <v-notification-list-item
           v-for="notification in notifications"
           :key="notification.id"
           :item="notification"
           @update="(payload) => requestUpdateNotification(payload)"
           @delete="(payload) => (selectedId = payload.id)"
-        >
-        </notification-list-item>
+        />
       </v-list>
 
       <v-card-actions>
@@ -54,8 +53,7 @@ import {
   IUpdateNotificationRequest,
   NotificationStatus,
 } from '@/interfaces/notifications';
-
-import NotificationListItem from './NotificationListItem.vue';
+import VNotificationListItem from '@/layouts/Default/NotificationListItem.vue';
 
 const notifications = ref<Array<INotificationResponse>>([]);
 
