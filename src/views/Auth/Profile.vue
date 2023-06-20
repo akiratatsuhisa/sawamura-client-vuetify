@@ -155,8 +155,8 @@ import { computed, defineAsyncComponent, onBeforeMount } from 'vue';
 import { useRoute } from 'vue-router';
 
 import VExportPdfBtn from '@/components/Auth/Profile/ExportPdf.vue';
-import { useAuth } from '@/composables/useAuth';
-import { Format } from '@/helpers/format';
+import { useAuth } from '@/composables';
+import { Format } from '@/helpers';
 
 const VDialogProfileCover = defineAsyncComponent(
   () => import('@/components/Auth/Dialogs/DialogProfileCover.vue'),

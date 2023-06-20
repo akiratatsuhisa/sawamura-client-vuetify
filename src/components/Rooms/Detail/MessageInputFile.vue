@@ -40,7 +40,7 @@
 </template>
 
 <script lang="ts" setup>
-import { BasicFile } from '@/interfaces/rooms';
+import { BasicFile } from '@/interfaces';
 
 defineProps<{ file: BasicFile }>();
 const emit = defineEmits<{ (event: 'removeFile', id: string): void }>();

@@ -15,7 +15,7 @@
 import { inject } from 'vue';
 
 import { KEYS } from '@/constants';
-import { IAvatarMenuItem } from '@/interfaces/menus';
+import { IAvatarMenuItem } from '@/interfaces';
 
 defineProps<{
   item: IAvatarMenuItem;

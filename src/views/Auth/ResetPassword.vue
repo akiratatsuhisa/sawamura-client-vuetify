@@ -2,7 +2,7 @@
   <v-container class="fill-height">
     <v-row class="h-100 align-content-center">
       <v-col class="mx-auto" md="6" lg="4">
-        <v-card ref="formRef">
+        <v-card>
           <v-card-title>Reset Password</v-card-title>
           <v-card-subtitle class="text-wrap">
             Reset your password.
@@ -49,9 +49,9 @@
               </v-btn>
               <span>
                 Return to
-                <router-link class="text-primary" :to="{ name: 'Login' }"
-                  >Login</router-link
-                >
+                <router-link class="text-primary" :to="{ name: 'Login' }">
+                  Login
+                </router-link>
               </span>
             </form>
           </v-card-text>
@@ -63,14 +63,12 @@
 
 <script lang="ts" setup>
 import { required, sameAs } from '@vuelidate/validators';
-import { onKeyStroke } from '@vueuse/core';
 import _ from 'lodash';
 import { computed, reactive, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 
-import { useAxios } from '@/composables/useAxios';
-import { getErrorMessage, useVuelidate } from '@/composables/useVuelidate';
-import { IResetPasswordRequest } from '@/interfaces/auth';
+import { getErrorMessage, useAxios, useVuelidate } from '@/composables';
+import { IResetPasswordRequest } from '@/interfaces';
 import { services } from '@/services';
 
 const router = useRouter();
@@ -118,14 +116,4 @@ const onSubmit = handleSubmit(async (data) => {
     name: 'Login',
   });
 });
-
-const formRef = ref();
-
-onKeyStroke(
-  'Enter',
-  () => {
-    onSubmit();
-  },
-  { target: formRef },
-);
 </script>

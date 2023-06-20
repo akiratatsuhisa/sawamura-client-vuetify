@@ -1,4 +1,4 @@
-import { IPaginationCursor, IPaginationExcludeIds } from './common';
+import { IPaginationCursor, IPaginationExcludeIds } from '@/interfaces';
 
 export type BasicFileType = 'images' | 'audios' | 'videos' | 'files';
 

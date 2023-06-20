@@ -51,11 +51,17 @@ import { required } from '@vuelidate/validators';
 import _ from 'lodash';
 import { computed, reactive, ref, watch } from 'vue';
 
-import { useAuth } from '@/composables/useAuth';
-import { useAxios } from '@/composables/useAxios';
-import { getErrorMessage, useVuelidate } from '@/composables/useVuelidate';
-import { ICreateRoomRequest } from '@/interfaces/rooms';
-import { ISearchUsersRequest, IUserResponse } from '@/interfaces/users';
+import {
+  getErrorMessage,
+  useAuth,
+  useAxios,
+  useVuelidate,
+} from '@/composables';
+import {
+  ICreateRoomRequest,
+  ISearchUsersRequest,
+  IUserResponse,
+} from '@/interfaces';
 import { services } from '@/services';
 
 defineProps<{

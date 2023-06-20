@@ -1,4 +1,4 @@
-import { IPaginationExcludeIds } from './common';
+import { IPaginationExcludeIds } from '@/interfaces';
 
 export enum NotificationEntityName {
   User = 'User',

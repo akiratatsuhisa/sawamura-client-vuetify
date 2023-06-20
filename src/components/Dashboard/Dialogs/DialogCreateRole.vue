@@ -25,8 +25,8 @@
 import { maxLength, required } from '@vuelidate/validators';
 import { reactive } from 'vue';
 
-import { getErrorMessage, useVuelidate } from '@/composables/useVuelidate';
-import { ICreateRoleRequest, IRoleResponse } from '@/interfaces/roles';
+import { getErrorMessage, useVuelidate } from '@/composables';
+import { ICreateRoleRequest, IRoleResponse } from '@/interfaces';
 
 defineProps<{
   modelValue: boolean;

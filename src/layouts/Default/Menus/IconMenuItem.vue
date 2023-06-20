@@ -12,7 +12,7 @@
 import { inject } from 'vue';
 
 import { KEYS } from '@/constants';
-import { IIconMenuItem } from '@/interfaces/menus';
+import { IIconMenuItem } from '@/interfaces';
 
 defineProps<{
   item: IIconMenuItem;

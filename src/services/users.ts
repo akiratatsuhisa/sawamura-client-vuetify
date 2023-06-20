@@ -1,6 +1,6 @@
 import { AxiosRequestConfig } from 'axios';
 
-import { ISearchUsersRequest, IUserResponse } from '@/interfaces/users';
+import { ISearchUsersRequest, IUserResponse } from '@/interfaces';
 import { Service } from '@/services/common';
 
 export class UsersService extends Service {

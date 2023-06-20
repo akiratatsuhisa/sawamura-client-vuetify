@@ -101,9 +101,9 @@ import { useObjectUrl } from '@vueuse/core';
 import _ from 'lodash';
 import { computed, inject, onMounted, ref, shallowRef } from 'vue';
 
-import { useAuth } from '@/composables/useAuth';
+import { useAuth } from '@/composables';
 import { KEYS } from '@/constants';
-import { IRoomMessageFileResponse } from '@/interfaces/rooms';
+import { IRoomMessageFileResponse } from '@/interfaces';
 import { axiosInstacne } from '@/services';
 
 const props = defineProps<{

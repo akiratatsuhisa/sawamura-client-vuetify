@@ -100,30 +100,50 @@
 <script lang="ts" setup>
 import 'emoji-mart-vue-fast/css/emoji-mart.css';
 
-import { useScroll } from '@vueuse/core';
+import { useScroll, useThrottleFn } from '@vueuse/core';
 import data from 'emoji-mart-vue-fast/data/twitter.json';
 // @ts-ignore
 import { EmojiIndex, Picker as EmojiPicker } from 'emoji-mart-vue-fast/src';
-import _ from 'lodash';
-import { computed, inject, provide, ref, watch } from 'vue';
+import findIndex from 'lodash/findIndex';
+import uniqBy from 'lodash/uniqBy';
+import {
+  computed,
+  defineAsyncComponent,
+  inject,
+  provide,
+  ref,
+  watch,
+} from 'vue';
 import { useRoute } from 'vue-router';
 
-import VMessageContent from '@/components/Rooms/Detail/MessageContent.vue';
-import VMessageInput from '@/components/Rooms/Detail/MessageInput.vue';
-import VTypingUsers from '@/components/Rooms/Detail/TypingUsers.vue';
-import { useRoom } from '@/composables/useRoom';
-import { useSocketChat } from '@/composables/useSocketChat';
-import { useSocketEventListener } from '@/composables/useSocketEventListener';
+import {
+  useRoom,
+  useSnackbar,
+  useSocketChat,
+  useSocketEventListener,
+} from '@/composables';
 import { KEYS } from '@/constants';
 import {
   IDeleteRoomMessageRequest,
   IRoomMessageResponse,
   ISearchRoomMessagesRequest,
-} from '@/interfaces/rooms';
+} from '@/interfaces';
 
-const socket = useSocketChat();
+const VMessageContent = defineAsyncComponent(
+  () => import('@/components/Rooms/Detail/MessageContent.vue'),
+);
+const VMessageInput = defineAsyncComponent(
+  () => import('@/components/Rooms/Detail/MessageInput.vue'),
+);
+const VTypingUsers = defineAsyncComponent(
+  () => import('@/components/Rooms/Detail/TypingUsers.vue'),
+);
 
 const route = useRoute();
+
+const { createSnackbarError } = useSnackbar();
+
+const socket = useSocketChat();
 
 const roomId = computed<string>(() => route.params.roomId as string);
 const room = inject(KEYS.CHAT.ROOM)!;
@@ -140,7 +160,7 @@ const { request: requestMessages, isLoading } = useSocketEventListener<
   ISearchRoomMessagesRequest
 >(socket, 'list:message', {
   response({ messages: data }) {
-    messages.value = _.uniqBy(
+    messages.value = uniqBy(
       [...messages.value, ...data],
       (message) => message.id,
     );
@@ -150,7 +170,7 @@ const { request: requestMessages, isLoading } = useSocketEventListener<
     }
   },
   exception(error) {
-    console.error(error);
+    createSnackbarError(error.message);
   },
 });
 
@@ -161,6 +181,8 @@ function fetchMoreMessages() {
     cursor: messages.value.at(-1)?.id,
   });
 }
+
+const fetchMoreMessagesThrottle = useThrottleFn(fetchMoreMessages, 250);
 
 watch(
   roomId,
@@ -205,7 +227,7 @@ watch(
   [isIntersecting, isLoading, isAllMessagesLoaded],
   ([intersecting, loading, allMessagesLoaded]) => {
     if (intersecting && !loading && !allMessagesLoaded) {
-      fetchMoreMessages();
+      fetchMoreMessagesThrottle();
     }
   },
 );
@@ -225,7 +247,7 @@ function unshiftMessage(data: IRoomMessageResponse) {
   }
 
   room.value.lastActivatedAt = data.room.lastActivatedAt;
-  messages.value = _.uniqBy([data, ...messages.value], (message) => message.id);
+  messages.value = uniqBy([data, ...messages.value], (message) => message.id);
 }
 
 function removeMessage(data: IRoomMessageResponse) {
@@ -233,10 +255,7 @@ function removeMessage(data: IRoomMessageResponse) {
     return;
   }
 
-  const index = _.findIndex(
-    messages.value,
-    (message) => message.id === data.id,
-  );
+  const index = findIndex(messages.value, (message) => message.id === data.id);
 
   if (index < 0) {
     return;
@@ -256,7 +275,7 @@ const { request: requestDeleteMessage, isLoading: isLoadingDeleteMessage } =
           return;
         }
 
-        console.error(error);
+        createSnackbarError(error.message);
       },
     },
   );

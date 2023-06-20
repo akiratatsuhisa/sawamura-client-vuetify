@@ -2,7 +2,7 @@
   <v-container class="fill-height">
     <v-row class="h-100 align-content-center">
       <v-col class="mx-auto" md="6" lg="4">
-        <v-card ref="formRef">
+        <v-card>
           <v-card-title>Confirm Email</v-card-title>
           <v-card-subtitle class="text-wrap">
             Once you've clicked the
@@ -21,14 +21,15 @@
                 Confirm
               </v-btn>
 
-              <span>
+              <div>
                 Already confirmed? Return to
                 <router-link
                   class="text-primary"
                   :to="{ name: 'Login', query: { redirectUrl } }"
-                  >Login</router-link
                 >
-              </span>
+                  Login
+                </router-link>
+              </div>
             </form>
           </v-card-text>
         </v-card>
@@ -38,15 +39,12 @@
 </template>
 
 <script lang="ts" setup>
-import { required } from '@vuelidate/validators';
-import { onKeyStroke } from '@vueuse/core';
 import _ from 'lodash';
-import { computed, reactive, ref } from 'vue';
+import { computed, reactive } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 
-import { useAxios } from '@/composables/useAxios';
-import { useVuelidate } from '@/composables/useVuelidate';
-import { IConfirmEmailRequest } from '@/interfaces/auth';
+import { useAxios, useVuelidate } from '@/composables';
+import { IConfirmEmailRequest } from '@/interfaces';
 import { services } from '@/services';
 
 const router = useRouter();
@@ -65,14 +63,7 @@ const form = reactive<IConfirmEmailRequest>({
       : route.query.token) ?? '',
 });
 
-const [_v, { handleSubmit }] = useVuelidate<IConfirmEmailRequest>(
-  {
-    token: {
-      required: required,
-    },
-  },
-  form,
-);
+const [_v$, { handleSubmit }] = useVuelidate<IConfirmEmailRequest>({}, form);
 
 const { excute: confirmEmail, isLoading } = useAxios(
   services.auth,
@@ -90,14 +81,4 @@ const onSubmit = handleSubmit(async (data) => {
     query: { redirectUrl: redirectUrl.value },
   });
 });
-
-const formRef = ref();
-
-onKeyStroke(
-  'Enter',
-  () => {
-    onSubmit();
-  },
-  { target: formRef },
-);
 </script>

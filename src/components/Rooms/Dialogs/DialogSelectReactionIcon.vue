@@ -38,7 +38,7 @@ import data from 'emoji-mart-vue-fast/data/twitter.json';
 import { EmojiIndex, Picker as EmojiPicker } from 'emoji-mart-vue-fast/src';
 import { reactive } from 'vue';
 
-import { useVuelidate } from '@/composables/useVuelidate';
+import { useVuelidate } from '@/composables';
 
 interface IReactionIconForm {
   value: string;

@@ -8,7 +8,7 @@
 import { inject } from 'vue';
 
 import { KEYS } from '@/constants';
-import { ITitleMenuItem } from '@/interfaces/menus';
+import { ITitleMenuItem } from '@/interfaces';
 
 defineProps<{
   item: ITitleMenuItem;

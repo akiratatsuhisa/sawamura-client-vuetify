@@ -1,19 +1,18 @@
 import { createSharedComposable, useLocalStorage } from '@vueuse/core';
 import axios, { AxiosRequestConfig } from 'axios';
+import dayjs from 'dayjs';
 import _ from 'lodash';
-import moment from 'moment';
 import { computed } from 'vue';
 
-import { Jwt } from '@/helpers/jwt';
+import { useSnackbar } from '@/composables';
+import { Jwt } from '@/helpers';
 import {
   IAuthOptions,
   IAuthResponse,
   IdentityUser,
   ILoginRequest,
-} from '@/interfaces/auth';
+} from '@/interfaces';
 import { config } from '@/services';
-
-import { useSnackbar } from './useSnackbar';
 
 export const useAuth = createSharedComposable(() => {
   const accessToken = useLocalStorage('auth:profile:accessToken', '');
@@ -32,7 +31,7 @@ export const useAuth = createSharedComposable(() => {
   function isExpires(seconds: number = 60) {
     return (
       !expires.value ||
-      moment(expires.value).subtract(seconds, 'seconds').isBefore()
+      dayjs(expires.value).subtract(seconds, 'seconds').isBefore()
     );
   }
 
@@ -72,7 +71,7 @@ export const useAuth = createSharedComposable(() => {
     return user.value;
   }
 
-  const { create: createSnackbar } = useSnackbar();
+  const { createSnackbarSuccess, createSnackbarError } = useSnackbar();
 
   async function login(dto: ILoginRequest, config?: AxiosRequestConfig) {
     try {
@@ -86,18 +85,15 @@ export const useAuth = createSharedComposable(() => {
       accessToken.value = data.accessToken;
       refreshToken.value = data.refreshToken;
 
-      createSnackbar('Login Successfully', { color: 'success', isOnce: true });
+      createSnackbarSuccess('Login Successfully');
     } catch (error: any) {
-      createSnackbar(error?.response?.data?.message ?? 'Error', {
-        color: 'error',
-        isOnce: true,
-      });
+      createSnackbarError(error?.response?.data?.message ?? 'Error');
     }
   }
 
   async function logout(config?: AxiosRequestConfig) {
     try {
-      createSnackbar('Logout Successfully', { color: 'success', isOnce: true });
+      createSnackbarSuccess('Logout Successfully');
 
       await axiosInstacne.request<IAuthResponse>({
         url: '/auth/refreshToken',
@@ -111,10 +107,7 @@ export const useAuth = createSharedComposable(() => {
         ...config,
       });
     } catch (error: any) {
-      createSnackbar(error?.response?.data?.message ?? 'Error', {
-        color: 'error',
-        isOnce: true,
-      });
+      createSnackbarError(error?.response?.data?.message ?? 'Error');
     } finally {
       accessToken.value = '';
       refreshToken.value = '';
@@ -149,7 +142,7 @@ export const useAuth = createSharedComposable(() => {
   );
 
   function updateImage(type: 'photo' | 'cover') {
-    updatedImages.value[type] = moment().unix().toString();
+    updatedImages.value[type] = dayjs().unix().toString();
   }
 
   return {

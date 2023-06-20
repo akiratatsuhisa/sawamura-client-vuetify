@@ -47,15 +47,18 @@ import { required } from '@vuelidate/validators';
 import _ from 'lodash';
 import { computed, inject, reactive, ref, watch } from 'vue';
 
-import { useAxios } from '@/composables/useAxios';
 import {
   getErrorMessage,
   setFieldData,
+  useAxios,
   useVuelidate,
-} from '@/composables/useVuelidate';
+} from '@/composables';
 import { KEYS } from '@/constants';
-import { ICreateRoomMemberRequest } from '@/interfaces/rooms';
-import { ISearchUsersRequest, IUserResponse } from '@/interfaces/users';
+import {
+  ICreateRoomMemberRequest,
+  ISearchUsersRequest,
+  IUserResponse,
+} from '@/interfaces';
 import { services } from '@/services';
 
 defineProps<{

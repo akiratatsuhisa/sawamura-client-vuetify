@@ -2,7 +2,7 @@
   <v-container class="fill-height">
     <v-row class="h-100 align-content-center">
       <v-col class="mx-auto" md="6" lg="4">
-        <v-card ref="formRef">
+        <v-card>
           <v-card-title>Forgot Password</v-card-title>
           <v-card-subtitle class="text-wrap">
             Tell us the username associated with your account, and we'll send
@@ -34,8 +34,9 @@
                 <router-link
                   class="text-primary"
                   :to="{ name: 'Login', query: { redirectUrl } }"
-                  >Login</router-link
                 >
+                  Login
+                </router-link>
               </span>
             </form>
           </v-card-text>
@@ -47,14 +48,12 @@
 
 <script lang="ts" setup>
 import { required } from '@vuelidate/validators';
-import { onKeyStroke } from '@vueuse/core';
 import _ from 'lodash';
-import { computed, reactive, ref } from 'vue';
+import { computed, reactive } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 
-import { useAxios } from '@/composables/useAxios';
-import { getErrorMessage, useVuelidate } from '@/composables/useVuelidate';
-import { IForgotPasswordRequest } from '@/interfaces/auth';
+import { getErrorMessage, useAxios, useVuelidate } from '@/composables';
+import { IForgotPasswordRequest } from '@/interfaces';
 import { services } from '@/services';
 
 const router = useRouter();
@@ -95,14 +94,4 @@ const onSubmit = handleSubmit(async (data) => {
     query: { redirectUrl: redirectUrl.value },
   });
 });
-
-const formRef = ref();
-
-onKeyStroke(
-  'Enter',
-  () => {
-    onSubmit();
-  },
-  { target: formRef },
-);
 </script>

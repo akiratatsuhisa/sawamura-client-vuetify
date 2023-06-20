@@ -28,9 +28,9 @@ import { maxLength, required, requiredIf } from '@vuelidate/validators';
 import _ from 'lodash';
 import { computed, inject, reactive } from 'vue';
 
-import { getErrorMessage, useVuelidate } from '@/composables/useVuelidate';
+import { getErrorMessage, useVuelidate } from '@/composables';
 import { KEYS } from '@/constants';
-import { IUpdateRoomMemberRequest } from '@/interfaces/rooms';
+import { IUpdateRoomMemberRequest } from '@/interfaces';
 
 const props = defineProps<{
   modelValue: boolean;

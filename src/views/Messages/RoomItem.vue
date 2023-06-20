@@ -35,8 +35,8 @@
 </template>
 
 <script lang="ts" setup>
-import { useRoom } from '@/composables/useRoom';
-import { IRoomResponse } from '@/interfaces/rooms';
+import { useRoom } from '@/composables';
+import { IRoomResponse } from '@/interfaces';
 
 const props = defineProps<{
   room: IRoomResponse;

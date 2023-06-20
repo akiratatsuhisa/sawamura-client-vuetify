@@ -14,13 +14,13 @@
     </template>
 
     <template v-if="typeof content === 'string'" #actions>
-      <v-btn variant="text" color="white" @click="remove(id)"> Close </v-btn>
+      <v-btn variant="text" color="on-primary" @click="remove(id)">Close</v-btn>
     </template>
   </v-snackbar>
 </template>
 
 <script setup lang="ts">
-import { useSnackbar } from '@/composables/useSnackbar';
+import { useSnackbar } from '@/composables';
 
 const { snackbars, remove } = useSnackbar();
 </script>

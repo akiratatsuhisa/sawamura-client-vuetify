@@ -7,7 +7,7 @@ import {
   IRoleResponse,
   ISortRoleRequest,
   IUpdateRoleRequest,
-} from '@/interfaces/roles';
+} from '@/interfaces';
 import { Service } from '@/services/common';
 
 export class RolesService extends Service {

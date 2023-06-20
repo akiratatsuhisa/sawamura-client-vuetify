@@ -20,7 +20,7 @@
       <v-sheet
         class="typing pa-2 ml-2 rounded-pill"
         :class="[
-          $vuetify.theme.current.dark
+          $vuetify.theme.name === 'dark'
             ? 'bg-grey-darken-3'
             : 'bg-grey-lighten-3',
         ]"
@@ -40,12 +40,11 @@
 
 <script lang="ts" setup>
 import { useDebounceFn } from '@vueuse/core';
+import dayjs from 'dayjs';
 import _ from 'lodash';
-import moment from 'moment';
 import { computed, inject, reactive, watch } from 'vue';
 
-import { useRoom } from '@/composables/useRoom';
-import { useSocketChat } from '@/composables/useSocketChat';
+import { useRoom, useSocketChat } from '@/composables';
 import { KEYS } from '@/constants';
 
 const room = inject(KEYS.CHAT.ROOM)!;
@@ -85,10 +84,10 @@ function handleTyping(data: { userId: string }) {
     return;
   }
 
-  typingUsers[data.userId] = moment().add('1000', 'millisecond').valueOf();
+  typingUsers[data.userId] = dayjs().add(1000, 'millisecond').valueOf();
 
   for (const [key, value] of Object.entries(typingUsers)) {
-    if (moment(value).isBefore(moment())) {
+    if (dayjs(value).isBefore(dayjs())) {
       delete typingUsers[key];
     }
   }

@@ -9,9 +9,8 @@ import {
   ref,
 } from 'vue';
 
+import { useAuth } from '@/composables';
 import { KEYS } from '@/constants';
-
-import { useAuth } from './useAuth';
 
 export function initSocket(options: {
   key: InjectionKey<Ref<Socket>>;
@@ -23,7 +22,7 @@ export function initSocket(options: {
 
   const socket = ref<Socket>(manager.socket(options.namespace));
 
-  provide(options.key, socket);
+  provide(options.key, socket as any);
 
   function connect() {
     console.debug(

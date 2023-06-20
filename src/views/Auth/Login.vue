@@ -2,7 +2,7 @@
   <v-container class="fill-height">
     <v-row class="h-100 align-content-center">
       <v-col class="mx-auto" md="6" lg="4">
-        <v-card ref="formRef">
+        <v-card>
           <v-card-title>Login</v-card-title>
           <v-card-subtitle class="text-wrap">
             By continuing, you are setting up account and agree to our User
@@ -39,8 +39,9 @@
                     name: 'ForgotPassword',
                     query: { redirectUrl },
                   }"
-                  >username</router-link
                 >
+                  username
+                </router-link>
                 or
                 <router-link
                   class="text-primary"
@@ -48,8 +49,10 @@
                     name: 'ForgotPassword',
                     query: { redirectUrl },
                   }"
-                  >password</router-link
-                >?
+                >
+                  password
+                </router-link>
+                ?
               </span>
               <v-btn
                 type="submit"
@@ -65,8 +68,9 @@
                 <router-link
                   class="text-primary"
                   :to="{ name: 'Register', query: { redirectUrl } }"
-                  >Register</router-link
                 >
+                  Register
+                </router-link>
               </span>
             </form>
           </v-card-text>
@@ -78,14 +82,12 @@
 
 <script lang="ts" setup>
 import { required } from '@vuelidate/validators';
-import { onKeyStroke } from '@vueuse/core';
 import _ from 'lodash';
 import { computed, reactive, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 
-import { useAuth } from '@/composables/useAuth';
-import { getErrorMessage, useVuelidate } from '@/composables/useVuelidate';
-import { ILoginRequest } from '@/interfaces/auth';
+import { getErrorMessage, useAuth, useVuelidate } from '@/composables';
+import { ILoginRequest } from '@/interfaces';
 
 const router = useRouter();
 const route = useRoute();
@@ -126,14 +128,4 @@ const onSubmit = handleSubmit(async (data) => {
     router.push({ name: 'Home' });
   }
 });
-
-const formRef = ref();
-
-onKeyStroke(
-  'Enter',
-  () => {
-    onSubmit();
-  },
-  { target: formRef },
-);
 </script>

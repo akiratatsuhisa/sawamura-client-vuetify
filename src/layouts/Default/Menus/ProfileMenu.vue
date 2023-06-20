@@ -34,32 +34,24 @@
 
       <v-list-item>
         <v-list-item-title>
-          <v-switch
-            color="primary"
-            hide-details
-            inset
-            v-model="isDark"
-            label="Theme"
-            density="compact"
-          >
-          </v-switch>
+          Theme {{ themes[selectedTheme].name }}
         </v-list-item-title>
 
         <template #append>
           <v-avatar
-            color="tertiary-container"
-            class="cursor-pointer"
-            @click.stop="isDark = !isDark"
+            v-for="(value, key) in themes"
+            :key="key"
+            :color="selectedTheme === key ? 'tertiary' : 'tertiary-container'"
+            class="cursor-pointer ml-1"
+            @click.stop="selectedTheme = key"
           >
-            <v-icon
-              :icon="isDark ? 'mdi-weather-night' : 'mdi-weather-sunny'"
-            ></v-icon>
+            <v-icon :icon="value.icon"></v-icon>
           </v-avatar>
         </template>
       </v-list-item>
 
       <v-list-item @click="onLogout">
-        <v-list-item-title> Logout </v-list-item-title>
+        <v-list-item-title>Logout</v-list-item-title>
 
         <template #append>
           <v-avatar color="tertiary-container">
@@ -72,23 +64,29 @@
 </template>
 
 <script lang="ts" setup>
-import { computed } from 'vue';
+import { useLocalStorage } from '@vueuse/core';
+import { ref, watch } from 'vue';
 import { useRouter } from 'vue-router';
-import { useTheme } from 'vuetify/lib/framework.mjs';
+import { useTheme } from 'vuetify';
 
-import { useAuth } from '@/composables/useAuth';
+import { useAuth } from '@/composables';
 
 const router = useRouter();
 
 const theme = useTheme();
 
-const isDark = computed<boolean>({
-  get() {
-    return theme.global.current.value.dark;
-  },
-  set(value: boolean) {
-    theme.global.name.value = value ? 'dark' : 'light';
-  },
+type ThemeType = 'light' | 'dark' | 'coffee';
+
+const themes = ref<Record<ThemeType, { name: string; icon: string }>>({
+  light: { name: 'Light', icon: 'mdi-weather-sunny' },
+  dark: { name: 'Dark', icon: 'mdi-weather-night' },
+  coffee: { name: 'Coffee', icon: 'mdi-coffee-outline' },
+});
+
+const selectedTheme = useLocalStorage<ThemeType>('theme:mode', 'light');
+
+watch(selectedTheme, (selectedTheme) => {
+  theme.global.name.value = selectedTheme;
 });
 
 const { logout, user, photoUrl } = useAuth();

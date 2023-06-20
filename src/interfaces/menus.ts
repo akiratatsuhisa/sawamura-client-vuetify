@@ -1,6 +1,6 @@
 import { RouteLocationNamedRaw } from 'vue-router';
 
-import { IRoomResponse } from './rooms';
+import { IRoomResponse } from '@/interfaces';
 
 export interface IMenuItem {
   key: string;

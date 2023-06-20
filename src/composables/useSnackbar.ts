@@ -3,56 +3,22 @@ import { v4 as uuidv4 } from 'uuid';
 import { Component, readonly, ref } from 'vue';
 import { VSnackbar } from 'vuetify/components/VSnackbar';
 
-type SnackbarProps = Pick<
-  VSnackbar['$props'],
-  | 'absolute'
-  | 'location'
-  | 'origin'
-  | 'transition'
-  | 'zIndex'
-  | 'eager'
-  | 'disabled'
-  | 'timeout'
-  | 'vertical'
-  | 'rounded'
-  | 'variant'
-  | 'modelValue'
-  | 'activatorProps'
-  | 'openOnClick'
-  | 'openOnHover'
-  | 'openOnFocus'
-  | 'closeOnContentClick'
-  | 'locationStrategy'
-  | 'closeOnBack'
-  | 'contained'
-  | 'multiLine'
-  | 'offset'
-  | 'height'
-  | 'width'
-  | 'color'
-  | 'maxHeight'
-  | 'maxWidth'
-  | 'minHeight'
-  | 'minWidth'
-  | 'position'
-  | 'theme'
-  | 'contentClass'
-  | 'rounded'
-  | 'activator'
-  | 'closeDelay'
-  | 'openDelay'
-  | 'openOnClick'
-  | 'openOnFocus'
-  | 'contentProps'
-  | 'attach'
->;
+export type VSnackbarProps = VSnackbar['$props'];
 
 export type Notification = {
   id: string;
   show: boolean;
   content: string | Component;
   isOnce?: boolean;
-} & Partial<SnackbarProps>;
+  color?: string;
+  timeout?: string | number;
+} & Record<string, any>;
+
+export type SnackbarBaseOptions = Partial<
+  Omit<Notification, 'id' | 'show' | 'content'>
+>;
+
+export type SnackbarOptions = Omit<SnackbarBaseOptions, 'color'>;
 
 export const useSnackbar = createSharedComposable(() => {
   const snackbars = ref<Array<Notification>>([]);
@@ -79,9 +45,9 @@ export const useSnackbar = createSharedComposable(() => {
     }, 500);
   }
 
-  function create(
+  function createSnackbar(
     messageOrComponent: string | Component,
-    options?: Partial<Omit<Notification, 'id' | 'show' | 'content'>>,
+    options: SnackbarBaseOptions = {},
   ) {
     const notification: Notification = {
       content: messageOrComponent,
@@ -97,9 +63,45 @@ export const useSnackbar = createSharedComposable(() => {
     return () => remove(notification.id);
   }
 
+  function createSnackbarSuccess(
+    messageOrComponent: string | Component,
+    options: SnackbarOptions = { isOnce: true },
+  ) {
+    (options as SnackbarBaseOptions).color = 'success';
+    createSnackbar(messageOrComponent, options);
+  }
+
+  function createSnackbarInfo(
+    messageOrComponent: string | Component,
+    options: SnackbarOptions = { isOnce: true },
+  ) {
+    (options as SnackbarBaseOptions).color = 'info';
+    createSnackbar(messageOrComponent, options);
+  }
+
+  function createSnackbarWarning(
+    messageOrComponent: string | Component,
+    options: SnackbarOptions = { isOnce: true },
+  ) {
+    (options as SnackbarBaseOptions).color = 'warning';
+    createSnackbar(messageOrComponent, options);
+  }
+
+  function createSnackbarError(
+    messageOrComponent: string | Component,
+    options: SnackbarOptions = { isOnce: true },
+  ) {
+    (options as SnackbarBaseOptions).color = 'error';
+    createSnackbar(messageOrComponent, options);
+  }
+
   return {
     snackbars: readonly(snackbars),
-    create,
+    createSnackbar,
+    createSnackbarSuccess,
+    createSnackbarInfo,
+    createSnackbarWarning,
+    createSnackbarError,
     remove,
     clear,
   };

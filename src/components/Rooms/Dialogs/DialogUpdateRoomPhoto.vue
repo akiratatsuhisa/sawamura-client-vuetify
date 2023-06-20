@@ -64,9 +64,9 @@ import { useFileDialog, useObjectUrl } from '@vueuse/core';
 import { inject, ref, shallowRef, watch } from 'vue';
 import { CircleStencil, Cropper as VCropper } from 'vue-advanced-cropper';
 
-import { useAxios } from '@/composables/useAxios';
+import { useAxios } from '@/composables';
 import { KEYS } from '@/constants';
-import { FileHelper, IMAGE_FILE } from '@/helpers/file';
+import { FileHelper, IMAGE_FILE } from '@/helpers';
 import { services } from '@/services';
 
 defineProps<{

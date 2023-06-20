@@ -1,7 +1,7 @@
 import decode from 'jwt-decode';
 import _ from 'lodash';
 
-import { IdentityUser } from '@/interfaces/auth';
+import { IdentityUser } from '@/interfaces';
 
 type ParseType = 'string' | 'number' | 'boolean' | 'object';
 

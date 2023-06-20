@@ -8,7 +8,7 @@ declare module 'vue-router' {
     requiresRoles?: Array<string>;
     breadcrumb?: {
       title: string;
-      to: RouteLocationNamedRaw;
-    };
+      disabled?: boolean;
+    } & Partial<LinkProps>;
   }
 }

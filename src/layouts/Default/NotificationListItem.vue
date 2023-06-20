@@ -47,7 +47,7 @@ import {
   INotificationResponse,
   NotificationEntityName,
   NotificationStatus,
-} from '@/interfaces/notifications';
+} from '@/interfaces';
 
 const props = defineProps<{ item: INotificationResponse }>();
 

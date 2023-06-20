@@ -15,7 +15,7 @@ import { useObjectUrl } from '@vueuse/core';
 import _ from 'lodash';
 import { ref, watch } from 'vue';
 
-import { useAxios } from '@/composables/useAxios';
+import { useAxios } from '@/composables';
 import { services } from '@/services';
 
 const { data, excute, isLoading } = useAxios(services.auth, 'exportProfilePdf');

@@ -56,10 +56,12 @@ import { useSortable } from '@vueuse/integrations/useSortable';
 import { computed, defineAsyncComponent, onMounted, ref } from 'vue';
 
 import VRoleItem from '@/components/Dashboard/Users/RoleItem.vue';
-import { useAxios } from '@/composables/useAxios';
-import { useSocketDashboard } from '@/composables/useSocketDashboard';
-import { useSocketEventListener } from '@/composables/useSocketEventListener';
-import { IRoleResponse } from '@/interfaces/roles';
+import {
+  useAxios,
+  useSocketDashboard,
+  useSocketEventListener,
+} from '@/composables';
+import { IRoleResponse } from '@/interfaces';
 import { services } from '@/services';
 
 const VDialogCreateRole = defineAsyncComponent(

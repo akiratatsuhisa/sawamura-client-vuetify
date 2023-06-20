@@ -285,11 +285,14 @@
 import { computed, defineAsyncComponent, inject, reactive } from 'vue';
 import { useRouter } from 'vue-router';
 
-import { useAuth } from '@/composables/useAuth';
-import { useDisplayThemeColor } from '@/composables/useColor';
-import { useRoom } from '@/composables/useRoom';
-import { useSocketChat } from '@/composables/useSocketChat';
-import { useSocketEventListener } from '@/composables/useSocketEventListener';
+import {
+  useAuth,
+  useDisplayThemeColor,
+  useRoom,
+  useSnackbar,
+  useSocketChat,
+  useSocketEventListener,
+} from '@/composables';
 import { KEYS } from '@/constants';
 import {
   ICreateRoomMemberRequest,
@@ -298,7 +301,7 @@ import {
   IRoomResponse,
   IUpdateRoomMemberRequest,
   IUpdateRoomRequest,
-} from '@/interfaces/rooms';
+} from '@/interfaces';
 
 const VDialogCreateMember = defineAsyncComponent(
   () => import('@/components/Rooms/Dialogs/DialogCreateMember.vue'),
@@ -354,6 +357,8 @@ const drawer = computed({
 const { identityId } = useAuth();
 
 const router = useRouter();
+
+const { createSnackbarError } = useSnackbar();
 
 const socket = useSocketChat();
 
@@ -439,7 +444,7 @@ const { request: requestUpdateRoom, isLoading: isLoadingUpdateRoom } =
           return;
         }
 
-        console.error(error);
+        createSnackbarError(error.message);
       },
     },
   );
@@ -456,7 +461,7 @@ const { request: requestDeleteRoom, isLoading: isLoadingDeleteRoom } =
           return;
         }
 
-        console.error(error);
+        createSnackbarError(error.message);
       },
     },
   );
@@ -473,7 +478,7 @@ const { request: requestCreateMember, isLoading: isLoadingCreateMember } =
           return;
         }
 
-        console.error(error);
+        createSnackbarError(error.message);
       },
     },
   );
@@ -490,7 +495,7 @@ const { request: requestUpdateMember, isLoading: isLoadingUpdateMember } =
           return;
         }
 
-        console.error(error);
+        createSnackbarError(error.message);
       },
     },
   );
@@ -507,7 +512,7 @@ const { request: requestDeleteMember, isLoading: isLoadingDeleteMember } =
           return;
         }
 
-        console.error(error);
+        createSnackbarError(error.message);
       },
     },
   );

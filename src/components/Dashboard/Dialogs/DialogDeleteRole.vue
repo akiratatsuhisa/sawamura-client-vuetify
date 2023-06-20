@@ -18,8 +18,8 @@
 import { required } from '@vuelidate/validators';
 import { reactive } from 'vue';
 
-import { useVuelidate } from '@/composables/useVuelidate';
-import { IDeleteRoleRequest, IRoleResponse } from '@/interfaces/roles';
+import { useVuelidate } from '@/composables';
+import { IDeleteRoleRequest, IRoleResponse } from '@/interfaces';
 
 const props = defineProps<{
   modelValue: boolean;

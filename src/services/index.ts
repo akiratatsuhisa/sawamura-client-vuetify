@@ -1,11 +1,10 @@
 import axios, { CreateAxiosDefaults } from 'axios';
 
+import { AuthService } from '@/services/auth';
 import { Service } from '@/services/common';
-
-import { AuthService } from './auth';
-import { RolesService } from './roles';
-import { RoomsService } from './rooms';
-import { UsersService } from './users';
+import { RolesService } from '@/services/roles';
+import { RoomsService } from '@/services/rooms';
+import { UsersService } from '@/services/users';
 
 export { Service };
 

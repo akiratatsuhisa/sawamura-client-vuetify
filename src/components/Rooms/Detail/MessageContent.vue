@@ -107,12 +107,12 @@ import _ from 'lodash';
 import { computed } from 'vue';
 
 import VMessageContentFile from '@/components/Rooms/Detail/MessageContentFile.vue';
-import { useAuth } from '@/composables/useAuth';
+import { useAuth } from '@/composables';
 import {
   IDeleteRoomMessageRequest,
   IRoomMessageFileResponse,
   IRoomMessageResponse,
-} from '@/interfaces/rooms';
+} from '@/interfaces';
 
 const props = defineProps<{
   index: number;

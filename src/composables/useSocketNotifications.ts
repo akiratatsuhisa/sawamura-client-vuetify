@@ -1,6 +1,5 @@
+import { initSocket, useSocket } from '@/composables';
 import { KEYS } from '@/constants';
-
-import { initSocket, useSocket } from './useSocket';
 
 const options = {
   key: KEYS.SOCKET_NOTIFICATIONS,

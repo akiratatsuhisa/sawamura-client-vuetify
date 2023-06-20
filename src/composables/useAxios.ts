@@ -6,11 +6,9 @@ import axios, {
 } from 'axios';
 import { Component, ref, unref } from 'vue';
 
-import { IExceptionResponseDetail } from '@/interfaces/error';
+import { useAuth, useSnackbar } from '@/composables';
+import { IExceptionResponseDetail } from '@/interfaces';
 import { config, Service } from '@/services';
-
-import { useAuth } from './useAuth';
-import { useSnackbar } from './useSnackbar';
 
 export type UseAxiosOptions<T> = {
   unauth?: boolean;
@@ -40,7 +38,7 @@ export function useAxios<
 
   const { getAccessTokenSilently } = useAuth();
 
-  const { create: createSnackbar } = useSnackbar();
+  const { createSnackbarSuccess, createSnackbarError } = useSnackbar();
 
   const axiosInstacne = axios.create(config);
 
@@ -86,7 +84,7 @@ export function useAxios<
 
       const content = unref(message);
       if (content) {
-        createSnackbar(content, { color: 'success', isOnce: true });
+        createSnackbarSuccess(content);
       }
 
       return response.data;
@@ -97,7 +95,7 @@ export function useAxios<
       data.value = undefined;
 
       if (error.value.message) {
-        createSnackbar(error.value.message, { color: 'error', isOnce: true });
+        createSnackbarError(error.value.message);
       }
 
       throw exception;

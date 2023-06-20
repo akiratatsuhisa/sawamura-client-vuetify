@@ -11,9 +11,9 @@
 <script lang="ts" setup>
 import { inject } from 'vue';
 
-import { useRoom } from '@/composables/useRoom';
+import { useRoom } from '@/composables';
 import { KEYS } from '@/constants';
-import { IRoomMenuItem } from '@/interfaces/menus';
+import { IRoomMenuItem } from '@/interfaces';
 
 const props = defineProps<{
   item: IRoomMenuItem;

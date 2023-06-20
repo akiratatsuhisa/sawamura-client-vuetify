@@ -1,10 +1,10 @@
+import dayjs from 'dayjs';
 import Decimal from 'decimal.js';
 import _ from 'lodash';
-import moment from 'moment';
 
 type localesType = undefined | string | string[];
 
-type dateTimeDataType = undefined | null | string | Date | moment.Moment;
+type dateTimeDataType = undefined | null | string | Date | dayjs.Dayjs;
 
 type dateTimeStyle = undefined | 'full' | 'long' | 'medium' | 'short';
 
@@ -35,12 +35,12 @@ export namespace Format {
     if (
       _.isNil(data) ||
       (_.isString(data) && _.trim(data) === '') ||
-      !moment(data).isValid()
+      !dayjs(data).isValid()
     ) {
       return '';
     }
 
-    data = moment(data).toDate();
+    data = dayjs(data).toDate();
 
     return new Intl.DateTimeFormat(locales, {
       dateStyle,

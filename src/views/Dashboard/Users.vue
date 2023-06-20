@@ -79,12 +79,8 @@ import { useTheme } from 'vuetify';
 
 import VIndexView from '@/components/Dashboard/Users/Index.vue';
 import VRoleList from '@/components/Dashboard/Users/RoleList.vue';
-import { useSocketDashboard } from '@/composables/useSocketDashboard';
-import { useSocketEventListener } from '@/composables/useSocketEventListener';
-import {
-  IChartUserRolesRequest,
-  IChartUserRolesResponse,
-} from '@/interfaces/dashboard';
+import { useSocketDashboard, useSocketEventListener } from '@/composables';
+import { IChartUserRolesRequest, IChartUserRolesResponse } from '@/interfaces';
 
 const theme = useTheme();
 
@@ -113,7 +109,7 @@ const options = computed<ApexOptions>(() => ({
     background: theme.current.value.colors['surface'],
   },
   theme: {
-    mode: theme.current.value.dark ? 'dark' : 'light',
+    mode: theme.name.value === 'dark' ? 'dark' : 'light',
   },
   labels: labels.value,
 }));

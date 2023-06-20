@@ -1,11 +1,10 @@
 import { MaybeRef, useLocalStorage, useTimeAgo } from '@vueuse/core';
+import dayjs from 'dayjs';
 import _ from 'lodash';
-import moment from 'moment';
 import { computed, unref } from 'vue';
 
-import { IRoomResponse, IRoomUserResponse } from '@/interfaces/rooms';
-
-import { useAuth } from './useAuth';
+import { useAuth } from '@/composables';
+import { IRoomResponse, IRoomUserResponse } from '@/interfaces';
 
 export function useRoom(room: MaybeRef<IRoomResponse>) {
   const { identityId } = useAuth();
@@ -67,7 +66,7 @@ export function useRoom(room: MaybeRef<IRoomResponse>) {
       updatedImages.value[unref(room).id] = { photo: '', cover: '' };
     }
 
-    updatedImages.value[unref(room).id][type] = moment().unix().toString();
+    updatedImages.value[unref(room).id][type] = dayjs().unix().toString();
   }
 
   const roomCoverUrl = computed(() => {

@@ -58,17 +58,13 @@
 <script lang="ts" setup>
 import { useIntervalFn } from '@vueuse/core';
 import { ApexOptions } from 'apexcharts';
+import dayjs from 'dayjs';
 import _ from 'lodash';
-import moment from 'moment';
 import { computed, ref } from 'vue';
 import { useTheme } from 'vuetify';
 
-import { useSocketDashboard } from '@/composables/useSocketDashboard';
-import { useSocketEventListener } from '@/composables/useSocketEventListener';
-import {
-  IChartMessgesRequest,
-  IChartMessgesResponse,
-} from '@/interfaces/dashboard';
+import { useSocketDashboard, useSocketEventListener } from '@/composables';
+import { IChartMessgesRequest, IChartMessgesResponse } from '@/interfaces';
 
 const theme = useTheme();
 
@@ -80,7 +76,7 @@ const options = computed<ApexOptions>(() => ({
     background: theme.current.value.colors['surface'],
   },
   theme: {
-    mode: theme.current.value.dark ? 'dark' : 'light',
+    mode: theme.name.value === 'dark ' ? 'dark' : 'light',
   },
   plotOptions: {
     bar: {
@@ -98,7 +94,7 @@ const options = computed<ApexOptions>(() => ({
   stroke: {
     show: true,
     width: 1,
-    colors: [theme.current.value.dark ? 'dark' : 'light'],
+    colors: [theme.name.value === 'dark' ? 'dark' : 'light'],
   },
 }));
 
@@ -137,8 +133,8 @@ const { isLoading: isLoadingChartMessages, request: requestChartMessages } =
 const { isActive, pause, resume } = useIntervalFn(
   () => {
     requestChartMessages({
-      fromDate: moment().subtract(11, 'months').startOf('month').toISOString(),
-      toDate: moment().endOf('month').toISOString(),
+      fromDate: dayjs().subtract(11, 'months').startOf('month').toISOString(),
+      toDate: dayjs().endOf('month').toISOString(),
     });
   },
   300000,

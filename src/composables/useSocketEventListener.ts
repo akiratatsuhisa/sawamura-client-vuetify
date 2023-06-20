@@ -4,7 +4,7 @@ import { Socket } from 'socket.io-client';
 import { v4 as uuidv4 } from 'uuid';
 import { isRef, onBeforeUnmount, readonly, ref, unref, watch } from 'vue';
 
-import { IWsExceptionResponse } from '@/interfaces/error';
+import { IWsExceptionResponse } from '@/interfaces';
 
 type EmitId = {
   __emit_id__?: string;

@@ -9,7 +9,7 @@ import {
   IRegisterResponse,
   IResetPasswordRequest,
   IResetPasswordResponse,
-} from '@/interfaces/auth';
+} from '@/interfaces';
 import { Service } from '@/services/common';
 
 export class AuthService extends Service {

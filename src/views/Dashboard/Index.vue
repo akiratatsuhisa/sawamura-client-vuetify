@@ -69,8 +69,8 @@
                 </strong>
               </template>
             </v-progress-linear>
-            <span class="text-caption text-end"
-              >{{
+            <span class="text-caption text-end">
+              {{
                 Format.binaryUnit(statisticalData.cache.value, {
                   outputUnit: BinaryUnit.Gibibyte,
                 })
@@ -80,8 +80,8 @@
                 Format.binaryUnit(statisticalData.cache.max as number, {
                   outputUnit: BinaryUnit.Gibibyte,
                 })
-              }}</span
-            >
+              }}
+            </span>
           </v-info-card>
         </v-col>
 
@@ -111,15 +111,14 @@ import { useRoute } from 'vue-router';
 
 import VDefaultComponent from '@/components/Dashboard/Default.vue';
 import VInfoCard, { InfoCardProps } from '@/components/Dashboard/InfoCard.vue';
-import { initSocketDashboard } from '@/composables/useSocketDashboard';
-import { useSocketEventListener } from '@/composables/useSocketEventListener';
-import { BinaryUnit, Format } from '@/helpers/format';
+import { initSocketDashboard, useSocketEventListener } from '@/composables';
+import { BinaryUnit, Format } from '@/helpers';
 import {
   ICountUsersRequest,
   ICountUsersResponse,
   IStorageDropboxRequest,
   IStorageDropboxResponse,
-} from '@/interfaces/dashboard';
+} from '@/interfaces';
 
 const route = useRoute();
 

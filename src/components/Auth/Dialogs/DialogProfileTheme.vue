@@ -54,9 +54,7 @@
 </template>
 
 <script lang="ts" setup>
-import { useAuth } from '@/composables/useAuth';
-import { useAxios } from '@/composables/useAxios';
-import { useThemePicker } from '@/composables/useColor';
+import { useAuth, useAxios, useThemePicker } from '@/composables';
 import { services } from '@/services';
 
 defineProps<{

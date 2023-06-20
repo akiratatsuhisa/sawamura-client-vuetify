@@ -24,7 +24,7 @@
 </template>
 
 <script lang="ts" setup>
-import { Format } from '@/helpers/format';
+import { Format } from '@/helpers';
 
 export type InfoCardProps = {
   color: string;

@@ -67,9 +67,9 @@ import _ from 'lodash';
 import { computed, inject, provide, ref } from 'vue';
 import { RouteLocationNamedRaw, useRoute, useRouter } from 'vue-router';
 
-import { useAuth } from '@/composables/useAuth';
+import { useAuth } from '@/composables';
 import { KEYS } from '@/constants';
-import { IRoomMenuItem, IRootMenuItem } from '@/interfaces/menus';
+import { IRoomMenuItem, IRootMenuItem } from '@/interfaces';
 import VAvatarMenuItem from '@/layouts/Default/Menus/AvatarMenuItem.vue';
 import VIconMenuItem from '@/layouts/Default/Menus/IconMenuItem.vue';
 import VRoomMenuItem from '@/layouts/Default/Menus/RoomMenuItem.vue';

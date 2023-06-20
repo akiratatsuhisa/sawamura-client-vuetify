@@ -43,11 +43,9 @@ import { useDisplay } from 'vuetify/lib/framework.mjs';
 
 import VInfoSidebar from '@/components/Rooms/Detail/InfoSidebar.vue';
 import VMainContent from '@/components/Rooms/Detail/MainContent.vue';
-import { useRoom } from '@/composables/useRoom';
-import { useSocketChat } from '@/composables/useSocketChat';
-import { useSocketEventListener } from '@/composables/useSocketEventListener';
+import { useRoom, useSocketChat, useSocketEventListener } from '@/composables';
 import { KEYS } from '@/constants';
-import { IRoomRequest, IRoomResponse } from '@/interfaces/rooms';
+import { IRoomRequest, IRoomResponse } from '@/interfaces';
 
 const display = useDisplay();
 

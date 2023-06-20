@@ -1,7 +1,7 @@
 import { MaybeRef } from '@vueuse/core';
 import { computed, ref, unref } from 'vue';
 
-import { numberToRgb, rgbToNumber } from '@/helpers/format';
+import { numberToRgb, rgbToNumber } from '@/helpers';
 
 export function useDisplayThemeColor(source: MaybeRef<number | null>) {
   return computed<string>(() => {

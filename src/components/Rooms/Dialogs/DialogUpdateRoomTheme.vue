@@ -56,8 +56,7 @@
 <script lang="ts" setup>
 import { inject } from 'vue';
 
-import { useAxios } from '@/composables/useAxios';
-import { useThemePicker } from '@/composables/useColor';
+import { useAxios, useThemePicker } from '@/composables';
 import { KEYS } from '@/constants';
 import { services } from '@/services';
 

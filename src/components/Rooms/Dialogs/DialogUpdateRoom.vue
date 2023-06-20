@@ -25,9 +25,9 @@
 import { maxLength, required } from '@vuelidate/validators';
 import { inject, reactive } from 'vue';
 
-import { getErrorMessage, useVuelidate } from '@/composables/useVuelidate';
+import { getErrorMessage, useVuelidate } from '@/composables';
 import { KEYS } from '@/constants';
-import { IUpdateRoomRequest } from '@/interfaces/rooms';
+import { IUpdateRoomRequest } from '@/interfaces';
 
 defineProps<{
   modelValue: boolean;

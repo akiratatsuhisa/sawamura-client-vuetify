@@ -19,9 +19,9 @@ import { required } from '@vuelidate/validators';
 import _ from 'lodash';
 import { computed, inject, reactive, ref } from 'vue';
 
-import { useVuelidate } from '@/composables/useVuelidate';
+import { useVuelidate } from '@/composables';
 import { KEYS } from '@/constants';
-import { IDeleteRoomMemberRequest } from '@/interfaces/rooms';
+import { IDeleteRoomMemberRequest } from '@/interfaces';
 
 const props = defineProps<{
   modelValue: boolean;

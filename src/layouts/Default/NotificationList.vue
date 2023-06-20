@@ -44,15 +44,14 @@
 import _ from 'lodash';
 import { computed, ref, watch } from 'vue';
 
-import { useSocketEventListener } from '@/composables/useSocketEventListener';
-import { useSocketNotifications } from '@/composables/useSocketNotifications';
+import { useSocketEventListener, useSocketNotifications } from '@/composables';
 import {
   IDeleteNotificationRequest,
   INotificationResponse,
   ISearchNotificationRequest,
   IUpdateNotificationRequest,
   NotificationStatus,
-} from '@/interfaces/notifications';
+} from '@/interfaces';
 import VNotificationListItem from '@/layouts/Default/NotificationListItem.vue';
 
 const notifications = ref<Array<INotificationResponse>>([]);

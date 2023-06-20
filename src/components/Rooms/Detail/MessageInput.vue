@@ -28,7 +28,7 @@
         hide-details
         prepend-icon="mdi-file-send"
         append-inner-icon="mdi-emoticon-outline"
-        @click:prepend="openFileDialog"
+        @click:prepend="() => openFileDialog()"
         @click:append-inner="emit('update:emojiPickerShow', !emojiPickerShow)"
         @keypress.exact.enter.prevent="sendMessage"
         @keypress="emit('typing', $event)"
@@ -70,15 +70,18 @@ import { computed, inject, nextTick, ref, shallowReactive, watch } from 'vue';
 import { VTextField } from 'vuetify/components';
 
 import VMessageInputFile from '@/components/Rooms/Detail/MessageInputFile.vue';
-import { useSocketChat } from '@/composables/useSocketChat';
-import { useSocketEventListener } from '@/composables/useSocketEventListener';
+import {
+  useSnackbar,
+  useSocketChat,
+  useSocketEventListener,
+} from '@/composables';
 import { KEYS, MESSAGE_FILE } from '@/constants';
 import {
   BasicFile,
   BasicFileType,
   ICreateRoomMessageRequest,
   IRoomMessageResponse,
-} from '@/interfaces/rooms';
+} from '@/interfaces';
 
 defineProps<{ emojiPickerShow: boolean }>();
 
@@ -90,6 +93,8 @@ const emit = defineEmits<{
 }>();
 
 const room = inject(KEYS.CHAT.ROOM)!;
+
+const { createSnackbarWarning, createSnackbarError } = useSnackbar();
 
 const socket = useSocketChat();
 
@@ -126,7 +131,7 @@ const filesInput = shallowReactive<Array<BasicFile>>([]);
 function selectFiles(files?: FileList | File[] | null) {
   _.forEach(files, (file) => {
     if (!file || file.size > MESSAGE_FILE.MAX_FILE_SIZE) {
-      console.error(
+      createSnackbarWarning(
         `file size must be less than or equals ${MESSAGE_FILE.MAX_FILE_SIZE} bytes`,
       );
       return;
@@ -141,7 +146,7 @@ function selectFiles(files?: FileList | File[] | null) {
       : null;
 
     if (_.isNull(type)) {
-      console.error('Invalid file type');
+      createSnackbarWarning('Invalid file type');
       return;
     }
 
@@ -210,7 +215,7 @@ const { request: requestCreateMessage } = useSocketEventListener<
       return;
     }
 
-    console.error(error);
+    createSnackbarError(error.message);
   },
 });
 

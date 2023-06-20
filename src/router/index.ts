@@ -1,7 +1,7 @@
 // Composables
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router';
 
-import { useAuth } from '@/composables/useAuth';
+import { useAuth } from '@/composables';
 import AccessDenied from '@/views/Errors/AccessDenied.vue';
 import InternalServer from '@/views/Errors/InternalServer.vue';
 import NotFound from '@/views/Errors/NotFound.vue';

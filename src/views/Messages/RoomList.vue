@@ -49,19 +49,24 @@
 import _ from 'lodash';
 import { computed, defineAsyncComponent, inject, ref } from 'vue';
 
-import { useSocketChat } from '@/composables/useSocketChat';
-import { useSocketEventListener } from '@/composables/useSocketEventListener';
+import {
+  useSnackbar,
+  useSocketChat,
+  useSocketEventListener,
+} from '@/composables';
 import { KEYS } from '@/constants';
 import {
   ICreateRoomRequest,
   IRoomResponse,
   ISearchRoomsRequest,
-} from '@/interfaces/rooms';
+} from '@/interfaces';
 import VRoomItem from '@/views/Messages/RoomItem.vue';
 
 const VDialogCreateRoomGroup = defineAsyncComponent(
   () => import('@/components/Rooms/Dialogs/DialogCreateRoomGroup.vue'),
 );
+
+const { createSnackbarError } = useSnackbar();
 
 const socket = useSocketChat();
 
@@ -79,7 +84,7 @@ const { request: requestRooms, isLoading: isLoadingRooms } =
         updateDrawerRooms(rooms.value);
       },
       exception(error) {
-        console.error(error);
+        createSnackbarError(error.message);
       },
       immediate: true,
       paramsOrData: { take: 20 },
@@ -111,7 +116,7 @@ const { request: requestCreateRoom, isLoading: isLoadingCreateRoom } =
       response: handleCreateRoom,
       listener: handleCreateRoom,
       exception(error) {
-        console.error(error);
+        createSnackbarError(error.message);
       },
     },
   );

@@ -5,7 +5,12 @@
     </template>
     <v-list-item-title> {{ value.name }} </v-list-item-title>
     <template #append>
-      <v-tooltip v-if="value.default" location="start" text="Default value">
+      <v-tooltip
+        v-if="value.default"
+        location="start"
+        text="Default value"
+        content-class="elevation-2"
+      >
         <template v-slot:activator="{ props }">
           <v-btn
             icon="mdi-shield-lock-outline"
@@ -42,7 +47,7 @@
 </template>
 
 <script lang="ts" setup>
-import { IRoleResponse } from '@/interfaces/roles';
+import { IRoleResponse } from '@/interfaces';
 
 const props = defineProps<{
   value: IRoleResponse;

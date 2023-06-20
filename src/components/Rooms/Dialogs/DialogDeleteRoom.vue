@@ -18,9 +18,9 @@
 import { required } from '@vuelidate/validators';
 import { inject, reactive } from 'vue';
 
-import { useVuelidate } from '@/composables/useVuelidate';
+import { useVuelidate } from '@/composables';
 import { KEYS } from '@/constants';
-import { IDeleteRoomRequest } from '@/interfaces/rooms';
+import { IDeleteRoomRequest } from '@/interfaces';
 
 defineProps<{
   modelValue: boolean;
