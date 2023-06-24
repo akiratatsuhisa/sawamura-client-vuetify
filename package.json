@@ -1,5 +1,5 @@
 {
-  "name": "vuetify-app",
+  "name": "sawamura-client-vuetify",
   "version": "0.0.0",
   "scripts": {
     "start": "vite",

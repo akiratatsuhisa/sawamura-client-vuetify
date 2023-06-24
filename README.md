@@ -41,7 +41,7 @@ See the [official Node.js installation documentation](https://nodejs.org/).
 To install the application, clone the repository and install the required dependencies:
 
 ```bash
-$ git clone https://github.com/akiratatsuhisa/vuetify-app.git
+$ git clone https://github.com/akiratatsuhisa/sawamura-client-vuetify.git
 ```
 
 Install Dependencies for client app, open new terminal.
