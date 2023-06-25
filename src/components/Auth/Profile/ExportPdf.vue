@@ -12,7 +12,6 @@
 
 <script lang="ts" setup>
 import { useObjectUrl } from '@vueuse/core';
-import _ from 'lodash';
 import { ref, watch } from 'vue';
 
 import { useAxios } from '@/composables';

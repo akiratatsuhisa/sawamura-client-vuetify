@@ -44,7 +44,7 @@
 
 <script lang="ts" setup>
 import { required } from '@vuelidate/validators';
-import _ from 'lodash';
+import { useDebounceFn } from '@vueuse/core';
 import { computed, inject, reactive, ref, watch } from 'vue';
 
 import {
@@ -116,7 +116,7 @@ const usersResult = ref<Array<IUserResponse>>([]);
 
 const isLoadingSearch = ref<boolean>(false);
 
-const debounceExcuteSearchUsers = _.debounce(
+const excuteSearchUsersDebounce = useDebounceFn(
   async (params: ISearchUsersRequest) => {
     usersResult.value = await excuteSearchUsers(params);
     isLoadingSearch.value = false;
@@ -130,7 +130,7 @@ watch(userSearch, (search) => {
   }
 
   isLoadingSearch.value = true;
-  debounceExcuteSearchUsers({ search });
+  excuteSearchUsersDebounce({ search });
 });
 
 function onOpen() {

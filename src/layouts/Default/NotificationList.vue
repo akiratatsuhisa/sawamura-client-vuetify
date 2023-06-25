@@ -41,6 +41,7 @@
 </template>
 
 <script lang="ts" setup>
+import { useThrottleFn } from '@vueuse/core';
 import _ from 'lodash';
 import { computed, ref, watch } from 'vue';
 
@@ -105,12 +106,12 @@ useSocketEventListener<INotificationResponse>(socket, 'create:notification', {
   },
 });
 
-const throttleRequestRooms = _.throttle(requestNotifications, 500);
+const requestRoomsThrottle = useThrottleFn(requestNotifications, 500);
 
 function fetchMore() {
   const excludeIds = _.map(notifications.value, (room) => room.id);
 
-  throttleRequestRooms({
+  requestRoomsThrottle({
     take: 10,
     excludeIds: excludeIds.length ? excludeIds : undefined,
   });

@@ -73,6 +73,65 @@
                 </router-link>
               </span>
             </form>
+            <!-- <div>
+              <v-row no-gutters>
+                <v-col class="d-flex align-center mr-2">
+                  <v-divider></v-divider>
+                </v-col>
+                <v-col cols="auto">OR</v-col>
+                <v-col class="d-flex align-center ml-2">
+                  <v-divider></v-divider>
+                </v-col>
+              </v-row>
+              <v-btn
+                :loading="isLoading"
+                variant="outlined"
+                color="secondary"
+                block
+                class="my-3 btn-social"
+              >
+                <template #prepend>
+                  <v-avatar
+                    image="/logos/google.svg"
+                    size="24"
+                    rounded="0"
+                  ></v-avatar>
+                </template>
+                Google
+              </v-btn>
+              <v-btn
+                :loading="isLoading"
+                variant="outlined"
+                color="secondary"
+                block
+                class="my-3 btn-social"
+              >
+                <template #prepend>
+                  <v-avatar
+                    image="/logos/facebook.svg"
+                    size="24"
+                    rounded="0"
+                  ></v-avatar>
+                </template>
+                Facebook
+              </v-btn>
+              <v-btn
+                :loading="isLoading"
+                variant="outlined"
+                color="secondary"
+                block
+                class="my-3 btn-social"
+              >
+                <template #prepend>
+                  <v-avatar
+                    image="/logos/twitter.svg"
+                    size="24"
+                    rounded="0"
+                  ></v-avatar>
+                </template>
+                Twitter
+              </v-btn>
+            </div> -->
           </v-card-text>
         </v-card>
       </v-col>

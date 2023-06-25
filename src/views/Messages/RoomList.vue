@@ -46,6 +46,7 @@
 </template>
 
 <script lang="ts" setup>
+import { useThrottleFn } from '@vueuse/core';
 import _ from 'lodash';
 import { computed, defineAsyncComponent, inject, ref } from 'vue';
 
@@ -91,12 +92,12 @@ const { request: requestRooms, isLoading: isLoadingRooms } =
     },
   );
 
-const throttleRequestRooms = _.throttle(requestRooms, 500);
+const requestRoomsThrottle = useThrottleFn(requestRooms, 500);
 
 function fetchMore() {
   const excludeIds = _.map(rooms.value, (room) => room.id);
 
-  throttleRequestRooms({
+  requestRoomsThrottle({
     take: 10,
     excludeIds: excludeIds.length ? excludeIds : undefined,
   });

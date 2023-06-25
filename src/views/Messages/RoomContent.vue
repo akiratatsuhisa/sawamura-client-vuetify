@@ -15,7 +15,7 @@
           </template>
         </v-tooltip>
 
-        <v-toolbar-title>{{ room?.name }}</v-toolbar-title>
+        <v-toolbar-title>{{ displayName }}</v-toolbar-title>
 
         <v-spacer></v-spacer>
 
@@ -118,7 +118,8 @@ const room = ref<IRoomResponse>({
   themeStyle: null,
 });
 
-const { currentMember, targetMember, disyplayLastActivatedAgo } = useRoom(room);
+const { currentMember, targetMember, displayName, disyplayLastActivatedAgo } =
+  useRoom(room);
 
 provide(KEYS.CHAT.ROOM, room);
 

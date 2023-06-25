@@ -73,7 +73,7 @@ const displayUsers = computed(() => {
   return obj;
 });
 
-const debouncedTyping = useDebounceFn(() => {
+const typeDebounce = useDebounceFn(() => {
   for (const key in typingUsers) {
     delete typingUsers[key];
   }
@@ -92,7 +92,7 @@ function handleTyping(data: { userId: string }) {
     }
   }
 
-  debouncedTyping();
+  typeDebounce();
 }
 
 watch(

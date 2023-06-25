@@ -17,6 +17,19 @@
   )
 );
 
+.btn-social {
+  justify-content: stretch;
+
+  .v-btn__prepend {
+    margin-left: 8px;
+    margin-right: 8px;
+  }
+
+  .v-btn__content {
+    width: 100%;
+  }
+}
+
 .cropper-wrapper {
   width: 100%;
   background: rgb(var(--v-theme-surface-variant));
