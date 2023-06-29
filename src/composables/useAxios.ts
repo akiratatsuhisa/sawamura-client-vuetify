@@ -52,7 +52,7 @@ export function useAxios<
     percent.value = Math.round((event.loaded / (event.total ?? 0)) * 100);
   }
 
-  async function excute<T extends Req>(paramsOrData: T): Promise<Res> {
+  async function excute(paramsOrData: Req): Promise<Res> {
     if (isLoading.value) {
       throw new Error('on progress');
     }

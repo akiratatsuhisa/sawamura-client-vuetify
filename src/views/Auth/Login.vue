@@ -73,7 +73,7 @@
                 </router-link>
               </span>
             </form>
-            <!-- <div>
+            <div>
               <v-row no-gutters>
                 <v-col class="d-flex align-center mr-2">
                   <v-divider></v-divider>
@@ -84,54 +84,25 @@
                 </v-col>
               </v-row>
               <v-btn
+                v-for="(name, provider) in PROVIDERS"
+                :key="provider"
                 :loading="isLoading"
                 variant="outlined"
                 color="secondary"
                 block
                 class="my-3 btn-social"
+                @click="linkProvider(provider)"
               >
                 <template #prepend>
                   <v-avatar
-                    image="/logos/google.svg"
+                    :image="`/logos/${provider}.svg`"
                     size="24"
                     rounded="0"
                   ></v-avatar>
                 </template>
-                Google
+                {{ name }}
               </v-btn>
-              <v-btn
-                :loading="isLoading"
-                variant="outlined"
-                color="secondary"
-                block
-                class="my-3 btn-social"
-              >
-                <template #prepend>
-                  <v-avatar
-                    image="/logos/facebook.svg"
-                    size="24"
-                    rounded="0"
-                  ></v-avatar>
-                </template>
-                Facebook
-              </v-btn>
-              <v-btn
-                :loading="isLoading"
-                variant="outlined"
-                color="secondary"
-                block
-                class="my-3 btn-social"
-              >
-                <template #prepend>
-                  <v-avatar
-                    image="/logos/twitter.svg"
-                    size="24"
-                    rounded="0"
-                  ></v-avatar>
-                </template>
-                Twitter
-              </v-btn>
-            </div> -->
+            </div>
           </v-card-text>
         </v-card>
       </v-col>
@@ -145,11 +116,17 @@ import _ from 'lodash';
 import { computed, reactive, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 
-import { getErrorMessage, useAuth, useVuelidate } from '@/composables';
+import {
+  getErrorMessage,
+  useAuth,
+  useOauth,
+  useVuelidate,
+} from '@/composables';
+import { PROVIDERS } from '@/constants';
 import { ILoginRequest } from '@/interfaces';
 
-const router = useRouter();
 const route = useRoute();
+const router = useRouter();
 
 const redirectUrl = computed(() =>
   _.isArray(route.query.redirectUrl)
@@ -187,4 +164,6 @@ const onSubmit = handleSubmit(async (data) => {
     router.push({ name: 'Home' });
   }
 });
+
+const { linkProvider } = useOauth();
 </script>

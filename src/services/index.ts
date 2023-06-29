@@ -2,6 +2,7 @@ import axios, { CreateAxiosDefaults } from 'axios';
 
 import { AuthService } from '@/services/auth';
 import { Service } from '@/services/common';
+import { OauthService } from '@/services/oauth';
 import { RolesService } from '@/services/roles';
 import { RoomsService } from '@/services/rooms';
 import { UsersService } from '@/services/users';
@@ -16,6 +17,7 @@ export const axiosInstacne = axios.create(config);
 
 export const services = {
   auth: new AuthService(),
+  oauth: new OauthService(),
   users: new UsersService(),
   roles: new RolesService(),
   rooms: new RoomsService(),

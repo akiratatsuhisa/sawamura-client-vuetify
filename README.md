@@ -59,6 +59,15 @@ Next, create an `.env` file with the following contents:
 | VITE_NO_AVATAR_URL     | URL for a default avatar image when a user does not have a profile picture.        | /images/no-avatar.png     |
 | VITE_NO_BACKGROUND_URL | URL for a default background image when a image does not have a custom background. | /images/no-background.png |
 
+OAuth2 variables:
+
+| KEY                      | DESCRIPTION                                                        | EXAMPLE VALUE                      |
+| ------------------------ | ------------------------------------------------------------------ | ---------------------------------- |
+| VITE_GOOGLE_CLIENT_ID    | Client ID provided by Google for OAuth2 authentication.            |                                    |
+| VITE_GOOGLE_CALLBACK_URL | The callback URL registered with Google for OAuth2 authentication. | http://localhost:4000/oauth/google |
+| VITE_GITHUB_CLIENT_ID    | Client ID provided by GitHub for OAuth2 authentication.            |                                    |
+| VITE_GITHUB_CALLBACK_URL | The callback URL registered with GitHub for OAuth2 authentication. | http://localhost:4000/oauth/github |
+
 ## Running the app
 
 ```bash

@@ -2,6 +2,7 @@ export * from '@/composables/useAuth';
 export * from '@/composables/useAxios';
 export * from '@/composables/useColor';
 export * from '@/composables/useRoom';
+export * from '@/composables/useRouter';
 export * from '@/composables/useSnackbar';
 export * from '@/composables/useSocket';
 export * from '@/composables/useSocketChat';

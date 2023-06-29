@@ -31,7 +31,7 @@
           <v-list class="mx-md-n6">
             <v-list-item
               v-if="room?.isGroup && currentMember?.role !== 'Member'"
-              @click="dialogs.updateRoom = true"
+              @click="openDialog('update')"
             >
               <template #prepend>
                 <v-avatar color="secondary-container">
@@ -43,7 +43,7 @@
             </v-list-item>
             <v-list-item
               v-if="room?.isGroup && currentMember?.role !== 'Member'"
-              @click="dialogs.updateRoomPhoto = true"
+              @click="openDialog('photo')"
             >
               <template #prepend>
                 <v-avatar color="secondary-container">
@@ -55,7 +55,7 @@
             </v-list-item>
             <v-list-item
               v-if="currentMember?.role !== 'Member'"
-              @click="dialogs.updateRoomCover = true"
+              @click="openDialog('cover')"
             >
               <template #prepend>
                 <v-avatar color="secondary-container">
@@ -67,7 +67,7 @@
             </v-list-item>
             <v-list-item
               v-if="currentMember?.role !== 'Member'"
-              @click="dialogs.updateRoomTheme = true"
+              @click="openDialog('theme')"
             >
               <template #prepend>
                 <v-avatar color="secondary-container">
@@ -85,7 +85,7 @@
             </v-list-item>
             <v-list-item
               v-if="room?.isGroup && currentMember?.role === 'Admin'"
-              @click="dialogs.deleteRoom = true"
+              @click="openDialog('delete')"
             >
               <template #prepend>
                 <v-avatar color="secondary-container">
@@ -95,7 +95,7 @@
 
               <v-list-item-title> Delete chat </v-list-item-title>
             </v-list-item>
-            <v-list-item @click="dialogs.selectReactionIcon = true">
+            <v-list-item @click="openDialog('icon')">
               <template #prepend>
                 <v-avatar color="secondary-container">
                   <v-icon icon="mdi-hand-okay"></v-icon>
@@ -114,10 +114,9 @@
             <v-list-item
               v-if="room?.isGroup"
               @click="
-                () => {
-                  dialogs.deleteMember = true;
-                  dialogs.memberId = identityId ?? '';
-                }
+                openDialog('members', {
+                  params: { memberDialog: 'delete', memberId: identityId },
+                })
               "
             >
               <template #prepend>
@@ -137,7 +136,11 @@
           <v-list class="mx-md-n6">
             <v-list-item
               v-if="room?.isGroup && currentMember?.role !== 'Member'"
-              @click="dialogs.createMember = true"
+              @click="
+                openDialog('members', {
+                  params: { memberDialog: 'create' },
+                })
+              "
             >
               <template #prepend>
                 <v-avatar color="secondary-container">
@@ -191,10 +194,12 @@
                       append-icon="mdi-account-edit-outline"
                       title="Change nickname"
                       @click="
-                        () => {
-                          dialogs.updateMember = true;
-                          dialogs.memberId = roomMember.member.id;
-                        }
+                        openDialog('members', {
+                          params: {
+                            memberDialog: 'update',
+                            memberId: roomMember.member.id,
+                          },
+                        })
                       "
                     />
                     <v-list-item
@@ -209,10 +214,12 @@
                       append-icon="mdi-database-edit-outline"
                       title="Change role"
                       @click="
-                        () => {
-                          dialogs.updateMemberRole = true;
-                          dialogs.memberId = roomMember.member.id;
-                        }
+                        openDialog('members', {
+                          params: {
+                            memberDialog: 'role',
+                            memberId: roomMember.member.id,
+                          },
+                        })
                       "
                     />
                     <v-list-item
@@ -227,10 +234,12 @@
                       append-icon="mdi-trash-can-outline"
                       title="Delete"
                       @click="
-                        () => {
-                          dialogs.deleteMember = true;
-                          dialogs.memberId = roomMember.member.id;
-                        }
+                        openDialog('members', {
+                          params: {
+                            memberDialog: 'delete',
+                            memberId: roomMember.member.id,
+                          },
+                        })
                       "
                     />
                   </v-list>
@@ -243,52 +252,25 @@
     </v-expansion-panels>
   </v-navigation-drawer>
 
-  <v-dialog-update-room
-    v-model="dialogs.updateRoom"
-    @submit="requestUpdateRoom"
-  />
-  <v-dialog-update-room-photo v-model="dialogs.updateRoomPhoto" />
-  <v-dialog-update-room-cover v-model="dialogs.updateRoomCover" />
-  <v-dialog-update-room-theme v-model="dialogs.updateRoomTheme" />
-  <v-dialog-delete-room
-    v-model="dialogs.deleteRoom"
-    @submit="requestDeleteRoom"
-  />
-  <v-dialog-create-member
-    v-model="dialogs.createMember"
-    @submit="requestCreateMember"
-  />
-  <v-dialog-update-member
-    v-model="dialogs.updateMember"
-    :member-id="dialogs.memberId"
-    @submit="requestUpdateMember"
-  />
-  <v-dialog-update-member-role
-    v-if="room?.isGroup"
-    v-model="dialogs.updateMemberRole"
-    :member-id="dialogs.memberId"
-    @submit="requestUpdateMember"
-  />
-  <v-dialog-delete-member
-    v-model="dialogs.deleteMember"
-    :member-id="dialogs.memberId"
-    @submit="requestDeleteMember"
-  />
-  <v-dialog-select-reaction-icon
-    v-model="dialogs.selectReactionIcon"
-    :value="reactionIcon"
-    @submit="onSelectReactionIcon"
-  />
+  <template v-for="(dialog, name) in dialogs" :key="name">
+    <component
+      :is="dialog.component"
+      :model-value="isActiveDialog(name)"
+      @update:model-value="closeDialog"
+      @submit="dialog.onSubmit"
+    />
+  </template>
 </template>
 
 <script lang="ts" setup>
-import { computed, defineAsyncComponent, inject, reactive } from 'vue';
+import { computed, defineAsyncComponent, inject } from 'vue';
 import { useRouter } from 'vue-router';
 
 import {
   useAuth,
   useDisplayThemeColor,
   useRoom,
+  useRouterDialog,
   useSnackbar,
   useSocketChat,
   useSocketEventListener,
@@ -302,37 +284,6 @@ import {
   IUpdateRoomMemberRequest,
   IUpdateRoomRequest,
 } from '@/interfaces';
-
-const VDialogCreateMember = defineAsyncComponent(
-  () => import('@/components/Rooms/Dialogs/DialogCreateMember.vue'),
-);
-const VDialogDeleteMember = defineAsyncComponent(
-  () => import('@/components/Rooms/Dialogs/DialogDeleteMember.vue'),
-);
-const VDialogDeleteRoom = defineAsyncComponent(
-  () => import('@/components/Rooms/Dialogs/DialogDeleteRoom.vue'),
-);
-const VDialogSelectReactionIcon = defineAsyncComponent(
-  () => import('@/components/Rooms/Dialogs/DialogSelectReactionIcon.vue'),
-);
-const VDialogUpdateMember = defineAsyncComponent(
-  () => import('@/components/Rooms/Dialogs/DialogUpdateMember.vue'),
-);
-const VDialogUpdateMemberRole = defineAsyncComponent(
-  () => import('@/components/Rooms/Dialogs/DialogUpdateMemberRole.vue'),
-);
-const VDialogUpdateRoom = defineAsyncComponent(
-  () => import('@/components/Rooms/Dialogs/DialogUpdateRoom.vue'),
-);
-const VDialogUpdateRoomCover = defineAsyncComponent(
-  () => import('@/components/Rooms/Dialogs/DialogUpdateRoomCover.vue'),
-);
-const VDialogUpdateRoomPhoto = defineAsyncComponent(
-  () => import('@/components/Rooms/Dialogs/DialogUpdateRoomPhoto.vue'),
-);
-const VDialogUpdateRoomTheme = defineAsyncComponent(
-  () => import('@/components/Rooms/Dialogs/DialogUpdateRoomTheme.vue'),
-);
 
 const props = defineProps<{
   modelValue?: IRoomResponse;
@@ -397,20 +348,6 @@ function handleDeleteRoom(data: IRoomResponse) {
 
   router.push({ name: 'Messages' });
 }
-
-const dialogs = reactive({
-  updateRoom: false,
-  updateRoomCover: false,
-  updateRoomPhoto: false,
-  updateRoomTheme: false,
-  deleteRoom: false,
-  createMember: false,
-  memberId: '',
-  updateMember: false,
-  updateMemberRole: false,
-  deleteMember: false,
-  selectReactionIcon: false,
-});
 
 useSocketEventListener<IRoomResponse>(socket, 'update:room:photo', {
   listener(data) {
@@ -516,6 +453,103 @@ const { request: requestDeleteMember, isLoading: isLoadingDeleteMember } =
       },
     },
   );
+
+const {
+  isActiveDialog: originIsActiveDialog,
+  openDialog,
+  closeDialog,
+} = useRouterDialog({
+  name: 'Messages:Room',
+  defaultParams: computed(() => ({
+    roomId: room.value.id,
+  })),
+  param: 'dialog',
+});
+
+const dialogs = {
+  update: {
+    component: defineAsyncComponent(
+      () => import('@/components/Rooms/Dialogs/DialogUpdateRoom.vue'),
+    ),
+    onSubmit: requestUpdateRoom,
+  },
+  photo: {
+    component: defineAsyncComponent(
+      () => import('@/components/Rooms/Dialogs/DialogUpdateRoomPhoto.vue'),
+    ),
+    onSubmit: () => undefined,
+  },
+  cover: {
+    component: defineAsyncComponent(
+      () => import('@/components/Rooms/Dialogs/DialogUpdateRoomCover.vue'),
+    ),
+    onSubmit: () => undefined,
+  },
+  theme: {
+    component: defineAsyncComponent(
+      () => import('@/components/Rooms/Dialogs/DialogUpdateRoomTheme.vue'),
+    ),
+    onSubmit: () => undefined,
+  },
+  delete: {
+    component: defineAsyncComponent(
+      () => import('@/components/Rooms/Dialogs/DialogDeleteRoom.vue'),
+    ),
+    onSubmit: requestDeleteRoom,
+  },
+  icon: {
+    component: defineAsyncComponent(
+      () => import('@/components/Rooms/Dialogs/DialogSelectReactionIcon.vue'),
+    ),
+    onSubmit: onSelectReactionIcon,
+  },
+  createMember: {
+    component: defineAsyncComponent(
+      () => import('@/components/Rooms/Dialogs/DialogCreateMember.vue'),
+    ),
+    onSubmit: requestCreateMember,
+  },
+  updateMember: {
+    component: defineAsyncComponent(
+      () => import('@/components/Rooms/Dialogs/DialogUpdateMember.vue'),
+    ),
+    onSubmit: requestUpdateMember,
+  },
+  updateMemberRole: {
+    component: defineAsyncComponent(
+      () => import('@/components/Rooms/Dialogs/DialogUpdateMemberRole.vue'),
+    ),
+    onSubmit: requestUpdateMember,
+  },
+  deleteMember: {
+    component: defineAsyncComponent(
+      () => import('@/components/Rooms/Dialogs/DialogDeleteMember.vue'),
+    ),
+    onSubmit: requestDeleteMember,
+  },
+};
+
+function isActiveDialog(name: keyof typeof dialogs) {
+  function isMemberDialog(memberDialog: string) {
+    return originIsActiveDialog(
+      ({ params }) =>
+        params?.dialog === 'members' && params?.memberDialog === memberDialog,
+    );
+  }
+
+  switch (name) {
+    case 'createMember':
+      return isMemberDialog('create');
+    case 'updateMember':
+      return isMemberDialog('update');
+    case 'updateMemberRole':
+      return isMemberDialog('role');
+    case 'deleteMember':
+      return isMemberDialog('delete');
+    default:
+      return originIsActiveDialog(name);
+  }
+}
 
 const isLoading = computed(
   () =>

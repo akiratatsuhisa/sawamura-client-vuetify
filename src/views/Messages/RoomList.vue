@@ -1,10 +1,4 @@
 <template>
-  <v-dialog-create-room-group
-    v-model="dialogCreateRoom"
-    @submit="requestCreateRoom"
-  >
-  </v-dialog-create-room-group>
-
   <v-main>
     <v-container class="fill-height">
       <v-row>
@@ -16,7 +10,7 @@
               <v-btn
                 class="ma-4"
                 prepend-icon="mdi-account-group"
-                @click="dialogCreateRoom = true"
+                @click="openDialog('create')"
                 :loading="isLoading"
               >
                 Create Group
@@ -43,6 +37,15 @@
       </v-row>
     </v-container>
   </v-main>
+
+  <template v-for="(dialog, name) in dialogs" :key="name">
+    <component
+      :is="dialog.component"
+      :model-value="isActiveDialog(name)"
+      @update:model-value="closeDialog"
+      @submit="dialog.onSubmit"
+    />
+  </template>
 </template>
 
 <script lang="ts" setup>
@@ -51,6 +54,7 @@ import _ from 'lodash';
 import { computed, defineAsyncComponent, inject, ref } from 'vue';
 
 import {
+  useRouterDialog,
   useSnackbar,
   useSocketChat,
   useSocketEventListener,
@@ -62,10 +66,6 @@ import {
   ISearchRoomsRequest,
 } from '@/interfaces';
 import VRoomItem from '@/views/Messages/RoomItem.vue';
-
-const VDialogCreateRoomGroup = defineAsyncComponent(
-  () => import('@/components/Rooms/Dialogs/DialogCreateRoomGroup.vue'),
-);
 
 const { createSnackbarError } = useSnackbar();
 
@@ -103,8 +103,6 @@ function fetchMore() {
   });
 }
 
-const dialogCreateRoom = ref(false);
-
 function handleCreateRoom(data: IRoomResponse) {
   rooms.value.unshift(data);
 }
@@ -121,6 +119,20 @@ const { request: requestCreateRoom, isLoading: isLoadingCreateRoom } =
       },
     },
   );
+
+const { isActiveDialog, openDialog, closeDialog } = useRouterDialog({
+  name: 'Messages',
+  param: 'dialog',
+});
+
+const dialogs = {
+  create: {
+    component: defineAsyncComponent(
+      () => import('@/components/Rooms/Dialogs/DialogCreateRoomGroup.vue'),
+    ),
+    onSubmit: requestCreateRoom,
+  },
+};
 
 const isLoading = computed(
   () => isLoadingRooms.value || isLoadingCreateRoom.value,

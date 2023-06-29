@@ -9,7 +9,7 @@
       <v-btn
         prepend-icon="mdi-content-save"
         :loading="isLoading"
-        @click="action = { mode: 'create' }"
+        @click="openDialog('create')"
       >
         Create
       </v-btn>
@@ -23,32 +23,23 @@
         :key="role.id"
         :value="role"
         :loading="isLoading"
-        @action="(value) => (action = value)"
+        @action="
+          (data) => openDialog(data.mode, { params: { id: data.value.id } })
+        "
       >
         {{ role.name }}
       </v-role-item>
     </v-list>
-
-    <v-dialog-create-role
-      :model-value="action?.mode === 'create'"
-      @update:model-value="closeDialog"
-      @submit="requestCreateRole"
-    />
-
-    <v-dialog-update-role
-      :value="action?.value"
-      :model-value="action?.mode === 'update'"
-      @update:model-value="closeDialog"
-      @submit="requestUpdateRole"
-    />
-
-    <v-dialog-delete-role
-      :value="action?.value"
-      :model-value="action?.mode === 'delete'"
-      @update:model-value="closeDialog"
-      @submit="requestDeleteRole"
-    />
   </v-card>
+
+  <template v-for="(dialog, name) in dialogs" :key="name">
+    <component
+      :is="dialog.component"
+      :model-value="isActiveDialog(name)"
+      @update:model-value="closeDialog"
+      @submit="dialog.onSubmit"
+    />
+  </template>
 </template>
 
 <script lang="ts" setup>
@@ -58,21 +49,12 @@ import { computed, defineAsyncComponent, onMounted, ref } from 'vue';
 import VRoleItem from '@/components/Dashboard/Users/RoleItem.vue';
 import {
   useAxios,
+  useRouterDialog,
   useSocketDashboard,
   useSocketEventListener,
 } from '@/composables';
 import { IRoleResponse } from '@/interfaces';
 import { services } from '@/services';
-
-const VDialogCreateRole = defineAsyncComponent(
-  () => import('@/components/Dashboard/Dialogs/DialogCreateRole.vue'),
-);
-const VDialogDeleteRole = defineAsyncComponent(
-  () => import('@/components/Dashboard/Dialogs/DialogDeleteRole.vue'),
-);
-const VDialogUpdateRole = defineAsyncComponent(
-  () => import('@/components/Dashboard/Dialogs/DialogUpdateRole.vue'),
-);
 
 const socket = useSocketDashboard();
 
@@ -115,21 +97,6 @@ useSortable(sortableRef, roles, {
   onEnd,
 });
 
-const action = ref<
-  | {
-      mode: 'create';
-      value?: undefined;
-    }
-  | {
-      mode: 'update' | 'delete';
-      value: IRoleResponse;
-    }
->();
-
-function closeDialog() {
-  action.value = undefined;
-}
-
 const { excute: requestCreateRole, isLoading: isLoadingCreateRole } = useAxios(
   services.roles,
   'create',
@@ -147,6 +114,32 @@ const { excute: requestDeleteRole, isLoading: isLoadingDeleteRole } = useAxios(
   'delete',
   { message: 'Delete Role Completed' },
 );
+
+const { openDialog, closeDialog, isActiveDialog } = useRouterDialog({
+  name: 'Dashboard:Users:Roles',
+  param: 'dialog',
+});
+
+const dialogs = {
+  create: {
+    component: defineAsyncComponent(
+      () => import('@/components/Dashboard/Dialogs/DialogCreateRole.vue'),
+    ),
+    onSubmit: requestCreateRole,
+  },
+  update: {
+    component: defineAsyncComponent(
+      () => import('@/components/Dashboard/Dialogs/DialogUpdateRole.vue'),
+    ),
+    onSubmit: requestUpdateRole,
+  },
+  delete: {
+    component: defineAsyncComponent(
+      () => import('@/components/Dashboard/Dialogs/DialogDeleteRole.vue'),
+    ),
+    onSubmit: requestDeleteRole,
+  },
+};
 
 const isLoading = computed(
   () =>

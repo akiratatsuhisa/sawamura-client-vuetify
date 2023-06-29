@@ -49,6 +49,10 @@ export default defineConfig({
             './src/views/Auth/ConfirmEmail.vue',
             './src/views/Auth/ResetPassword.vue',
           ],
+          oauth: [
+            './src/views/Oauth/Callback.vue',
+            './src/views/Oauth/Error.vue',
+          ],
         },
       },
     },

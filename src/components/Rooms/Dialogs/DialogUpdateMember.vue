@@ -27,14 +27,14 @@
 import { maxLength, required, requiredIf } from '@vuelidate/validators';
 import _ from 'lodash';
 import { computed, inject, reactive } from 'vue';
+import { useRoute } from 'vue-router';
 
 import { getErrorMessage, useVuelidate } from '@/composables';
 import { KEYS } from '@/constants';
 import { IUpdateRoomMemberRequest } from '@/interfaces';
 
-const props = defineProps<{
+defineProps<{
   modelValue: boolean;
-  memberId: string;
 }>();
 
 const emit = defineEmits<{
@@ -72,10 +72,12 @@ const onSubmit = handleSubmit((data) => {
   emit('update:modelValue', false);
 });
 
+const route = useRoute();
+
 function onOpen() {
   const roomMember = _.find(
     room.value?.roomMembers,
-    (roomMember) => roomMember.member.id === props.memberId,
+    (roomMember) => roomMember.member.id === route.params.memberId,
   );
 
   if (!roomMember) {

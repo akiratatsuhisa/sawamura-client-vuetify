@@ -50,6 +50,16 @@
         </template>
       </v-list-item>
 
+      <v-list-item :to="{ name: 'Settings' }">
+        <v-list-item-title>Settings</v-list-item-title>
+
+        <template #append>
+          <v-avatar color="tertiary-container">
+            <v-icon icon="mdi-cog"></v-icon>
+          </v-avatar>
+        </template>
+      </v-list-item>
+
       <v-list-item @click="onLogout">
         <v-list-item-title>Logout</v-list-item-title>
 

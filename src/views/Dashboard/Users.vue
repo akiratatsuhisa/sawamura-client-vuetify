@@ -18,9 +18,7 @@
             <v-index-view></v-index-view>
           </v-window-item>
           <v-window-item :value="tabs.Roles.name">
-            <v-fade-transition>
-              <v-role-list v-if="route.name === tabs.Roles.name" />
-            </v-fade-transition>
+            <v-role-list />
           </v-window-item>
         </v-window>
       </v-card>
@@ -84,10 +82,10 @@ import { IChartUserRolesRequest, IChartUserRolesResponse } from '@/interfaces';
 
 const theme = useTheme();
 
-const router = useRouter();
 const route = useRoute();
+const router = useRouter();
 
-const tabs = ref({
+const tabs = {
   Information: {
     title: 'Information',
     name: 'Dashboard:Users',
@@ -96,7 +94,7 @@ const tabs = ref({
     title: 'Roles',
     name: 'Dashboard:Users:Roles',
   },
-});
+};
 const tab = computed(() => route.name);
 
 const isExpand = ref<boolean>(true);

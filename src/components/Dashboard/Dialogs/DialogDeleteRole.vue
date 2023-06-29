@@ -8,7 +8,7 @@
   >
     <template #title>Role</template>
 
-    <span>Delete this role: {{ value?.name }}</span>
+    <span>Delete this role: {{ name }}</span>
 
     <template #action>Delete</template>
   </v-base-dialog>
@@ -16,14 +16,15 @@
 
 <script lang="ts" setup>
 import { required } from '@vuelidate/validators';
-import { reactive } from 'vue';
+import { reactive, ref } from 'vue';
+import { useRoute } from 'vue-router';
 
-import { useVuelidate } from '@/composables';
-import { IDeleteRoleRequest, IRoleResponse } from '@/interfaces';
+import { useAxios, useVuelidate } from '@/composables';
+import { IDeleteRoleRequest } from '@/interfaces';
+import { services } from '@/services';
 
-const props = defineProps<{
+defineProps<{
   modelValue: boolean;
-  value?: IRoleResponse;
 }>();
 
 const emit = defineEmits<{
@@ -49,9 +50,21 @@ const onSubmit = handleSubmit((data) => {
   emit('update:modelValue', false);
 });
 
-function onOpen() {
-  form.id = props.value?.id ?? '';
+const name = ref('');
 
-  v$.value.$reset();
+const route = useRoute();
+const { excute } = useAxios(services.roles, 'getById');
+
+async function onOpen() {
+  try {
+    const result = await excute({ id: route.params.id as string });
+
+    form.id = result.id;
+    name.value = result.name;
+
+    v$.value.$reset();
+  } catch {
+    emit('update:modelValue', false);
+  }
 }
 </script>

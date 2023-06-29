@@ -24,13 +24,14 @@
 <script lang="ts" setup>
 import { maxLength, required } from '@vuelidate/validators';
 import { reactive } from 'vue';
+import { useRoute } from 'vue-router';
 
-import { getErrorMessage, useVuelidate } from '@/composables';
-import { IRoleResponse, IUpdateRoleRequest } from '@/interfaces';
+import { getErrorMessage, useAxios, useVuelidate } from '@/composables';
+import { IUpdateRoleRequest } from '@/interfaces';
+import { services } from '@/services';
 
-const props = defineProps<{
+defineProps<{
   modelValue: boolean;
-  value?: IRoleResponse;
 }>();
 
 const emit = defineEmits<{
@@ -61,10 +62,19 @@ const onSubmit = handleSubmit((data) => {
   emit('update:modelValue', false);
 });
 
-function onOpen() {
-  form.id = props.value?.id ?? '';
-  form.name = props.value?.name ?? '';
+const route = useRoute();
+const { excute } = useAxios(services.roles, 'getById');
 
-  v$.value.$reset();
+async function onOpen() {
+  try {
+    const result = await excute({ id: route.params.id as string });
+
+    form.id = result.id;
+    form.name = result.name;
+
+    v$.value.$reset();
+  } catch {
+    emit('update:modelValue', false);
+  }
 }
 </script>

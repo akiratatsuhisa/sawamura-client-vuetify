@@ -36,23 +36,25 @@
 import data from 'emoji-mart-vue-fast/data/twitter.json';
 // @ts-ignore
 import { EmojiIndex, Picker as EmojiPicker } from 'emoji-mart-vue-fast/src';
-import { reactive } from 'vue';
+import { inject, reactive } from 'vue';
 
 import { useVuelidate } from '@/composables';
+import { KEYS } from '@/constants';
 
 interface IReactionIconForm {
   value: string;
 }
 
-const props = defineProps<{
+defineProps<{
   modelValue: boolean;
-  value: IReactionIconForm['value'];
 }>();
 
 const emit = defineEmits<{
   (event: 'update:modelValue', value: boolean): void;
   (event: 'submit', value: IReactionIconForm): void;
 }>();
+
+const reactionIcon = inject(KEYS.CHAT.REACTION_ICON)!;
 
 const form = reactive<IReactionIconForm>({
   value: '',
@@ -77,7 +79,7 @@ const onSubmit = handleSubmit((data) => {
 });
 
 function onOpen() {
-  form.value = props.value;
+  form.value = reactionIcon.value ?? '';
   v$.value.$reset();
 }
 </script>

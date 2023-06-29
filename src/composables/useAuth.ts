@@ -1,10 +1,15 @@
-import { createSharedComposable, useLocalStorage } from '@vueuse/core';
+import {
+  createSharedComposable,
+  MaybeRef,
+  useLocalStorage,
+} from '@vueuse/core';
 import axios, { AxiosRequestConfig } from 'axios';
 import dayjs from 'dayjs';
 import _ from 'lodash';
-import { computed } from 'vue';
+import { computed, unref } from 'vue';
+import { useRoute } from 'vue-router';
 
-import { useSnackbar } from '@/composables';
+import { useAxios, useSnackbar } from '@/composables';
 import { Jwt } from '@/helpers';
 import {
   IAuthOptions,
@@ -12,7 +17,7 @@ import {
   IdentityUser,
   ILoginRequest,
 } from '@/interfaces';
-import { config } from '@/services';
+import { config, services } from '@/services';
 
 export const useAuth = createSharedComposable(() => {
   const accessToken = useLocalStorage('auth:profile:accessToken', '');
@@ -114,6 +119,13 @@ export const useAuth = createSharedComposable(() => {
     }
   }
 
+  async function oauthLogin(data: IAuthResponse) {
+    accessToken.value = data.accessToken;
+    refreshToken.value = data.refreshToken;
+
+    createSnackbarSuccess('Login Successfully');
+  }
+
   const updatedImages = useLocalStorage('auth:profile:images', {
     photo: '',
     cover: '',
@@ -152,6 +164,7 @@ export const useAuth = createSharedComposable(() => {
     identityId,
     login,
     logout,
+    oauthLogin,
     fetchAccessToken,
     getAccessTokenSilently,
     getUserSilently,
@@ -160,3 +173,92 @@ export const useAuth = createSharedComposable(() => {
     updateImage,
   };
 });
+
+export function useOauth(isLinkProvider?: MaybeRef<boolean>) {
+  const route = useRoute();
+
+  const { excute: excuteLinkProvider } = useAxios(
+    services.oauth,
+    'linkProvider',
+  );
+
+  async function getState() {
+    const isLink = unref(isLinkProvider);
+
+    if (isLink) {
+      const data = await excuteLinkProvider({});
+
+      return {
+        redirectUrl: route.fullPath,
+        token: data.token,
+      };
+    } else {
+      return {
+        redirectUrl: _.isArray(route.query.redirectUrl)
+          ? _.get(route.query.redirectUrl, '0', '/')
+          : (route.query.redirectUrl as string) ?? '/',
+      };
+    }
+  }
+
+  async function challenge(rootUrl: string, options: Record<string, string>) {
+    options.state = JSON.stringify(await getState());
+
+    const qs = new URLSearchParams(options);
+    const link = `${rootUrl}?${qs.toString()}`;
+    window.location.href = link;
+  }
+
+  function challengeGoogleOauth() {
+    const rootUrl = `https://accounts.google.com/o/oauth2/v2/auth`;
+    const options = {
+      client_id: import.meta.env.VITE_GOOGLE_CLIENT_ID,
+      redirect_uri: import.meta.env.VITE_GOOGLE_CALLBACK_URL,
+      access_type: 'offline',
+      response_type: 'code',
+      prompt: 'consent',
+      scope: [
+        'https://www.googleapis.com/auth/userinfo.profile',
+        'https://www.googleapis.com/auth/userinfo.email',
+      ].join(' '),
+    };
+
+    challenge(rootUrl, options);
+  }
+
+  function challengeGithubOauth() {
+    const rootUrl = `https://github.com/login/oauth/authorize`;
+    const options = {
+      client_id: import.meta.env.VITE_GITHUB_CLIENT_ID,
+      redirect_uri: import.meta.env.VITE_GITHUB_CALLBACK_URL,
+      scope: ['user:email', 'read:user'].join(' '),
+      prompt: 'consent',
+    };
+
+    challenge(rootUrl, options);
+  }
+
+  const { excute: excuteUnlinkProvider, isLoading: isLoadingUnlinkProvider } =
+    useAxios(services.oauth, 'unlinkProvider', {
+      message: 'Unlink provider successfully',
+    });
+
+  async function linkProvider(provider: string) {
+    switch (provider) {
+      case 'google':
+        return challengeGoogleOauth();
+      case 'github':
+        return challengeGithubOauth();
+    }
+  }
+
+  async function unlinkProvider(provider: string) {
+    await excuteUnlinkProvider({ provider });
+  }
+
+  return {
+    linkProvider,
+    unlinkProvider,
+    isLoadingUnlinkProvider,
+  };
+}

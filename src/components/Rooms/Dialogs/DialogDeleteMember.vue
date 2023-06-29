@@ -18,14 +18,14 @@
 import { required } from '@vuelidate/validators';
 import _ from 'lodash';
 import { computed, inject, reactive, ref } from 'vue';
+import { useRoute } from 'vue-router';
 
 import { useVuelidate } from '@/composables';
 import { KEYS } from '@/constants';
 import { IDeleteRoomMemberRequest } from '@/interfaces';
 
-const props = defineProps<{
+defineProps<{
   modelValue: boolean;
-  memberId: string;
 }>();
 
 const emit = defineEmits<{
@@ -56,6 +56,8 @@ const [v$, { handleSubmit }] = useVuelidate(
   form,
 );
 
+const route = useRoute();
+
 const onSubmit = handleSubmit((data) => {
   emit('submit', data);
   emit('update:modelValue', false);
@@ -64,7 +66,7 @@ const onSubmit = handleSubmit((data) => {
 function onOpen() {
   const roomMember = _.find(
     room.value?.roomMembers,
-    (roomMember) => roomMember.member.id === props.memberId,
+    (roomMember) => roomMember.member.id === route.params.memberId,
   );
 
   if (!roomMember) {

@@ -83,3 +83,8 @@ export namespace MESSAGE_FILE {
     ].join('|'),
   );
 }
+
+export const PROVIDERS: Record<string, string> = {
+  google: 'Google',
+  github: 'Github',
+};

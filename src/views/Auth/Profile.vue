@@ -40,7 +40,7 @@
                       >
                         <v-avatar
                           color="secondary-container"
-                          @click="$router.push({ name: 'Profile:Photo' })"
+                          @click="openDialog('photo')"
                         >
                           <v-icon icon="mdi-image-edit" size="28" />
                         </v-avatar>
@@ -68,7 +68,7 @@
                   variant="elevated"
                   size="small"
                   class="mr-md-2 mb-2 mb-md-0"
-                  @click="$router.push({ name: 'Profile:Edit' })"
+                  @click="openDialog('edit')"
                 >
                   Edit Profile
                 </v-btn>
@@ -78,7 +78,7 @@
                   variant="elevated"
                   size="small"
                   class="mr-md-2 mb-2 mb-md-0"
-                  @click="$router.push({ name: 'Profile:Theme' })"
+                  @click="openDialog('theme')"
                 >
                   Select Theme
                 </v-btn>
@@ -88,7 +88,7 @@
                   variant="elevated"
                   size="small"
                   class="mb-2 mb-md-0"
-                  @click="$router.push({ name: 'Profile:Cover' })"
+                  @click="openDialog('cover')"
                 >
                   Change Cover
                 </v-btn>
@@ -131,51 +131,54 @@
     </v-container>
   </v-main>
 
-  <v-dialog-profile-photo
-    :model-value="route.name === 'Profile:Photo'"
-    @update:model-value="$router.push({ name: 'Profile' })"
-  />
-  <v-dialog-profile-cover
-    :model-value="route.name === 'Profile:Cover'"
-    @update:model-value="$router.push({ name: 'Profile' })"
-  />
-  <v-dialog-profile-theme
-    :model-value="route.name === 'Profile:Theme'"
-    @update:model-value="$router.push({ name: 'Profile' })"
-  />
-  <v-dialog-profile-edit
-    :model-value="route.name === 'Profile:Edit'"
-    @update:model-value="$router.push({ name: 'Profile' })"
-  />
+  <template v-for="(dialog, name) in dialogs" :key="name">
+    <component
+      :is="dialog.component"
+      :model-value="isActiveDialog(name)"
+      @update:model-value="closeDialog"
+    />
+  </template>
 </template>
 
 <script lang="ts" setup>
 import { useStyleTag } from '@vueuse/core';
 import { computed, defineAsyncComponent, onBeforeMount } from 'vue';
-import { useRoute } from 'vue-router';
 
 import VExportPdfBtn from '@/components/Auth/Profile/ExportPdf.vue';
-import { useAuth } from '@/composables';
+import { useAuth, useRouterDialog } from '@/composables';
 import { Format } from '@/helpers';
-
-const VDialogProfileCover = defineAsyncComponent(
-  () => import('@/components/Auth/Dialogs/DialogProfileCover.vue'),
-);
-const VDialogProfileEdit = defineAsyncComponent(
-  () => import('@/components/Auth/Dialogs/DialogProfileEdit.vue'),
-);
-const VDialogProfilePhoto = defineAsyncComponent(
-  () => import('@/components/Auth/Dialogs/DialogProfilePhoto.vue'),
-);
-const VDialogProfileTheme = defineAsyncComponent(
-  () => import('@/components/Auth/Dialogs/DialogProfileTheme.vue'),
-);
 
 const LAZY_BACKGROUND = import.meta.env.VITE_NO_BACKGROUND_URL;
 
 const { user, photoUrl, coverUrl, getUserSilently } = useAuth();
 
-const route = useRoute();
+const { isActiveDialog, openDialog, closeDialog } = useRouterDialog({
+  name: 'Profile',
+  param: 'dialog',
+});
+
+const dialogs = {
+  photo: {
+    component: defineAsyncComponent(
+      () => import('@/components/Auth/Dialogs/DialogProfilePhoto.vue'),
+    ),
+  },
+  cover: {
+    component: defineAsyncComponent(
+      () => import('@/components/Auth/Dialogs/DialogProfileCover.vue'),
+    ),
+  },
+  theme: {
+    component: defineAsyncComponent(
+      () => import('@/components/Auth/Dialogs/DialogProfileTheme.vue'),
+    ),
+  },
+  edit: {
+    component: defineAsyncComponent(
+      () => import('@/components/Auth/Dialogs/DialogProfileEdit.vue'),
+    ),
+  },
+};
 
 onBeforeMount(async () => {
   await getUserSilently();
