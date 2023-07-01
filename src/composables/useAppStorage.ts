@@ -4,7 +4,7 @@ import { useTheme } from 'vuetify';
 
 export type ThemeModeType = 'light' | 'dark' | 'coffee';
 
-export const useAppStorage = createSharedComposable(() => {
+export const useThemeModeStorage = createSharedComposable(() => {
   const theme = useTheme();
 
   const themeModes = reactive<
@@ -24,6 +24,12 @@ export const useAppStorage = createSharedComposable(() => {
     () => themeModes[selectedThemeMode.value],
   );
 
+  const isThemeModeSelectable = computed(() =>
+    (['light', 'dark'] as Array<ThemeModeType>).includes(
+      selectedThemeMode.value,
+    ),
+  );
+
   watch(selectedThemeMode, (selectedTheme) => {
     theme.global.name.value = selectedTheme;
   });
@@ -36,6 +42,7 @@ export const useAppStorage = createSharedComposable(() => {
     themeModes,
     selectedThemeMode,
     selectedThemeModeDetail,
+    isThemeModeSelectable,
     isActiveThemeMode,
   };
 });

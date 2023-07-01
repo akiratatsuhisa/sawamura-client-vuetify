@@ -40,6 +40,11 @@ export const useAuth = createSharedComposable(() => {
     );
   }
 
+  function updateTokens(tokens: { accessToken: string; refreshToken: string }) {
+    accessToken.value = tokens.accessToken;
+    refreshToken.value = tokens.refreshToken;
+  }
+
   async function fetchAccessToken() {
     try {
       const { data } = await axiosInstacne.request<IAuthResponse>({
@@ -50,11 +55,12 @@ export const useAuth = createSharedComposable(() => {
         },
       });
 
-      accessToken.value = data.accessToken;
-      refreshToken.value = data.refreshToken;
+      updateTokens(data);
     } catch (error) {
-      accessToken.value = '';
-      refreshToken.value = '';
+      updateTokens({
+        accessToken: '',
+        refreshToken: '',
+      });
     }
   }
 
@@ -86,9 +92,7 @@ export const useAuth = createSharedComposable(() => {
         data: dto,
         ...config,
       });
-
-      accessToken.value = data.accessToken;
-      refreshToken.value = data.refreshToken;
+      updateTokens(data);
 
       createSnackbarSuccess('Login Successfully');
     } catch (error: any) {
@@ -114,15 +118,15 @@ export const useAuth = createSharedComposable(() => {
     } catch (error: any) {
       createSnackbarError(error?.response?.data?.message ?? 'Error');
     } finally {
-      accessToken.value = '';
-      refreshToken.value = '';
+      updateTokens({
+        accessToken: '',
+        refreshToken: '',
+      });
     }
   }
 
   async function oauthLogin(data: IAuthResponse) {
-    accessToken.value = data.accessToken;
-    refreshToken.value = data.refreshToken;
-
+    updateTokens(data);
     createSnackbarSuccess('Login Successfully');
   }
 
@@ -165,6 +169,7 @@ export const useAuth = createSharedComposable(() => {
     login,
     logout,
     oauthLogin,
+    updateTokens,
     fetchAccessToken,
     getAccessTokenSilently,
     getUserSilently,

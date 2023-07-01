@@ -92,3 +92,15 @@ export function useVuelidate<
 
   return [vuelidate, { isLoading, handleSubmit, submitable }];
 }
+
+export function useShowPassword(fields: Record<string, boolean>) {
+  function bindShowPassword(field: keyof typeof fields) {
+    return {
+      type: fields[field] ? 'text' : 'password',
+      appendInnerIcon: fields[field] ? 'mdi-eye' : 'mdi-eye-off',
+      'onClick:appendInner': () => (fields[field] = !fields[field]),
+    };
+  }
+
+  return { fields, bindShowPassword };
+}

@@ -5,13 +5,20 @@
     this browser.
   </span>
 
-  <v-radio-group v-model="selectedThemeMode">
-    <v-row no-gutters class="ma-0 my-sm-3 mx-sm-6">
-      <v-col cols="12" sm="4" v-for="(detail, mode) in themeModes" :key="mode">
+  <v-radio-group v-model="selectedThemeMode" hide-details>
+    <v-row no-gutters class="ma-0 mt-3 mx-md-6">
+      <v-col
+        cols="12"
+        sm="4"
+        v-for="(detail, mode, index) in themeModes"
+        :key="mode"
+      >
         <div
-          class="d-flex justify-lg-space-between align-center ma-2 pa-2 rounded-pill elevation-1 cursor-pointer"
+          class="d-flex justify-space-between align-center pa-2 rounded-pill elevation-1 cursor-pointer"
           :class="[
             isActiveThemeMode(mode) ? 'bg-tertiary' : 'bg-tertiary-container',
+            index !== 0 ? 'ml-0 ml-sm-3' : 'ml-0',
+            index !== 0 ? 'mt-3 mt-sm-0' : 'mt-sm-0',
           ]"
           @click.stop.prevent="() => (selectedThemeMode = mode)"
         >
@@ -21,55 +28,60 @@
       </v-col>
     </v-row>
   </v-radio-group>
-  <v-divider></v-divider>
 
-  <h3 class="text-h5">Personal Theme</h3>
-  <span class="text-subtitle-2 font-weight-light text-high-emphasis">
-    Manage your color, and background. These settings affect on this account
-    only.
-  </span>
+  <v-expand-transition>
+    <div v-if="isThemeModeSelectable">
+      <v-divider class="my-3"></v-divider>
 
-  <div class="d-flex my-6 flex-column flex-md-row">
-    <v-menu :close-on-content-click="false" offset="16">
-      <template v-slot:activator="{ props }">
+      <h3 class="text-h5">Personal Theme</h3>
+      <span class="text-subtitle-2 font-weight-light text-high-emphasis">
+        Manage your color, and background. These settings affect on this account
+        only.
+      </span>
+
+      <div class="d-flex flex-column flex-sm-row mt-3">
+        <v-menu :close-on-content-click="false" offset="16">
+          <template v-slot:activator="{ props }">
+            <v-btn
+              :loading="isLoadingTheme"
+              v-bind="props"
+              color="primary-container"
+              prepend-icon="mdi-palette"
+            >
+              Select Source Color
+              <template #append>
+                <v-avatar
+                  v-if="themeSource"
+                  :color="displayThemeColor"
+                  size="x-small"
+                  class="elevation-4"
+                ></v-avatar>
+              </template>
+            </v-btn>
+          </template>
+
+          <v-color-picker
+            v-model="themePicker"
+            class="overflow-hidden"
+            mode="rgb"
+            hide-inputs
+          ></v-color-picker>
+        </v-menu>
+
+        <v-spacer></v-spacer>
+
         <v-btn
           :loading="isLoadingTheme"
-          v-bind="props"
-          color="primary-container"
-          prepend-icon="mdi-palette"
+          color="primary"
+          variant="tonal"
+          class="mt-6 mt-sm-0"
+          @click="clearThemeSource"
         >
-          Select Source Color
-          <template #append>
-            <v-avatar
-              v-if="themeSource"
-              :color="displayThemeColor"
-              size="x-small"
-              class="elevation-4"
-            ></v-avatar>
-          </template>
+          Clear
         </v-btn>
-      </template>
-
-      <v-color-picker
-        v-model="themePicker"
-        class="overflow-hidden"
-        mode="rgb"
-        hide-inputs
-      ></v-color-picker>
-    </v-menu>
-
-    <v-spacer></v-spacer>
-
-    <v-btn
-      :loading="isLoadingTheme"
-      color="primary"
-      variant="tonal"
-      class="mt-6 mt-md-0"
-      @click="clearThemeSource"
-    >
-      Clear
-    </v-btn>
-  </div>
+      </div>
+    </div>
+  </v-expand-transition>
 </template>
 
 <script lang="ts" setup>
@@ -77,14 +89,19 @@ import { useDebounceFn } from '@vueuse/core';
 import { watch } from 'vue';
 
 import {
-  useAppStorage,
   useAuth,
   useAxios,
+  useThemeModeStorage,
   useThemePicker,
 } from '@/composables';
 import { services } from '@/services';
 
-const { themeModes, selectedThemeMode, isActiveThemeMode } = useAppStorage();
+const {
+  themeModes,
+  selectedThemeMode,
+  isThemeModeSelectable,
+  isActiveThemeMode,
+} = useThemeModeStorage();
 
 const { fetchAccessToken, user } = useAuth();
 

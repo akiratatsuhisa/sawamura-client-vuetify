@@ -1,7 +1,9 @@
 export type IdentityUser = {
   id: string | null;
   username: string | null;
+  hasPassword: boolean | null;
   email: string | null;
+  emailConfirmed: boolean | null;
   firstName: string | null;
   lastName: string | null;
   birthDate: string | null;
@@ -38,12 +40,23 @@ export interface IRegisterResponse {
   username: string;
 }
 
+export interface IUpdateEmailRequest {
+  email: string;
+}
+
 export interface IConfirmEmailRequest {
   token: string;
 }
 
+export interface IVerifyEmailRequest {}
+
 export interface IConfirmEmailResponse {
   username: string;
+}
+
+export interface IUpdatePasswordRequest {
+  currentPassword?: string | null;
+  newPassword: string;
 }
 
 export interface IForgotPasswordRequest {

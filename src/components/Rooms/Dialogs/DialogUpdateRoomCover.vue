@@ -10,9 +10,10 @@
     <template #title>Room Cover</template>
 
     <div class="d-flex mb-3">
-      <v-btn color="primary" @click="open">Choose image</v-btn>
+      <v-btn color="primary" @click="openSelectImage">Choose image</v-btn>
 
       <v-spacer></v-spacer>
+
       <v-btn
         v-if="room.coverUrl"
         color="secondary"
@@ -22,16 +23,15 @@
       </v-btn>
     </div>
 
-    <div>
-      <v-switch
-        v-model="theme"
-        density="compact"
-        color="tertiary"
-        label="Generate theme from uploaded image"
-        inset
-        hide-details
-      ></v-switch>
-    </div>
+    <v-switch
+      v-if="isThemeModeSelectable"
+      v-model="isThemeModeGenerate"
+      density="compact"
+      color="tertiary"
+      label="Generate theme from uploaded image"
+      inset
+      hide-details
+    ></v-switch>
 
     <v-divider class="my-3"></v-divider>
 
@@ -76,13 +76,12 @@
 import 'vue-advanced-cropper/dist/style.css';
 import 'vue-advanced-cropper/dist/theme.compact.css';
 
-import { useFileDialog, useObjectUrl } from '@vueuse/core';
-import { computed, inject, ref, shallowRef, watch } from 'vue';
+import { computed, inject, ref } from 'vue';
 import { Cropper as VCropper, RectangleStencil } from 'vue-advanced-cropper';
 
-import { useAxios } from '@/composables';
+import { useAxios, useImageCropper } from '@/composables';
 import { KEYS } from '@/constants';
-import { FileHelper, IMAGE_FILE } from '@/helpers';
+import { IMAGE_FILE } from '@/helpers';
 import { services } from '@/services';
 
 defineProps<{
@@ -96,31 +95,16 @@ const emit = defineEmits<{
 
 const room = inject(KEYS.CHAT.ROOM)!;
 
-const submitable = ref(false);
-
-const theme = ref<boolean>(false);
-const imageFile = shallowRef<File>();
-const imageCropperSrc = useObjectUrl(imageFile);
-
 const {
-  files: selectFiles,
-  open,
-  reset,
-} = useFileDialog({
-  multiple: false,
-  accept: '.jpg,.png',
-});
-
-watch(selectFiles, (files) => {
-  const file = files?.item(0);
-  if (!file) {
-    return;
-  }
-
-  imageFile.value = file;
-});
-
-const cropperRef = ref<InstanceType<typeof VCropper>>();
+  isThemeModeSelectable,
+  isThemeModeGenerate,
+  submitable,
+  cropperRef,
+  imageCropperSrc,
+  openSelectImage,
+  resetSelectImage,
+  getImage,
+} = useImageCropper();
 
 const { isLoading: isLoadingUpdateCover, excute: updateCover } = useAxios(
   services.rooms,
@@ -137,19 +121,20 @@ const isLoading = computed(
 );
 
 async function onSubmit() {
-  const result = cropperRef.value!.getResult();
-
-  const image = await FileHelper.convertCanvasToFile(result.canvas!, {
+  const image = await getImage({
     mimeType: IMAGE_FILE.MIME_TYPE,
-    dimensions: FileHelper.resizeImage(
-      result.canvas!.width,
-      result.canvas!.height,
-      IMAGE_FILE.PHOTO_DIMENSIONS.WIDTH,
-      IMAGE_FILE.PHOTO_DIMENSIONS.HEIGHT,
-    ),
+    isDynamicDimensions: true,
+    dimensions: {
+      width: IMAGE_FILE.PHOTO_DIMENSIONS.WIDTH,
+      height: IMAGE_FILE.PHOTO_DIMENSIONS.HEIGHT,
+    },
   });
 
-  updateCover({ id: room.value!.id, image, theme: theme.value });
+  updateCover({
+    id: room.value!.id,
+    image,
+    theme: isThemeModeSelectable.value && isThemeModeGenerate.value,
+  });
 
   emit('update:modelValue', false);
 }
@@ -164,9 +149,7 @@ async function onSubmitDelete() {
 }
 
 function onOpen() {
-  reset();
-  imageFile.value = undefined;
-  submitable.value = false;
+  resetSelectImage();
 }
 </script>
 

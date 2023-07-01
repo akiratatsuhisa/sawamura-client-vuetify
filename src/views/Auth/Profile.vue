@@ -74,6 +74,7 @@
                 </v-btn>
 
                 <v-btn
+                  v-if="isThemeModeSelectable"
                   prepend-icon="mdi-palette"
                   variant="elevated"
                   size="small"
@@ -145,12 +146,13 @@ import { useStyleTag } from '@vueuse/core';
 import { computed, defineAsyncComponent, onBeforeMount } from 'vue';
 
 import VExportPdfBtn from '@/components/Auth/Profile/ExportPdf.vue';
-import { useAuth, useRouterDialog } from '@/composables';
+import { useAuth, useRouterDialog, useThemeModeStorage } from '@/composables';
 import { Format } from '@/helpers';
 
 const LAZY_BACKGROUND = import.meta.env.VITE_NO_BACKGROUND_URL;
 
 const { user, photoUrl, coverUrl, getUserSilently } = useAuth();
+const { isThemeModeSelectable } = useThemeModeStorage();
 
 const { isActiveDialog, openDialog, closeDialog } = useRouterDialog({
   name: 'Profile',

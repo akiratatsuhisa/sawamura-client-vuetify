@@ -4,6 +4,7 @@
     These are the social accounts you connected to your Sawamura account to log
     in. You can enable or disable access here.
   </span>
+
   <template v-for="(name, provider) in PROVIDERS" :key="provider">
     <div class="d-flex justify-space-between py-2 align-center">
       <v-list-item>

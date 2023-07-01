@@ -16,9 +16,7 @@
                 :error-messages="getErrorMessage(v$.password)"
                 @blur="v$.password.$validate"
                 clearable
-                :type="showPassword ? 'text' : 'password'"
-                :append-inner-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
-                @click:append-inner="showPassword = !showPassword"
+                v-bind="bindShowPassword('new')"
               >
               </v-text-field>
               <v-text-field
@@ -30,11 +28,7 @@
                 clearable
                 persistent-hint
                 hint="Re-enter password"
-                :type="showConfirmPassword ? 'text' : 'password'"
-                :append-inner-icon="
-                  showConfirmPassword ? 'mdi-eye' : 'mdi-eye-off'
-                "
-                @click:append-inner="showConfirmPassword = !showConfirmPassword"
+                v-bind="bindShowPassword('confirm')"
               >
               </v-text-field>
 
@@ -64,18 +58,27 @@
 <script lang="ts" setup>
 import { required, sameAs } from '@vuelidate/validators';
 import _ from 'lodash';
-import { computed, reactive, ref } from 'vue';
+import { computed, reactive } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 
-import { getErrorMessage, useAxios, useVuelidate } from '@/composables';
+import {
+  getErrorMessage,
+  useAxios,
+  useShowPassword,
+  useVuelidate,
+} from '@/composables';
 import { IResetPasswordRequest } from '@/interfaces';
 import { services } from '@/services';
 
 const router = useRouter();
 const route = useRoute();
 
-const showPassword = ref(false);
-const showConfirmPassword = ref(false);
+const { bindShowPassword } = useShowPassword(
+  reactive({
+    new: false,
+    confirm: false,
+  }),
+);
 
 const form = reactive<IResetPasswordRequest & { confirmPassword: string }>({
   token:

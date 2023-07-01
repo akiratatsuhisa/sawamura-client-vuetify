@@ -26,9 +26,7 @@
                 :error-messages="getErrorMessage(v$.password)"
                 @blur="v$.password.$validate"
                 clearable
-                :type="showPassword ? 'text' : 'password'"
-                :append-inner-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
-                @click:append-inner="showPassword = !showPassword"
+                v-bind="bindShowPassword('current')"
               >
               </v-text-field>
               <span>
@@ -113,13 +111,14 @@
 <script lang="ts" setup>
 import { required } from '@vuelidate/validators';
 import _ from 'lodash';
-import { computed, reactive, ref } from 'vue';
+import { computed, reactive } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 
 import {
   getErrorMessage,
   useAuth,
   useOauth,
+  useShowPassword,
   useVuelidate,
 } from '@/composables';
 import { PROVIDERS } from '@/constants';
@@ -134,7 +133,7 @@ const redirectUrl = computed(() =>
     : route.query.redirectUrl,
 );
 
-const showPassword = ref(false);
+const { bindShowPassword } = useShowPassword(reactive({ current: false }));
 
 const form = reactive<ILoginRequest>({
   username: history.state.username ?? '',

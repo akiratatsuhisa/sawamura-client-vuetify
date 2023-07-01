@@ -1,6 +1,6 @@
 import { createSharedComposable } from '@vueuse/core';
 import { v4 as uuidv4 } from 'uuid';
-import { Component, readonly, ref } from 'vue';
+import { Component, reactive, readonly } from 'vue';
 import { VSnackbar } from 'vuetify/components/VSnackbar';
 
 export type VSnackbarProps = VSnackbar['$props'];
@@ -21,14 +21,14 @@ export type SnackbarBaseOptions = Partial<
 export type SnackbarOptions = Omit<SnackbarBaseOptions, 'color'>;
 
 export const useSnackbar = createSharedComposable(() => {
-  const snackbars = ref<Array<Notification>>([]);
+  const snackbars = reactive<Array<Notification>>([]);
 
   function clear() {
-    snackbars.value = [];
+    snackbars.splice(0, snackbars.length);
   }
 
   function remove(id: string) {
-    const notification = snackbars.value.find((o) => o.id === id);
+    const notification = snackbars.find((o) => o.id === id);
 
     if (!notification) {
       return;
@@ -37,10 +37,10 @@ export const useSnackbar = createSharedComposable(() => {
     notification.show = false;
 
     setTimeout(() => {
-      const index = snackbars.value.findIndex((o) => o.id === id);
+      const index = snackbars.findIndex((o) => o.id === id);
 
       if (index !== -1) {
-        snackbars.value.splice(index, 1);
+        snackbars.splice(index, 1);
       }
     }, 500);
   }
@@ -56,9 +56,13 @@ export const useSnackbar = createSharedComposable(() => {
       show: true,
     };
 
-    snackbars.value = snackbars.value.filter((v) => !v.isOnce);
+    snackbars.splice(
+      0,
+      snackbars.length,
+      ...snackbars.filter((v) => !v.isOnce),
+    );
 
-    snackbars.value.push(notification);
+    snackbars.push(notification);
 
     return () => remove(notification.id);
   }

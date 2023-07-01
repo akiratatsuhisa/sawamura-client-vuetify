@@ -99,7 +99,11 @@ export namespace Jwt {
     return {
       id: get(payload, 'sub') as string | null,
       username: get(payload, 'username') as string | null,
+      hasPassword: get(payload, 'hasPassword', 'boolean') as boolean | null,
       email: get(payload, 'email') as string | null,
+      emailConfirmed: get(payload, 'emailConfirmed', 'boolean') as
+        | boolean
+        | null,
       firstName: get(payload, 'firstName') as string | null,
       lastName: get(payload, 'lastName') as string | null,
       birthDate: get(payload, 'birthDate') as string | null,

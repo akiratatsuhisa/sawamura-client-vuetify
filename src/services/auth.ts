@@ -1,6 +1,7 @@
 import { AxiosRequestConfig } from 'axios';
 
 import {
+  IAuthResponse,
   IConfirmEmailRequest,
   IConfirmEmailResponse,
   IForgotPasswordRequest,
@@ -9,6 +10,9 @@ import {
   IRegisterResponse,
   IResetPasswordRequest,
   IResetPasswordResponse,
+  IUpdateEmailRequest,
+  IUpdatePasswordRequest,
+  IVerifyEmailRequest,
 } from '@/interfaces';
 import { Service } from '@/services/common';
 
@@ -31,6 +35,24 @@ export class AuthService extends Service {
     });
   }
 
+  verifyEmail(config: AxiosRequestConfig, data: IVerifyEmailRequest) {
+    return this.fetch<void>({
+      ...config,
+      url: 'auth/verifyEmail',
+      method: 'POST',
+      data,
+    });
+  }
+
+  updateEmail(config: AxiosRequestConfig, data: IUpdateEmailRequest) {
+    return this.fetch<void>({
+      ...config,
+      url: 'auth/email',
+      method: 'PATCH',
+      data,
+    });
+  }
+
   forgotPassword(config: AxiosRequestConfig, data: IForgotPasswordRequest) {
     return this.fetch<IForgotPasswordResponse>({
       ...config,
@@ -45,6 +67,15 @@ export class AuthService extends Service {
       ...config,
       url: 'auth/resetPassword',
       method: 'POST',
+      data,
+    });
+  }
+
+  updatePassword(config: AxiosRequestConfig, data: IUpdatePasswordRequest) {
+    return this.fetch<IAuthResponse>({
+      ...config,
+      url: 'auth/password',
+      method: 'PATCH',
       data,
     });
   }

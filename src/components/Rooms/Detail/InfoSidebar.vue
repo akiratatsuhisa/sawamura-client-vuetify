@@ -66,7 +66,7 @@
               <v-list-item-title> Change cover </v-list-item-title>
             </v-list-item>
             <v-list-item
-              v-if="currentMember?.role !== 'Member'"
+              v-if="isThemeModeSelectable && currentMember?.role !== 'Member'"
               @click="openDialog('theme')"
             >
               <template #prepend>
@@ -274,6 +274,7 @@ import {
   useSnackbar,
   useSocketChat,
   useSocketEventListener,
+  useThemeModeStorage,
 } from '@/composables';
 import { KEYS } from '@/constants';
 import {
@@ -314,6 +315,8 @@ const { createSnackbarError } = useSnackbar();
 const socket = useSocketChat();
 
 const room = inject(KEYS.CHAT.ROOM)!;
+
+const { isThemeModeSelectable } = useThemeModeStorage();
 
 const displayThemeColor = useDisplayThemeColor(
   computed(() => room.value.themeSource),

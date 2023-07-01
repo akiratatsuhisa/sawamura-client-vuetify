@@ -76,7 +76,7 @@
 <script lang="ts" setup>
 import { useRouter } from 'vue-router';
 
-import { useAppStorage, useAuth } from '@/composables';
+import { useAuth, useThemeModeStorage } from '@/composables';
 
 const router = useRouter();
 
@@ -85,7 +85,7 @@ const {
   selectedThemeMode,
   selectedThemeModeDetail,
   isActiveThemeMode,
-} = useAppStorage();
+} = useThemeModeStorage();
 
 const { logout, user, photoUrl } = useAuth();
 

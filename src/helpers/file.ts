@@ -44,12 +44,14 @@ export namespace FileHelper {
     return { width, height };
   }
 
+  export interface IConvertCanvasToFileOptions {
+    dimensions?: DimensionsType;
+    mimeType: string;
+  }
+
   export async function convertCanvasToFile(
     canvas: HTMLCanvasElement,
-    options: {
-      dimensions?: DimensionsType;
-      mimeType: string;
-    },
+    options: IConvertCanvasToFileOptions,
   ) {
     const {
       dimensions = { width: canvas.width, height: canvas.height },
