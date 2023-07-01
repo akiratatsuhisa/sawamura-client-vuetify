@@ -34,18 +34,18 @@
 
       <v-list-item>
         <v-list-item-title>
-          Theme {{ themes[selectedTheme].name }}
+          Theme {{ selectedThemeModeDetail.name }}
         </v-list-item-title>
 
         <template #append>
           <v-avatar
-            v-for="(value, key) in themes"
-            :key="key"
-            :color="selectedTheme === key ? 'tertiary' : 'tertiary-container'"
+            v-for="(detail, mode) in themeModes"
+            :key="mode"
+            :color="isActiveThemeMode(mode) ? 'tertiary' : 'tertiary-container'"
             class="cursor-pointer ml-1"
-            @click.stop="selectedTheme = key"
+            @click.stop="selectedThemeMode = mode"
           >
-            <v-icon :icon="value.icon"></v-icon>
+            <v-icon :icon="detail.icon"></v-icon>
           </v-avatar>
         </template>
       </v-list-item>
@@ -74,30 +74,18 @@
 </template>
 
 <script lang="ts" setup>
-import { useLocalStorage } from '@vueuse/core';
-import { ref, watch } from 'vue';
 import { useRouter } from 'vue-router';
-import { useTheme } from 'vuetify';
 
-import { useAuth } from '@/composables';
+import { useAppStorage, useAuth } from '@/composables';
 
 const router = useRouter();
 
-const theme = useTheme();
-
-type ThemeType = 'light' | 'dark' | 'coffee';
-
-const themes = ref<Record<ThemeType, { name: string; icon: string }>>({
-  light: { name: 'Light', icon: 'mdi-weather-sunny' },
-  dark: { name: 'Dark', icon: 'mdi-weather-night' },
-  coffee: { name: 'Coffee', icon: 'mdi-coffee-outline' },
-});
-
-const selectedTheme = useLocalStorage<ThemeType>('theme:mode', 'light');
-
-watch(selectedTheme, (selectedTheme) => {
-  theme.global.name.value = selectedTheme;
-});
+const {
+  themeModes,
+  selectedThemeMode,
+  selectedThemeModeDetail,
+  isActiveThemeMode,
+} = useAppStorage();
 
 const { logout, user, photoUrl } = useAuth();
 

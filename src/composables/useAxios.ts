@@ -3,6 +3,8 @@ import axios, {
   AxiosHeaders,
   AxiosProgressEvent,
   AxiosRequestConfig,
+  AxiosResponse,
+  isAxiosError,
 } from 'axios';
 import { Component, ref, unref } from 'vue';
 
@@ -46,6 +48,7 @@ export function useAxios<
   const percent = ref<number>();
 
   const data = ref<Res>();
+  const headers = ref<AxiosHeaders>(new AxiosHeaders());
   const error = ref<IExceptionResponseDetail>();
 
   function onProgress(event: AxiosProgressEvent) {
@@ -65,22 +68,23 @@ export function useAxios<
 
       const fetcher = service.setFetcher(axiosInstacne);
 
-      const headers = new AxiosHeaders();
+      const requestHeaders = new AxiosHeaders();
       if (token) {
-        headers.set('Authorization', `Bearer ${token}`);
+        requestHeaders.set('Authorization', `Bearer ${token}`);
       }
 
-      const response = await fetcher[action](
+      const response = (await fetcher[action](
         {
-          headers,
+          headers: requestHeaders,
           onUploadProgress: onProgress,
           onDownloadProgress: onProgress,
         },
         paramsOrData,
-      );
+      )) satisfies AxiosResponse<Res>;
 
-      error.value = undefined;
       data.value = response.data === '' ? undefined : response.data;
+      headers.value = response.headers;
+      error.value = undefined;
 
       const content = unref(message);
       if (content) {
@@ -88,13 +92,19 @@ export function useAxios<
       }
 
       return response.data;
-    } catch (exception: any) {
+    } catch (exception: unknown) {
       percent.value = undefined;
 
-      error.value = exception.response.data as IExceptionResponseDetail;
       data.value = undefined;
+      if (isAxiosError(exception)) {
+        error.value = exception.response?.data as IExceptionResponseDetail;
+        headers.value = exception.response?.headers as AxiosHeaders;
+      } else {
+        error.value = undefined;
+        headers.value = new AxiosHeaders();
+      }
 
-      if (error.value.message) {
+      if (error.value?.message) {
         createSnackbarError(error.value.message);
       }
 
@@ -113,6 +123,7 @@ export function useAxios<
     percent,
     data,
     error,
+    headers,
     excute,
   };
 }

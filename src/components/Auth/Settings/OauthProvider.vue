@@ -1,12 +1,10 @@
 <template>
-  <h2>Connected accounts</h2>
-  <v-list-subheader tag="h3">
-    These are the social accounts you connected to your sawamura account to log
+  <h3 class="text-h5">Connected accounts</h3>
+  <span class="text-subtitle-2 font-weight-light text-high-emphasis">
+    These are the social accounts you connected to your Sawamura account to log
     in. You can enable or disable access here.
-  </v-list-subheader>
+  </span>
   <template v-for="(name, provider) in PROVIDERS" :key="provider">
-    <v-divider></v-divider>
-
     <div class="d-flex justify-space-between py-2 align-center">
       <v-list-item>
         <template #prepend>
@@ -47,6 +45,8 @@
         </v-btn>
       </div>
     </div>
+
+    <v-divider></v-divider>
   </template>
 </template>
 

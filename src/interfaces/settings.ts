@@ -7,6 +7,11 @@ export type SettingsTab = {
 };
 
 export type SettingsTabs = Record<
-  'email' | 'password' | 'oauth-providers',
+  | 'account'
+  | 'display'
+  | 'languages'
+  | 'email'
+  | 'password'
+  | 'oauth-providers',
   SettingsTab
 >;

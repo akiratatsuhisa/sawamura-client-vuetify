@@ -39,17 +39,14 @@ export default {
             const dialog = to.params.dialog as string | undefined;
             const id = to.params.id as string | undefined;
 
-            // route: /roles
             if (!dialog && !id) {
               return true;
             }
 
-            // route: /roles/create
             if (dialog === 'create' && !id) {
               return true;
             }
 
-            // routes: /roles/update/:id or /roles/delete/:id
             if ((dialog === 'update' || dialog === 'delete') && id !== '') {
               return true;
             }

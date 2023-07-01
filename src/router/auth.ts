@@ -40,7 +40,7 @@ export const defaultAuthRoutes = [
     component: () => import('@/views/Auth/Profile.vue'),
   },
   {
-    path: 'settings/:tab(email|password|oauth\\-providers)?',
+    path: 'settings/:tab(account|display|languages|email|password|oauth\\-providers)?',
     name: 'Settings',
     meta: { requiresAuth: true },
     component: () => import('@/views/Auth/Settings.vue'),

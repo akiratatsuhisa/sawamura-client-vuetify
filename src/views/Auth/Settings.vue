@@ -21,11 +21,14 @@
                   v-for="(detail, key) in tabs"
                   :key="`tab-${key}`"
                   :value="key"
+                  tag="h2"
                 >
                   <v-icon start>{{ detail.icon }}</v-icon>
                   {{ detail.title }}
                 </v-tab>
               </v-tabs>
+
+              <v-divider :vertical="!isMobile"></v-divider>
 
               <v-window
                 :model-value="tab"
@@ -52,11 +55,12 @@
 </template>
 
 <script lang="ts" setup>
+import { useStyleTag } from '@vueuse/core';
 import _ from 'lodash';
 import { computed, defineAsyncComponent } from 'vue';
 import { useDisplay } from 'vuetify';
 
-import { useRouterTab } from '@/composables';
+import { useAuth, useRouterTab } from '@/composables';
 import { SettingsTabs } from '@/interfaces';
 
 const display = useDisplay();
@@ -66,10 +70,31 @@ const isMobile = computed(() => display.mobile.value);
 const { tab, changeTab, isActiveTab } = useRouterTab({
   name: 'Settings',
   param: 'tab',
-  defaultTab: 'email',
+  defaultTab: 'account',
 });
 
 const tabs: SettingsTabs = {
+  account: {
+    title: 'Account',
+    icon: 'mdi-card-account-details-outline',
+    component: defineAsyncComponent(
+      () => import('@/components/Auth/Settings/AccountInfomation.vue'),
+    ),
+  },
+  display: {
+    title: 'Display',
+    icon: 'mdi-palette',
+    component: defineAsyncComponent(
+      () => import('@/components/Auth/Settings/DisplayView.vue'),
+    ),
+  },
+  languages: {
+    title: 'Languages',
+    icon: 'mdi-translate',
+    component: defineAsyncComponent(
+      () => import('@/components/Auth/Settings/LanguagesView.vue'),
+    ),
+  },
   email: {
     title: 'Email',
     icon: 'mdi-email',
@@ -92,4 +117,11 @@ const tabs: SettingsTabs = {
     ),
   },
 };
+
+const { user } = useAuth();
+
+useStyleTag(
+  computed(() => user.value?.themeStyle ?? ''),
+  { id: 'vuetify-auth-profile-style' },
+);
 </script>
