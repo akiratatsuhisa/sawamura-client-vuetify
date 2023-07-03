@@ -32,7 +32,7 @@
           v-if="isProviderLinked(provider)"
           :loading="isLoading"
           variant="tonal"
-          @click="unlinkProvider(provider)"
+          @click="onRequestUnlinkProvider(provider)"
         >
           Dsiable
         </v-btn>
@@ -55,12 +55,28 @@
 import _ from 'lodash';
 import { computed, watch } from 'vue';
 
-import { useAxios, useOauth } from '@/composables';
+import { useAlert, useAxios, useOauth } from '@/composables';
 import { PROVIDERS } from '@/constants';
 import { services } from '@/services';
 
+const alert = useAlert();
+
 const { linkProvider, unlinkProvider, isLoadingUnlinkProvider } =
   useOauth(true);
+
+async function onRequestUnlinkProvider(provider: string) {
+  const { isConfirm } = await alert.fire({
+    cancelButton: { show: true, text: 'Cancel' },
+    confirmButton: { show: true, text: 'Agree' },
+    message: `Do you want to unlink login provider ${provider}`,
+  });
+
+  if (!isConfirm) {
+    return true;
+  }
+
+  unlinkProvider(provider);
+}
 
 const {
   excute: excuteFindProviders,

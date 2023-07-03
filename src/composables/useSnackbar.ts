@@ -1,70 +1,66 @@
-import { createSharedComposable } from '@vueuse/core';
 import { v4 as uuidv4 } from 'uuid';
-import { Component, reactive, readonly } from 'vue';
+import { Component, inject } from 'vue';
 import { VSnackbar } from 'vuetify/components/VSnackbar';
+
+import { KEYS } from '@/constants';
 
 export type VSnackbarProps = VSnackbar['$props'];
 
-export type Notification = {
+export type SnackbarProps = {
   id: string;
-  show: boolean;
   content: string | Component;
   isOnce?: boolean;
   color?: string;
   timeout?: string | number;
-} & Record<string, any>;
+};
 
 export type SnackbarBaseOptions = Partial<
-  Omit<Notification, 'id' | 'show' | 'content'>
+  Omit<SnackbarProps, 'id' | 'show' | 'content'>
 >;
 
 export type SnackbarOptions = Omit<SnackbarBaseOptions, 'color'>;
 
-export const useSnackbar = createSharedComposable(() => {
-  const snackbars = reactive<Array<Notification>>([]);
+export function snackbarShow(
+  items: Array<SnackbarProps>,
+  messageOrComponent: string | Component,
+  options: SnackbarOptions = {},
+) {
+  const id = uuidv4();
 
-  function clear() {
-    snackbars.splice(0, snackbars.length);
+  function remove() {
+    const index = items.findIndex((item) => item.id === id);
+
+    if (index !== -1) {
+      items.splice(index, 1);
+    }
   }
 
-  function remove(id: string) {
-    const notification = snackbars.find((o) => o.id === id);
+  const notification = {
+    content: messageOrComponent,
+    ...options,
+    onClose: remove,
+    id,
+  };
 
-    if (!notification) {
-      return;
-    }
+  items.splice(0, items.length, ...items.filter((item) => !item.isOnce));
 
-    notification.show = false;
+  items.push(notification);
 
-    setTimeout(() => {
-      const index = snackbars.findIndex((o) => o.id === id);
+  return () => remove();
+}
 
-      if (index !== -1) {
-        snackbars.splice(index, 1);
-      }
-    }, 500);
+export function useSnackbar() {
+  const items = inject(KEYS.SNACKBARS)!;
+
+  function clear() {
+    items.splice(0, items.length);
   }
 
   function createSnackbar(
     messageOrComponent: string | Component,
     options: SnackbarBaseOptions = {},
   ) {
-    const notification: Notification = {
-      content: messageOrComponent,
-      ...options,
-      id: uuidv4(),
-      show: true,
-    };
-
-    snackbars.splice(
-      0,
-      snackbars.length,
-      ...snackbars.filter((v) => !v.isOnce),
-    );
-
-    snackbars.push(notification);
-
-    return () => remove(notification.id);
+    snackbarShow(items, messageOrComponent, options);
   }
 
   function createSnackbarSuccess(
@@ -100,13 +96,11 @@ export const useSnackbar = createSharedComposable(() => {
   }
 
   return {
-    snackbars: readonly(snackbars),
     createSnackbar,
     createSnackbarSuccess,
     createSnackbarInfo,
     createSnackbarWarning,
     createSnackbarError,
-    remove,
     clear,
   };
-});
+}
