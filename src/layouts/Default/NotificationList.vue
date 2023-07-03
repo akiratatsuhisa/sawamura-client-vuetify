@@ -17,7 +17,7 @@
           :key="notification.id"
           :item="notification"
           @update="(payload) => requestUpdateNotification(payload)"
-          @delete="(payload) => (selectedId = payload.id)"
+          @delete="(payload) => onRequestDeleteNotification(payload)"
         />
       </v-list>
 
@@ -28,24 +28,18 @@
       </v-card-actions>
     </v-card>
   </v-menu>
-
-  <v-dialog :model-value="hasSelectedId" width="auto" persistent>
-    <v-card>
-      <v-card-text>Do you want to delete this notification?</v-card-text>
-      <v-card-actions class="justify-end">
-        <v-btn color="primary" @click="selectedId = undefined">Cancel</v-btn>
-        <v-btn color="primary" @click="onSubmitDelete">Agree</v-btn>
-      </v-card-actions>
-    </v-card>
-  </v-dialog>
 </template>
 
 <script lang="ts" setup>
 import { useThrottleFn } from '@vueuse/core';
 import _ from 'lodash';
-import { computed, ref, watch } from 'vue';
+import { ref, watch } from 'vue';
 
-import { useSocketEventListener, useSocketNotifications } from '@/composables';
+import {
+  useAlert,
+  useSocketEventListener,
+  useSocketNotifications,
+} from '@/composables';
 import {
   IDeleteNotificationRequest,
   INotificationResponse,
@@ -135,13 +129,21 @@ watch(
   { immediate: true, deep: true },
 );
 
-const selectedId = ref<string>();
-const hasSelectedId = computed(() => !_.isUndefined(selectedId.value));
+const alert = useAlert();
 
-function onSubmitDelete() {
-  if (!_.isUndefined(selectedId.value)) {
-    requestDeleteNotification({ id: selectedId.value });
+async function onRequestDeleteNotification(
+  payload: IDeleteNotificationRequest,
+) {
+  const { isCancel } = await alert.fire({
+    cancelButton: { show: true, text: 'Cancel' },
+    confirmButton: { show: true, text: 'Agree' },
+    message: 'Do you want to delete this notification?',
+  });
+
+  if (isCancel) {
+    return true;
   }
-  selectedId.value = undefined;
+
+  requestDeleteNotification(payload);
 }
 </script>

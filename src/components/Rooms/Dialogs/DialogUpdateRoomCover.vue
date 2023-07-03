@@ -14,11 +14,7 @@
 
       <v-spacer></v-spacer>
 
-      <v-btn
-        v-if="room.coverUrl"
-        color="secondary"
-        @click="dialogConfirm = true"
-      >
+      <v-btn v-if="room.coverUrl" color="secondary" @click="onRequestDelete">
         Delete
       </v-btn>
     </div>
@@ -60,26 +56,16 @@
 
     <template #action>Change</template>
   </v-base-dialog>
-
-  <v-dialog v-model="dialogConfirm" width="auto" persistent>
-    <v-card>
-      <v-card-text>Do you want to delete room cover?</v-card-text>
-      <v-card-actions class="justify-end">
-        <v-btn color="primary" @click="dialogConfirm = false">Cancel</v-btn>
-        <v-btn color="primary" @click="onSubmitDelete">Agree</v-btn>
-      </v-card-actions>
-    </v-card>
-  </v-dialog>
 </template>
 
 <script lang="ts" setup>
 import 'vue-advanced-cropper/dist/style.css';
 import 'vue-advanced-cropper/dist/theme.compact.css';
 
-import { computed, inject, ref } from 'vue';
+import { computed, inject } from 'vue';
 import { Cropper as VCropper, RectangleStencil } from 'vue-advanced-cropper';
 
-import { useAxios, useImageCropper } from '@/composables';
+import { useAlert, useAxios, useImageCropper } from '@/composables';
 import { KEYS } from '@/constants';
 import { IMAGE_FILE } from '@/helpers';
 import { services } from '@/services';
@@ -139,12 +125,20 @@ async function onSubmit() {
   emit('update:modelValue', false);
 }
 
-const dialogConfirm = ref(false);
+const alert = useAlert();
 
-async function onSubmitDelete() {
+async function onRequestDelete() {
+  const { isCancel } = await alert.fire({
+    cancelButton: { show: true, text: 'Cancel' },
+    confirmButton: { show: true, text: 'Agree' },
+    message: 'Do you want to delete room cover?',
+  });
+
+  if (isCancel) {
+    return true;
+  }
+
   deleteCover({ id: room.value!.id });
-
-  dialogConfirm.value = false;
   emit('update:modelValue', false);
 }
 

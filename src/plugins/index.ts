@@ -9,6 +9,7 @@ import type { App } from 'vue';
 import VueApexCharts from 'vue3-apexcharts';
 
 import VBaseDialog from '@/components/VBaseDialog.vue';
+import alert from '@/plugins/alert';
 import axios from '@/plugins/axios';
 import socket from '@/plugins/socket';
 import vuetify from '@/plugins/vuetify';
@@ -20,6 +21,7 @@ export function registerPlugins(app: App) {
   loadFonts();
   app
     .use(vuetify)
+    .use(alert)
     .use(axios)
     .use(socket)
     .use(router)
