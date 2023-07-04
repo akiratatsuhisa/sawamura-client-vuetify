@@ -3,10 +3,15 @@ import { Manager, Socket } from 'socket.io-client';
 import { DeepReadonly, InjectionKey, Ref, WritableComputedRef } from 'vue';
 import { RouteLocationNamedRaw } from 'vue-router';
 
+import { AlertProps, SnackbarProps } from '@/composables';
 import { IRoomMemberResponse, IRoomResponse } from '@/interfaces';
 
 export namespace KEYS {
   export const AXIOS: InjectionKey<AxiosInstance> = Symbol('axios');
+
+  export const ALERTS: InjectionKey<Array<AlertProps>> = Symbol('alerts');
+  export const SNACKBARS: InjectionKey<Array<SnackbarProps>> =
+    Symbol('snackbars');
 
   export const MANAGER_SOCKETS: InjectionKey<Manager> =
     Symbol('manager:sockets');

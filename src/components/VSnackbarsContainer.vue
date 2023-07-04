@@ -1,26 +1,13 @@
 <template>
-  <v-snackbar
-    v-for="{ show, id, content, ...attrs } in snackbars"
-    :key="id"
-    :model-value="show"
-    @update:model-value="remove(id)"
-    v-bind="attrs"
-  >
-    <template v-if="typeof content === 'string'">
-      {{ content }}
-    </template>
-    <template v-else>
-      <component :is="content" />
-    </template>
-
-    <template v-if="typeof content === 'string'" #actions>
-      <v-btn variant="text" color="on-primary" @click="remove(id)">Close</v-btn>
-    </template>
-  </v-snackbar>
+  <v-custom-snackbar v-for="item in items" :key="item.id" v-bind="item">
+  </v-custom-snackbar>
 </template>
 
 <script setup lang="ts">
-import { useSnackbar } from '@/composables';
+import { inject } from 'vue';
 
-const { snackbars, remove } = useSnackbar();
+import VCustomSnackbar from '@/components/VCustomSnackbar.vue';
+import { KEYS } from '@/constants';
+
+const items = inject(KEYS.SNACKBARS)!;
 </script>

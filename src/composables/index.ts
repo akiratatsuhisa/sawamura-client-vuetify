@@ -1,3 +1,4 @@
+export * from '@/composables/useAlert';
 export * from '@/composables/useAppStorage';
 export * from '@/composables/useAuth';
 export * from '@/composables/useAxios';
