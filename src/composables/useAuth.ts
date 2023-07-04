@@ -135,6 +135,10 @@ export const useAuth = createSharedComposable(() => {
     cover: '',
   });
 
+  const fullName = computed(() =>
+    _.trim(`${user.value?.lastName ?? ''} ${user.value?.firstName ?? ''}`),
+  );
+
   const photoUrl = computed(() =>
     user.value?.photoUrl
       ? `${import.meta.env.VITE_API_URL}/auth/photo?username=${
@@ -173,6 +177,7 @@ export const useAuth = createSharedComposable(() => {
     fetchAccessToken,
     getAccessTokenSilently,
     getUserSilently,
+    fullName,
     photoUrl,
     coverUrl,
     updateImage,

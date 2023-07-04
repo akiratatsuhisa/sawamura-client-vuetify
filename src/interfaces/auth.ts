@@ -40,6 +40,10 @@ export interface IRegisterResponse {
   username: string;
 }
 
+export interface IDeleteAccountRequest {}
+
+export interface IDeleteAccountResponse {}
+
 export interface IUpdateEmailRequest {
   email: string;
 }

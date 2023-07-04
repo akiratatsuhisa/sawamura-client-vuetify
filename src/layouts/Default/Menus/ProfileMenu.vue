@@ -19,8 +19,8 @@
             :image="photoUrl"
           ></v-avatar>
         </template>
-        <v-list-item-title v-if="user?.lastName || user?.lastName">
-          {{ user?.lastName }} {{ user?.firstName }}
+        <v-list-item-title v-if="fullName">
+          {{ fullName }}
         </v-list-item-title>
         <v-list-item-title v-else>{{ user?.username }}</v-list-item-title>
         <v-list-item-subtitle>{{ user?.username }}</v-list-item-subtitle>
@@ -87,7 +87,7 @@ const {
   isActiveThemeMode,
 } = useThemeModeStorage();
 
-const { logout, user, photoUrl } = useAuth();
+const { logout, user, fullName, photoUrl } = useAuth();
 
 async function onLogout() {
   await logout();

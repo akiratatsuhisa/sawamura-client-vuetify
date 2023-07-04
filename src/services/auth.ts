@@ -4,6 +4,8 @@ import {
   IAuthResponse,
   IConfirmEmailRequest,
   IConfirmEmailResponse,
+  IDeleteAccountRequest,
+  IDeleteAccountResponse,
   IForgotPasswordRequest,
   IForgotPasswordResponse,
   IRegisterRequest,
@@ -22,6 +24,15 @@ export class AuthService extends Service {
       ...config,
       url: 'auth/register',
       method: 'POST',
+      data,
+    });
+  }
+
+  deleteAccount(config: AxiosRequestConfig, data: IDeleteAccountRequest) {
+    return this.fetch<IDeleteAccountResponse>({
+      ...config,
+      url: 'auth/delete',
+      method: 'DELETE',
       data,
     });
   }

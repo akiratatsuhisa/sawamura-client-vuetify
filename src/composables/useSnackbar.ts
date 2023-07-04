@@ -1,10 +1,7 @@
 import { v4 as uuidv4 } from 'uuid';
 import { Component, inject } from 'vue';
-import { VSnackbar } from 'vuetify/components/VSnackbar';
 
 import { KEYS } from '@/constants';
-
-export type VSnackbarProps = VSnackbar['$props'];
 
 export type SnackbarProps = {
   id: string;
@@ -14,11 +11,11 @@ export type SnackbarProps = {
   timeout?: string | number;
 };
 
-export type SnackbarBaseOptions = Partial<
+export type SnackbarOptions = Partial<
   Omit<SnackbarProps, 'id' | 'show' | 'content'>
 >;
 
-export type SnackbarOptions = Omit<SnackbarBaseOptions, 'color'>;
+export type SnackbarOptionsWithoutColor = Omit<SnackbarOptions, 'color'>;
 
 export function snackbarShow(
   items: Array<SnackbarProps>,
@@ -58,40 +55,40 @@ export function useSnackbar() {
 
   function createSnackbar(
     messageOrComponent: string | Component,
-    options: SnackbarBaseOptions = {},
+    options: SnackbarOptions = {},
   ) {
     snackbarShow(items, messageOrComponent, options);
   }
 
   function createSnackbarSuccess(
     messageOrComponent: string | Component,
-    options: SnackbarOptions = { isOnce: true },
+    options: SnackbarOptionsWithoutColor = { isOnce: true },
   ) {
-    (options as SnackbarBaseOptions).color = 'success';
+    (options as SnackbarOptions).color = 'success';
     createSnackbar(messageOrComponent, options);
   }
 
   function createSnackbarInfo(
     messageOrComponent: string | Component,
-    options: SnackbarOptions = { isOnce: true },
+    options: SnackbarOptionsWithoutColor = { isOnce: true },
   ) {
-    (options as SnackbarBaseOptions).color = 'info';
+    (options as SnackbarOptions).color = 'info';
     createSnackbar(messageOrComponent, options);
   }
 
   function createSnackbarWarning(
     messageOrComponent: string | Component,
-    options: SnackbarOptions = { isOnce: true },
+    options: SnackbarOptionsWithoutColor = { isOnce: true },
   ) {
-    (options as SnackbarBaseOptions).color = 'warning';
+    (options as SnackbarOptions).color = 'warning';
     createSnackbar(messageOrComponent, options);
   }
 
   function createSnackbarError(
     messageOrComponent: string | Component,
-    options: SnackbarOptions = { isOnce: true },
+    options: SnackbarOptionsWithoutColor = { isOnce: true },
   ) {
-    (options as SnackbarBaseOptions).color = 'error';
+    (options as SnackbarOptions).color = 'error';
     createSnackbar(messageOrComponent, options);
   }
 
