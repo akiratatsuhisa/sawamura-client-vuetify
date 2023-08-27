@@ -28,7 +28,7 @@
         </v-btn>
       </v-toolbar>
 
-      <v-divider></v-divider>
+      <v-divider />
 
       <v-main-content />
     </div>
@@ -43,9 +43,18 @@ import { useDisplay } from 'vuetify/lib/framework.mjs';
 
 import VInfoSidebar from '@/components/Rooms/Detail/InfoSidebar.vue';
 import VMainContent from '@/components/Rooms/Detail/MainContent.vue';
-import { useRoom, useSocketChat, useSocketEventListener } from '@/composables';
+import {
+  usePageLocale,
+  useRoom,
+  useSocketChat,
+  useSocketEventListener,
+} from '@/composables';
 import { KEYS } from '@/constants';
 import { IRoomRequest, IRoomResponse } from '@/interfaces';
+
+const { translate } = usePageLocale({
+  prefix: 'messages.room',
+});
 
 const display = useDisplay();
 
@@ -118,8 +127,14 @@ const room = ref<IRoomResponse>({
   themeStyle: null,
 });
 
-const { currentMember, targetMember, displayName, disyplayLastActivatedAgo } =
+const { currentMember, targetMember, displayName, lastActivatedAgo } =
   useRoom(room);
+
+const disyplayLastActivatedAgo = computed(() => {
+  return lastActivatedAgo.value === ''
+    ? ''
+    : translate('lastActivated', { lastActivated: lastActivatedAgo.value });
+});
 
 provide(KEYS.CHAT.ROOM, room);
 

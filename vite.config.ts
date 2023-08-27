@@ -1,9 +1,8 @@
-// Plugins
 import { fileURLToPath, URL } from 'node:url';
 
 import vue from '@vitejs/plugin-vue';
-// Utilities
 import { defineConfig } from 'vite';
+import { VitePWA } from 'vite-plugin-pwa';
 import vuetify, { transformAssetUrls } from 'vite-plugin-vuetify';
 
 // https://vitejs.dev/config/
@@ -16,6 +15,32 @@ export default defineConfig({
     vuetify({
       autoImport: true,
       styles: { configFile: 'src/scss/settings.scss' },
+    }),
+    VitePWA({
+      registerType: 'autoUpdate',
+      devOptions: {
+        enabled: true,
+      },
+      includeAssets: ['favicon.ico'],
+      manifest: {
+        name: 'Sawamura Application',
+        short_name: 'Sawamura',
+        description: 'Sawamura',
+        theme_color: '#FDFDF5',
+        background_color: '#FDFDF5',
+        icons: [
+          {
+            src: 'pwa-192.png',
+            sizes: '192x192',
+            type: 'image/png',
+          },
+          {
+            src: 'pwa-512.png',
+            sizes: '512x512',
+            type: 'image/png',
+          },
+        ],
+      },
     }),
   ],
   define: { 'process.env': {} },

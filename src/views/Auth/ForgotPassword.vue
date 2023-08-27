@@ -3,22 +3,20 @@
     <v-row class="h-100 align-content-center">
       <v-col class="mx-auto" md="6" lg="4">
         <v-card>
-          <v-card-title>Forgot Password</v-card-title>
+          <v-card-title>{{ translate('title') }}</v-card-title>
           <v-card-subtitle class="text-wrap">
-            Tell us the username associated with your account, and we'll send
-            you an email with a link to reset your password.
+            {{ translate('subtitle') }}
           </v-card-subtitle>
           <v-card-text>
             <form @submit.prevent="onSubmit">
               <v-text-field
                 class="mb-3"
-                label="Username"
+                :label="translateFormField('username')"
                 v-model="v$.username.$model"
                 :error-messages="getErrorMessage(v$.username)"
                 @blur="v$.username.$validate"
                 clearable
-              >
-              </v-text-field>
+              />
 
               <v-btn
                 type="submit"
@@ -27,17 +25,21 @@
                 block
                 class="mb-3"
               >
-                Send
+                {{ translate('form.submit') }}
               </v-btn>
-              <span>
-                Return to
+
+              <i18n-t
+                :keypath="pathShared('returnToLogin')"
+                tag="span"
+                scope="global"
+              >
                 <router-link
                   class="text-primary"
                   :to="{ name: 'Login', query: { redirectUrl } }"
                 >
-                  Login
+                  {{ $t('pages.auth.login.title') }}
                 </router-link>
-              </span>
+              </i18n-t>
             </form>
           </v-card-text>
         </v-card>
@@ -47,17 +49,26 @@
 </template>
 
 <script lang="ts" setup>
-import { required } from '@vuelidate/validators';
 import _ from 'lodash';
 import { computed, reactive } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 
-import { getErrorMessage, useAxios, useVuelidate } from '@/composables';
+import {
+  getErrorMessage,
+  useAxios,
+  usePageLocale,
+  useVuelidate,
+} from '@/composables';
 import { IForgotPasswordRequest } from '@/interfaces';
 import { services } from '@/services';
+import { required } from '@/validators';
 
 const router = useRouter();
 const route = useRoute();
+const { translate, pathShared, pathFormField, translateFormField } =
+  usePageLocale({
+    prefix: 'auth.forgotPassword',
+  });
 
 const redirectUrl = computed(() =>
   _.isArray(route.query.redirectUrl)
@@ -72,7 +83,7 @@ const form = reactive<IForgotPasswordRequest>({
 const [v$, { handleSubmit }] = useVuelidate<IForgotPasswordRequest>(
   {
     username: {
-      required: required,
+      required: required(pathFormField('username')),
     },
   },
   form,

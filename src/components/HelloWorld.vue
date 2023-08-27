@@ -5,9 +5,9 @@
     <v-responsive>
       <v-img contain height="300" src="@/assets/logo.svg" />
 
-      <div class="text-body-2 font-weight-light mb-n1">Welcome to</div>
-
-      <h1 class="text-h2 font-weight-bold">Vuetify</h1>
+      <h1 class="text-h2 font-weight-bold">
+        {{ $t('pages.home.hello') }}
+      </h1>
 
       <div class="py-14" />
 

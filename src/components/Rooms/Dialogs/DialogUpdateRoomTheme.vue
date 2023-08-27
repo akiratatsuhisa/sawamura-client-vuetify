@@ -7,7 +7,7 @@
     @submit="onSubmit"
     @open="onOpen"
   >
-    <template #title>Room Theme</template>
+    <template #title>{{ translate('title') }}</template>
 
     <div class="d-flex mb-12 flex-column flex-md-row">
       <v-menu :close-on-content-click="false" offset="16">
@@ -17,7 +17,7 @@
             color="primary-container"
             prepend-icon="mdi-palette"
           >
-            Select Source Color
+            {{ translate('select') }}
             <template #append>
               <v-avatar
                 v-if="themeSource"
@@ -45,18 +45,18 @@
         class="mt-6 mt-md-0"
         @click="clearThemeSource"
       >
-        Clear
+        {{ translate('clear') }}
       </v-btn>
     </div>
 
-    <template #action>Change</template>
+    <template #action>{{ translate('form.submit') }}</template>
   </v-base-dialog>
 </template>
 
 <script lang="ts" setup>
 import { inject } from 'vue';
 
-import { useAxios, useThemePicker } from '@/composables';
+import { useAxios, usePageLocale, useThemePicker } from '@/composables';
 import { KEYS } from '@/constants';
 import { services } from '@/services';
 
@@ -68,6 +68,10 @@ const emit = defineEmits<{
   (event: 'update:modelValue', value: boolean): void;
   (event: 'submit', data: any): void;
 }>();
+
+const { translate } = usePageLocale({
+  prefix: 'messages.room.dialogs.chooseTheme',
+});
 
 const room = inject(KEYS.CHAT.ROOM)!;
 

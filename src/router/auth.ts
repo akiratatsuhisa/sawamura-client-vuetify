@@ -43,6 +43,6 @@ export const defaultAuthRoutes = [
     path: 'settings/:tab(account|display|languages|email|password|oauth\\-providers)?',
     name: 'Settings',
     meta: { requiresAuth: true },
-    component: () => import('@/views/Auth/Settings.vue'),
+    component: () => import('@/views/Settings.vue'),
   },
 ] as Array<RouteRecordRaw>;

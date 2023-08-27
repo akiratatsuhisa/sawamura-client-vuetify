@@ -89,7 +89,8 @@ export namespace MESSAGE_FILE {
   );
 }
 
-export const PROVIDERS: Record<string, string> = {
-  google: 'Google',
-  github: 'Github',
-};
+export namespace AUTH_REGEX {
+  export const USERNAME = /^[a-zA-Z][a-zA-Z0-9_-]*$/;
+  export const PASSWORD =
+    /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]+$/;
+}

@@ -100,7 +100,7 @@
 <script lang="ts" setup>
 import 'emoji-mart-vue-fast/css/emoji-mart.css';
 
-import { useScroll, useThrottleFn } from '@vueuse/core';
+import { useScroll } from '@vueuse/core';
 import data from 'emoji-mart-vue-fast/data/twitter.json';
 // @ts-ignore
 import { EmojiIndex, Picker as EmojiPicker } from 'emoji-mart-vue-fast/src';
@@ -117,6 +117,7 @@ import {
 import { useRoute } from 'vue-router';
 
 import {
+  useFetchIntersection,
   useRoom,
   useSnackbar,
   useSocketChat,
@@ -182,8 +183,6 @@ function fetchMoreMessages() {
   });
 }
 
-const fetchMoreMessagesThrottle = useThrottleFn(fetchMoreMessages, 250);
-
 watch(
   roomId,
   (roomId) => {
@@ -201,16 +200,6 @@ watch(
   { immediate: true },
 );
 
-const isIntersecting = ref<boolean>(false);
-
-function onIntersect(
-  current: boolean,
-  _entries: Array<IntersectionObserverEntry>,
-  _observer: IntersectionObserver,
-) {
-  isIntersecting.value = current;
-}
-
 const { y: scrollMessages } = useScroll(messagesRef);
 
 const isDisplayGotoLastMessage = computed(() => scrollMessages.value < -120);
@@ -223,14 +212,12 @@ function gotoLastMessage() {
   messagesRef.value.scrollTop = 0;
 }
 
-watch(
-  [isIntersecting, isLoading, isAllMessagesLoaded],
-  ([intersecting, loading, allMessagesLoaded]) => {
-    if (intersecting && !loading && !allMessagesLoaded) {
-      fetchMoreMessagesThrottle();
-    }
-  },
-);
+const { onIntersect } = useFetchIntersection({
+  fetch: fetchMoreMessages,
+  ms: 250,
+  isLoading,
+  isAllLoaded: isAllMessagesLoaded,
+});
 
 const messageInputRef = ref<InstanceType<typeof VMessageInput>>();
 

@@ -1,28 +1,27 @@
 <template>
-  <h3 class="text-h5">Connected accounts</h3>
+  <h3 class="text-h5">{{ translateConnectedAccounts('title') }}</h3>
   <span class="text-subtitle-2 font-weight-light text-high-emphasis">
-    These are the social accounts you connected to your Sawamura account to log
-    in. You can enable or disable access here.
+    {{ translateConnectedAccounts('subtitle') }}
   </span>
 
-  <template v-for="(name, provider) in PROVIDERS" :key="provider">
+  <template v-for="(detail, provider) in providers" :key="provider">
     <div class="d-flex justify-space-between py-2 align-center">
       <v-list-item>
         <template #prepend>
-          <v-avatar :image="`/logos/${provider}.svg`" size="24" rounded="0" />
+          <v-avatar :image="detail.image" size="24" rounded="0" />
         </template>
-        <template #title>{{ name }}</template>
+        <template #title>{{ detail.name }}</template>
         <template #subtitle>
           <div
             v-if="isProviderLinked(provider)"
             class="text-success d-flex align-center"
           >
             <v-icon start>mdi-check-circle-outline</v-icon>
-            <span>Connected</span>
+            <span>{{ translateShared('connectStates.connected') }}</span>
           </div>
           <div v-else class="text-error d-flex align-center">
             <v-icon start>mdi-close-circle-outline</v-icon>
-            <span>Unconnected</span>
+            <span>{{ translateShared('connectStates.unconnected') }}</span>
           </div>
         </template>
       </v-list-item>
@@ -34,7 +33,7 @@
           variant="tonal"
           @click="onRequestUnlinkProvider(provider)"
         >
-          Dsiable
+          {{ translateShared('activeStates.disable') }}
         </v-btn>
         <v-btn
           v-else
@@ -42,12 +41,12 @@
           :loading="isLoading"
           @click="linkProvider(provider)"
         >
-          Enable
+          {{ translateShared('activeStates.enable') }}
         </v-btn>
       </div>
     </div>
 
-    <v-divider></v-divider>
+    <v-divider />
   </template>
 </template>
 
@@ -55,20 +54,35 @@
 import _ from 'lodash';
 import { computed, watch } from 'vue';
 
-import { useAlert, useAxios, useOauth } from '@/composables';
-import { PROVIDERS } from '@/constants';
+import { useAlert, useAxios, useOauth, usePageLocale } from '@/composables';
 import { services } from '@/services';
 
+const {
+  translate: translateConnectedAccounts,
+  translateShared,
+  makeTranslateAlert: makeTranslateAlertConnectedAccounts,
+} = usePageLocale({
+  prefix: 'settings.oauthProviders.connectedAccounts',
+});
 const alert = useAlert();
 
-const { linkProvider, unlinkProvider, isLoadingUnlinkProvider } =
+const { providers, linkProvider, unlinkProvider, isLoadingUnlinkProvider } =
   useOauth(true);
+
+const translateAlertConnectedAccounts =
+  makeTranslateAlertConnectedAccounts('unlink');
 
 async function onRequestUnlinkProvider(provider: string) {
   const { isConfirm } = await alert.fire({
-    cancelButton: { show: true, text: 'Cancel' },
-    confirmButton: { show: true, text: 'Agree' },
-    message: `Do you want to unlink login provider ${provider}`,
+    cancelButton: {
+      show: true,
+      text: translateAlertConnectedAccounts('cancel'),
+    },
+    confirmButton: {
+      show: true,
+      text: translateAlertConnectedAccounts('confirm'),
+    },
+    message: translateAlertConnectedAccounts('message', { provider }),
   });
 
   if (!isConfirm) {

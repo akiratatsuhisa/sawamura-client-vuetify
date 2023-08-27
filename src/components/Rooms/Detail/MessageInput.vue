@@ -1,5 +1,5 @@
 <template>
-  <v-divider></v-divider>
+  <v-divider />
 
   <v-sheet ref="messageZoneRef">
     <div v-if="filesInput.length">
@@ -12,7 +12,7 @@
         />
       </v-sheet>
 
-      <v-divider></v-divider>
+      <v-divider />
     </div>
 
     <v-card-text>

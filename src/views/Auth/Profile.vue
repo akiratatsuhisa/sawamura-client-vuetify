@@ -74,7 +74,7 @@
                 </v-btn>
 
                 <v-btn
-                  v-if="isThemeModeSelectable"
+                  v-if="isThemeSelectable"
                   prepend-icon="mdi-palette"
                   variant="elevated"
                   size="small"
@@ -95,7 +95,7 @@
                 </v-btn>
               </v-card-text>
 
-              <v-divider></v-divider>
+              <v-divider />
 
               <v-card-text>
                 <v-list>
@@ -152,7 +152,7 @@ import { Format } from '@/helpers';
 const LAZY_BACKGROUND = import.meta.env.VITE_NO_BACKGROUND_URL;
 
 const { user, photoUrl, coverUrl, getUserSilently } = useAuth();
-const { isThemeModeSelectable } = useThemeModeStorage();
+const { isThemeSelectable } = useThemeModeStorage();
 
 const { isActiveDialog, openDialog, closeDialog } = useRouterDialog({
   name: 'Profile',

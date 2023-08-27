@@ -99,18 +99,12 @@ export function useRoom(room: MaybeRef<IRoomResponse>) {
     computed(() => unref(room).lastActivatedAt ?? ''),
   );
 
-  const disyplayLastActivatedAgo = computed(() => {
-    return lastActivatedAgo.value === ''
-      ? ''
-      : `Last activated: ${lastActivatedAgo.value}`;
-  });
-
   return {
     roomMembers,
     currentMember,
     targetMember,
     displayName,
-    disyplayLastActivatedAgo,
+    lastActivatedAgo,
     roomPhotoUrl,
     roomCoverUrl,
     updateImage,

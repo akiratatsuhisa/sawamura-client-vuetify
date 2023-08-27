@@ -7,29 +7,30 @@
     @submit="onSubmit"
     @open="onOpen"
   >
-    <template #title>Room Cover</template>
+    <template #title>{{ translate('title') }}</template>
 
     <div class="d-flex mb-3">
-      <v-btn color="primary" @click="openSelectImage">Choose image</v-btn>
-
+      <v-btn color="primary" @click="openSelectImage">
+        {{ translateShared('chooseImage') }}
+      </v-btn>
       <v-spacer></v-spacer>
 
       <v-btn v-if="room.coverUrl" color="secondary" @click="onRequestDelete">
-        Delete
+        {{ translate('delete') }}
       </v-btn>
     </div>
 
     <v-switch
-      v-if="isThemeModeSelectable"
+      v-if="isThemeSelectable"
       v-model="isThemeModeGenerate"
       density="compact"
       color="tertiary"
-      label="Generate theme from uploaded image"
+      :label="translateShared('generateTheme')"
       inset
       hide-details
     ></v-switch>
 
-    <v-divider class="my-3"></v-divider>
+    <v-divider class="my-3" />
 
     <div class="d-flex justify-center align-center">
       <div
@@ -54,7 +55,7 @@
       </div>
     </div>
 
-    <template #action>Change</template>
+    <template #action>{{ translate('form.submit') }}</template>
   </v-base-dialog>
 </template>
 
@@ -65,7 +66,12 @@ import 'vue-advanced-cropper/dist/theme.compact.css';
 import { computed, inject } from 'vue';
 import { Cropper as VCropper, RectangleStencil } from 'vue-advanced-cropper';
 
-import { useAlert, useAxios, useImageCropper } from '@/composables';
+import {
+  useAlert,
+  useAxios,
+  useImageCropper,
+  usePageLocale,
+} from '@/composables';
 import { KEYS } from '@/constants';
 import { IMAGE_FILE } from '@/helpers';
 import { services } from '@/services';
@@ -79,10 +85,14 @@ const emit = defineEmits<{
   (event: 'submit', data: any): void;
 }>();
 
+const { translate, makeTranslateAlert, translateShared } = usePageLocale({
+  prefix: 'messages.room.dialogs.changeCover',
+});
+
 const room = inject(KEYS.CHAT.ROOM)!;
 
 const {
-  isThemeModeSelectable,
+  isThemeSelectable,
   isThemeModeGenerate,
   submitable,
   cropperRef,
@@ -119,7 +129,7 @@ async function onSubmit() {
   updateCover({
     id: room.value!.id,
     image,
-    theme: isThemeModeSelectable.value && isThemeModeGenerate.value,
+    theme: isThemeSelectable.value && isThemeModeGenerate.value,
   });
 
   emit('update:modelValue', false);
@@ -127,11 +137,13 @@ async function onSubmit() {
 
 const alert = useAlert();
 
+const translateAlert = makeTranslateAlert('delete');
+
 async function onRequestDelete() {
   const { isConfirm } = await alert.fire({
-    cancelButton: { show: true, text: 'Cancel' },
-    confirmButton: { show: true, text: 'Agree' },
-    message: 'Do you want to delete room cover?',
+    cancelButton: { show: true, text: translateAlert('cancel') },
+    confirmButton: { show: true, text: translateAlert('confirm') },
+    message: translateAlert('message'),
   });
 
   if (!isConfirm) {

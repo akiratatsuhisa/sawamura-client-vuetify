@@ -16,7 +16,7 @@
         </template>
       </v-list-item>
 
-      <v-divider></v-divider>
+      <v-divider />
     </template>
 
     <v-list density="compact" nav @click:select="handleSelect($event, true)">
@@ -48,7 +48,7 @@
         </template>
       </v-list-item>
 
-      <v-divider></v-divider>
+      <v-divider />
     </template>
 
     <v-list nav @click:select="handleSelect">

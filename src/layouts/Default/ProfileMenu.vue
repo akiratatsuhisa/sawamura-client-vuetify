@@ -30,11 +30,15 @@
         </template>
       </v-list-item>
 
-      <v-divider class="my-2"></v-divider>
+      <v-divider class="my-2" />
 
       <v-list-item>
         <v-list-item-title>
-          Theme {{ selectedThemeModeDetail.name }}
+          {{
+            translateItem('theme', {
+              name: $t(`common.themes.${selectedThemeModeDetail.name}`),
+            })
+          }}
         </v-list-item-title>
 
         <template #append>
@@ -50,8 +54,27 @@
         </template>
       </v-list-item>
 
+      <v-list-item>
+        <v-list-item-title>
+          {{ $t(`common.languages.${selectedLanguageDetail.name}`) }}
+        </v-list-item-title>
+
+        <template #append>
+          <v-avatar
+            v-for="(detail, language) in languages"
+            :key="language"
+            :image="detail.image"
+            class="cursor-pointer ml-1"
+            @click.stop="selectedLanguage = language"
+          >
+          </v-avatar>
+        </template>
+      </v-list-item>
+
       <v-list-item :to="{ name: 'Settings' }">
-        <v-list-item-title>Settings</v-list-item-title>
+        <v-list-item-title>
+          {{ translateItem('settings') }}
+        </v-list-item-title>
 
         <template #append>
           <v-avatar color="tertiary-container">
@@ -61,7 +84,9 @@
       </v-list-item>
 
       <v-list-item @click="onLogout">
-        <v-list-item-title>Logout</v-list-item-title>
+        <v-list-item-title>
+          {{ translateItem('logout') }}
+        </v-list-item-title>
 
         <template #append>
           <v-avatar color="tertiary-container">
@@ -74,11 +99,26 @@
 </template>
 
 <script lang="ts" setup>
-import { useRouter } from 'vue-router';
+import _ from 'lodash';
+import { computed } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
 
-import { useAuth, useThemeModeStorage } from '@/composables';
+import {
+  useAuth,
+  useLanguageStorage,
+  useLayoutLocale,
+  useThemeModeStorage,
+} from '@/composables';
 
 const router = useRouter();
+const route = useRoute();
+const { translateItem } = useLayoutLocale({ prefix: 'default.topbar.profile' });
+
+const redirectUrl = computed(() =>
+  _.isArray(route.query.redirectUrl)
+    ? _.get(route.query.redirectUrl, '0', '/')
+    : route.query.redirectUrl,
+);
 
 const {
   themeModes,
@@ -87,11 +127,14 @@ const {
   isActiveThemeMode,
 } = useThemeModeStorage();
 
+const { languages, selectedLanguage, selectedLanguageDetail } =
+  useLanguageStorage();
+
 const { logout, user, fullName, photoUrl } = useAuth();
 
 async function onLogout() {
   await logout();
 
-  router.push({ name: 'Login' });
+  router.push({ name: 'Login', query: { redirectUrl: redirectUrl.value } });
 }
 </script>

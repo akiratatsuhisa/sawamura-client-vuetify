@@ -7,27 +7,27 @@
     @submit="onSubmit"
     @open="onOpen"
   >
-    <template #title>Room</template>
+    <template #title>{{ translate('title') }}</template>
 
     <v-text-field
       class="mt-3"
-      label="Room name"
+      :label="translateFormField('name')"
       v-model="v$.name.$model"
       :error-messages="getErrorMessage(v$.name)"
       @blur="v$.name.$validate"
-    ></v-text-field>
+    />
 
-    <template #action>Edit</template>
+    <template #action>{{ translate('form.submit') }}</template>
   </v-base-dialog>
 </template>
 
 <script lang="ts" setup>
-import { maxLength, required } from '@vuelidate/validators';
 import { inject, reactive } from 'vue';
 
-import { getErrorMessage, useVuelidate } from '@/composables';
+import { getErrorMessage, usePageLocale, useVuelidate } from '@/composables';
 import { KEYS } from '@/constants';
 import { IUpdateRoomRequest } from '@/interfaces';
+import { maxLength, required } from '@/validators';
 
 defineProps<{
   modelValue: boolean;
@@ -40,6 +40,10 @@ const emit = defineEmits<{
 
 const room = inject(KEYS.CHAT.ROOM)!;
 
+const { translate, translateFormField, pathFormField } = usePageLocale({
+  prefix: 'messages.room.dialogs.editName',
+});
+
 const form = reactive<IUpdateRoomRequest>({
   id: '',
   name: '',
@@ -48,11 +52,11 @@ const form = reactive<IUpdateRoomRequest>({
 const [v$, { handleSubmit, submitable }] = useVuelidate(
   {
     id: {
-      required: required,
+      required: required(pathFormField('id')),
     },
     name: {
-      required,
-      maxLength: maxLength(255),
+      required: required(pathFormField('name')),
+      maxLength: maxLength(pathFormField('name'), 255),
     },
   },
   form,

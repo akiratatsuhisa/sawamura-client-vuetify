@@ -21,12 +21,14 @@
         </h3>
       </v-sheet>
 
-      <v-divider></v-divider>
+      <v-divider />
     </template>
 
     <v-expansion-panels multiple>
       <v-expansion-panel elevation="0" rounded="0">
-        <v-expansion-panel-title>Basics Information</v-expansion-panel-title>
+        <v-expansion-panel-title>
+          {{ translate('menus.basicsInformation.index') }}
+        </v-expansion-panel-title>
         <v-expansion-panel-text>
           <v-list class="mx-md-n6">
             <v-list-item
@@ -39,7 +41,9 @@
                 </v-avatar>
               </template>
 
-              <v-list-item-title> Edit name </v-list-item-title>
+              <v-list-item-title>
+                {{ translate('menus.basicsInformation.editName') }}
+              </v-list-item-title>
             </v-list-item>
             <v-list-item
               v-if="room?.isGroup && currentMember?.role !== 'Member'"
@@ -51,7 +55,9 @@
                 </v-avatar>
               </template>
 
-              <v-list-item-title> Change photo </v-list-item-title>
+              <v-list-item-title>
+                {{ translate('menus.basicsInformation.changePhoto') }}
+              </v-list-item-title>
             </v-list-item>
             <v-list-item
               v-if="currentMember?.role !== 'Member'"
@@ -63,10 +69,12 @@
                 </v-avatar>
               </template>
 
-              <v-list-item-title> Change cover </v-list-item-title>
+              <v-list-item-title>
+                {{ translate('menus.basicsInformation.changeCover') }}
+              </v-list-item-title>
             </v-list-item>
             <v-list-item
-              v-if="isThemeModeSelectable && currentMember?.role !== 'Member'"
+              v-if="isThemeSelectable && currentMember?.role !== 'Member'"
               @click="openDialog('theme')"
             >
               <template #prepend>
@@ -81,7 +89,9 @@
                 </v-avatar>
               </template>
 
-              <v-list-item-title> Choose Theme </v-list-item-title>
+              <v-list-item-title>
+                {{ translate('menus.basicsInformation.chooseTheme') }}
+              </v-list-item-title>
             </v-list-item>
             <v-list-item
               v-if="room?.isGroup && currentMember?.role === 'Admin'"
@@ -93,7 +103,9 @@
                 </v-avatar>
               </template>
 
-              <v-list-item-title> Delete chat </v-list-item-title>
+              <v-list-item-title>
+                {{ translate('menus.basicsInformation.deleteChat') }}
+              </v-list-item-title>
             </v-list-item>
             <v-list-item @click="openDialog('icon')">
               <template #prepend>
@@ -102,13 +114,17 @@
                 </v-avatar>
               </template>
 
-              <v-list-item-title> Reaction Icon </v-list-item-title>
+              <v-list-item-title>
+                {{ translate('menus.basicsInformation.reactionIcon') }}
+              </v-list-item-title>
             </v-list-item>
           </v-list>
         </v-expansion-panel-text>
       </v-expansion-panel>
       <v-expansion-panel elevation="0" rounded="0">
-        <v-expansion-panel-title>Support</v-expansion-panel-title>
+        <v-expansion-panel-title>
+          {{ translate('menus.support.index') }}
+        </v-expansion-panel-title>
         <v-expansion-panel-text>
           <v-list class="mx-md-n6">
             <v-list-item
@@ -125,13 +141,17 @@
                 </v-avatar>
               </template>
 
-              <v-list-item-title> Out group </v-list-item-title>
+              <v-list-item-title>
+                {{ translate('menus.support.outGroup') }}
+              </v-list-item-title>
             </v-list-item>
           </v-list>
         </v-expansion-panel-text>
       </v-expansion-panel>
       <v-expansion-panel elevation="0" rounded="0">
-        <v-expansion-panel-title>Members</v-expansion-panel-title>
+        <v-expansion-panel-title>
+          {{ translate('menus.members.index') }}
+        </v-expansion-panel-title>
         <v-expansion-panel-text>
           <v-list class="mx-md-n6">
             <v-list-item
@@ -148,7 +168,9 @@
                 </v-avatar>
               </template>
 
-              <v-list-item-title> Add Member </v-list-item-title>
+              <v-list-item-title>
+                {{ translate('menus.members.addMember') }}
+              </v-list-item-title>
             </v-list-item>
 
             <v-list-item v-for="roomMember in roomMembers" :key="roomMember.id">
@@ -173,7 +195,11 @@
               </v-list-item-title>
 
               <v-list-item-subtitle>
-                {{ roomMember.role }} - {{ roomMember.member.username }}
+                {{
+                  translateShared(`roomRoles.${_.camelCase(roomMember.role)}`)
+                }}
+                -
+                {{ roomMember.member.username }}
               </v-list-item-subtitle>
 
               <template #append>
@@ -192,7 +218,7 @@
                   <v-list class="bg-surface-variant text-on-surface-variant">
                     <v-list-item
                       append-icon="mdi-account-edit-outline"
-                      title="Change nickname"
+                      :title="translate('menus.members.changeNickName')"
                       @click="
                         openDialog('members', {
                           params: {
@@ -212,7 +238,7 @@
                         )
                       "
                       append-icon="mdi-database-edit-outline"
-                      title="Change role"
+                      :title="translate('menus.members.changeRole')"
                       @click="
                         openDialog('members', {
                           params: {
@@ -232,7 +258,7 @@
                         )
                       "
                       append-icon="mdi-trash-can-outline"
-                      title="Delete"
+                      :title="translate('menus.members.removeMember')"
                       @click="
                         openDialog('members', {
                           params: {
@@ -263,12 +289,14 @@
 </template>
 
 <script lang="ts" setup>
+import _ from 'lodash';
 import { computed, defineAsyncComponent, inject } from 'vue';
 import { useRouter } from 'vue-router';
 
 import {
   useAuth,
   useDisplayThemeColor,
+  usePageLocale,
   useRoom,
   useRouterDialog,
   useSnackbar,
@@ -297,6 +325,10 @@ const emit = defineEmits<{
   (event: 'update:drawer', value: boolean): void;
 }>();
 
+const { translate, translateShared } = usePageLocale({
+  prefix: 'messages.room',
+});
+
 const drawer = computed({
   get() {
     return props.drawer;
@@ -316,7 +348,7 @@ const socket = useSocketChat();
 
 const room = inject(KEYS.CHAT.ROOM)!;
 
-const { isThemeModeSelectable } = useThemeModeStorage();
+const { isThemeSelectable } = useThemeModeStorage();
 
 const displayThemeColor = useDisplayThemeColor(
   computed(() => room.value.themeSource),

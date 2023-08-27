@@ -1,21 +1,25 @@
 <template>
   <v-card flat>
     <v-card-text class="d-flex justify-space-between align-baseline">
-      <h3 class="text-subtitle-1 d-inline">
-        Total roles:
+      <i18n-t
+        :keypath="path('subtitle')"
+        tag="h3"
+        scope="global"
+        class="text-subtitle-1 d-inline"
+      >
         <strong class="text-tertiary">{{ roles?.length ?? 0 }}</strong>
-      </h3>
+      </i18n-t>
 
       <v-btn
         prepend-icon="mdi-content-save"
         :loading="isLoading"
         @click="openDialog('create')"
       >
-        Create
+        {{ translate('actions.create') }}
       </v-btn>
     </v-card-text>
 
-    <v-divider></v-divider>
+    <v-divider />
 
     <v-list lines="one" ref="sortableRef">
       <v-role-item
@@ -49,12 +53,15 @@ import { computed, defineAsyncComponent, onMounted, ref } from 'vue';
 import VRoleItem from '@/components/Dashboard/Users/RoleItem.vue';
 import {
   useAxios,
+  usePageLocale,
   useRouterDialog,
   useSocketDashboard,
   useSocketEventListener,
 } from '@/composables';
 import { IRoleResponse } from '@/interfaces';
 import { services } from '@/services';
+
+const { path, translate } = usePageLocale({ prefix: 'dashboard.users.roles' });
 
 const socket = useSocketDashboard();
 
@@ -100,19 +107,19 @@ useSortable(sortableRef, roles, {
 const { excute: requestCreateRole, isLoading: isLoadingCreateRole } = useAxios(
   services.roles,
   'create',
-  { message: 'Create Role Completed' },
+  { message: computed(() => translate('messages.create')) },
 );
 
 const { excute: requestUpdateRole, isLoading: isLoadingUpdateRole } = useAxios(
   services.roles,
   'update',
-  { message: 'Update Role Completed' },
+  { message: computed(() => translate('messages.update')) },
 );
 
 const { excute: requestDeleteRole, isLoading: isLoadingDeleteRole } = useAxios(
   services.roles,
   'delete',
-  { message: 'Delete Role Completed' },
+  { message: computed(() => translate('messages.delete')) },
 );
 
 const { openDialog, closeDialog, isActiveDialog } = useRouterDialog({

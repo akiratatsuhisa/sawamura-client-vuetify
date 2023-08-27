@@ -91,7 +91,7 @@
       <v-list class="bg-surface-variant text-on-surface-variant">
         <v-list-item
           append-icon="mdi-trash-can-outline"
-          title="Delete"
+          :title="translate('menus.delete')"
           @click="removeMessage"
         />
       </v-list>
@@ -107,7 +107,7 @@ import _ from 'lodash';
 import { computed } from 'vue';
 
 import VMessageContentFile from '@/components/Rooms/Detail/MessageContentFile.vue';
-import { useAuth } from '@/composables';
+import { useAuth, usePageLocale } from '@/composables';
 import {
   IDeleteRoomMessageRequest,
   IRoomMessageFileResponse,
@@ -123,6 +123,8 @@ const props = defineProps<{
 const emit = defineEmits<{
   (event: 'removeMessage', data: IDeleteRoomMessageRequest): void;
 }>();
+
+const { translate } = usePageLocale({ prefix: 'messages.room.messages' });
 
 const { identityId } = useAuth();
 

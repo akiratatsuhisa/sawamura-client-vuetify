@@ -36,7 +36,7 @@
     </template>
   </v-list-item>
 
-  <v-divider></v-divider>
+  <v-divider />
 </template>
 
 <script lang="ts" setup>

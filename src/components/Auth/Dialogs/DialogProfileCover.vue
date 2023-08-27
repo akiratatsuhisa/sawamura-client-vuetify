@@ -14,7 +14,7 @@
     </div>
 
     <v-switch
-      v-if="isThemeModeSelectable"
+      v-if="isThemeSelectable"
       v-model="isThemeModeGenerate"
       density="compact"
       color="tertiary"
@@ -23,7 +23,7 @@
       hide-details
     ></v-switch>
 
-    <v-divider class="my-3"></v-divider>
+    <v-divider class="my-3" />
 
     <div class="d-flex justify-center align-center cropper-wrapper">
       <div
@@ -71,7 +71,7 @@ const emit = defineEmits<{
 const { fetchAccessToken, updateImage } = useAuth();
 
 const {
-  isThemeModeSelectable,
+  isThemeSelectable,
   isThemeModeGenerate,
   submitable,
   cropperRef,
@@ -98,7 +98,7 @@ async function onSubmit() {
   (async () => {
     await updateCover({
       image,
-      theme: isThemeModeSelectable.value && isThemeModeGenerate.value,
+      theme: isThemeSelectable.value && isThemeModeGenerate.value,
     });
     await fetchAccessToken();
     updateImage('cover');

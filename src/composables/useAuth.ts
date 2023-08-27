@@ -6,10 +6,10 @@ import {
 import axios, { AxiosRequestConfig } from 'axios';
 import dayjs from 'dayjs';
 import _ from 'lodash';
-import { computed, unref } from 'vue';
+import { computed, reactive, unref } from 'vue';
 import { useRoute } from 'vue-router';
 
-import { useAxios, useSnackbar } from '@/composables';
+import { useAxios, useLayoutLocale, useSnackbar } from '@/composables';
 import { Jwt } from '@/helpers';
 import {
   IAuthOptions,
@@ -184,8 +184,17 @@ export const useAuth = createSharedComposable(() => {
   };
 });
 
+export type ProviderType = 'google' | 'github';
+
 export function useOauth(isLinkProvider?: MaybeRef<boolean>) {
   const route = useRoute();
+
+  const providers = reactive<
+    Record<ProviderType, { name: string; image: string }>
+  >({
+    google: { name: 'google', image: '/logos/google.svg' },
+    github: { name: 'github', image: '/logos/github.svg' },
+  });
 
   const { excute: excuteLinkProvider } = useAxios(
     services.oauth,
@@ -248,9 +257,13 @@ export function useOauth(isLinkProvider?: MaybeRef<boolean>) {
     challenge(rootUrl, options);
   }
 
+  const { translate } = useLayoutLocale({
+    prefix: 'default.oauth',
+  });
+
   const { excute: excuteUnlinkProvider, isLoading: isLoadingUnlinkProvider } =
     useAxios(services.oauth, 'unlinkProvider', {
-      message: 'Unlink provider successfully',
+      message: computed(() => translate('messages.unlink')),
     });
 
   async function linkProvider(provider: string) {
@@ -267,6 +280,7 @@ export function useOauth(isLinkProvider?: MaybeRef<boolean>) {
   }
 
   return {
+    providers,
     linkProvider,
     unlinkProvider,
     isLoadingUnlinkProvider,

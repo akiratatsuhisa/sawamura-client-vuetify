@@ -7,15 +7,15 @@
     @submit="onSubmit"
     @open="onOpen"
   >
-    <template #title>Create Group</template>
+    <template #title>{{ translate('title') }}</template>
 
     <v-text-field
       class="mt-3"
-      label="Room name"
+      :label="translateFormField('name')"
       v-model="v$.name.$model"
       :error-messages="getErrorMessage(v$.name)"
       @blur="v$.name.$validate"
-    ></v-text-field>
+    />
 
     <v-autocomplete
       class="mt-3"
@@ -23,7 +23,7 @@
       v-model:search="userSearch"
       :loading="isLoadingSearch"
       variant="outlined"
-      label="Member(s)"
+      :label="translateFormField('members')"
       :items="usersResult"
       chips
       closable-chips
@@ -42,12 +42,11 @@
       </template>
     </v-autocomplete>
 
-    <template #action>Create</template>
+    <template #action>{{ translate('form.submit') }}</template>
   </v-base-dialog>
 </template>
 
 <script lang="ts" setup>
-import { required } from '@vuelidate/validators';
 import { useDebounceFn } from '@vueuse/core';
 import _ from 'lodash';
 import { computed, reactive, ref, watch } from 'vue';
@@ -56,6 +55,7 @@ import {
   getErrorMessage,
   useAuth,
   useAxios,
+  usePageLocale,
   useVuelidate,
 } from '@/composables';
 import {
@@ -64,6 +64,7 @@ import {
   IUserResponse,
 } from '@/interfaces';
 import { services } from '@/services';
+import { required } from '@/validators';
 
 defineProps<{
   modelValue: boolean;
@@ -73,6 +74,10 @@ const emit = defineEmits<{
   (event: 'update:modelValue', value: boolean): void;
   (event: 'submit', value: ICreateRoomRequest): void;
 }>();
+
+const { translate, translateFormField, pathFormField } = usePageLocale({
+  prefix: 'messages.list.dialogs.createGroup',
+});
 
 const { identityId } = useAuth();
 
@@ -87,10 +92,10 @@ const form = reactive<
 const [v$, { handleSubmit, submitable }] = useVuelidate(
   computed(() => ({
     name: {
-      required: required,
+      required: required(pathFormField('name')),
     },
     members: {
-      required: required,
+      required: required(pathFormField('members')),
     },
   })),
   form,

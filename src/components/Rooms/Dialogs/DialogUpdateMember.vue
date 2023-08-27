@@ -7,31 +7,31 @@
     @submit="onSubmit"
     @open="onOpen"
   >
-    <template #title>Room Member</template>
+    <template #title>{{ translate('title') }}</template>
 
     <v-text-field
       class="mt-3"
-      label="Nickname"
+      :label="translateFormField('nickName')"
       v-model="v$.nickName.$model"
       :error-messages="getErrorMessage(v$.nickName)"
       @blur="v$.nickName.$validate"
       clearable
-      hint="Click clear icon to clear nickname"
-    ></v-text-field>
+      :hint="translateFormField('nickName', 'hint')"
+    />
 
-    <template #action>Edit</template>
+    <template #action>{{ translate('form.submit') }}</template>
   </v-base-dialog>
 </template>
 
 <script lang="ts" setup>
-import { maxLength, required, requiredIf } from '@vuelidate/validators';
 import _ from 'lodash';
 import { computed, inject, reactive } from 'vue';
 import { useRoute } from 'vue-router';
 
-import { getErrorMessage, useVuelidate } from '@/composables';
+import { getErrorMessage, usePageLocale, useVuelidate } from '@/composables';
 import { KEYS } from '@/constants';
 import { IUpdateRoomMemberRequest } from '@/interfaces';
+import { maxLength, required } from '@/validators';
 
 defineProps<{
   modelValue: boolean;
@@ -42,26 +42,29 @@ const emit = defineEmits<{
   (event: 'submit', value: IUpdateRoomMemberRequest): void;
 }>();
 
+const { translate, translateFormField, pathFormField } = usePageLocale({
+  prefix: 'messages.room.dialogs.changeNickName',
+});
+
 const room = inject(KEYS.CHAT.ROOM)!;
 
 const form = reactive<IUpdateRoomMemberRequest & { nickName: string | null }>({
-  memberId: '',
   roomId: '',
+  memberId: '',
   nickName: null,
   role: undefined,
 });
 
 const [v$, { handleSubmit, submitable }] = useVuelidate(
   computed(() => ({
-    memberId: {
-      required: required,
-    },
     roomId: {
-      required: required,
+      required: required(pathFormField('roomId')),
+    },
+    memberId: {
+      required: required(pathFormField('memberId')),
     },
     nickName: {
-      required: requiredIf(() => form.nickName !== null),
-      maxLength: maxLength(255),
+      maxLength: maxLength(pathFormField('nickName'), 255),
     },
   })),
   form,
@@ -85,8 +88,8 @@ function onOpen() {
     return;
   }
 
-  form.memberId = roomMember.member.id;
   form.roomId = room.value?.id ?? '';
+  form.memberId = roomMember.member.id;
   form.nickName = roomMember.nickName;
 
   v$.value.$reset();

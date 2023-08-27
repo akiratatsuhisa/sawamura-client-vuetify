@@ -7,23 +7,25 @@
     @submit="onSubmit"
     @open="onOpen"
   >
-    <template #title>Room Photo</template>
+    <template #title>{{ translate('title') }}</template>
 
     <div class="d-flex mb-3">
-      <v-btn color="primary" @click="openSelectImage">Choose image</v-btn>
+      <v-btn color="primary" @click="openSelectImage">
+        {{ translateShared('chooseImage') }}
+      </v-btn>
     </div>
 
     <v-switch
-      v-if="isThemeModeSelectable"
+      v-if="isThemeSelectable"
       v-model="isThemeModeGenerate"
       density="compact"
       color="tertiary"
-      label="Generate theme from uploaded image"
+      :label="translateShared('generateTheme')"
       inset
       hide-details
     ></v-switch>
 
-    <v-divider class="my-3"></v-divider>
+    <v-divider class="my-3" />
 
     <div class="d-flex justify-center align-center">
       <div
@@ -51,7 +53,7 @@
       </div>
     </div>
 
-    <template #action>Change</template>
+    <template #action>{{ translate('form.submit') }}</template>
   </v-base-dialog>
 </template>
 
@@ -62,7 +64,7 @@ import 'vue-advanced-cropper/dist/theme.compact.css';
 import { inject } from 'vue';
 import { CircleStencil, Cropper as VCropper } from 'vue-advanced-cropper';
 
-import { useAxios, useImageCropper } from '@/composables';
+import { useAxios, useImageCropper, usePageLocale } from '@/composables';
 import { KEYS } from '@/constants';
 import { IMAGE_FILE } from '@/helpers';
 import { services } from '@/services';
@@ -76,10 +78,14 @@ const emit = defineEmits<{
   (event: 'submit', data: any): void;
 }>();
 
+const { translate, translateShared } = usePageLocale({
+  prefix: 'messages.room.dialogs.changePhoto',
+});
+
 const room = inject(KEYS.CHAT.ROOM)!;
 
 const {
-  isThemeModeSelectable,
+  isThemeSelectable,
   isThemeModeGenerate,
   submitable,
   cropperRef,
@@ -106,7 +112,7 @@ async function onSubmit() {
   updatePhoto({
     id: room.value!.id,
     image,
-    theme: isThemeModeSelectable.value && isThemeModeGenerate.value,
+    theme: isThemeSelectable.value && isThemeModeGenerate.value,
   });
 
   emit('update:modelValue', false);

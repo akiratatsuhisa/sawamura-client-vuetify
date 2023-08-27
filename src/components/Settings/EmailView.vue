@@ -1,32 +1,39 @@
 <template>
   <template v-if="user?.email">
-    <h3 class="text-h5">Verify Email</h3>
-    <span
+    <h3 class="text-h5">{{ translateVerifyEmail('title') }}</h3>
+
+    <i18n-t
+      :keypath="pathVerifyEmail('subtitle.unverified')"
+      tag="span"
+      scope="global"
       v-if="!user?.emailConfirmed"
       class="text-subtitle-2 font-weight-light text-high-emphasis"
     >
-      You should confirm this email
       <span class="text-primary text-decoration-underline">
         {{ user.email }}
       </span>
-      to be able to experience all the features fully.
-    </span>
-    <span v-else class="text-subtitle-2 font-weight-light text-high-emphasis">
-      Email:
+    </i18n-t>
+    <i18n-t
+      :keypath="pathVerifyEmail('subtitle.verified')"
+      tag="span"
+      scope="global"
+      v-else
+      class="text-subtitle-2 font-weight-light text-high-emphasis"
+    >
       <span class="text-primary text-decoration-underline">
         {{ user.email }}
       </span>
-    </span>
+    </i18n-t>
 
     <div class="d-flex justify-space-between align-center">
       <v-list-item-subtitle>
         <div v-if="!user.emailConfirmed" class="text-error d-flex align-center">
           <v-icon start>mdi-close-circle-outline</v-icon>
-          <span>Unverified</span>
+          <span>{{ translateShared('verifyStates.unverified') }}</span>
         </div>
         <div v-else class="text-success d-flex align-center">
           <v-icon start>mdi-check-circle-outline</v-icon>
-          <span>Verified</span>
+          <span>{{ translateShared('verifyStates.verified') }}</span>
         </div>
       </v-list-item-subtitle>
 
@@ -37,29 +44,35 @@
         :disabled="hasSent"
         @click="onSubmitRequestVerifyEmail"
       >
-        <template v-if="!hasSent">Send</template>
+        <template v-if="!hasSent">{{
+          translateVerifyEmail('form.submit')
+        }}</template>
         <template v-else>
           <v-icon>mdi-cloud-check-outline</v-icon>
         </template>
       </v-btn>
     </div>
 
-    <v-divider class="my-3"></v-divider>
+    <v-divider class="my-3" />
   </template>
 
   <template v-if="user?.email">
-    <h3 class="text-h5">Change Email</h3>
-    <span class="text-subtitle-2 font-weight-light text-high-emphasis">
-      Your current email is
+    <h3 class="text-h5">{{ translateChangeEmail('title') }}</h3>
+    <i18n-t
+      :keypath="pathChangeEmail('subtitle')"
+      tag="span"
+      scope="global"
+      class="text-subtitle-2 font-weight-light text-high-emphasis"
+    >
       <span class="text-primary text-decoration-underline">
-        {{ user.email }} </span
-      >. What would you like to update it to?
-    </span>
+        {{ user.email }}
+      </span>
+    </i18n-t>
   </template>
   <template v-else>
-    <h3 class="text-h5">Configure Email</h3>
+    <h3 class="text-h5">{{ translateConfigureEmail('title') }}</h3>
     <span class="text-subtitle-2 font-weight-light text-high-emphasis">
-      Your account don't have an email yet. Would you like to configure it?
+      {{ translateConfigureEmail('subtitle') }}
     </span>
   </template>
 
@@ -68,17 +81,21 @@
       <v-col cols="12" md="8" lg="6">
         <v-text-field
           class="mb-3"
-          :label="user?.email ? 'Current' : 'Email'"
+          :label="
+            user?.email
+              ? translateChangeEmailFormField('email')
+              : translateConfigureEmailFormField('email')
+          "
           v-model="v$.email.$model"
           :error-messages="getErrorMessage(v$.email)"
           @blur="v$.email.$validate"
           placeholder="email@example.com"
           persistent-hint
-          hint="After you update your email address, a verification email will be sent to you."
+          :hint="translateChangeEmailFormField('email', 'hint')"
         />
       </v-col>
       <v-col cols="12" md="auto">
-        <v-divider v-if="$vuetify.display.smAndDown" class="mb-3"></v-divider>
+        <v-divider v-if="$vuetify.display.smAndDown" class="mb-3" />
 
         <v-btn
           class="mt-0 mt-md-3"
@@ -87,7 +104,7 @@
           :block="$vuetify.display.smAndDown"
           :disabled="!submitable"
         >
-          Submit
+          {{ translateChangeEmail('form.submit') }}
         </v-btn>
       </v-col>
     </v-row>
@@ -95,23 +112,46 @@
 </template>
 
 <script lang="ts" setup>
-import { email, maxLength, required } from '@vuelidate/validators';
-import { reactive, ref } from 'vue';
+import { computed, reactive, ref } from 'vue';
 
 import {
   getErrorMessage,
   useAuth,
   useAxios,
+  usePageLocale,
   useVuelidate,
 } from '@/composables';
 import { IUpdateEmailRequest } from '@/interfaces';
 import { services } from '@/services';
+import { email, maxLength, required } from '@/validators';
+
+const {
+  path: pathVerifyEmail,
+  translate: translateVerifyEmail,
+  translateShared,
+} = usePageLocale({
+  prefix: 'settings.email.verifyEmail',
+});
+const {
+  path: pathChangeEmail,
+  translate: translateChangeEmail,
+  pathFormField: pathChangeEmailFormField,
+  translateFormField: translateChangeEmailFormField,
+} = usePageLocale({
+  prefix: 'settings.email.changeEmail',
+});
+const {
+  translate: translateConfigureEmail,
+  translateFormField: translateConfigureEmailFormField,
+} = usePageLocale({
+  prefix: 'settings.email.configureEmail',
+});
 
 const { user, fetchAccessToken } = useAuth();
 
 const { excute: requestVerifyEmail, isLoading: isLoadingVerifyEmail } =
   useAxios(services.auth, 'verifyEmail', {
-    message: 'Verification mail has been sent',
+    message: computed(() => translateVerifyEmail('message')),
   });
 
 const hasSent = ref(false);
@@ -127,7 +167,7 @@ async function onSubmitRequestVerifyEmail() {
 
 const { excute: requestUpdateEmail, isLoading: isLoadingUpdateEmail } =
   useAxios(services.auth, 'updateEmail', {
-    message: 'Email has been changed, a verification mail has been sent',
+    message: computed(() => translateChangeEmail('message')),
   });
 
 const form = reactive<IUpdateEmailRequest>({
@@ -138,9 +178,9 @@ const [v$, { handleSubmit, isLoading, submitable }] =
   useVuelidate<IUpdateEmailRequest>(
     {
       email: {
-        required: required,
+        required: required(pathChangeEmailFormField('email')),
         email: email,
-        maxLength: maxLength(255),
+        maxLength: maxLength(pathChangeEmailFormField('email'), 255),
       },
     },
     form,

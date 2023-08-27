@@ -5,9 +5,11 @@
         <v-col md="12" lg="10" class="mx-auto">
           <v-card>
             <v-toolbar color="surface-variant">
-              <v-toolbar-title tag="h1">Settings</v-toolbar-title>
+              <v-toolbar-title tag="h1">
+                {{ translate('title') }}
+              </v-toolbar-title>
             </v-toolbar>
-            <v-divider></v-divider>
+            <v-divider />
             <div
               class="d-flex"
               :class="[isMobile ? 'flex-column' : 'flex-row']"
@@ -24,11 +26,11 @@
                   tag="h2"
                 >
                   <v-icon start>{{ detail.icon }}</v-icon>
-                  {{ detail.title }}
+                  {{ translateShared(`menus.${detail.name}`) }}
                 </v-tab>
               </v-tabs>
 
-              <v-divider :vertical="!isMobile"></v-divider>
+              <v-divider :vertical="!isMobile" />
 
               <v-window
                 :model-value="tab"
@@ -60,7 +62,7 @@ import _ from 'lodash';
 import { computed, defineAsyncComponent } from 'vue';
 import { useDisplay } from 'vuetify';
 
-import { useAuth, useRouterTab } from '@/composables';
+import { useAuth, usePageLocale, useRouterTab } from '@/composables';
 import { SettingsTabs } from '@/interfaces';
 
 const display = useDisplay();
@@ -75,48 +77,50 @@ const { tab, changeTab, isActiveTab } = useRouterTab({
 
 const tabs: SettingsTabs = {
   account: {
-    title: 'Account',
+    name: 'account',
     icon: 'mdi-card-account-details-outline',
     component: defineAsyncComponent(
-      () => import('@/components/Auth/Settings/AccountInfomation.vue'),
+      () => import('@/components/Settings/AccountInfomation.vue'),
     ),
   },
   display: {
-    title: 'Display',
+    name: 'display',
     icon: 'mdi-palette',
     component: defineAsyncComponent(
-      () => import('@/components/Auth/Settings/DisplayView.vue'),
+      () => import('@/components/Settings/DisplayView.vue'),
     ),
   },
   languages: {
-    title: 'Languages',
+    name: 'languages',
     icon: 'mdi-translate',
     component: defineAsyncComponent(
-      () => import('@/components/Auth/Settings/LanguagesView.vue'),
+      () => import('@/components/Settings/LanguagesView.vue'),
     ),
   },
   email: {
-    title: 'Email',
+    name: 'email',
     icon: 'mdi-email',
     component: defineAsyncComponent(
-      () => import('@/components/Auth/Settings/EmailView.vue'),
+      () => import('@/components/Settings/EmailView.vue'),
     ),
   },
   password: {
-    title: 'Password',
+    name: 'password',
     icon: 'mdi-form-textbox-password',
     component: defineAsyncComponent(
-      () => import('@/components/Auth/Settings/PasswordView.vue'),
+      () => import('@/components/Settings/PasswordView.vue'),
     ),
   },
   'oauth-providers': {
-    title: 'Oauth Providers',
+    name: 'oauthProviders',
     icon: 'mdi-link-variant',
     component: defineAsyncComponent(
-      () => import('@/components/Auth/Settings/OauthProvider.vue'),
+      () => import('@/components/Settings/OauthProvider.vue'),
     ),
   },
 };
+
+const { translate, translateShared } = usePageLocale({ prefix: 'settings' });
 
 const { user } = useAuth();
 

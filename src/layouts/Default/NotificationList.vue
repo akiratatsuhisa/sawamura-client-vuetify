@@ -10,33 +10,43 @@
       </v-btn>
     </template>
 
-    <v-card width="300" class="bg-surface-variant text-on-surface-variant">
-      <v-list height="350">
-        <v-notification-list-item
-          v-for="notification in notifications"
-          :key="notification.id"
-          :item="notification"
-          @update="(payload) => requestUpdateNotification(payload)"
-          @delete="(payload) => onRequestDeleteNotification(payload)"
-        />
-      </v-list>
-
-      <v-card-actions>
-        <v-spacer></v-spacer>
-
-        <v-btn color="primary" variant="text" @click="fetchMore"> Fetch </v-btn>
-      </v-card-actions>
+    <v-card
+      width="300"
+      class="overflow bg-surface-variant text-on-surface-variant"
+    >
+      <v-card-title>{{ translate('title') }}</v-card-title>
+      <v-card-text class="pa-0">
+        <v-list height="350">
+          <v-notification-list-item
+            v-for="notification in notifications"
+            :key="notification.id"
+            :item="notification"
+            @update="(payload) => requestUpdateNotification(payload)"
+            @delete="(payload) => onRequestDeleteNotification(payload)"
+          />
+          <v-list-item v-intersect="onIntersect" class="text-center">
+            <v-btn
+              :loading="isLoading"
+              icon="mdi-arrow-down"
+              size="small"
+              variant="plain"
+              @click="fetchMoreNotifications"
+            />
+          </v-list-item>
+        </v-list>
+      </v-card-text>
     </v-card>
   </v-menu>
 </template>
 
 <script lang="ts" setup>
-import { useThrottleFn } from '@vueuse/core';
 import _ from 'lodash';
 import { ref, watch } from 'vue';
 
 import {
   useAlert,
+  useFetchIntersection,
+  useLayoutLocale,
   useSocketEventListener,
   useSocketNotifications,
 } from '@/composables';
@@ -49,11 +59,17 @@ import {
 } from '@/interfaces';
 import VNotificationListItem from '@/layouts/Default/NotificationListItem.vue';
 
+const { translate, makeTranslateAlert } = useLayoutLocale({
+  prefix: 'default.topbar.notification',
+});
+
 const notifications = ref<Array<INotificationResponse>>([]);
 
 const socket = useSocketNotifications();
 
-const { request: requestNotifications } = useSocketEventListener<
+const isAllNotificationsLoaded = ref<boolean>(false);
+
+const { isLoading, request: requestNotifications } = useSocketEventListener<
   {
     notifications: Array<INotificationResponse>;
   },
@@ -64,6 +80,10 @@ const { request: requestNotifications } = useSocketEventListener<
       [...notifications.value, ...data],
       (notification) => notification.id,
     );
+
+    if (!data.length) {
+      isAllNotificationsLoaded.value = true;
+    }
   },
   immediate: true,
   paramsOrData: { take: 10 },
@@ -100,16 +120,21 @@ useSocketEventListener<INotificationResponse>(socket, 'create:notification', {
   },
 });
 
-const requestRoomsThrottle = useThrottleFn(requestNotifications, 500);
-
-function fetchMore() {
+function fetchMoreNotifications() {
   const excludeIds = _.map(notifications.value, (room) => room.id);
 
-  requestRoomsThrottle({
+  requestNotifications({
     take: 10,
     excludeIds: excludeIds.length ? excludeIds : undefined,
   });
 }
+
+const { onIntersect } = useFetchIntersection({
+  fetch: fetchMoreNotifications,
+  ms: 500,
+  isLoading,
+  isAllLoaded: isAllNotificationsLoaded,
+});
 
 watch(
   notifications,
@@ -131,13 +156,15 @@ watch(
 
 const alert = useAlert();
 
+const translateAlert = makeTranslateAlert('delete');
+
 async function onRequestDeleteNotification(
   payload: IDeleteNotificationRequest,
 ) {
   const { isConfirm } = await alert.fire({
-    cancelButton: { show: true, text: 'Cancel' },
-    confirmButton: { show: true, text: 'Agree' },
-    message: 'Do you want to delete this notification?',
+    cancelButton: { show: true, text: translateAlert('cancel') },
+    confirmButton: { show: true, text: translateAlert('confirm') },
+    message: translateAlert('message'),
   });
 
   if (!isConfirm) {

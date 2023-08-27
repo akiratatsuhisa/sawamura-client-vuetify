@@ -6,22 +6,22 @@
     @submit="onSubmit"
     @open="onOpen"
   >
-    <template #title>Role</template>
+    <template #title>{{ translate('title') }}</template>
 
-    <span>Delete this role: {{ name }}</span>
+    <span>{{ translate('message', { name }) }}</span>
 
-    <template #action>Delete</template>
+    <template #action>{{ translate('form.submit') }}</template>
   </v-base-dialog>
 </template>
 
 <script lang="ts" setup>
-import { required } from '@vuelidate/validators';
 import { reactive, ref } from 'vue';
 import { useRoute } from 'vue-router';
 
-import { useAxios, useVuelidate } from '@/composables';
+import { useAxios, usePageLocale, useVuelidate } from '@/composables';
 import { IDeleteRoleRequest } from '@/interfaces';
 import { services } from '@/services';
+import { required } from '@/validators';
 
 defineProps<{
   modelValue: boolean;
@@ -32,6 +32,10 @@ const emit = defineEmits<{
   (event: 'submit', value: IDeleteRoleRequest): void;
 }>();
 
+const { translate, pathFormField } = usePageLocale({
+  prefix: 'dashboard.users.roles.delete',
+});
+
 const form = reactive<IDeleteRoleRequest>({
   id: '',
 });
@@ -39,7 +43,7 @@ const form = reactive<IDeleteRoleRequest>({
 const [v$, { handleSubmit }] = useVuelidate(
   {
     id: {
-      required: required,
+      required: required(pathFormField('id')),
     },
   },
   form,

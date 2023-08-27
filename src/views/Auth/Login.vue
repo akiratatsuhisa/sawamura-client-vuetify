@@ -3,55 +3,61 @@
     <v-row class="h-100 align-content-center">
       <v-col class="mx-auto" md="6" lg="4">
         <v-card>
-          <v-card-title>Login</v-card-title>
+          <v-card-title>
+            {{ translate('title') }}
+          </v-card-title>
           <v-card-subtitle class="text-wrap">
-            By continuing, you are setting up account and agree to our User
-            Agreement and Privacy Policy.
+            {{ translateShared('privacy') }}
           </v-card-subtitle>
           <v-card-text>
             <form @submit.prevent="onSubmit">
               <v-text-field
                 class="mb-3"
-                label="Username"
+                :label="translateFormField('username')"
                 v-model="v$.username.$model"
                 :error-messages="getErrorMessage(v$.username)"
                 @blur="v$.username.$validate"
                 clearable
-              >
-              </v-text-field>
+              />
               <v-text-field
                 class="mb-3"
-                label="Password"
+                :label="translateFormField('password')"
                 v-model="v$.password.$model"
                 :error-messages="getErrorMessage(v$.password)"
                 @blur="v$.password.$validate"
                 clearable
                 v-bind="bindShowPassword('current')"
+              />
+
+              <i18n-t
+                :keypath="path('forgotPassword')"
+                tag="span"
+                scope="global"
               >
-              </v-text-field>
-              <span>
-                Forget your
-                <router-link
-                  class="text-primary"
-                  :to="{
-                    name: 'ForgotPassword',
-                    query: { redirectUrl },
-                  }"
-                >
-                  username
-                </router-link>
-                or
-                <router-link
-                  class="text-primary"
-                  :to="{
-                    name: 'ForgotPassword',
-                    query: { redirectUrl },
-                  }"
-                >
-                  password
-                </router-link>
-                ?
-              </span>
+                <template #username>
+                  <router-link
+                    class="text-primary"
+                    :to="{
+                      name: 'ForgotPassword',
+                      query: { redirectUrl },
+                    }"
+                  >
+                    {{ translateFormField('username') }}
+                  </router-link>
+                </template>
+                <template #password>
+                  <router-link
+                    class="text-primary"
+                    :to="{
+                      name: 'ForgotPassword',
+                      query: { redirectUrl },
+                    }"
+                  >
+                    {{ translateFormField('password') }}
+                  </router-link>
+                </template>
+              </i18n-t>
+
               <v-btn
                 type="submit"
                 :loading="isLoading"
@@ -59,30 +65,29 @@
                 block
                 class="my-3"
               >
-                Login
+                {{ translate('form.submit') }}
               </v-btn>
-              <span>
-                New to my app?
+              <i18n-t :keypath="path('newTo.text')" tag="span" scope="global">
                 <router-link
                   class="text-primary"
                   :to="{ name: 'Register', query: { redirectUrl } }"
                 >
-                  Register
+                  {{ translate('newTo.link') }}
                 </router-link>
-              </span>
+              </i18n-t>
             </form>
             <div>
               <v-row no-gutters>
                 <v-col class="d-flex align-center mr-2">
-                  <v-divider></v-divider>
+                  <v-divider />
                 </v-col>
                 <v-col cols="auto">OR</v-col>
                 <v-col class="d-flex align-center ml-2">
-                  <v-divider></v-divider>
+                  <v-divider />
                 </v-col>
               </v-row>
               <v-btn
-                v-for="(name, provider) in PROVIDERS"
+                v-for="(detail, provider) in providers"
                 :key="provider"
                 :loading="isLoading"
                 variant="outlined"
@@ -93,12 +98,12 @@
               >
                 <template #prepend>
                   <v-avatar
-                    :image="`/logos/${provider}.svg`"
+                    :image="detail.image"
                     size="24"
                     rounded="0"
                   ></v-avatar>
                 </template>
-                {{ name }}
+                {{ detail.name }}
               </v-btn>
             </div>
           </v-card-text>
@@ -109,7 +114,6 @@
 </template>
 
 <script lang="ts" setup>
-import { required } from '@vuelidate/validators';
 import _ from 'lodash';
 import { computed, reactive } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
@@ -118,14 +122,19 @@ import {
   getErrorMessage,
   useAuth,
   useOauth,
+  usePageLocale,
   useShowPassword,
   useVuelidate,
 } from '@/composables';
-import { PROVIDERS } from '@/constants';
 import { ILoginRequest } from '@/interfaces';
+import { required } from '@/validators';
 
 const route = useRoute();
 const router = useRouter();
+const { path, translate, translateShared, pathFormField, translateFormField } =
+  usePageLocale({
+    prefix: 'auth.login',
+  });
 
 const redirectUrl = computed(() =>
   _.isArray(route.query.redirectUrl)
@@ -143,10 +152,10 @@ const form = reactive<ILoginRequest>({
 const [v$, { handleSubmit, isLoading }] = useVuelidate<ILoginRequest>(
   {
     username: {
-      required: required,
+      required: required(pathFormField('username')),
     },
     password: {
-      required: required,
+      required: required(pathFormField('password')),
     },
   },
   form,
@@ -164,5 +173,5 @@ const onSubmit = handleSubmit(async (data) => {
   }
 });
 
-const { linkProvider } = useOauth();
+const { providers, linkProvider } = useOauth();
 </script>

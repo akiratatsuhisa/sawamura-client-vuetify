@@ -5,7 +5,7 @@
         <v-col class="mx-auto" md="8" lg="10">
           <v-card rounded="xl">
             <div class="d-flex flex-column flex-sm-row">
-              <v-card-title tag="h1">Messages</v-card-title>
+              <v-card-title tag="h1">{{ translate('title') }}</v-card-title>
               <v-spacer></v-spacer>
               <v-btn
                 class="ma-4"
@@ -13,23 +13,25 @@
                 @click="openDialog('create')"
                 :loading="isLoading"
               >
-                Create Group
+                {{ translate('createGroup') }}
               </v-btn>
             </div>
 
             <v-list lines="one">
-              <v-list-subheader tag="h2">Rooms</v-list-subheader>
+              <v-list-subheader tag="h2">
+                {{ translate('subtitle') }}
+              </v-list-subheader>
 
               <template v-for="room in rooms" :key="room.id">
                 <v-room-item :room="room" />
 
-                <v-divider inset></v-divider>
+                <v-divider inset />
               </template>
             </v-list>
 
             <v-card-actions class="justify-center">
               <v-btn @click="fetchMore" :loading="isLoading">
-                Fetch more
+                {{ translate('fetchMore') }}
               </v-btn>
             </v-card-actions>
           </v-card>
@@ -54,6 +56,7 @@ import _ from 'lodash';
 import { computed, defineAsyncComponent, inject, ref } from 'vue';
 
 import {
+  usePageLocale,
   useRouterDialog,
   useSnackbar,
   useSocketChat,
@@ -70,6 +73,8 @@ import VRoomItem from '@/views/Messages/RoomItem.vue';
 const { createSnackbarError } = useSnackbar();
 
 const socket = useSocketChat();
+
+const { translate } = usePageLocale({ prefix: 'messages.list' });
 
 const updateDrawerRooms = inject(KEYS.DRAWER.UPDATE_ROOMS)!;
 

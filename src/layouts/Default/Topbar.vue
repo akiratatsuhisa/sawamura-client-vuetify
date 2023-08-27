@@ -10,7 +10,7 @@
       </v-fab-transition>
     </v-app-bar-nav-icon>
 
-    <v-app-bar-title>Vue App</v-app-bar-title>
+    <v-app-bar-title>{{ $t('common.app.title') }}</v-app-bar-title>
 
     <v-spacer></v-spacer>
 
@@ -26,7 +26,7 @@ import { defineAsyncComponent, inject } from 'vue';
 import { KEYS } from '@/constants';
 
 const VProfileMenu = defineAsyncComponent(
-  () => import('@/layouts/Default/Menus/ProfileMenu.vue'),
+  () => import('@/layouts/Default/ProfileMenu.vue'),
 );
 const VNotificationList = defineAsyncComponent(
   () => import('@/layouts/Default/NotificationList.vue'),

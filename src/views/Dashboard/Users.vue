@@ -9,7 +9,7 @@
           grow
         >
           <v-tab v-for="tab in tabs" :key="tab.title" :value="tab.name">
-            {{ tab.title }}
+            {{ translate(`tabs.${tab.title}`) }}
           </v-tab>
         </v-tabs>
 
@@ -38,9 +38,7 @@
             @click="isActive ? pause() : resume()"
           ></v-btn>
 
-          <v-toolbar-title>Chart User Roles</v-toolbar-title>
-
-          <v-spacer></v-spacer>
+          <v-toolbar-title>{{ translate('subchart') }}</v-toolbar-title>
 
           <v-btn
             size="small"
@@ -77,21 +75,26 @@ import { useTheme } from 'vuetify';
 
 import VIndexView from '@/components/Dashboard/Users/Index.vue';
 import VRoleList from '@/components/Dashboard/Users/RoleList.vue';
-import { useSocketDashboard, useSocketEventListener } from '@/composables';
+import {
+  usePageLocale,
+  useSocketDashboard,
+  useSocketEventListener,
+} from '@/composables';
 import { IChartUserRolesRequest, IChartUserRolesResponse } from '@/interfaces';
 
 const theme = useTheme();
 
 const route = useRoute();
 const router = useRouter();
+const { translate } = usePageLocale({ prefix: 'dashboard.users' });
 
 const tabs = {
   Information: {
-    title: 'Information',
+    title: 'information',
     name: 'Dashboard:Users',
   },
   Roles: {
-    title: 'Roles',
+    title: 'roles',
     name: 'Dashboard:Users:Roles',
   },
 };

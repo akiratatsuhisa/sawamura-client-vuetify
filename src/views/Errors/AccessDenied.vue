@@ -9,13 +9,15 @@
             </v-card-text>
             <v-card-title tag="h1">
               <span class="text-warning">403</span>
-              Access Denied
+              {{ translate('title') }}
             </v-card-title>
             <v-card-subtitle tag="h2">
-              Sorry, you are not authorized to access this page.
+              {{ translate('subtitle') }}
             </v-card-subtitle>
             <v-card-text>
-              <v-btn :to="{ name: 'Home' }">Back Home</v-btn>
+              <v-btn :to="{ name: 'Home' }">
+                {{ translateShared('returnToHome') }}
+              </v-btn>
             </v-card-text>
           </v-card>
         </v-col>
@@ -23,3 +25,11 @@
     </v-container>
   </v-main>
 </template>
+
+<script lang="ts" setup>
+import { usePageLocale } from '@/composables';
+
+const { translate, translateShared } = usePageLocale({
+  prefix: 'errors.accessDenied',
+});
+</script>

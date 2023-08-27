@@ -25,9 +25,7 @@
             @click="isActive ? pause() : resume()"
           ></v-btn>
 
-          <v-toolbar-title>Chart Messages</v-toolbar-title>
-
-          <v-spacer></v-spacer>
+          <v-toolbar-title>{{ translate('subchart') }}</v-toolbar-title>
 
           <v-btn
             size="small"
@@ -63,10 +61,16 @@ import _ from 'lodash';
 import { computed, ref } from 'vue';
 import { useTheme } from 'vuetify';
 
-import { useSocketDashboard, useSocketEventListener } from '@/composables';
+import {
+  usePageLocale,
+  useSocketDashboard,
+  useSocketEventListener,
+} from '@/composables';
 import { IChartMessgesRequest, IChartMessgesResponse } from '@/interfaces';
 
 const theme = useTheme();
+
+const { translate } = usePageLocale({ prefix: 'dashboard.messages' });
 
 const isExpand = ref<boolean>(true);
 

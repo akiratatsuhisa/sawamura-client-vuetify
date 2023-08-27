@@ -7,7 +7,7 @@
     @submit="onSubmit"
     @open="onOpen"
   >
-    <template #title>Room Member</template>
+    <template #title>{{ translate('title') }}</template>
 
     <v-autocomplete
       class="mt-3"
@@ -15,7 +15,7 @@
       v-model:search="userSearch"
       :loading="isLoadingSearch"
       variant="outlined"
-      label="Member"
+      :label="translateFormField('member')"
       :items="usersResult"
       item-title="username"
       return-object
@@ -29,21 +29,28 @@
     </v-autocomplete>
 
     <v-radio-group
-      label="Role"
+      :label="translateFormField('role')"
       v-model="v$.role.$model"
       :error-messages="getErrorMessage(v$.role)"
       @blur="v$.role.$validate"
     >
-      <v-radio label="Moderator" value="Moderator" :error="v$.role.$error" />
-      <v-radio label="Member" value="Member" :error="v$.role.$error" />
+      <v-radio
+        :label="translateShared('roomRoles.moderator')"
+        value="Moderator"
+        :error="v$.role.$error"
+      />
+      <v-radio
+        :label="translateShared('roomRoles.member')"
+        value="Member"
+        :error="v$.role.$error"
+      />
     </v-radio-group>
 
-    <template #action>Add</template>
+    <template #action>{{ translate('form.submit') }}</template>
   </v-base-dialog>
 </template>
 
 <script lang="ts" setup>
-import { required } from '@vuelidate/validators';
 import { useDebounceFn } from '@vueuse/core';
 import { computed, inject, reactive, ref, watch } from 'vue';
 
@@ -51,6 +58,7 @@ import {
   getErrorMessage,
   setFieldData,
   useAxios,
+  usePageLocale,
   useVuelidate,
 } from '@/composables';
 import { KEYS } from '@/constants';
@@ -60,6 +68,7 @@ import {
   IUserResponse,
 } from '@/interfaces';
 import { services } from '@/services';
+import { required } from '@/validators';
 
 defineProps<{
   modelValue: boolean;
@@ -69,6 +78,11 @@ const emit = defineEmits<{
   (event: 'update:modelValue', value: boolean): void;
   (event: 'submit', value: ICreateRoomMemberRequest): void;
 }>();
+
+const { translate, translateFormField, pathFormField, translateShared } =
+  usePageLocale({
+    prefix: 'messages.room.dialogs.addMember',
+  });
 
 const room = inject(KEYS.CHAT.ROOM)!;
 
@@ -85,14 +99,14 @@ const form = reactive<
 
 const [v$, { handleSubmit, submitable }] = useVuelidate(
   computed(() => ({
-    member: {
-      required: required,
-    },
     roomId: {
-      required: required,
+      required: required(pathFormField('roomId')),
+    },
+    member: {
+      required: required(pathFormField('member')),
     },
     role: {
-      required: required,
+      required: required(pathFormField('role')),
     },
   })),
   form,
@@ -101,8 +115,8 @@ const [v$, { handleSubmit, submitable }] = useVuelidate(
 const onSubmit = handleSubmit((formData) => {
   const data: ICreateRoomMemberRequest = {
     roomId: formData.roomId,
-    role: formData.role,
     memberId: formData.member?.id ?? '',
+    role: formData.role,
   };
 
   emit('submit', data);

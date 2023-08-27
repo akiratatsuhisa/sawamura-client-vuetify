@@ -7,7 +7,7 @@ import { FileHelper } from '@/helpers';
 import { useThemeModeStorage } from './useAppStorage';
 
 export function useImageCropper() {
-  const { isThemeModeSelectable } = useThemeModeStorage();
+  const { isThemeSelectable } = useThemeModeStorage();
 
   const isThemeModeGenerate = ref<boolean>(false);
 
@@ -64,7 +64,7 @@ export function useImageCropper() {
   }
 
   return {
-    isThemeModeSelectable,
+    isThemeSelectable,
     isThemeModeGenerate,
     submitable,
     cropperRef,

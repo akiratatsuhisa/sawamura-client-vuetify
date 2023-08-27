@@ -10,19 +10,19 @@
 
     <v-row class="my-2">
       <v-col cols="6" md="6" class="pr-1">
-        <v-text-field label="First Name"></v-text-field>
+        <v-text-field label="First Name" />
       </v-col>
       <v-col cols="6" md="6" class="pl-1">
-        <v-text-field label="Last Name"></v-text-field>
+        <v-text-field label="Last Name" />
       </v-col>
       <v-col cols="12">
-        <v-text-field label="Birth Date"></v-text-field>
+        <v-text-field label="Birth Date" />
       </v-col>
       <v-col cols="12">
-        <v-text-field label="Salary" prefix="$"></v-text-field>
+        <v-text-field label="Salary" prefix="$" />
       </v-col>
       <v-col cols="12">
-        <v-text-field label="Email"></v-text-field>
+        <v-text-field label="Email" />
       </v-col>
     </v-row>
 

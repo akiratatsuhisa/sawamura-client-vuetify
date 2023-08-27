@@ -1,8 +1,7 @@
 <template>
-  <h3 class="text-h5">Theme Mode</h3>
+  <h3 class="text-h5">{{ translateThemeMode('title') }}</h3>
   <span class="text-subtitle-2 font-weight-light text-high-emphasis">
-    Manage your display mode. These settings affect all the Sawamura accounts on
-    this browser.
+    {{ translateThemeMode('subtitle') }}
   </span>
 
   <v-radio-group v-model="selectedThemeMode" hide-details>
@@ -22,7 +21,10 @@
           ]"
           @click.stop.prevent="() => (selectedThemeMode = mode)"
         >
-          <v-radio :label="detail.name" :value="mode"></v-radio>
+          <v-radio
+            :label="$t(`common.themes.${detail.name}`)"
+            :value="mode"
+          ></v-radio>
           <v-icon size="30" class="pr-5">{{ detail.icon }}</v-icon>
         </div>
       </v-col>
@@ -30,13 +32,12 @@
   </v-radio-group>
 
   <v-expand-transition>
-    <div v-if="isThemeModeSelectable">
-      <v-divider class="my-3"></v-divider>
+    <div v-if="isThemeSelectable">
+      <v-divider class="my-3" />
 
-      <h3 class="text-h5">Personal Theme</h3>
+      <h3 class="text-h5">{{ translatePersonalTheme('title') }}</h3>
       <span class="text-subtitle-2 font-weight-light text-high-emphasis">
-        Manage your color, and background. These settings affect on this account
-        only.
+        {{ translatePersonalTheme('subtitle') }}
       </span>
 
       <div class="d-flex flex-column flex-sm-row mt-3">
@@ -48,7 +49,7 @@
               color="primary-container"
               prepend-icon="mdi-palette"
             >
-              Select Source Color
+              {{ translateThemeFormField('select') }}
               <template #append>
                 <v-avatar
                   v-if="themeSource"
@@ -77,7 +78,7 @@
           class="mt-6 mt-sm-0"
           @click="clearThemeSource"
         >
-          Clear
+          {{ translateThemeFormField('clear') }}
         </v-btn>
       </div>
     </div>
@@ -91,17 +92,24 @@ import { watch } from 'vue';
 import {
   useAuth,
   useAxios,
+  usePageLocale,
   useThemeModeStorage,
   useThemePicker,
 } from '@/composables';
 import { services } from '@/services';
 
+const { translate: translateThemeMode } = usePageLocale({
+  prefix: 'settings.display.themeMode',
+});
 const {
-  themeModes,
-  selectedThemeMode,
-  isThemeModeSelectable,
-  isActiveThemeMode,
-} = useThemeModeStorage();
+  translate: translatePersonalTheme,
+  translateFormField: translateThemeFormField,
+} = usePageLocale({
+  prefix: 'settings.display.personalTheme',
+});
+
+const { themeModes, selectedThemeMode, isThemeSelectable, isActiveThemeMode } =
+  useThemeModeStorage();
 
 const { fetchAccessToken, user } = useAuth();
 

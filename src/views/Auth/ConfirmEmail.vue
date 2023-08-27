@@ -3,11 +3,9 @@
     <v-row class="h-100 align-content-center">
       <v-col class="mx-auto" md="6" lg="4">
         <v-card>
-          <v-card-title>Confirm Email</v-card-title>
+          <v-card-title>{{ translate('title') }}</v-card-title>
           <v-card-subtitle class="text-wrap">
-            Once you've clicked the
-            <span class="text-primary font-weight-bold">confirm</span> button,
-            your email address will be confirmed.
+            {{ translate('subtitle') }}
           </v-card-subtitle>
           <v-card-text>
             <form @submit.prevent="onSubmit">
@@ -18,18 +16,21 @@
                 block
                 class="mb-3"
               >
-                Confirm
+                {{ translate('form.submit') }}
               </v-btn>
 
-              <div>
-                Already confirmed? Return to
+              <i18n-t
+                :keypath="pathShared('returnToLogin')"
+                tag="span"
+                scope="global"
+              >
                 <router-link
                   class="text-primary"
                   :to="{ name: 'Login', query: { redirectUrl } }"
                 >
-                  Login
+                  {{ $t('pages.auth.login.title') }}
                 </router-link>
-              </div>
+              </i18n-t>
             </form>
           </v-card-text>
         </v-card>
@@ -43,12 +44,15 @@ import _ from 'lodash';
 import { computed, reactive } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 
-import { useAxios, useVuelidate } from '@/composables';
+import { useAxios, usePageLocale, useVuelidate } from '@/composables';
 import { IConfirmEmailRequest } from '@/interfaces';
 import { services } from '@/services';
 
 const router = useRouter();
 const route = useRoute();
+const { translate, pathShared } = usePageLocale({
+  prefix: 'auth.confirmEmail',
+});
 
 const redirectUrl = computed(() =>
   _.isArray(route.query.redirectUrl)

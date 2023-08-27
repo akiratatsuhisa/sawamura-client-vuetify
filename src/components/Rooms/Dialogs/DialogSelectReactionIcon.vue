@@ -9,10 +9,15 @@
   >
     <template #title>
       <div class="d-flex justify-space-between mr-3">
-        <span>Reaction icon {{ form.value }}</span>
-        <v-btn v-if="form.value" size="small" @click="v$.value.$model = ''"
-          >Remove</v-btn
+        <span>{{ translate('title') }} {{ form.value }}</span>
+        <v-btn
+          v-if="form.value"
+          size="small"
+          variant="tonal"
+          @click="v$.value.$model = ''"
         >
+          {{ translate('clear') }}
+        </v-btn>
       </div>
     </template>
 
@@ -28,7 +33,7 @@
       }"
     />
 
-    <template #action>Select</template>
+    <template #action>{{ translate('form.submit') }}</template>
   </v-base-dialog>
 </template>
 
@@ -38,7 +43,7 @@ import data from 'emoji-mart-vue-fast/data/twitter.json';
 import { EmojiIndex, Picker as EmojiPicker } from 'emoji-mart-vue-fast/src';
 import { inject, reactive } from 'vue';
 
-import { useVuelidate } from '@/composables';
+import { usePageLocale, useVuelidate } from '@/composables';
 import { KEYS } from '@/constants';
 
 interface IReactionIconForm {
@@ -53,6 +58,10 @@ const emit = defineEmits<{
   (event: 'update:modelValue', value: boolean): void;
   (event: 'submit', value: IReactionIconForm): void;
 }>();
+
+const { translate } = usePageLocale({
+  prefix: 'messages.room.dialogs.reactionIcon',
+});
 
 const reactionIcon = inject(KEYS.CHAT.REACTION_ICON)!;
 

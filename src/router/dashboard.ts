@@ -9,7 +9,7 @@ export default {
     requiresAuth: true,
     requiresRoles: ['Administrator'],
     breadcrumb: {
-      title: 'Dashboard',
+      title: 'dashboard',
       to: { name: 'Dashboard' },
     },
   },
@@ -20,7 +20,7 @@ export default {
       name: 'Dashboard:Users',
       meta: {
         breadcrumb: {
-          title: 'Users',
+          title: 'users',
           to: { name: 'Dashboard:Users' },
         },
       },
@@ -31,7 +31,7 @@ export default {
           name: 'Dashboard:Users:Roles',
           meta: {
             breadcrumb: {
-              title: 'Roles',
+              title: 'roles',
               to: { name: 'Dashboard:Users:Roles' },
             },
           },
@@ -62,7 +62,7 @@ export default {
       name: 'Dashboard:Messages',
       meta: {
         breadcrumb: {
-          title: 'Messages',
+          title: 'messages',
           to: { name: 'Dashboard:Messages' },
         },
       },

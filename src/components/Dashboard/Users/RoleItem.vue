@@ -8,7 +8,7 @@
       <v-tooltip
         v-if="value.default"
         location="start"
-        text="Default value"
+        :text="translate('actions.default')"
         content-class="elevation-2"
       >
         <template v-slot:activator="{ props }">
@@ -32,12 +32,12 @@
         <v-list class="bg-surface-variant text-on-surface-variant">
           <v-list-item
             append-icon="mdi-pencil-outline"
-            title="Update"
+            :title="translate('actions.update')"
             @click="onAction('update')"
           />
           <v-list-item
             append-icon="mdi-trash-can-outline"
-            title="Delete"
+            :title="translate('actions.delete')"
             @click="onAction('delete')"
           />
         </v-list>
@@ -47,6 +47,7 @@
 </template>
 
 <script lang="ts" setup>
+import { usePageLocale } from '@/composables';
 import { IRoleResponse } from '@/interfaces';
 
 const props = defineProps<{
@@ -60,6 +61,8 @@ const emit = defineEmits<{
     value: { mode: 'update' | 'delete'; value: IRoleResponse },
   ): void;
 }>();
+
+const { translate } = usePageLocale({ prefix: 'dashboard.users.roles' });
 
 function onAction(mode: 'update' | 'delete') {
   emit('action', { mode, value: props.value });

@@ -1,8 +1,7 @@
 <template>
-  <h3 class="text-h5">Change Password</h3>
+  <h3 class="text-h5">{{ translateChangePassword('title') }}</h3>
   <span class="text-subtitle-2 font-weight-light text-high-emphasis">
-    Changing your password will log you out of all your active Sawamura sessions
-    except the one you’re using at this time.
+    {{ translateChangePassword('subtitle') }}
   </span>
 
   <form @submit.prevent="onSubmit" class="mt-6">
@@ -11,7 +10,7 @@
         <v-col cols="12" md="8" lg="6">
           <v-text-field
             class="mb-3"
-            label="Current Password"
+            :label="translateChangePasswordFormField('currentPassword')"
             v-model="v$.currentPassword.$model"
             :error-messages="getErrorMessage(v$.currentPassword)"
             @blur="v$.currentPassword.$validate"
@@ -27,17 +26,17 @@
             name: 'ForgotPassword',
           }"
         >
-          Forget password?
+          {{ translateChangePassword('forgotPassword') }}
         </router-link>
       </span>
-      <v-divider class="mt-3 mb-6"></v-divider>
+      <v-divider class="mt-3 mb-6" />
     </template>
 
     <v-row no-gutters>
       <v-col cols="12" md="8" lg="6">
         <v-text-field
           class="mb-3"
-          label="New Password"
+          :label="translateChangePasswordFormField('newPassword')"
           v-model="v$.newPassword.$model"
           :error-messages="getErrorMessage(v$.newPassword)"
           @blur="v$.newPassword.$validate"
@@ -47,18 +46,18 @@
 
         <v-text-field
           class="mb-3"
-          label="Confirm Password"
+          :label="translateChangePasswordFormField('confirmPassword')"
           v-model="v$.confirmPassword.$model"
           :error-messages="getErrorMessage(v$.confirmPassword)"
           @blur="v$.confirmPassword.$validate"
           clearable
           persistent-hint
-          hint="Re-enter password"
+          :hint="translateChangePasswordFormField('confirmPassword', 'hint')"
           v-bind="bindShowPassword('confirm')"
         />
       </v-col>
     </v-row>
-    <v-divider class="mb-3"></v-divider>
+    <v-divider class="mb-3" />
     <v-row no-gutters>
       <v-col cols="12" md="8" lg="6" class="text-right">
         <v-btn
@@ -67,7 +66,7 @@
           :block="$vuetify.display.smAndDown"
           :disabled="!submitable"
         >
-          Submit
+          {{ translateChangePassword('form.submit') }}
         </v-btn>
       </v-col>
     </v-row>
@@ -75,18 +74,28 @@
 </template>
 
 <script lang="ts" setup>
-import { maxLength, required, sameAs } from '@vuelidate/validators';
 import { computed, reactive } from 'vue';
 
 import {
   getErrorMessage,
   useAuth,
   useAxios,
+  usePageLocale,
   useShowPassword,
   useVuelidate,
 } from '@/composables';
+import { AUTH_REGEX } from '@/constants';
 import { IUpdatePasswordRequest } from '@/interfaces';
 import { services } from '@/services';
+import { maxLength, minLength, regex, required, sameAs } from '@/validators';
+
+const {
+  translate: translateChangePassword,
+  pathFormField: pathChangePasswordFormField,
+  translateFormField: translateChangePasswordFormField,
+} = usePageLocale({
+  prefix: 'settings.password.changePassword',
+});
 
 const { user, updateTokens } = useAuth();
 
@@ -106,7 +115,7 @@ const form = reactive<IUpdatePasswordRequest & { confirmPassword: string }>({
 
 const { excute: requestUpdatePassword, isLoading: isLoadingUpdatePassword } =
   useAxios(services.auth, 'updatePassword', {
-    message: 'Password has been changed',
+    message: computed(() => translateChangePassword('message')),
   });
 
 const [v$, { handleSubmit, isLoading, submitable }] = useVuelidate<
@@ -115,17 +124,26 @@ const [v$, { handleSubmit, isLoading, submitable }] = useVuelidate<
   computed(() => ({
     currentPassword: user?.value?.hasPassword
       ? {
-          required: required,
-          maxLength: maxLength(64),
+          required: required(pathChangePasswordFormField('currentPassword')),
         }
       : {},
+
     newPassword: {
-      required: required,
-      maxLength: maxLength(64),
+      required: required(pathChangePasswordFormField('newPassword')),
+      minLength: minLength(pathChangePasswordFormField('newPassword'), 8),
+      maxLength: maxLength(pathChangePasswordFormField('newPassword'), 64),
+      regex: regex(
+        pathChangePasswordFormField('newPassword'),
+        AUTH_REGEX.PASSWORD,
+      ),
     },
     confirmPassword: {
-      required: required,
-      sameAs: sameAs(computed(() => form.newPassword)),
+      required: required(pathChangePasswordFormField('confirmPassword')),
+      sameAsRef: sameAs(
+        pathChangePasswordFormField('newPassword'),
+        pathChangePasswordFormField('confirmPassword'),
+        computed(() => form.newPassword),
+      ),
     },
   })),
   form,

@@ -6,23 +6,23 @@
     @submit="onSubmit"
     @open="onOpen"
   >
-    <template #title>Room Member</template>
+    <template #title>{{ translate('title') }}</template>
 
     <span>{{ message }}</span>
 
-    <template #action>Delete</template>
+    <template #action>{{ translate('form.submit') }}</template>
   </v-base-dialog>
 </template>
 
 <script lang="ts" setup>
-import { required } from '@vuelidate/validators';
 import _ from 'lodash';
 import { computed, inject, reactive, ref } from 'vue';
 import { useRoute } from 'vue-router';
 
-import { useVuelidate } from '@/composables';
+import { usePageLocale, useVuelidate } from '@/composables';
 import { KEYS } from '@/constants';
-import { IDeleteRoomMemberRequest } from '@/interfaces';
+import { IDeleteRoomMemberRequest, IRoomMemberResponse } from '@/interfaces';
+import { required } from '@/validators';
 
 defineProps<{
   modelValue: boolean;
@@ -33,24 +33,36 @@ const emit = defineEmits<{
   (event: 'submit', value: IDeleteRoomMemberRequest): void;
 }>();
 
-const message = ref('');
+const { translate, pathFormField } = usePageLocale({
+  prefix: 'messages.room.dialogs.removeMember',
+});
 
-const room = inject(KEYS.CHAT.ROOM)!;
+const roomMember = ref<IRoomMemberResponse>();
 
 const currentMember = inject(KEYS.CHAT.CURRENT_MEMBER)!;
 
+const room = inject(KEYS.CHAT.ROOM)!;
+
+const message = computed(() =>
+  currentMember.value?.id === roomMember.value?.id
+    ? translate('selfMessage')
+    : translate('message', {
+        member: roomMember.value?.nickName ?? roomMember.value?.member.username,
+      }),
+);
+
 const form = reactive<IDeleteRoomMemberRequest>({
-  memberId: '',
   roomId: '',
+  memberId: '',
 });
 
 const [v$, { handleSubmit }] = useVuelidate(
   computed(() => ({
-    memberId: {
-      required: required,
-    },
     roomId: {
-      required: required,
+      required: required(pathFormField('roomId')),
+    },
+    memberId: {
+      required: required(pathFormField('memberId')),
     },
   })),
   form,
@@ -64,25 +76,18 @@ const onSubmit = handleSubmit((data) => {
 });
 
 function onOpen() {
-  const roomMember = _.find(
+  roomMember.value = _.find(
     room.value?.roomMembers,
     (roomMember) => roomMember.member.id === route.params.memberId,
   );
 
-  if (!roomMember) {
+  if (!roomMember.value) {
     emit('update:modelValue', false);
     return;
   }
 
-  message.value =
-    currentMember.value?.id === roomMember.id
-      ? 'Do you want to out this group?'
-      : `Do you want to remove member ${
-          roomMember.nickName ?? roomMember.member.username
-        }?`;
-
-  form.memberId = roomMember.member.id;
   form.roomId = room.value?.id ?? '';
+  form.memberId = roomMember.value.member.id;
 
   v$.value.$reset();
 }

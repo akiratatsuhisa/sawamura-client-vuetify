@@ -1,16 +1,14 @@
 <template>
-  <h3 class="text-h5">Account Infomation</h3>
+  <h3 class="text-h5">{{ translateAccountInfomation('title') }}</h3>
   <span class="text-subtitle-2 font-weight-light text-high-emphasis">
-    See information about your account, download an archive of your data, or
-    learn about your account deactivation options
+    {{ translateAccountInfomation('subtitle') }}
   </span>
 
-  <v-divider class="my-3"></v-divider>
+  <v-divider class="my-3" />
 
-  <h3 class="text-h5">Delete Account</h3>
+  <h3 class="text-h5">{{ translateDeleteAccount('title') }}</h3>
   <span class="text-subtitle-2 font-weight-light text-high-emphasis">
-    Permanently delete your Sawamura account. Once deleted, the data is not
-    recoverable.
+    {{ translateDeleteAccount('subtitle') }}
   </span>
 
   <div
@@ -27,7 +25,7 @@
     </v-list-item>
 
     <div>
-      <v-divider v-if="$vuetify.display.smAndDown" class="my-3"></v-divider>
+      <v-divider v-if="$vuetify.display.smAndDown" class="my-3" />
 
       <v-btn
         :loading="isLoading"
@@ -36,7 +34,7 @@
         :block="$vuetify.display.smAndDown"
         @click="onRequestDeleteAccount"
       >
-        Delete Account
+        {{ translateDeleteAccount('form.submit') }}
       </v-btn>
     </div>
   </div>
@@ -45,9 +43,17 @@
 <script lang="ts" setup>
 import { useRouter } from 'vue-router';
 
-import { useAlert, useAuth, useAxios } from '@/composables';
+import { useAlert, useAuth, useAxios, usePageLocale } from '@/composables';
 import { services } from '@/services';
 
+const { translate: translateAccountInfomation } = usePageLocale({
+  prefix: 'settings.account.accountInfomation',
+});
+const { translate: translateDeleteAccount, makeTranslateAlert } = usePageLocale(
+  {
+    prefix: 'settings.account.deleteAccount',
+  },
+);
 const router = useRouter();
 
 const { user, fullName, photoUrl, logout } = useAuth();
@@ -58,11 +64,14 @@ const { isLoading, excute: requestDeleteUser } = useAxios(
 
 const alert = useAlert();
 
+const translateAlertDeleteAlert = makeTranslateAlert('deleteAlert');
+const translateAlertDeleteConfirm = makeTranslateAlert('deleteConfirm');
+
 async function onRequestDeleteAccount() {
   const { isConfirm: isConfirmFirst } = await alert.fire({
-    denyButton: { show: true, text: 'No' },
-    confirmButton: { show: true, text: 'Yes' },
-    message: 'Are you sure to delete your account?',
+    denyButton: { show: true, text: translateAlertDeleteAlert('deny') },
+    confirmButton: { show: true, text: translateAlertDeleteAlert('confirm') },
+    message: translateAlertDeleteAlert('message'),
   });
 
   if (!isConfirmFirst) {
@@ -70,9 +79,9 @@ async function onRequestDeleteAccount() {
   }
 
   const { isConfirm: isConfirmSecond } = await alert.fire({
-    denyButton: { show: true, text: 'Cancel' },
-    confirmButton: { show: true, text: 'Agree' },
-    message: 'If you click agree, there is no way to go back!',
+    cancelButton: { show: true, text: translateAlertDeleteConfirm('cancel') },
+    confirmButton: { show: true, text: translateAlertDeleteConfirm('confirm') },
+    message: translateAlertDeleteConfirm('message'),
   });
 
   if (!isConfirmSecond) {

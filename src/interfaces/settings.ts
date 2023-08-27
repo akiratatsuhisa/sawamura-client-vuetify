@@ -1,7 +1,7 @@
 import { Component } from 'vue';
 
 export type SettingsTab = {
-  title: string;
+  name: string;
   icon: string;
   component: Component;
 };

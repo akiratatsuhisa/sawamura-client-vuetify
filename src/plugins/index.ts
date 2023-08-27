@@ -9,6 +9,7 @@ import type { App } from 'vue';
 import VueApexCharts from 'vue3-apexcharts';
 
 import VBaseDialog from '@/components/VBaseDialog.vue';
+import i18n from '@/locales';
 import axios from '@/plugins/axios';
 import notification from '@/plugins/notification';
 import socket from '@/plugins/socket';
@@ -20,12 +21,13 @@ import pinia from '@/store';
 export function registerPlugins(app: App) {
   loadFonts();
   app
-    .use(vuetify)
-    .use(notification)
-    .use(axios)
-    .use(socket)
     .use(router)
     .use(pinia)
+    .use(axios)
+    .use(socket)
+    .use(vuetify)
+    .use(notification)
+    .use(i18n)
     .use(VueApexCharts);
 
   app.component('VBaseDialog', VBaseDialog);

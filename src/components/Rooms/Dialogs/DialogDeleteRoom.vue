@@ -6,21 +6,21 @@
     @submit="onSubmit"
     @open="onOpen"
   >
-    <template #title>Room</template>
+    <template #title>{{ translate('title') }}</template>
 
-    <span>Delete this room</span>
+    <span>{{ translate('message') }}</span>
 
-    <template #action>Delete</template>
+    <template #action>{{ translate('form.submit') }}</template>
   </v-base-dialog>
 </template>
 
 <script lang="ts" setup>
-import { required } from '@vuelidate/validators';
 import { inject, reactive } from 'vue';
 
-import { useVuelidate } from '@/composables';
+import { usePageLocale, useVuelidate } from '@/composables';
 import { KEYS } from '@/constants';
 import { IDeleteRoomRequest } from '@/interfaces';
+import { required } from '@/validators';
 
 defineProps<{
   modelValue: boolean;
@@ -31,6 +31,10 @@ const emit = defineEmits<{
   (event: 'submit', value: IDeleteRoomRequest): void;
 }>();
 
+const { translate, pathFormField } = usePageLocale({
+  prefix: 'messages.room.dialogs.deleteChat',
+});
+
 const room = inject(KEYS.CHAT.ROOM)!;
 
 const form = reactive<IDeleteRoomRequest>({
@@ -40,7 +44,7 @@ const form = reactive<IDeleteRoomRequest>({
 const [v$, { handleSubmit }] = useVuelidate(
   {
     id: {
-      required: required,
+      required: required(pathFormField('id')),
     },
   },
   form,

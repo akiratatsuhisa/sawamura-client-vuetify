@@ -17,7 +17,11 @@
     </v-list-item-title>
 
     <v-list-item-subtitle>
-      {{ room.isGroup ? 'Group' : 'Private' }}
+      {{
+        room.isGroup
+          ? translateShared('roomTypes.group')
+          : translateShared('roomTypes.private')
+      }}
     </v-list-item-subtitle>
 
     <template #append>
@@ -35,12 +39,14 @@
 </template>
 
 <script lang="ts" setup>
-import { useRoom } from '@/composables';
+import { usePageLocale, useRoom } from '@/composables';
 import { IRoomResponse } from '@/interfaces';
 
 const props = defineProps<{
   room: IRoomResponse;
 }>();
+
+const { translateShared } = usePageLocale({ prefix: 'messages.list' });
 
 const { displayName, roomPhotoUrl } = useRoom(props.room);
 </script>

@@ -7,28 +7,33 @@
     @submit="onSubmit"
     @open="onOpen"
   >
-    <template #title>Role</template>
+    <template #title>{{ translate('title') }}</template>
 
     <v-text-field
       class="mt-3"
-      label="Role name"
+      :label="translateFormField('name')"
       v-model="v$.name.$model"
-      :error-messages="getErrorMessage(v$.name)"
       @blur="v$.name.$validate"
-    ></v-text-field>
+      :error-messages="getErrorMessage(v$.name)"
+    />
 
-    <template #action>Update</template>
+    <template #action>{{ translate('form.submit') }}</template>
   </v-base-dialog>
 </template>
 
 <script lang="ts" setup>
-import { maxLength, required } from '@vuelidate/validators';
 import { reactive } from 'vue';
 import { useRoute } from 'vue-router';
 
-import { getErrorMessage, useAxios, useVuelidate } from '@/composables';
+import {
+  getErrorMessage,
+  useAxios,
+  usePageLocale,
+  useVuelidate,
+} from '@/composables';
 import { IUpdateRoleRequest } from '@/interfaces';
 import { services } from '@/services';
+import { maxLength, required } from '@/validators';
 
 defineProps<{
   modelValue: boolean;
@@ -39,6 +44,10 @@ const emit = defineEmits<{
   (event: 'submit', value: IUpdateRoleRequest): void;
 }>();
 
+const { translate, pathFormField, translateFormField } = usePageLocale({
+  prefix: 'dashboard.users.roles.update',
+});
+
 const form = reactive<IUpdateRoleRequest>({
   id: '',
   name: '',
@@ -47,11 +56,11 @@ const form = reactive<IUpdateRoleRequest>({
 const [v$, { handleSubmit, submitable }] = useVuelidate(
   {
     id: {
-      required: required,
+      required: required(pathFormField('id')),
     },
     name: {
-      required,
-      maxLength: maxLength(255),
+      required: required(pathFormField('name')),
+      maxLength: maxLength(pathFormField('name'), 255),
     },
   },
   form,

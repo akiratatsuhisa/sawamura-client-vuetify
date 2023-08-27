@@ -8,16 +8,19 @@
       >
         <div>
           <v-breadcrumbs :items="breadcrumbs">
-            <template v-slot:divider>
+            <template #divider>
               <v-icon icon="mdi-chevron-right"></v-icon>
+            </template>
+            <template #title="{ item: { title } }">
+              {{ translate(`breadcrumbs.${title}`) }}
             </template>
           </v-breadcrumbs>
         </div>
 
-        <v-divider></v-divider>
+        <v-divider />
         <div class="pa-2 text-end">
           <v-btn size="small" append-icon="mdi-table-arrow-left">
-            Import CSV
+            {{ translate('import') }}
           </v-btn>
         </div>
       </v-sheet>
@@ -111,7 +114,11 @@ import { useRoute } from 'vue-router';
 
 import VDefaultComponent from '@/components/Dashboard/Default.vue';
 import VInfoCard, { InfoCardProps } from '@/components/Dashboard/InfoCard.vue';
-import { initSocketDashboard, useSocketEventListener } from '@/composables';
+import {
+  initSocketDashboard,
+  usePageLocale,
+  useSocketEventListener,
+} from '@/composables';
 import { BinaryUnit, Format } from '@/helpers';
 import {
   ICountUsersRequest,
@@ -121,11 +128,12 @@ import {
 } from '@/interfaces';
 
 const route = useRoute();
+const { translate } = usePageLocale({ prefix: 'dashboard.index' });
 
 const breadcrumbs = computed(() =>
   _(route.matched)
     .map((r) => r.meta.breadcrumb)
-    .filter((r) => !_.isUndefined(r))
+    .filter((b) => !_.isUndefined(b))
     .value(),
 );
 

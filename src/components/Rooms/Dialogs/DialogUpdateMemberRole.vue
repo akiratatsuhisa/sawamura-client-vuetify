@@ -7,37 +7,45 @@
     @submit="onSubmit"
     @open="onOpen"
   >
-    <template #title>Room Member</template>
+    <template #title>{{ translate('title') }}</template>
 
     <v-radio-group
       v-model="v$.role.$model"
       :error-messages="getErrorMessage(v$.role)"
       @blur="v$.role.$validate"
-      label="Change Role"
+      :label="translateFormField('role')"
     >
       <v-radio
         v-if="currentMember?.role === 'Admin'"
-        label="Administrator"
+        :label="translateShared('roomRoles.admin')"
         value="Admin"
         :error="v$.role.$error"
       />
-      <v-radio label="Moderator" value="Moderator" :error="v$.role.$error" />
-      <v-radio label="Member" value="Member" :error="v$.role.$error" />
+      <v-radio
+        :label="translateShared('roomRoles.moderator')"
+        value="Moderator"
+        :error="v$.role.$error"
+      />
+      <v-radio
+        :label="translateShared('roomRoles.member')"
+        value="Member"
+        :error="v$.role.$error"
+      />
     </v-radio-group>
 
-    <template #action>Change</template>
+    <template #action>{{ translate('form.submit') }}</template>
   </v-base-dialog>
 </template>
 
 <script lang="ts" setup>
-import { required } from '@vuelidate/validators';
 import _ from 'lodash';
 import { computed, inject, reactive } from 'vue';
 import { useRoute } from 'vue-router';
 
-import { getErrorMessage, useVuelidate } from '@/composables';
+import { getErrorMessage, usePageLocale, useVuelidate } from '@/composables';
 import { KEYS } from '@/constants';
 import { IUpdateRoomMemberRequest } from '@/interfaces';
+import { required } from '@/validators';
 
 defineProps<{
   modelValue: boolean;
@@ -48,27 +56,32 @@ const emit = defineEmits<{
   (event: 'submit', value: IUpdateRoomMemberRequest): void;
 }>();
 
+const { translate, translateFormField, pathFormField, translateShared } =
+  usePageLocale({
+    prefix: 'messages.room.dialogs.changeRole',
+  });
+
 const room = inject(KEYS.CHAT.ROOM)!;
 
 const currentMember = inject(KEYS.CHAT.CURRENT_MEMBER)!;
 
 const form = reactive<IUpdateRoomMemberRequest & { role: string }>({
-  memberId: '',
   roomId: '',
+  memberId: '',
   nickName: undefined,
   role: '',
 });
 
 const [v$, { handleSubmit, submitable }] = useVuelidate(
   computed(() => ({
-    memberId: {
-      required: required,
-    },
     roomId: {
-      required: required,
+      required: required(pathFormField('roomId')),
+    },
+    memberId: {
+      required: required(pathFormField('memberId')),
     },
     role: {
-      required: required,
+      required: required(pathFormField('role')),
     },
   })),
   form,
@@ -92,8 +105,8 @@ function onOpen() {
     return;
   }
 
-  form.memberId = roomMember.member.id;
   form.roomId = room.value?.id ?? '';
+  form.memberId = roomMember.member.id;
   form.role = roomMember.role;
 
   v$.value.$reset();

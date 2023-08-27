@@ -3,9 +3,9 @@
     <v-row class="h-100 align-content-center">
       <v-col class="mx-auto" md="6" lg="4">
         <v-card>
-          <v-card-title>Oauth Login</v-card-title>
+          <v-card-title>{{ translate('title') }}</v-card-title>
           <v-card-subtitle class="text-wrap">
-            Has an error when Oauth, please try again
+            {{ translate('subtitle') }}
           </v-card-subtitle>
           <v-card-text>
             <v-btn
@@ -15,7 +15,7 @@
               block
               class="mb-3"
             >
-              Login Page
+              {{ translate('link') }}
             </v-btn>
           </v-card-text>
         </v-card>
@@ -24,4 +24,8 @@
   </v-container>
 </template>
 
-<script lang="ts" setup></script>
+<script lang="ts" setup>
+import { usePageLocale } from '@/composables';
+
+const { translate } = usePageLocale({ prefix: 'oauth.error' });
+</script>
