@@ -29,7 +29,13 @@ export const messages: LocalePagesMessages = {
       },
     },
     input: {
-      placeHolder: 'Aa',
+      placeholder: 'Aa',
+      actions: {
+        sendFiles: 'Send File(s)',
+        captureImage: 'Capture Image',
+        captureVideo: 'Capture Video',
+        sendAudio: 'Send audio record',
+      },
     },
     menus: {
       basicsInformation: {
@@ -150,7 +156,7 @@ export const messages: LocalePagesMessages = {
       },
       removeMember: {
         title: 'Room Member',
-        message: 'Do you want to remove member {member}',
+        message: 'Do you want to remove member {member}?',
         selfMessage: 'Do you want to out this group?',
         form: {
           roomId: {
@@ -172,7 +178,7 @@ export const messages: LocalePagesMessages = {
       private: 'Private',
     },
     roomRoles: {
-      admin: 'Administrator',
+      administrator: 'Administrator',
       moderator: 'Moderator',
       member: 'Member',
     },

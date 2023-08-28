@@ -13,9 +13,10 @@
     <v-card
       width="300"
       class="overflow bg-surface-variant text-on-surface-variant"
+      rounded="xl"
     >
       <v-card-title>{{ translate('title') }}</v-card-title>
-      <v-card-text class="pa-0">
+      <v-card-text class="px-0 py-3">
         <v-list height="350">
           <v-notification-list-item
             v-for="notification in notifications"

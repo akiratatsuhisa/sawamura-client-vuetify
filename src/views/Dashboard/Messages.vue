@@ -1,7 +1,7 @@
 <template>
   <v-row class="flex-column-reverse flex-md-row">
     <v-col cols="12" sm="12" md="7" lg="8">
-      <v-card>
+      <v-card rounded="xl">
         <v-card-title>Infomation</v-card-title>
         <v-card-text>
           Lorem ipsum dolor sit amet consectetur adipisicing elit. Reiciendis,
@@ -12,13 +12,8 @@
       </v-card>
     </v-col>
     <v-col cols="12" sm="12" md="5" lg="4">
-      <v-card class="bg-surface text-on-surface">
-        <v-toolbar
-          density="compact"
-          color="surface"
-          elevation="1"
-          :class="[isExpand && 'mb-3']"
-        >
+      <v-card class="bg-surface text-on-surface" rounded="xl">
+        <v-toolbar color="surface-variant" rounded="xl">
           <v-btn
             size="small"
             :icon="isActive ? 'mdi-chart-line' : 'mdi-pause-circle-outline'"
@@ -44,10 +39,11 @@
 
         <apexchart
           v-if="isExpand"
+          class="mt-3"
           height="500"
           :options="options"
           :series="series"
-        ></apexchart>
+        />
       </v-card>
     </v-col>
   </v-row>

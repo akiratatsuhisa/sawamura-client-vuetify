@@ -1,19 +1,19 @@
 <template>
   <v-navigation-drawer
-    color="surface-variant"
-    rail
-    :permanent="subItems.length > 0 && subDrawer"
     v-model="drawer"
+    :permanent="subItems.length > 0 && subDrawer"
+    rail
+    rail-width="88"
   >
     <template #prepend>
       <v-list-item nav @click="router.push({ name: 'Profile' })">
-        <template #prepend>
+        <div class="pa-1 d-flex justify-center">
           <v-avatar
-            color="secondary-container"
-            class="elevation-6"
             :image="photoUrl"
-          ></v-avatar>
-        </template>
+            color="secondary-container"
+            class="elevation-2"
+          />
+        </div>
       </v-list-item>
 
       <v-divider />
@@ -23,19 +23,35 @@
       <v-list-item
         v-for="item in items"
         :key="item.key"
-        rounded="xl"
-        :prepend-icon="item.icon"
         :value="item.value"
+        class="px-0 py-2 rounded-0 v-list-item--rail"
+        variant="text"
+        :ripple="false"
         :active="isActive(item.value, true)"
         @click="item.onClick"
-      ></v-list-item>
+      >
+        <div class="d-flex justify-center flex-column text-center">
+          <div class="d-flex justify-center">
+            <div
+              class="v-list-item--rail-icon d-flex justify-center align-center px-4 py-1 rounded-pill"
+              :class="{ 'bg-secondary-container': isActive(item.value, true) }"
+            >
+              <v-icon :icon="item.icon" size="24" />
+            </div>
+          </div>
+
+          <span class="text-caption text-on-surface-variant">
+            {{ item.value.name }}
+          </span>
+        </div>
+      </v-list-item>
     </v-list>
   </v-navigation-drawer>
 
   <v-navigation-drawer
-    color="surface-variant"
     :model-value="subItems.length > 0 && drawer && subDrawer"
     @update:model-value="subDrawer = $event"
+    class="rounded-e-xl"
   >
     <template #prepend>
       <v-list-item nav>
@@ -53,10 +69,30 @@
 
     <v-list nav @click:select="handleSelect">
       <template v-for="item in subItems" :key="item.key">
-        <v-title-menu-item v-if="item.type === 'title'" :item="item" />
-        <v-icon-menu-item v-else-if="item.type === 'icon'" :item="item" />
-        <v-avatar-menu-item v-else-if="item.type === 'avatar'" :item="item" />
-        <v-room-menu-item v-else-if="item.type === 'room'" :item="item" />
+        <v-title-menu-item
+          v-if="item.type === 'title'"
+          :item="item"
+          class="v-list-item--drawer"
+          active-class="bg-secondary-container"
+        />
+        <v-icon-menu-item
+          v-else-if="item.type === 'icon'"
+          :item="item"
+          class="v-list-item--drawer"
+          active-class="bg-secondary-container"
+        />
+        <v-avatar-menu-item
+          v-else-if="item.type === 'avatar'"
+          :item="item"
+          class="v-list-item--drawer"
+          active-class="bg-secondary-container"
+        />
+        <v-room-menu-item
+          v-else-if="item.type === 'room'"
+          :item="item"
+          class="v-list-item--drawer"
+          active-class="bg-secondary-container"
+        />
       </template>
     </v-list>
   </v-navigation-drawer>
@@ -192,3 +228,27 @@ function isActive(item: RouteLocationNamedRaw, prefix: boolean = false) {
 
 provide(KEYS.DRAWER.IS_ACTIVE, isActive);
 </script>
+
+<style lang="scss">
+.v-list-item--rail {
+  & .v-list-item__overlay,
+  & .v-list-item__underlay {
+    display: none;
+  }
+
+  & .v-list-item--rail-icon {
+    &:hover {
+      background-color: rgba(var(--v-theme-on-surface), 0.1);
+    }
+
+    transition: background-color 0.2s ease-out;
+  }
+}
+
+.v-list-item--drawer {
+  & .v-list-item__overlay,
+  & .v-list-item__underlay {
+    display: none;
+  }
+}
+</style>

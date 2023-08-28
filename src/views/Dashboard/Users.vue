@@ -1,7 +1,7 @@
 <template>
   <v-row class="flex-column-reverse flex-md-row">
     <v-col cols="12" sm="12" md="7" lg="8">
-      <v-card>
+      <v-card rounded="xl">
         <v-tabs
           bg-color="transparent"
           :model-value="tab"
@@ -25,13 +25,8 @@
     </v-col>
 
     <v-col cols="12" sm="12" md="5" lg="4">
-      <v-card class="bg-surface text-on-surface">
-        <v-toolbar
-          density="compact"
-          color="surface"
-          elevation="3"
-          :class="[isExpand && 'mb-3']"
-        >
+      <v-card class="bg-surface text-on-surface" rounded="xl">
+        <v-toolbar color="surface-variant" rounded="xl">
           <v-btn
             size="small"
             :icon="isActive ? 'mdi-chart-donut' : 'mdi-pause-circle-outline'"
@@ -57,9 +52,10 @@
 
         <apexchart
           v-if="isExpand"
+          class="mt-3"
           :options="options"
           :series="series"
-        ></apexchart>
+        />
       </v-card>
     </v-col>
   </v-row>

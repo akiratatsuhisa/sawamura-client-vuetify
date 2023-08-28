@@ -29,7 +29,13 @@ export const messages: LocalePagesMessages = {
       },
     },
     input: {
-      placeHolder: 'あァ',
+      placeholder: 'あァ',
+      actions: {
+        sendFiles: 'ファイルを送信',
+        captureImage: '画像を撮影',
+        captureVideo: '動画を撮影',
+        sendAudio: '音声録音を送信',
+      },
     },
     menus: {
       basicsInformation: {
@@ -172,7 +178,7 @@ export const messages: LocalePagesMessages = {
       private: 'プライベート',
     },
     roomRoles: {
-      admin: '管理者',
+      administrator: '管理者',
       moderator: 'モデレーター',
       member: 'メンバー',
     },

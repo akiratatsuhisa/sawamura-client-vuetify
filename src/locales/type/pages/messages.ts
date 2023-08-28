@@ -26,7 +26,13 @@ export type LocalePagesMessages = {
       };
     };
     input: {
-      placeHolder: string;
+      placeholder: string;
+      actions: {
+        sendFiles: string;
+        captureImage: string;
+        captureVideo: string;
+        sendAudio: string;
+      };
     };
     menus: {
       basicsInformation: {
@@ -149,7 +155,7 @@ export type LocalePagesMessages = {
       private: string;
     };
     roomRoles: {
-      admin: string;
+      administrator: string;
       moderator: string;
       member: string;
     };

@@ -9,27 +9,28 @@
   >
     <template #title>Profile Photo</template>
 
-    <div class="d-flex mb-3">
-      <v-btn color="primary" @click="openSelectImage">Choose image</v-btn>
+    <div class="mb-3">
+      <div class="d-flex mb-3">
+        <v-btn color="primary" @click="openSelectImage">Choose image</v-btn>
+      </div>
+
+      <v-switch
+        v-if="isThemeSelectable"
+        v-model="isThemeModeGenerate"
+        density="compact"
+        color="tertiary"
+        true-icon="mdi-check"
+        false-icon="mdi-close"
+        label="Generate theme from uploaded image"
+        inset
+        hide-details
+      />
     </div>
 
-    <v-switch
-      v-if="isThemeSelectable"
-      v-model="isThemeModeGenerate"
-      density="compact"
-      color="tertiary"
-      label="Generate theme from uploaded image"
-      inset
-      hide-details
-    ></v-switch>
-
-    <v-divider class="my-3" />
-
-    <div class="d-flex justify-center align-center cropper-wrapper">
-      <div
-        :style="{ backgroundImage: 'url(' + imageCropperSrc + ')' }"
-        class="image-background"
-      ></div>
+    <v-cropper-container
+      class="cropper-wrapper"
+      :background-src="imageCropperSrc"
+    >
       <v-cropper
         ref="cropperRef"
         class="cropper elevation-1"
@@ -44,7 +45,7 @@
         @ready="submitable = true"
         @error="submitable = false"
       />
-    </div>
+    </v-cropper-container>
 
     <template #action>Change</template>
   </v-base-dialog>
@@ -56,6 +57,7 @@ import 'vue-advanced-cropper/dist/theme.compact.css';
 
 import { Cropper as VCropper, RectangleStencil } from 'vue-advanced-cropper';
 
+import VCropperContainer from '@/components/VCropperContainer.vue';
 import { useAuth, useAxios, useImageCropper } from '@/composables';
 import { IMAGE_FILE } from '@/helpers';
 import { services } from '@/services';

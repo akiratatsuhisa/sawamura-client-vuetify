@@ -3,7 +3,7 @@
     class="h-100 d-flex flex-nowrap"
     :color="`${color}-lighten-1`"
     elevation="2"
-    rounded="lg"
+    rounded="xl"
   >
     <v-avatar
       class="my-3 ml-3 elevation-1"

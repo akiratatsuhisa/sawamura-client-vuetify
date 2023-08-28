@@ -5,7 +5,7 @@
   >
     <v-avatar
       color="secondary-container"
-      class="align-self-end elevation-4"
+      class="align-self-end elevation-4 mb-1"
       size="28"
       :image="photoUrl"
     >
@@ -25,7 +25,7 @@
               isCurrentUserMessage ? 'bg-primary' : 'bg-primary-container',
             ]"
           >
-            <v-card-text>
+            <v-card-text class="py-2 px-4">
               {{ message.content }}
             </v-card-text>
           </v-card>
@@ -39,7 +39,7 @@
           <div v-else-if="isFileType">
             <div
               v-if="files.length"
-              class="pa-1 files"
+              class="files"
               :class="[isCurrentUserMessage ? 'justify-end' : 'justify-start']"
             >
               <v-message-content-file
@@ -88,7 +88,7 @@
         ></v-btn>
       </template>
 
-      <v-list class="bg-surface-variant text-on-surface-variant">
+      <v-list class="bg-surface-variant text-on-surface-variant" rounded="xl">
         <v-list-item
           append-icon="mdi-trash-can-outline"
           :title="translate('menus.delete')"
@@ -145,7 +145,7 @@ const timeAgo = useTimeAgo(props.message.createdAt);
 const isFileType = computed(
   () =>
     _.some(
-      ['Image', 'Images', 'Files', 'Audio', 'Video', 'Media'],
+      ['Image', 'Images', 'Files', 'Audios', 'Videos'],
       (type) => props.message.type === type,
     ) && _.isArray(props.message.content),
 );

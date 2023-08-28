@@ -1,6 +1,12 @@
 import { AxiosInstance } from 'axios';
 import { Manager, Socket } from 'socket.io-client';
-import { DeepReadonly, InjectionKey, Ref, WritableComputedRef } from 'vue';
+import {
+  DeepReadonly,
+  InjectionKey,
+  Ref,
+  ShallowRef,
+  WritableComputedRef,
+} from 'vue';
 import { RouteLocationNamedRaw } from 'vue-router';
 
 import { AlertProps, SnackbarProps } from '@/composables';
@@ -16,12 +22,13 @@ export namespace KEYS {
   export const MANAGER_SOCKETS: InjectionKey<Manager> =
     Symbol('manager:sockets');
 
-  export const SOCKET_CHAT: InjectionKey<Ref<Socket>> = Symbol('socket:chat');
+  export const SOCKET_CHAT: InjectionKey<ShallowRef<Socket>> =
+    Symbol('socket:chat');
 
-  export const SOCKET_DASHBOARD: InjectionKey<Ref<Socket>> =
+  export const SOCKET_DASHBOARD: InjectionKey<ShallowRef<Socket>> =
     Symbol('socket:dashboard');
 
-  export const SOCKET_NOTIFICATIONS: InjectionKey<Ref<Socket>> = Symbol(
+  export const SOCKET_NOTIFICATIONS: InjectionKey<ShallowRef<Socket>> = Symbol(
     'socket:notifications',
   );
 
@@ -57,9 +64,16 @@ export namespace MESSAGE_FILE {
   // 25 MiB
   export const MAX_FILE_SIZE = 26_214_400;
 
-  // MEDIA MIME TYPES
+  // IMAGE MIME TYPES
   export const IMAGE_MIME_TYPES =
     /image\/(jpe?g|png|gif|bmp|webp|svg\+xml|tiff)/;
+
+  // AUDIO MIME TYPES
+  export const AUDIO_MIME_TYPES =
+    /audio\/(aac|((x-)?midi)|mp3|mpeg|ogg|opus|wav|webm|3gpp2?)/;
+
+  // VIDEO MIME TYPES
+  export const VIDEO_MIME_TYPES = /video\/(x-msvideo|mp4|mpeg|ogg|webm|3gpp2?)/;
 
   // OFFICE MIME TYPES
   export const MICROSOFT_MIME_TYPES =
@@ -83,6 +97,8 @@ export namespace MESSAGE_FILE {
   // ALL MIME TYPES
   export const ALL_MIME_TYPES = new RegExp(
     [
+      MESSAGE_FILE.IMAGE_MIME_TYPES.source,
+      MESSAGE_FILE.VIDEO_MIME_TYPES.source,
       MESSAGE_FILE.IMAGE_MIME_TYPES.source,
       MESSAGE_FILE.OFFICE_MIME_TYPES.source,
     ].join('|'),

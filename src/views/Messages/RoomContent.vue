@@ -23,9 +23,11 @@
           {{ disyplayLastActivatedAgo }}
         </v-card-subtitle>
 
-        <v-btn icon @click="drawer = !drawer">
-          <v-icon>mdi-information</v-icon>
-        </v-btn>
+        <v-btn
+          color="primary"
+          icon="mdi-information"
+          @click="drawer = !drawer"
+        />
       </v-toolbar>
 
       <v-divider />

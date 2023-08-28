@@ -104,6 +104,7 @@ export interface ICreateRoomMessageRequest {
   content?: string;
   files?: Array<{
     name: string;
+    type: string;
     data: File;
   }>;
 }

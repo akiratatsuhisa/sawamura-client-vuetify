@@ -5,22 +5,22 @@ import {
   onBeforeUnmount,
   onMounted,
   provide,
-  Ref,
-  ref,
+  ShallowRef,
+  shallowRef,
 } from 'vue';
 
 import { useAuth } from '@/composables';
 import { KEYS } from '@/constants';
 
 export function initSocket(options: {
-  key: InjectionKey<Ref<Socket>>;
+  key: InjectionKey<ShallowRef<Socket>>;
   namespace: string;
 }) {
   const manager = inject(KEYS.MANAGER_SOCKETS)!;
 
   const { getAccessTokenSilently } = useAuth();
 
-  const socket = ref<Socket>(manager.socket(options.namespace));
+  const socket = shallowRef<Socket>(manager.socket(options.namespace));
 
   provide(options.key, socket as any);
 
@@ -61,11 +61,11 @@ export function initSocket(options: {
     socket.value.off('authenticate', authenticate);
   });
 
-  return socket as Ref<Socket>;
+  return socket as ShallowRef<Socket>;
 }
 
 export function useSocket(options: {
-  key: InjectionKey<Ref<Socket>>;
+  key: InjectionKey<ShallowRef<Socket>>;
   namespace: string;
 }) {
   const socket = inject(options.key);
@@ -76,5 +76,5 @@ export function useSocket(options: {
     );
   }
 
-  return socket as Ref<Socket>;
+  return socket as ShallowRef<Socket>;
 }

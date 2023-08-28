@@ -1,5 +1,5 @@
 <template>
-  <v-app-bar elevation="4">
+  <v-app-bar elevation="1" class="bg-surface-variant text-on-surface-variant">
     <v-app-bar-nav-icon @click="drawer = !drawer">
       <v-fab-transition mode="out-in">
         <v-icon

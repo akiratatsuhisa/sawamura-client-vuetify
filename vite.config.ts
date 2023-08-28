@@ -26,8 +26,8 @@ export default defineConfig({
         name: 'Sawamura Application',
         short_name: 'Sawamura',
         description: 'Sawamura',
-        theme_color: '#FDFDF5',
-        background_color: '#FDFDF5',
+        theme_color: '#E0E4D6',
+        background_color: '#E0E4D6',
         icons: [
           {
             src: 'pwa-192.png',

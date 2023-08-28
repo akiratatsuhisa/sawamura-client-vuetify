@@ -7,11 +7,11 @@
   >
     <v-card
       tag="form"
-      :rounded="fullscreen ? '0' : 'lg'"
+      :rounded="fullscreen ? '0' : 'xl'"
       @submit.prevent="emit('submit')"
       class="bg-surface text-on-surface"
     >
-      <v-toolbar color="surface" elevation="2">
+      <v-toolbar color="surface">
         <v-app-bar-nav-icon
           :icon="fullscreen ? 'mdi-arrow-left' : 'mdi-close'"
           @click="emit('update:modelValue', false)"
@@ -22,6 +22,8 @@
           <slot name="title"></slot>
         </v-toolbar-title>
       </v-toolbar>
+
+      <v-divider />
 
       <v-card-text class="overflow-y-auto">
         <slot></slot>

@@ -59,13 +59,13 @@
     <emoji-picker
       :data="emojiIndex"
       set="twitter"
-      class="ma-2 position-absolute"
+      class="ma-2 position-absolute rounded-xl elevation-2"
       :class="{ 'd-none': !emojiPickerShow }"
-      @select="selectEmoji"
       :style="{
         right: $vuetify.display.mdAndUp ? '3.5rem' : '0',
         bottom: '0',
       }"
+      @select="selectEmoji"
     />
   </v-sheet>
 
@@ -306,7 +306,7 @@ provide(KEYS.CHAT.SELECT_MESSAGE_IMAGE_SRC, selectMessageImageSrc);
   }
 
   .bg-filter {
-    background-color: rgb(var(--v-theme-surface-variant), 0.6);
+    background-color: rgba(var(--v-theme-surface-variant), 0.6);
     backdrop-filter: blur(0.5px);
   }
 }

@@ -9,49 +9,46 @@
   >
     <template #title>{{ translate('title') }}</template>
 
-    <div class="d-flex mb-3">
-      <v-btn color="primary" @click="openSelectImage">
-        {{ translateShared('chooseImage') }}
-      </v-btn>
-    </div>
-
-    <v-switch
-      v-if="isThemeSelectable"
-      v-model="isThemeModeGenerate"
-      density="compact"
-      color="tertiary"
-      :label="translateShared('generateTheme')"
-      inset
-      hide-details
-    ></v-switch>
-
-    <v-divider class="my-3" />
-
-    <div class="d-flex justify-center align-center">
-      <div
-        class="d-flex justify-center align-center cropper-wrapper"
-        :style="{ height: $vuetify.display.smAndDown ? '' : '400px' }"
-      >
-        <div
-          :style="{ backgroundImage: 'url(' + imageCropperSrc + ')' }"
-          class="image-background"
-        ></div>
-        <v-cropper
-          ref="cropperRef"
-          class="cropper elevation-1"
-          background-class="cropper-background"
-          :stencil-component="CircleStencil"
-          :src="imageCropperSrc"
-          :stencil-props="{
-            aspectRatio: 1 / 1,
-            width: IMAGE_FILE.PHOTO_DIMENSIONS.WIDTH,
-            height: IMAGE_FILE.PHOTO_DIMENSIONS.HEIGHT,
-          }"
-          @ready="submitable = true"
-          @error="submitable = false"
-        />
+    <div class="mb-3">
+      <div class="d-flex mb-3">
+        <v-btn color="primary" @click="openSelectImage">
+          {{ translateShared('chooseImage') }}
+        </v-btn>
       </div>
+
+      <v-switch
+        v-if="isThemeSelectable"
+        v-model="isThemeModeGenerate"
+        density="compact"
+        color="tertiary"
+        true-icon="mdi-check"
+        false-icon="mdi-close"
+        :label="translateShared('generateTheme')"
+        inset
+        hide-details
+      />
     </div>
+
+    <v-cropper-container
+      class="cropper-wrapper"
+      height="400px"
+      :background-src="imageCropperSrc"
+    >
+      <v-cropper
+        ref="cropperRef"
+        class="cropper elevation-1"
+        background-class="cropper-background"
+        :stencil-component="CircleStencil"
+        :src="imageCropperSrc"
+        :stencil-props="{
+          aspectRatio: 1 / 1,
+          width: IMAGE_FILE.PHOTO_DIMENSIONS.WIDTH,
+          height: IMAGE_FILE.PHOTO_DIMENSIONS.HEIGHT,
+        }"
+        @ready="submitable = true"
+        @error="submitable = false"
+      />
+    </v-cropper-container>
 
     <template #action>{{ translate('form.submit') }}</template>
   </v-base-dialog>
@@ -64,6 +61,7 @@ import 'vue-advanced-cropper/dist/theme.compact.css';
 import { inject } from 'vue';
 import { CircleStencil, Cropper as VCropper } from 'vue-advanced-cropper';
 
+import VCropperContainer from '@/components/VCropperContainer.vue';
 import { useAxios, useImageCropper, usePageLocale } from '@/composables';
 import { KEYS } from '@/constants';
 import { IMAGE_FILE } from '@/helpers';

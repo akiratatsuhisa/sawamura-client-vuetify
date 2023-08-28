@@ -8,88 +8,55 @@
         class="flex-grow-0 flex-shrink-0"
         :class="[fileType]"
       >
-        <div v-if="isLoading" class="h-100 d-flex justify-center align-center">
+        <div
+          v-if="isLoading"
+          class="h-100 px-2 d-flex justify-center align-center"
+        >
+          <v-progress-linear
+            v-if="type === 'Audios'"
+            indeterminate
+            color="primary"
+          ></v-progress-linear>
           <v-progress-circular
+            v-else
             indeterminate
             color="primary"
           ></v-progress-circular>
         </div>
         <div
-          v-else-if="!isLoading && !fileBlob"
+          v-else-if="!isLoading && !fileSrc"
           class="h-100 d-flex justify-center align-center"
           :class="[
             isCurrentUserMessage ? 'bg-tertiary' : 'bg-tertiary-container',
           ]"
         >
-          <v-icon
-            :icon="
-              isImage
-                ? 'mdi-image-off-outline'
-                : 'mdi-file-document-remove-outline'
-            "
-            size="32"
-          />
+          <v-icon :icon="notFoundIcon" size="32" />
         </div>
         <template v-else>
-          <a
-            hidden
-            :href="fileSrc"
-            :download="file.name"
-            ref="linkDownloadRef"
-          ></a>
+          <v-message-content-image-file
+            v-if="isImage"
+            :file-src="fileSrc"
+            :is-hovering="isHovering"
+          />
 
-          <template v-if="isImage">
-            <img :src="fileSrc" class="d-block" />
+          <v-message-content-audio-file
+            v-else-if="type === 'Audios'"
+            :file-src="fileSrc"
+            :is-current-user-message="isCurrentUserMessage"
+          />
 
-            <v-overlay
-              :model-value="isHovering"
-              contained
-              class="align-center justify-center cursor-pointer"
-              @click="selectMessageImageSrc(fileSrc!)"
-            >
-              <v-avatar color="secondary">
-                <v-icon icon="mdi-image"></v-icon>
-              </v-avatar>
-            </v-overlay>
-          </template>
+          <v-message-content-video-file
+            v-else-if="type === 'Videos'"
+            :file-src="fileSrc"
+          />
 
-          <template v-else>
-            <div
-              class="h-100 d-flex flex-column flex-nowrap"
-              :class="[
-                isCurrentUserMessage ? 'bg-primary' : 'bg-primary-container',
-              ]"
-            >
-              <div class="h-100 d-flex justify-center align-center">
-                <v-avatar
-                  :color="
-                    isCurrentUserMessage ? 'primary-container' : 'primary'
-                  "
-                  size="small"
-                >
-                  <v-icon
-                    :color="
-                      isCurrentUserMessage ? 'primary' : 'primary-container'
-                    "
-                    icon="mdi-file-document-outline"
-                  />
-                </v-avatar>
-              </div>
-              <div class="px-2 pb-2 text-truncate">
-                {{ file.name }}
-              </div>
-            </div>
-
-            <v-overlay
-              :model-value="isHovering"
-              contained
-              class="align-center justify-center"
-            >
-              <v-avatar color="secondary" @click="downloadFile">
-                <v-icon icon="mdi-download"></v-icon>
-              </v-avatar>
-            </v-overlay>
-          </template>
+          <v-message-content-office-file
+            v-else
+            :isCurrentUserMessage="isCurrentUserMessage"
+            :file-name="file.name"
+            :file-src="fileSrc"
+            :is-hovering="isHovering"
+          />
         </template>
       </v-card>
     </template>
@@ -97,12 +64,14 @@
 </template>
 
 <script lang="ts" setup>
-import { useObjectUrl } from '@vueuse/core';
 import _ from 'lodash';
-import { computed, inject, onMounted, ref, shallowRef } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 
+import VMessageContentAudioFile from '@/components/Rooms/Detail/MessageContentFiles/MessageContentAudioFile.vue';
+import VMessageContentImageFile from '@/components/Rooms/Detail/MessageContentFiles/MessageContentImageFile.vue';
+import VMessageContentOfficeFile from '@/components/Rooms/Detail/MessageContentFiles/MessageContentOfficeFile.vue';
+import VMessageContentVideoFile from '@/components/Rooms/Detail/MessageContentFiles/MessageContentVideoFile.vue';
 import { useAuth } from '@/composables';
-import { KEYS } from '@/constants';
 import { IRoomMessageFileResponse } from '@/interfaces';
 import { axiosInstacne } from '@/services';
 
@@ -115,16 +84,26 @@ const props = defineProps<{
 const { getAccessTokenSilently } = useAuth();
 
 const isLoading = ref(true);
-const fileBlob = shallowRef<Blob>();
-const fileSrc = useObjectUrl(fileBlob);
-
-const fileType = computed(() => 'file-' + _.lowerCase(props.type));
 
 const isImage = computed(() =>
   _.some(['Image', 'Images'], (type) => props.type === type),
 );
+const notFoundIcon = computed(() => {
+  switch (props.type) {
+    case 'Image':
+    case 'Images':
+      return 'mdi-image-off-outline';
+    case 'Audios':
+      return 'mdi-volume-off';
+    case 'Videos':
+      return 'mdi-video-off';
+    default:
+      return 'mdi-file-document-outline';
+  }
+});
 
-const selectMessageImageSrc = inject(KEYS.CHAT.SELECT_MESSAGE_IMAGE_SRC)!;
+const fileType = computed(() => 'file-' + _.lowerCase(props.type));
+const fileSrc = ref<string>();
 
 onMounted(async () => {
   if (!props.file.mime || !props.file.pathDisplay) {
@@ -132,71 +111,61 @@ onMounted(async () => {
     return;
   }
 
-  const { pathDisplay, mime } = props.file;
+  const { pathDisplay } = props.file;
 
   try {
     const token = await getAccessTokenSilently();
+
     const { data } = await axiosInstacne.get('/rooms' + pathDisplay, {
-      responseType: 'arraybuffer',
       headers: {
         Authorization: `Bearer ${token}`,
       },
     });
 
-    fileBlob.value = new Blob([data], { type: mime });
+    fileSrc.value = data;
   } catch {
-    fileBlob.value = undefined;
+    fileSrc.value = undefined;
   } finally {
     isLoading.value = false;
   }
 });
-
-const linkDownloadRef = ref<HTMLLinkElement>();
-
-function downloadFile() {
-  linkDownloadRef.value?.click();
-}
 </script>
 
 <style lang="scss" scoped>
 .file-image,
 .file-images {
-  &:has(img) {
+  &:has(.img) {
     width: auto;
-  }
-
-  img {
-    object-fit: cover;
   }
 }
 .file-image {
   height: 8rem;
   width: 10rem;
-
-  img {
-    height: 8rem;
-    max-width: 16rem;
-  }
 }
 
 .file-images {
   height: 5rem;
   width: 8rem;
-
-  img {
-    height: 5rem;
-    max-width: 12rem;
-  }
 }
 
 .file-audios {
-  height: 4.5rem;
-  width: 4.5rem;
+  height: 2.25rem;
+  width: 17rem;
+
+  &:has(.audio) {
+    height: 2.25rem;
+    width: 17rem;
+  }
 }
 
-.file-medias {
-  height: 4.5rem;
-  width: 4.5rem;
+.file-videos {
+  height: 8.5rem;
+  width: 15rem;
+
+  &:has(.video) {
+    height: auto;
+    width: 15rem;
+  }
 }
 
 .file-files {

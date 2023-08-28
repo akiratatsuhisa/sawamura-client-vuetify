@@ -16,8 +16,8 @@
       :label="translateFormField('role')"
     >
       <v-radio
-        v-if="currentMember?.role === 'Admin'"
-        :label="translateShared('roomRoles.admin')"
+        v-if="currentMember?.role === 'Administrator'"
+        :label="translateShared('roomRoles.administrator')"
         value="Admin"
         :error="v$.role.$error"
       />

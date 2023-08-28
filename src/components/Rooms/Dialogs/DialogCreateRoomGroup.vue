@@ -107,7 +107,7 @@ const onSubmit = handleSubmit((formData) => {
     members: [
       {
         memberId: identityId.value ?? '',
-        role: 'Admin',
+        role: 'Administrator',
       },
       ...formData.members.map((value) => ({
         memberId: value.id,

@@ -60,14 +60,22 @@
 .emoji-mart {
   background: rgb(var(--v-theme-surface-variant)) !important;
   color: rgb(var(--v-theme-on-surface-variant)) !important;
-  border: 1px solid rgb(var(--v-theme-surface)) !important;
+  border: transparent !important;
 
   .emoji-mart-bar-anchors {
-    border-bottom: 1px solid rgb(var(--v-theme-surface)) !important;
+    border-bottom: 1px solid rgba(var(--v-theme-outline), 0.25) !important;
+
+    .emoji-mart-anchor-selected {
+      color: rgb(var(--v-theme-primary)) !important;
+    }
+
+    .emoji-mart-anchor-bar {
+      background-color: rgb(var(--v-theme-primary)) !important;
+    }
   }
 
   .emoji-mart-bar-preview {
-    border-top: 1px solid rgb(var(--v-theme-surface)) !important;
+    border-top: 1px solid rgba(var(--v-theme-outline), 0.25) !important;
   }
 
   .emoji-mart-category-label {
@@ -76,7 +84,7 @@
   }
 
   .emoji-mart-search input {
-    border: 1px solid rgb(var(--v-theme-surface)) !important;
+    border: 1px solid rgb(var(--v-theme-outline)) !important;
   }
 }
 
@@ -96,9 +104,9 @@ html {
 *::-webkit-scrollbar-thumb {
   border-radius: 9999px;
   border: 3px solid rgb(var(--v-theme-surface-variant));
-  background-color: rgb(var(--v-theme-primary), 0.5);
+  background-color: rgba(var(--v-theme-primary), 0.5);
 }
 
 *::-webkit-scrollbar-thumb:hover {
-  background-color: rgb(var(--v-theme-primary), 0.75);
+  background-color: rgba(var(--v-theme-primary), 0.75);
 }

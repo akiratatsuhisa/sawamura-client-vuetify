@@ -37,7 +37,7 @@
             >
               <template #prepend>
                 <v-avatar color="secondary-container">
-                  <v-icon icon="mdi-pencil"></v-icon>
+                  <v-icon icon="mdi-pencil" />
                 </v-avatar>
               </template>
 
@@ -51,7 +51,7 @@
             >
               <template #prepend>
                 <v-avatar color="secondary-container">
-                  <v-icon icon="mdi-image-sync"></v-icon>
+                  <v-icon icon="mdi-image-sync" />
                 </v-avatar>
               </template>
 
@@ -65,7 +65,7 @@
             >
               <template #prepend>
                 <v-avatar color="secondary-container">
-                  <v-icon icon="mdi-image-edit"></v-icon>
+                  <v-icon icon="mdi-image-edit" />
                 </v-avatar>
               </template>
 
@@ -85,7 +85,7 @@
                     size="x-small"
                     class="elevation-4"
                   ></v-avatar>
-                  <v-icon icon="mdi-palette" v-else></v-icon>
+                  <v-icon icon="mdi-palette" v-else />
                 </v-avatar>
               </template>
 
@@ -94,12 +94,12 @@
               </v-list-item-title>
             </v-list-item>
             <v-list-item
-              v-if="room?.isGroup && currentMember?.role === 'Admin'"
+              v-if="room?.isGroup && currentMember?.role === 'Administrator'"
               @click="openDialog('delete')"
             >
               <template #prepend>
                 <v-avatar color="secondary-container">
-                  <v-icon icon="mdi-trash-can"></v-icon>
+                  <v-icon icon="mdi-trash-can" />
                 </v-avatar>
               </template>
 
@@ -110,7 +110,7 @@
             <v-list-item @click="openDialog('icon')">
               <template #prepend>
                 <v-avatar color="secondary-container">
-                  <v-icon icon="mdi-hand-okay"></v-icon>
+                  <v-icon icon="mdi-hand-okay" />
                 </v-avatar>
               </template>
 
@@ -137,7 +137,7 @@
             >
               <template #prepend>
                 <v-avatar color="secondary-container">
-                  <v-icon icon="mdi-logout"></v-icon>
+                  <v-icon icon="mdi-logout" />
                 </v-avatar>
               </template>
 
@@ -164,7 +164,7 @@
             >
               <template #prepend>
                 <v-avatar color="secondary-container">
-                  <v-icon icon="mdi-account-plus"></v-icon>
+                  <v-icon icon="mdi-account-plus-outline" />
                 </v-avatar>
               </template>
 
@@ -215,7 +215,10 @@
                     ></v-btn>
                   </template>
 
-                  <v-list class="bg-surface-variant text-on-surface-variant">
+                  <v-list
+                    class="bg-surface-variant text-on-surface-variant"
+                    rounded="xl"
+                  >
                     <v-list-item
                       append-icon="mdi-account-edit-outline"
                       :title="translate('menus.members.changeNickName')"
@@ -234,7 +237,7 @@
                         currentMember?.role !== 'Member' &&
                         !(
                           currentMember?.role === 'Moderator' &&
-                          roomMember.role === 'Admin'
+                          roomMember.role === 'Administrator'
                         )
                       "
                       append-icon="mdi-database-edit-outline"
@@ -254,10 +257,10 @@
                         currentMember?.role !== 'Member' &&
                         !(
                           currentMember?.role === 'Moderator' &&
-                          roomMember.role === 'Admin'
+                          roomMember.role === 'Administrator'
                         )
                       "
-                      append-icon="mdi-trash-can-outline"
+                      append-icon="mdi-account-minus-outline"
                       :title="translate('menus.members.removeMember')"
                       @click="
                         openDialog('members', {

@@ -3,13 +3,13 @@
     <v-container>
       <v-row>
         <v-col md="8" lg="6" class="mx-auto">
-          <v-card>
+          <v-card rounded="xl">
             <v-img
               aspect-ratio="16/9"
               cover
               :lazy-src="LAZY_BACKGROUND"
               :src="coverUrl"
-              class="elevation-4"
+              class="elevation-4 rounded-xl"
             >
             </v-img>
 

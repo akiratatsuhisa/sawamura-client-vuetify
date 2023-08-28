@@ -12,8 +12,9 @@
         <span>{{ translate('title') }} {{ form.value }}</span>
         <v-btn
           v-if="form.value"
-          size="small"
+          color="primary"
           variant="tonal"
+          size="small"
           @click="v$.value.$model = ''"
         >
           {{ translate('clear') }}
@@ -24,7 +25,7 @@
     <emoji-picker
       :data="emojiIndex"
       set="twitter"
-      class="w-100"
+      class="w-100 rounded-xl"
       :class="{ 'h-100': $vuetify.display.smAndDown }"
       @select="selectEmoji"
       :style="{

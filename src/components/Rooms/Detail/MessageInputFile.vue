@@ -23,7 +23,7 @@
                 <v-avatar color="secondary-container" size="large">
                   <v-icon
                     color="on-secondary-container"
-                    icon="mdi-file-document-outline"
+                    :icon="icon"
                     size="large"
                   />
                 </v-avatar>
@@ -40,10 +40,23 @@
 </template>
 
 <script lang="ts" setup>
+import { computed } from 'vue';
+
 import { BasicFile } from '@/interfaces';
 
-defineProps<{ file: BasicFile }>();
+const props = defineProps<{ file: BasicFile }>();
 const emit = defineEmits<{ (event: 'removeFile', id: string): void }>();
+
+const icon = computed(() => {
+  switch (props.file.type) {
+    case 'audios':
+      return 'mdi-volume-high';
+    case 'videos':
+      return 'mdi-video';
+    default:
+      return 'mdi-file-document-outline';
+  }
+});
 </script>
 
 <style lang="scss" scoped>
@@ -58,7 +71,7 @@ const emit = defineEmits<{ (event: 'removeFile', id: string): void }>();
     width: 6rem;
   }
 
-  .file-medias {
+  .file-videos {
     height: 6rem;
     width: 6rem;
   }

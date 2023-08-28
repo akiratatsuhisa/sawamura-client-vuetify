@@ -3,7 +3,7 @@
     <v-container>
       <v-row>
         <v-col md="12" lg="10" class="mx-auto">
-          <v-card>
+          <v-card rounded="xl">
             <v-toolbar color="surface-variant">
               <v-toolbar-title tag="h1">
                 {{ translate('title') }}
@@ -18,6 +18,7 @@
                 :model-value="tab"
                 @update:model-value="(value: unknown) => changeTab(value as string)"
                 :direction="isMobile ? 'horizontal' : 'vertical'"
+                class="mb-5"
               >
                 <v-tab
                   v-for="(detail, key) in tabs"

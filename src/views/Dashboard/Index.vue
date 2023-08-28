@@ -3,7 +3,7 @@
     <v-container fluid>
       <v-sheet
         elevation="2"
-        rounded="lg"
+        rounded="xl"
         class="bg-surface-variant text-on-surface-variant"
       >
         <div>

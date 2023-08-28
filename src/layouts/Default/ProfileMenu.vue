@@ -10,7 +10,7 @@
       </v-btn>
     </template>
 
-    <v-list class="bg-surface-variant text-on-surface-variant">
+    <v-list class="bg-surface-variant text-on-surface-variant" rounded="xl">
       <v-list-item @click="router.push({ name: 'Profile' })">
         <template #prepend>
           <v-avatar
