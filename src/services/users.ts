@@ -1,6 +1,11 @@
 import { AxiosRequestConfig } from 'axios';
 
-import { ISearchUsersRequest, IUserResponse } from '@/interfaces';
+import {
+  IAdvancedUserResponse,
+  ISearchAdvancedUsersRequest,
+  ISearchUsersRequest,
+  IUserResponse,
+} from '@/interfaces';
 import { Service } from '@/services/common';
 
 export class UsersService extends Service {
@@ -8,6 +13,22 @@ export class UsersService extends Service {
     return this.fetch<Array<IUserResponse>>({
       ...config,
       url: 'users',
+      method: 'GET',
+      params,
+    });
+  }
+
+  searchAdvanced(
+    config: AxiosRequestConfig,
+    params: ISearchAdvancedUsersRequest,
+  ) {
+    return this.fetch<{
+      count: number;
+      totalCount: number;
+      records: Array<IAdvancedUserResponse>;
+    }>({
+      ...config,
+      url: 'users/advanced',
       method: 'GET',
       params,
     });

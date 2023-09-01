@@ -1,6 +1,6 @@
 <template>
   <div
-    class="audio pa-1 d-flex align-center"
+    class="bg-surface-container-highest audio pa-1 d-flex align-center"
     :class="[isCurrentUserMessage ? 'flex-row-reverse' : 'flex-row']"
   >
     <v-chip size="small" rounded>{{ currentTime }}</v-chip>

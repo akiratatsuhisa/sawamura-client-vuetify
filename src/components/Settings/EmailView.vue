@@ -29,11 +29,11 @@
       <v-list-item-subtitle>
         <div v-if="!user.emailConfirmed" class="text-error d-flex align-center">
           <v-icon start>mdi-close-circle-outline</v-icon>
-          <span>{{ translateShared('verifyStates.unverified') }}</span>
+          <span>{{ $t('common.verifyStates.unverified') }}</span>
         </div>
         <div v-else class="text-success d-flex align-center">
           <v-icon start>mdi-check-circle-outline</v-icon>
-          <span>{{ translateShared('verifyStates.verified') }}</span>
+          <span>{{ $t('common.verifyStates.verified') }}</span>
         </div>
       </v-list-item-subtitle>
 
@@ -125,13 +125,10 @@ import { IUpdateEmailRequest } from '@/interfaces';
 import { services } from '@/services';
 import { email, maxLength, required } from '@/validators';
 
-const {
-  path: pathVerifyEmail,
-  translate: translateVerifyEmail,
-  translateShared,
-} = usePageLocale({
-  prefix: 'settings.email.verifyEmail',
-});
+const { path: pathVerifyEmail, translate: translateVerifyEmail } =
+  usePageLocale({
+    prefix: 'settings.email.verifyEmail',
+  });
 const {
   path: pathChangeEmail,
   translate: translateChangeEmail,

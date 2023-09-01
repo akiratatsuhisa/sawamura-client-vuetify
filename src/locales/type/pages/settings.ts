@@ -121,17 +121,5 @@ export type LocalePagesSettings = {
       password: string;
       oauthProviders: string;
     };
-    activeStates: {
-      enable: string;
-      disable: string;
-    };
-    verifyStates: {
-      verified: string;
-      unverified: string;
-    };
-    connectStates: {
-      connected: string;
-      unconnected: string;
-    };
   };
 };

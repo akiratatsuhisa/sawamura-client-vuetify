@@ -3,7 +3,8 @@
     v-model="drawer"
     :permanent="subItems.length > 0 && subDrawer"
     rail
-    rail-width="88"
+    rail-width="80"
+    class="bg-surface-container-low text-on-surface"
   >
     <template #prepend>
       <v-list-item nav @click="router.push({ name: 'Profile' })">
@@ -20,38 +21,20 @@
     </template>
 
     <v-list density="compact" nav @click:select="handleSelect($event, true)">
-      <v-list-item
+      <v-rail-menu-item
         v-for="item in items"
         :key="item.key"
-        :value="item.value"
-        class="px-0 py-2 rounded-0 v-list-item--rail"
-        variant="text"
-        :ripple="false"
-        :active="isActive(item.value, true)"
+        :item="item"
         @click="item.onClick"
       >
-        <div class="d-flex justify-center flex-column text-center">
-          <div class="d-flex justify-center">
-            <div
-              class="v-list-item--rail-icon d-flex justify-center align-center px-4 py-1 rounded-pill"
-              :class="{ 'bg-secondary-container': isActive(item.value, true) }"
-            >
-              <v-icon :icon="item.icon" size="24" />
-            </div>
-          </div>
-
-          <span class="text-caption text-on-surface-variant">
-            {{ item.value.name }}
-          </span>
-        </div>
-      </v-list-item>
+      </v-rail-menu-item>
     </v-list>
   </v-navigation-drawer>
 
   <v-navigation-drawer
     :model-value="subItems.length > 0 && drawer && subDrawer"
     @update:model-value="subDrawer = $event"
-    class="rounded-e-xl"
+    class="bg-surface-container-low text-on-surface rounded-e-xl"
   >
     <template #prepend>
       <v-list-item nav>
@@ -105,9 +88,10 @@ import { RouteLocationNamedRaw, useRoute, useRouter } from 'vue-router';
 
 import { useAuth } from '@/composables';
 import { KEYS } from '@/constants';
-import { IRoomMenuItem, IRootMenuItem } from '@/interfaces';
+import { IRailMenuItem, IRoomMenuItem } from '@/interfaces';
 import VAvatarMenuItem from '@/layouts/Default/Menus/AvatarMenuItem.vue';
 import VIconMenuItem from '@/layouts/Default/Menus/IconMenuItem.vue';
+import VRailMenuItem from '@/layouts/Default/Menus/RailMenuItem.vue';
 import VRoomMenuItem from '@/layouts/Default/Menus/RoomMenuItem.vue';
 import VTitleMenuItem from '@/layouts/Default/Menus/TitleMenuItem.vue';
 
@@ -121,18 +105,22 @@ const darwerRooms = inject(KEYS.DRAWER.ROOMS)!;
 const drawer = inject(KEYS.DRAWER.SHOW);
 const subDrawer = ref<boolean>(false);
 
-const items = computed<Array<IRootMenuItem>>(() => [
+const items = computed<Array<IRailMenuItem>>(() => [
   {
+    type: 'rail',
     key: 'Home',
     value: { name: 'Home' },
+    translate: 'menus.home.title',
     icon: 'mdi-home',
     onClick() {
       subDrawer.value = false;
     },
   },
   {
+    type: 'rail',
     key: 'Messages',
     value: { name: 'Messages' },
+    translate: 'menus.messages.title',
     icon: 'mdi-forum',
     onClick() {
       subDrawer.value = true;
@@ -144,6 +132,7 @@ const items = computed<Array<IRootMenuItem>>(() => [
         value: { name: 'Messages' },
         icon: 'mdi-forum-outline',
         title: 'Room List',
+        translate: 'menus.messages.subs.list',
       },
       ..._.map(
         darwerRooms.value,
@@ -158,8 +147,10 @@ const items = computed<Array<IRootMenuItem>>(() => [
     ],
   },
   {
+    type: 'rail',
     key: 'Dashboard',
     value: { name: 'Dashboard' },
+    translate: 'menus.dashboard.title',
     icon: 'mdi-view-dashboard',
     onClick() {
       subDrawer.value = true;
@@ -169,15 +160,15 @@ const items = computed<Array<IRootMenuItem>>(() => [
         type: 'icon',
         key: 'Dashboard:Users',
         value: { name: 'Dashboard:Users' },
+        translate: 'menus.dashboard.subs.users',
         icon: 'mdi-table-account',
-        title: 'Users',
       },
       {
         type: 'icon',
         key: 'Dashboard:Messages',
         value: { name: 'Dashboard:Messages' },
+        translate: 'menus.dashboard.subs.messages',
         icon: 'mdi-gauge',
-        title: 'Messages',
       },
     ],
   },
@@ -228,27 +219,3 @@ function isActive(item: RouteLocationNamedRaw, prefix: boolean = false) {
 
 provide(KEYS.DRAWER.IS_ACTIVE, isActive);
 </script>
-
-<style lang="scss">
-.v-list-item--rail {
-  & .v-list-item__overlay,
-  & .v-list-item__underlay {
-    display: none;
-  }
-
-  & .v-list-item--rail-icon {
-    &:hover {
-      background-color: rgba(var(--v-theme-on-surface), 0.1);
-    }
-
-    transition: background-color 0.2s ease-out;
-  }
-}
-
-.v-list-item--drawer {
-  & .v-list-item__overlay,
-  & .v-list-item__underlay {
-    display: none;
-  }
-}
-</style>

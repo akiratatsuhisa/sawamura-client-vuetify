@@ -15,6 +15,37 @@ export const dashboard: LocalePagesDashboard = {
       information: '情報',
       roles: '権限',
     },
+    title: '検索条件',
+    form: {
+      username: {
+        label: 'ユーザー名',
+      },
+      name: {
+        label: '名前',
+      },
+      email: {
+        label: 'メールアドレス',
+      },
+      emailStates: {
+        label: 'メールステータス',
+      },
+      sort: {
+        label: '並替',
+      },
+      roleIds: {
+        label: '権限',
+      },
+      clear: 'クリア',
+      submit: '検索',
+    },
+    sortList: {
+      usernameAsc: 'ユーザー名　A-Z',
+      usernameDesc: 'ユーザー名　Z-A',
+      createdAtAsc: '作成日時　昇順',
+      createdAtDesc: '作成日時　降順',
+      updatedAtAsc: '更新日時　昇順',
+      updatedAtDesc: '更新日時　降順',
+    },
     subchart: 'グラフのユーザー権限',
     roles: {
       subtitle: '合計権限：{0}',

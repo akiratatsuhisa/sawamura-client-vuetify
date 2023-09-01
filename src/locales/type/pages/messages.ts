@@ -154,10 +154,5 @@ export type LocalePagesMessages = {
       group: string;
       private: string;
     };
-    roomRoles: {
-      administrator: string;
-      moderator: string;
-      member: string;
-    };
   };
 };

@@ -177,10 +177,5 @@ export const messages: LocalePagesMessages = {
       group: 'グループ',
       private: 'プライベート',
     },
-    roomRoles: {
-      administrator: '管理者',
-      moderator: 'モデレーター',
-      member: 'メンバー',
-    },
   },
 };

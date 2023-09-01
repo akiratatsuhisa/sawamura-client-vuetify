@@ -2,9 +2,9 @@
   <v-main>
     <v-container fluid>
       <v-sheet
+        class="bg-surface-container-low text-on-surface"
         elevation="2"
         rounded="xl"
-        class="bg-surface-variant text-on-surface-variant"
       >
         <div>
           <v-breadcrumbs :items="breadcrumbs">

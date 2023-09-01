@@ -18,7 +18,6 @@
         {{ translate('actions.create') }}
       </v-btn>
     </v-card-text>
-
     <v-divider />
 
     <v-list lines="one" ref="sortableRef">

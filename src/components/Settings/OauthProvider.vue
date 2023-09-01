@@ -17,11 +17,11 @@
             class="text-success d-flex align-center"
           >
             <v-icon start>mdi-check-circle-outline</v-icon>
-            <span>{{ translateShared('connectStates.connected') }}</span>
+            <span>{{ $t('common.connectStates.connected') }}</span>
           </div>
           <div v-else class="text-error d-flex align-center">
             <v-icon start>mdi-close-circle-outline</v-icon>
-            <span>{{ translateShared('connectStates.unconnected') }}</span>
+            <span>{{ $t('common.connectStates.unconnected') }}</span>
           </div>
         </template>
       </v-list-item>
@@ -33,7 +33,7 @@
           variant="tonal"
           @click="onRequestUnlinkProvider(provider)"
         >
-          {{ translateShared('activeStates.disable') }}
+          {{ $t('common.activeStates.disable') }}
         </v-btn>
         <v-btn
           v-else
@@ -41,7 +41,7 @@
           :loading="isLoading"
           @click="linkProvider(provider)"
         >
-          {{ translateShared('activeStates.enable') }}
+          {{ $t('common.activeStates.enable') }}
         </v-btn>
       </div>
     </div>
@@ -59,7 +59,6 @@ import { services } from '@/services';
 
 const {
   translate: translateConnectedAccounts,
-  translateShared,
   makeTranslateAlert: makeTranslateAlertConnectedAccounts,
 } = usePageLocale({
   prefix: 'settings.oauthProviders.connectedAccounts',

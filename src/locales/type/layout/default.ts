@@ -21,6 +21,26 @@ export type LocaleLayoutDefault = {
       };
     };
   };
+  sidebar: {
+    menus: {
+      home: {
+        title: string;
+      };
+      messages: {
+        title: string;
+        subs: {
+          list: string;
+        };
+      };
+      dashboard: {
+        title: string;
+        subs: {
+          users: string;
+          messages: string;
+        };
+      };
+    };
+  };
   oauth: {
     messages: {
       unlink: string;

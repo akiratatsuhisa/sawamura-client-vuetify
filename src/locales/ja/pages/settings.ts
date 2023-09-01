@@ -128,17 +128,5 @@ export const settings: LocalePagesSettings = {
       password: 'パスワード',
       oauthProviders: 'OAuthプロバイダ',
     },
-    activeStates: {
-      enable: '有効',
-      disable: '無効',
-    },
-    verifyStates: {
-      verified: '認証済み',
-      unverified: '未認証',
-    },
-    connectStates: {
-      connected: '接続済み',
-      unconnected: '未接続',
-    },
   },
 };

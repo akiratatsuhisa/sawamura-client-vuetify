@@ -18,7 +18,7 @@
       <template v-slot:activator="{ props: tooltipProps }">
         <div class="px-2 flex-shrink-1" v-bind="tooltipProps">
           <v-card
-            v-if="message.type === 'Text'"
+            v-if="isStringType"
             rounded="xl"
             class="text-pre-wrap text-break"
             :class="[
@@ -74,7 +74,7 @@
     </v-tooltip>
 
     <v-menu
-      v-if="message.type !== 'None'"
+      v-if="isMessageRemoveable"
       :location="isCurrentUserMessage ? 'left center' : 'right center'"
     >
       <template v-slot:activator="{ props }">
@@ -88,7 +88,7 @@
         ></v-btn>
       </template>
 
-      <v-list class="bg-surface-variant text-on-surface-variant" rounded="xl">
+      <v-list class="bg-surface-container-high text-on-surface" rounded="xl">
         <v-list-item
           append-icon="mdi-trash-can-outline"
           :title="translate('menus.delete')"
@@ -104,10 +104,11 @@
 <script setup lang="ts">
 import { useTimeAgo } from '@vueuse/core';
 import _ from 'lodash';
-import { computed } from 'vue';
+import { computed, inject } from 'vue';
 
 import VMessageContentFile from '@/components/Rooms/Detail/MessageContentFile.vue';
-import { useAuth, usePageLocale } from '@/composables';
+import { usePageLocale } from '@/composables';
+import { KEYS } from '@/constants';
 import {
   IDeleteRoomMessageRequest,
   IRoomMessageFileResponse,
@@ -126,10 +127,9 @@ const emit = defineEmits<{
 
 const { translate } = usePageLocale({ prefix: 'messages.room.messages' });
 
-const { identityId } = useAuth();
-
+const currentUser = inject(KEYS.CHAT.CURRENT_MEMBER)!;
 const isCurrentUserMessage = computed(
-  () => identityId.value === props.message.user.id,
+  () => currentUser.value?.member.id === props.message.user.id,
 );
 
 const photoUrl = computed(() =>
@@ -142,6 +142,7 @@ const photoUrl = computed(() =>
 
 const timeAgo = useTimeAgo(props.message.createdAt);
 
+const isStringType = computed(() => props.message.type === 'Text');
 const isFileType = computed(
   () =>
     _.some(
@@ -170,6 +171,16 @@ const files = computed(() =>
   isFileType.value && _.isArray(props.message.content)
     ? _.filter(props.message.content, isValidFile)
     : [],
+);
+
+const isMessageRemoveable = computed(
+  () =>
+    props.message.type !== 'None' &&
+    (isCurrentUserMessage.value ||
+      _.some(
+        ['Administrator', 'Moderator'],
+        (role) => currentUser.value?.role === role,
+      )),
 );
 
 function removeMessage() {

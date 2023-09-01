@@ -13,19 +13,17 @@
           rounded="lg"
           v-bind="props"
         >
-          <template v-if="file.type === 'images'">
+          <template v-if="isImages">
             <img :src="file.src" class="d-block" />
           </template>
 
           <template v-else>
-            <div class="h-100 d-flex flex-column flex-nowrap bg-surface">
+            <div
+              class="h-100 d-flex flex-column flex-nowrap bg-surface-container-highest"
+            >
               <div class="h-100 d-flex justify-center align-center">
-                <v-avatar color="secondary-container" size="large">
-                  <v-icon
-                    color="on-secondary-container"
-                    :icon="icon"
-                    size="large"
-                  />
+                <v-avatar color="secondary" size="large">
+                  <v-icon color="on-secondary" :icon="icon" size="large" />
                 </v-avatar>
               </div>
               <div class="px-2 pb-2 text-truncate">
@@ -33,6 +31,17 @@
               </div>
             </div>
           </template>
+
+          <v-overlay
+            :model-value="isHovering && isImages"
+            contained
+            class="align-center justify-center cursor-pointer"
+            @click="selectMessageImageSrc(file.src)"
+          >
+            <v-avatar color="secondary">
+              <v-icon icon="mdi-image"></v-icon>
+            </v-avatar>
+          </v-overlay>
         </v-card>
       </v-badge>
     </template>
@@ -40,12 +49,15 @@
 </template>
 
 <script lang="ts" setup>
-import { computed } from 'vue';
+import { computed, inject } from 'vue';
 
+import { KEYS } from '@/constants';
 import { BasicFile } from '@/interfaces';
 
 const props = defineProps<{ file: BasicFile }>();
 const emit = defineEmits<{ (event: 'removeFile', id: string): void }>();
+
+const isImages = computed(() => props.file.type === 'images');
 
 const icon = computed(() => {
   switch (props.file.type) {
@@ -57,6 +69,8 @@ const icon = computed(() => {
       return 'mdi-file-document-outline';
   }
 });
+
+const selectMessageImageSrc = inject(KEYS.CHAT.SELECT_MESSAGE_IMAGE_SRC)!;
 </script>
 
 <style lang="scss" scoped>

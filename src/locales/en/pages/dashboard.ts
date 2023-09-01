@@ -15,6 +15,37 @@ export const dashboard: LocalePagesDashboard = {
       information: 'Information',
       roles: 'Roles',
     },
+    title: 'Search Conditions',
+    form: {
+      username: {
+        label: 'Username',
+      },
+      name: {
+        label: 'Name',
+      },
+      email: {
+        label: 'Email',
+      },
+      emailStates: {
+        label: 'Email States',
+      },
+      sort: {
+        label: 'Sort',
+      },
+      roleIds: {
+        label: 'Roles',
+      },
+      clear: 'Clear',
+      submit: 'Search',
+    },
+    sortList: {
+      usernameAsc: 'Username A-Z',
+      usernameDesc: 'Username Z-A',
+      createdAtAsc: 'Created at Asc',
+      createdAtDesc: 'Created at Desc',
+      updatedAtAsc: 'Updated at Desc',
+      updatedAtDesc: 'Updated at Desc',
+    },
     subchart: 'Chart User Roles',
     roles: {
       subtitle: 'Totals Roles: {0}',

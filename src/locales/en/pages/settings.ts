@@ -130,17 +130,5 @@ export const settings: LocalePagesSettings = {
       password: 'Password',
       oauthProviders: 'Oauth Providers',
     },
-    activeStates: {
-      enable: 'Enable',
-      disable: 'Disable',
-    },
-    verifyStates: {
-      verified: 'Verified',
-      unverified: 'Unverified',
-    },
-    connectStates: {
-      connected: 'Connected',
-      unconnected: 'Unconnected',
-    },
   },
 };

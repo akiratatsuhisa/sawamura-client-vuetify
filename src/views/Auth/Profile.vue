@@ -13,9 +13,9 @@
             >
             </v-img>
 
-            <v-sheet class="bg-surface-variant text-on-surface-variant">
+            <v-sheet class="bg-surface-container-low text-on-surface">
               <v-sheet
-                class="mb-3 d-flex bg-surface-variant text-on-surface-variant"
+                class="mb-3 d-flex bg-surface-container-low text-on-surface"
               >
                 <v-hover>
                   <template v-slot="{ isHovering, props }">

@@ -10,7 +10,7 @@
       </v-btn>
     </template>
 
-    <v-list class="bg-surface-variant text-on-surface-variant" rounded="xl">
+    <v-list class="bg-surface-container-high text-on-surface" rounded="xl">
       <v-list-item @click="router.push({ name: 'Profile' })">
         <template #prepend>
           <v-avatar
@@ -44,12 +44,13 @@
         <template #append>
           <v-avatar
             v-for="(detail, mode) in themeModes"
+            v-ripple="true"
             :key="mode"
             :color="isActiveThemeMode(mode) ? 'tertiary' : 'tertiary-container'"
             class="cursor-pointer ml-1"
             @click.stop="selectedThemeMode = mode"
           >
-            <v-icon :icon="detail.icon"></v-icon>
+            <v-icon :icon="detail.icon" />
           </v-avatar>
         </template>
       </v-list-item>
@@ -62,12 +63,12 @@
         <template #append>
           <v-avatar
             v-for="(detail, language) in languages"
+            v-ripple="true"
             :key="language"
             :image="detail.image"
             class="cursor-pointer ml-1"
             @click.stop="selectedLanguage = language"
-          >
-          </v-avatar>
+          />
         </template>
       </v-list-item>
 
@@ -78,7 +79,7 @@
 
         <template #append>
           <v-avatar color="tertiary-container">
-            <v-icon icon="mdi-cog"></v-icon>
+            <v-icon icon="mdi-cog" />
           </v-avatar>
         </template>
       </v-list-item>
@@ -90,7 +91,7 @@
 
         <template #append>
           <v-avatar color="tertiary-container">
-            <v-icon icon="mdi-logout"></v-icon>
+            <v-icon icon="mdi-logout" />
           </v-avatar>
         </template>
       </v-list-item>

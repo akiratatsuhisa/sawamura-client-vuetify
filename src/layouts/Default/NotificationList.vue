@@ -12,7 +12,7 @@
 
     <v-card
       width="300"
-      class="overflow bg-surface-variant text-on-surface-variant"
+      class="overflow bg-surface-container-high text-on-surface"
       rounded="xl"
     >
       <v-card-title>{{ translate('title') }}</v-card-title>

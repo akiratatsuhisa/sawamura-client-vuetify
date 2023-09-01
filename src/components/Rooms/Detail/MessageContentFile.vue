@@ -13,7 +13,7 @@
           class="h-100 px-2 d-flex justify-center align-center"
         >
           <v-progress-linear
-            v-if="type === 'Audios'"
+            v-if="isAudios"
             indeterminate
             color="primary"
           ></v-progress-linear>
@@ -34,7 +34,7 @@
         </div>
         <template v-else>
           <v-message-content-image-file
-            v-if="isImage"
+            v-if="isImages"
             :file-src="fileSrc"
             :is-hovering="isHovering"
           />
@@ -85,7 +85,8 @@ const { getAccessTokenSilently } = useAuth();
 
 const isLoading = ref(true);
 
-const isImage = computed(() =>
+const isAudios = computed(() => props.type === 'Audios');
+const isImages = computed(() =>
   _.some(['Image', 'Images'], (type) => props.type === type),
 );
 const notFoundIcon = computed(() => {

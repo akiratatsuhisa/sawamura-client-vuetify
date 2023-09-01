@@ -1,9 +1,9 @@
 <template>
   <v-divider />
 
-  <v-card ref="messageZoneRef" color="surface" variant="flat">
+  <v-card ref="messageZoneRef" color="surface" variant="flat" rounded="0">
     <div v-show="!isShowRecord && filesInput.length">
-      <v-sheet class="pa-2 pt-3 files bg-surface-variant">
+      <v-sheet class="pa-2 pt-3 files bg-surface-container-lowest">
         <v-message-input-file
           v-for="file in filesInput"
           :key="file.id"
@@ -46,7 +46,7 @@
                 </v-btn>
               </template>
               <v-list
-                class="bg-surface-variant text-on-surface-variant"
+                class="bg-surface-container-high text-on-surface"
                 rounded="xl"
               >
                 <v-list-item
@@ -283,6 +283,7 @@ const isDisplayReactionIcon = computed(
 );
 
 function clearMessage() {
+  isShowRecord.value = false;
   if (filesInput.length) {
     _.forEach(filesInput, (file) => URL.revokeObjectURL(file.src));
   }

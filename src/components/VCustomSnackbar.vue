@@ -1,27 +1,30 @@
 <template>
   <v-snackbar v-model="snackbar" v-bind="props">
-    <template v-if="typeof content === 'string'">
+    <template v-if="contentIsString">
       {{ content }}
     </template>
     <template v-else>
       <component :is="content" />
     </template>
 
-    <template v-if="typeof content === 'string'" #actions>
+    <template v-if="contentIsString" #actions>
       <v-btn variant="text" color="on-primary" @click="onClose">Close</v-btn>
     </template>
   </v-snackbar>
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from 'vue';
+import { computed, ref, watch } from 'vue';
 
 import { SnackbarProps } from '@/composables';
 
 const props = defineProps<SnackbarProps>();
+
 const emit = defineEmits<{
   (event: 'close', payload?: any): void;
 }>();
+
+const contentIsString = computed(() => typeof props.content === 'string');
 
 const snackbar = ref(true);
 

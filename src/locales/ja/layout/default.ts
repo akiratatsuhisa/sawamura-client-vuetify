@@ -20,6 +20,26 @@ export const defaultLayout: LocaleLayoutDefault = {
       },
     },
   },
+  sidebar: {
+    menus: {
+      home: {
+        title: 'ホーム',
+      },
+      messages: {
+        title: 'メッセージ',
+        subs: {
+          list: 'ルームリスト',
+        },
+      },
+      dashboard: {
+        title: '統計',
+        subs: {
+          users: 'ユーザー',
+          messages: 'メッセージ',
+        },
+      },
+    },
+  },
   oauth: {
     messages: {
       unlink: 'プロバイダのリンクを解除しました',

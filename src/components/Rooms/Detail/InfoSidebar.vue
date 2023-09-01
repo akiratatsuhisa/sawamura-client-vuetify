@@ -30,9 +30,10 @@
           {{ translate('menus.basicsInformation.index') }}
         </v-expansion-panel-title>
         <v-expansion-panel-text>
-          <v-list class="mx-md-n6">
+          <v-list density="compact" nav class="mx-n6">
             <v-list-item
               v-if="room?.isGroup && currentMember?.role !== 'Member'"
+              rounded="pill"
               @click="openDialog('update')"
             >
               <template #prepend>
@@ -47,6 +48,7 @@
             </v-list-item>
             <v-list-item
               v-if="room?.isGroup && currentMember?.role !== 'Member'"
+              rounded="pill"
               @click="openDialog('photo')"
             >
               <template #prepend>
@@ -61,6 +63,7 @@
             </v-list-item>
             <v-list-item
               v-if="currentMember?.role !== 'Member'"
+              rounded="pill"
               @click="openDialog('cover')"
             >
               <template #prepend>
@@ -75,6 +78,7 @@
             </v-list-item>
             <v-list-item
               v-if="isThemeSelectable && currentMember?.role !== 'Member'"
+              rounded="pill"
               @click="openDialog('theme')"
             >
               <template #prepend>
@@ -95,6 +99,7 @@
             </v-list-item>
             <v-list-item
               v-if="room?.isGroup && currentMember?.role === 'Administrator'"
+              rounded="pill"
               @click="openDialog('delete')"
             >
               <template #prepend>
@@ -107,7 +112,7 @@
                 {{ translate('menus.basicsInformation.deleteChat') }}
               </v-list-item-title>
             </v-list-item>
-            <v-list-item @click="openDialog('icon')">
+            <v-list-item rounded="pill" @click="openDialog('icon')">
               <template #prepend>
                 <v-avatar color="secondary-container">
                   <v-icon icon="mdi-hand-okay" />
@@ -126,9 +131,10 @@
           {{ translate('menus.support.index') }}
         </v-expansion-panel-title>
         <v-expansion-panel-text>
-          <v-list class="mx-md-n6">
+          <v-list density="compact" nav class="mx-n6">
             <v-list-item
               v-if="room?.isGroup"
+              rounded="pill"
               @click="
                 openDialog('members', {
                   params: { memberDialog: 'delete', memberId: identityId },
@@ -153,9 +159,10 @@
           {{ translate('menus.members.index') }}
         </v-expansion-panel-title>
         <v-expansion-panel-text>
-          <v-list class="mx-md-n6">
+          <v-list density="compact" nav class="mx-n6">
             <v-list-item
               v-if="room?.isGroup && currentMember?.role !== 'Member'"
+              rounded="pill"
               @click="
                 openDialog('members', {
                   params: { memberDialog: 'create' },
@@ -173,108 +180,14 @@
               </v-list-item-title>
             </v-list-item>
 
-            <v-list-item v-for="roomMember in roomMembers" :key="roomMember.id">
-              <template #prepend>
-                <v-avatar
-                  color="secondary-container"
-                  class="elevation-6"
-                  tag="button"
-                  :image="getPhotoUrlByRoomUser(roomMember.member)"
-                  @click="
-                    $router.push({
-                      name: 'Users:Detail',
-                      params: { id: roomMember.id },
-                    })
-                  "
-                >
-                </v-avatar>
-              </template>
-
-              <v-list-item-title>
-                {{ roomMember.nickName ?? roomMember.member.username }}
-              </v-list-item-title>
-
-              <v-list-item-subtitle>
-                {{
-                  translateShared(`roomRoles.${_.camelCase(roomMember.role)}`)
-                }}
-                -
-                {{ roomMember.member.username }}
-              </v-list-item-subtitle>
-
-              <template #append>
-                <v-menu>
-                  <template v-slot:activator="{ props }">
-                    <v-btn
-                      class="align-self-center"
-                      icon="mdi-dots-vertical"
-                      variant="plain"
-                      size="x-small"
-                      v-bind="props"
-                      :loading="isLoading"
-                    ></v-btn>
-                  </template>
-
-                  <v-list
-                    class="bg-surface-variant text-on-surface-variant"
-                    rounded="xl"
-                  >
-                    <v-list-item
-                      append-icon="mdi-account-edit-outline"
-                      :title="translate('menus.members.changeNickName')"
-                      @click="
-                        openDialog('members', {
-                          params: {
-                            memberDialog: 'update',
-                            memberId: roomMember.member.id,
-                          },
-                        })
-                      "
-                    />
-                    <v-list-item
-                      v-if="
-                        room?.isGroup &&
-                        currentMember?.role !== 'Member' &&
-                        !(
-                          currentMember?.role === 'Moderator' &&
-                          roomMember.role === 'Administrator'
-                        )
-                      "
-                      append-icon="mdi-database-edit-outline"
-                      :title="translate('menus.members.changeRole')"
-                      @click="
-                        openDialog('members', {
-                          params: {
-                            memberDialog: 'role',
-                            memberId: roomMember.member.id,
-                          },
-                        })
-                      "
-                    />
-                    <v-list-item
-                      v-if="
-                        room?.isGroup &&
-                        currentMember?.role !== 'Member' &&
-                        !(
-                          currentMember?.role === 'Moderator' &&
-                          roomMember.role === 'Administrator'
-                        )
-                      "
-                      append-icon="mdi-account-minus-outline"
-                      :title="translate('menus.members.removeMember')"
-                      @click="
-                        openDialog('members', {
-                          params: {
-                            memberDialog: 'delete',
-                            memberId: roomMember.member.id,
-                          },
-                        })
-                      "
-                    />
-                  </v-list>
-                </v-menu>
-              </template>
-            </v-list-item>
+            <v-info-sidebar-member-item
+              v-for="roomMember in roomMembers"
+              :key="roomMember.id"
+              :is-group="room.isGroup"
+              :is-loading="isLoading"
+              :room-member="roomMember"
+              @open-dialog="(params) => openDialog('members', { params })"
+            />
           </v-list>
         </v-expansion-panel-text>
       </v-expansion-panel>
@@ -296,6 +209,7 @@ import _ from 'lodash';
 import { computed, defineAsyncComponent, inject } from 'vue';
 import { useRouter } from 'vue-router';
 
+import VInfoSidebarMemberItem from '@/components/Rooms/Detail/InfoSidebarMemberItem.vue';
 import {
   useAuth,
   useDisplayThemeColor,
@@ -328,7 +242,7 @@ const emit = defineEmits<{
   (event: 'update:drawer', value: boolean): void;
 }>();
 
-const { translate, translateShared } = usePageLocale({
+const { translate } = usePageLocale({
   prefix: 'messages.room',
 });
 
@@ -363,14 +277,8 @@ function onSelectReactionIcon(data: { value: string }) {
   reactionIcon.value = data.value;
 }
 
-const {
-  roomMembers,
-  currentMember,
-  displayName,
-  roomPhotoUrl,
-  updateImage,
-  getPhotoUrlByRoomUser,
-} = useRoom(room);
+const { roomMembers, currentMember, displayName, roomPhotoUrl, updateImage } =
+  useRoom(room);
 
 function setRoom(data: IRoomResponse) {
   if (data.id !== room.value?.id) {

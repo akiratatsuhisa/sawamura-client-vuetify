@@ -9,9 +9,17 @@
       tag="form"
       :rounded="fullscreen ? '0' : 'xl'"
       @submit.prevent="emit('submit')"
-      class="bg-surface text-on-surface"
+      :class="[
+        fullscreen ? 'bg-surface' : 'bg-surface-container-high',
+        'text-on-surface',
+      ]"
     >
-      <v-toolbar color="surface">
+      <v-toolbar
+        :class="[
+          fullscreen ? 'bg-surface' : 'bg-surface-container-high',
+          'text-on-surface',
+        ]"
+      >
         <v-app-bar-nav-icon
           :icon="fullscreen ? 'mdi-arrow-left' : 'mdi-close'"
           @click="emit('update:modelValue', false)"
@@ -25,7 +33,10 @@
 
       <v-divider />
 
-      <v-card-text class="overflow-y-auto">
+      <v-card-text
+        class="overflow-y-auto"
+        :class="contentClass?.(fullscreen) ?? contentClass"
+      >
         <slot></slot>
       </v-card-text>
 
@@ -33,6 +44,7 @@
         <v-btn
           type="submit"
           color="primary"
+          :variant="fullscreen ? 'elevated' : 'text'"
           :block="fullscreen"
           :disabled="disabledSubmit"
         >
@@ -52,6 +64,7 @@ const props = defineProps<{
   fullscreen?: boolean;
   disabledSubmit?: boolean;
   mobileWidth?: number | string;
+  contentClass?: any;
 }>();
 
 const emit = defineEmits<{

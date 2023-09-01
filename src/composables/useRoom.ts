@@ -6,6 +6,12 @@ import { computed, unref } from 'vue';
 import { useAuth } from '@/composables';
 import { IRoomResponse, IRoomUserResponse } from '@/interfaces';
 
+export function getPhotoUrlByRoomUser(user: IRoomUserResponse) {
+  return user.photoUrl
+    ? `${import.meta.env.VITE_API_URL}/auth/photo?username=${user.username}`
+    : import.meta.env.VITE_NO_AVATAR_URL;
+}
+
 export function useRoom(room: MaybeRef<IRoomResponse>) {
   const { identityId } = useAuth();
 
@@ -88,12 +94,6 @@ export function useRoom(room: MaybeRef<IRoomResponse>) {
       ? targetMember.value.nickName
       : targetMember.value?.member.username;
   });
-
-  function getPhotoUrlByRoomUser(user: IRoomUserResponse) {
-    return user.photoUrl
-      ? `${import.meta.env.VITE_API_URL}/auth/photo?username=${user.username}`
-      : import.meta.env.VITE_NO_AVATAR_URL;
-  }
 
   const lastActivatedAgo = useTimeAgo(
     computed(() => unref(room).lastActivatedAt ?? ''),

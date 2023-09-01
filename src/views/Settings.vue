@@ -4,7 +4,7 @@
       <v-row>
         <v-col md="12" lg="10" class="mx-auto">
           <v-card rounded="xl">
-            <v-toolbar color="surface-variant">
+            <v-toolbar>
               <v-toolbar-title tag="h1">
                 {{ translate('title') }}
               </v-toolbar-title>
@@ -18,7 +18,7 @@
                 :model-value="tab"
                 @update:model-value="(value: unknown) => changeTab(value as string)"
                 :direction="isMobile ? 'horizontal' : 'vertical'"
-                class="mb-5"
+                class="mb-lg-5"
               >
                 <v-tab
                   v-for="(detail, key) in tabs"
@@ -30,7 +30,6 @@
                   {{ translateShared(`menus.${detail.name}`) }}
                 </v-tab>
               </v-tabs>
-
               <v-divider :vertical="!isMobile" />
 
               <v-window

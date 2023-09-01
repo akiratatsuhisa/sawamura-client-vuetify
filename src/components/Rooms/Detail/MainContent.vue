@@ -77,24 +77,7 @@
     @typing="onTyping"
   />
 
-  <v-overlay
-    :model-value="!!selectedMessageImageSrc"
-    class="align-center justify-center"
-    persistent
-  >
-    <v-btn
-      position="absolute"
-      icon="mdi-close"
-      location="top right"
-      size="x-small"
-      variant="flat"
-      class="ma-2"
-      @click="selectedMessageImageSrc = undefined"
-    ></v-btn>
-    <div class="wrapper-image" @click="selectedMessageImageSrc = undefined">
-      <v-img :src="selectedMessageImageSrc" />
-    </div>
-  </v-overlay>
+  <v-main-content-display-image v-model="selectedMessageImageSrc" />
 </template>
 
 <script lang="ts" setup>
@@ -116,6 +99,7 @@ import {
 } from 'vue';
 import { useRoute } from 'vue-router';
 
+import VMainContentDisplayImage from '@/components/Rooms/Detail/MainContentDisplayImage.vue';
 import {
   useFetchIntersection,
   useRoom,
@@ -309,17 +293,5 @@ provide(KEYS.CHAT.SELECT_MESSAGE_IMAGE_SRC, selectMessageImageSrc);
     background-color: rgba(var(--v-theme-surface-variant), 0.6);
     backdrop-filter: blur(0.5px);
   }
-}
-
-.wrapper-image {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding-top: 4.5rem;
-  padding-left: 1.5rem;
-  padding-right: 1.5rem;
-  padding-bottom: 1.5rem;
-  height: calc(100vh);
-  width: calc(100vw);
 }
 </style>

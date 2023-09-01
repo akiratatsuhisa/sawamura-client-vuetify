@@ -19,7 +19,7 @@ const props = defineProps<{
   item: IRoomMenuItem;
 }>();
 
-const { displayName, roomPhotoUrl } = useRoom(props.item.room);
-
 const isActive = inject(KEYS.DRAWER.IS_ACTIVE)!;
+
+const { displayName, roomPhotoUrl } = useRoom(props.item.room);
 </script>

@@ -10,8 +10,9 @@
     <template #append>
       <v-btn
         size="small"
-        variant="plain"
+        variant="tonal"
         color="secondary"
+        class="ml-1"
         icon
         @click.stop="update"
       >
@@ -26,12 +27,13 @@
       </v-btn>
       <v-btn
         size="small"
-        variant="plain"
-        color="tertiary"
+        variant="tonal"
+        color="secondary"
+        class="ml-1"
         icon
         @click.stop="emit('delete', { id: item.id })"
       >
-        <v-icon size="x-large" icon="mdi-trash-can"></v-icon>
+        <v-icon size="large" icon="mdi-trash-can"></v-icon>
       </v-btn>
     </template>
   </v-list-item>

@@ -6,6 +6,7 @@
     @update:model-value="emit('update:modelValue', $event)"
     @submit="onSubmit"
     @open="onOpen"
+    :content-class="(fullscreen: boolean) => (fullscreen ? '' : 'pa-0')"
   >
     <template #title>
       <div class="d-flex justify-space-between mr-3">

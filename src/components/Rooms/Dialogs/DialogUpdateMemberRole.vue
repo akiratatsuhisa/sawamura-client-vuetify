@@ -17,17 +17,17 @@
     >
       <v-radio
         v-if="currentMember?.role === 'Administrator'"
-        :label="translateShared('roomRoles.administrator')"
+        :label="$t('common.roomRoles.administrator')"
         value="Admin"
         :error="v$.role.$error"
       />
       <v-radio
-        :label="translateShared('roomRoles.moderator')"
+        :label="$t('common.roomRoles.moderator')"
         value="Moderator"
         :error="v$.role.$error"
       />
       <v-radio
-        :label="translateShared('roomRoles.member')"
+        :label="$t('common.roomRoles.member')"
         value="Member"
         :error="v$.role.$error"
       />
@@ -56,10 +56,9 @@ const emit = defineEmits<{
   (event: 'submit', value: IUpdateRoomMemberRequest): void;
 }>();
 
-const { translate, translateFormField, pathFormField, translateShared } =
-  usePageLocale({
-    prefix: 'messages.room.dialogs.changeRole',
-  });
+const { translate, translateFormField, pathFormField } = usePageLocale({
+  prefix: 'messages.room.dialogs.changeRole',
+});
 
 const room = inject(KEYS.CHAT.ROOM)!;
 

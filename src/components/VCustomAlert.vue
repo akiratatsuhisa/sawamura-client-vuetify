@@ -6,7 +6,12 @@
     min-width="250"
     max-width="400"
   >
-    <v-card tag="form" class="rounded-xl" @submit.prevent="onSubmit">
+    <v-card
+      tag="form"
+      @submit.prevent="onSubmit"
+      class="bg-surface-container-high text-on-surface"
+      rounded="xl"
+    >
       <v-card-text v-if="props.message">
         <div v-if="props.icon" class="text-center pa-3">
           <v-icon :color="props.icon.color" size="64">

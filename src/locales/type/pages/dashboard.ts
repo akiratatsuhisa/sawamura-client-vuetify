@@ -13,6 +13,25 @@ export type LocalePagesDashboard = {
       information: string;
       roles: string;
     };
+    title: string;
+    form: {
+      username: { label: string };
+      name: { label: string };
+      email: { label: string };
+      emailStates: { label: string };
+      sort: { label: string };
+      roleIds: { label: string };
+      clear: string;
+      submit: string;
+    };
+    sortList: {
+      usernameAsc: string;
+      usernameDesc: string;
+      createdAtAsc: string;
+      createdAtDesc: string;
+      updatedAtAsc: string;
+      updatedAtDesc: string;
+    };
     subchart: string;
     roles: {
       /**

@@ -1,6 +1,41 @@
 @use 'vuetify/settings' with (
-  $card-background: rgb(var(--v-theme-surface-variant)),
-  $card-color: rgb(var(--v-theme-on-surface-variant)),
-  $list-background: rgb(var(--v-theme-surface-variant)),
-  $list-color: rgb(var(--v-theme-on-surface-variant))
+  $button-text-transform: none,
+  $toolbar-background: rgb(var(--v-theme-surface-container-low)),
+  $toolbar-color: rgb(var(--v-theme-on-surface)),
+  $card-background: rgb(var(--v-theme-surface-container-low)),
+  $card-color: rgb(var(--v-theme-on-surface)),
+  $list-background: transparent,
+  $list-color: rgb(var(--v-theme-on-surface)),
+  $tooltip-background-color: rgb(var(--v-theme-inverse-surface)),
+  $tooltip-text-color: rgb(var(--v-theme-on-inverse-surface))
 );
+
+.v-chip {
+  &.v-chip--selected {
+    .v-chip__overlay,
+    .v-btn__underlay {
+      display: none;
+    }
+
+    background-color: rgb(var(--v-theme-secondary-container));
+    color: rgb(var(--v-theme-on-secondary-container));
+    border: none;
+  }
+}
+
+.v-btn-toggle {
+  border-color: rgb(var(--v-theme-outline));
+  .v-btn--active {
+    .v-btn__overlay,
+    .v-btn__underlay {
+      display: none;
+    }
+
+    background-color: rgb(var(--v-theme-secondary-container));
+    color: rgb(var(--v-theme-on-secondary-container));
+  }
+
+  &.v-btn-group--divided .v-btn:not(:last-child) {
+    border-inline-end-color: rgb(var(--v-theme-outline));
+  }
+}

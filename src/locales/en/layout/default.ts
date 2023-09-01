@@ -20,6 +20,26 @@ export const defaultLayout: LocaleLayoutDefault = {
       },
     },
   },
+  sidebar: {
+    menus: {
+      home: {
+        title: 'Home',
+      },
+      messages: {
+        title: 'Messages',
+        subs: {
+          list: 'Room List',
+        },
+      },
+      dashboard: {
+        title: 'Dashboard',
+        subs: {
+          users: 'Users',
+          messages: 'Messages',
+        },
+      },
+    },
+  },
   oauth: {
     messages: {
       unlink: 'Unlink provider successfully',

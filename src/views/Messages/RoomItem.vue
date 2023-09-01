@@ -26,14 +26,13 @@
 
     <template #append>
       <v-btn
-        color="grey-lighten-1"
         icon="mdi-login-variant"
         variant="text"
         :to="{
           name: 'Messages:Room',
           params: { roomId: room.id },
         }"
-      ></v-btn>
+      />
     </template>
   </v-list-item>
 </template>

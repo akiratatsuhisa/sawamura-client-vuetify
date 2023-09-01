@@ -29,7 +29,7 @@
           ></v-btn>
         </template>
 
-        <v-list class="bg-surface-variant text-on-surface-variant" rounded="xl">
+        <v-list class="bg-surface-container-high text-on-surface" rounded="xl">
           <v-list-item
             append-icon="mdi-pencil-outline"
             :title="translate('actions.update')"

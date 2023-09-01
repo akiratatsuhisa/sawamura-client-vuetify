@@ -12,6 +12,7 @@
             {{ translate(`tabs.${tab.title}`) }}
           </v-tab>
         </v-tabs>
+        <v-divider />
 
         <v-window :model-value="tab">
           <v-window-item :value="tabs.Information.name">
@@ -25,21 +26,21 @@
     </v-col>
 
     <v-col cols="12" sm="12" md="5" lg="4">
-      <v-card class="bg-surface text-on-surface" rounded="xl">
-        <v-toolbar color="surface-variant" rounded="xl">
+      <v-card rounded="xl">
+        <v-toolbar>
           <v-btn
             size="small"
             :icon="isActive ? 'mdi-chart-donut' : 'mdi-pause-circle-outline'"
             @click="isActive ? pause() : resume()"
-          ></v-btn>
+          />
 
           <v-toolbar-title>{{ translate('subchart') }}</v-toolbar-title>
 
           <v-btn
             size="small"
-            :icon="isExpand ? 'mdi-chevron-down' : 'mdi-chevron-up'"
+            :icon="isExpand ? 'mdi-chevron-up' : 'mdi-chevron-down'"
             @click="isExpand = !isExpand"
-          ></v-btn>
+          />
 
           <v-progress-linear
             v-if="isLoadingChartUserRoles"
@@ -103,7 +104,8 @@ const labels = ref<Array<string>>([]);
 const options = computed<ApexOptions>(() => ({
   chart: {
     type: 'donut',
-    background: theme.current.value.colors['surface'],
+    background: theme.current.value.colors['surface-container-low'],
+    foreColor: theme.current.value.colors['on-surface'],
   },
   theme: {
     mode: theme.name.value === 'dark' ? 'dark' : 'light',

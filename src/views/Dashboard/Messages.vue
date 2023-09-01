@@ -12,21 +12,21 @@
       </v-card>
     </v-col>
     <v-col cols="12" sm="12" md="5" lg="4">
-      <v-card class="bg-surface text-on-surface" rounded="xl">
-        <v-toolbar color="surface-variant" rounded="xl">
+      <v-card rounded="xl">
+        <v-toolbar>
           <v-btn
             size="small"
             :icon="isActive ? 'mdi-chart-line' : 'mdi-pause-circle-outline'"
             @click="isActive ? pause() : resume()"
-          ></v-btn>
+          />
 
           <v-toolbar-title>{{ translate('subchart') }}</v-toolbar-title>
 
           <v-btn
             size="small"
-            :icon="isExpand ? 'mdi-chevron-down' : 'mdi-chevron-up'"
+            :icon="isExpand ? 'mdi-chevron-up' : 'mdi-chevron-down'"
             @click="isExpand = !isExpand"
-          ></v-btn>
+          />
 
           <v-progress-linear
             v-if="isLoadingChartMessages"
@@ -39,7 +39,7 @@
 
         <apexchart
           v-if="isExpand"
-          class="mt-3"
+          class="mt-3 messages-chart"
           height="500"
           :options="options"
           :series="series"
@@ -73,7 +73,8 @@ const isExpand = ref<boolean>(true);
 const options = computed<ApexOptions>(() => ({
   chart: {
     type: 'bar',
-    background: theme.current.value.colors['surface'],
+    background: theme.current.value.colors['surface-container-low'],
+    foreColor: theme.current.value.colors['on-surface'],
   },
   theme: {
     mode: theme.name.value === 'dark ' ? 'dark' : 'light',
@@ -141,3 +142,39 @@ const { isActive, pause, resume } = useIntervalFn(
   { immediateCallback: true },
 );
 </script>
+
+<style lang="scss">
+.messages-chart {
+  .apexcharts-menu {
+    border: none !important;
+    background-color: rgb(var(--v-theme-surface-container-high)) !important;
+    color: rgb(var(--v-theme-on-surface)) !important;
+
+    .apexcharts-menu-item {
+      background-color: rgb(var(--v-theme-surface-container-high)) !important;
+    }
+  }
+
+  .apexcharts-tooltip {
+    border: none !important;
+    background-color: rgb(var(--v-theme-surface-container-high)) !important;
+    color: rgb(var(--v-theme-on-surface)) !important;
+
+    .apexcharts-tooltip-title {
+      background-color: rgb(
+        var(--v-theme-surface-container-highest)
+      ) !important;
+      color: rgb(var(--v-theme-on-surface)) !important;
+    }
+
+    .apexcharts-tooltip-series-group {
+      background-color: rgb(var(--v-theme-surface-container-high)) !important;
+      color: rgb(var(--v-theme-on-surface)) !important;
+    }
+
+    .apexcharts-tooltip-title {
+      border-bottom: solid 1px rgb(var(--v-theme-outline), 0.2) !important;
+    }
+  }
+}
+</style>
