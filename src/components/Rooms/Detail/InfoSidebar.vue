@@ -176,7 +176,7 @@
               </template>
 
               <v-list-item-title>
-                {{ translate('menus.members.addMember') }}
+                {{ translate('menus.members.insertMember') }}
               </v-list-item-title>
             </v-list-item>
 

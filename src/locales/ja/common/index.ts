@@ -23,9 +23,28 @@ export const common: LocaleCommon = {
     connected: '接続済み',
     unconnected: '未接続',
   },
+  matches: {
+    all: 'すべて一致',
+    any: 'いずれか一致',
+  },
   roomRoles: {
     administrator: '管理者',
     moderator: 'モデレーター',
     member: 'メンバー',
+  },
+  data: {
+    noRecord: '検索条件に一致するレコードはありません',
+    create: '登録',
+    insert: '追加',
+    update: '編集',
+    change: '変更',
+    delete: '削除',
+    remove: '解除',
+    view: '表示',
+  },
+  pagination: {
+    limit: '{limit}件ずつ',
+    show: '{limit}件表示',
+    showing: 'レコード{from}から{to}までを表示中（全{totalCount}件）',
   },
 };

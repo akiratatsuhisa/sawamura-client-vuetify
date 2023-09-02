@@ -35,6 +35,9 @@ export const dashboard: LocalePagesDashboard = {
       roleIds: {
         label: '権限',
       },
+      roleMode: {
+        label: '権限一致モード',
+      },
       clear: 'クリア',
       submit: '検索',
     },
@@ -45,6 +48,24 @@ export const dashboard: LocalePagesDashboard = {
       createdAtDesc: '作成日時　降順',
       updatedAtAsc: '更新日時　昇順',
       updatedAtDesc: '更新日時　降順',
+    },
+    list: {
+      username: 'ユーザー名：{0}',
+      timeAgo: '最終更新：{0}',
+      redirect: '表示',
+    },
+    changeRoles: {
+      title: 'ユーザー権限を変更',
+      subtitle: '権限リスト',
+      message: 'ユーザー{username}の権限変更が成功しました',
+      form: {
+        submit: '変更',
+      },
+      displayMode: 'アドバンストモード',
+      tags: {
+        default: 'デフォルト',
+        notDefault: 'デフォルトなし',
+      },
     },
     subchart: 'グラフのユーザー権限',
     roles: {

@@ -7,6 +7,7 @@ import {
 } from '@vuelidate/core';
 import _ from 'lodash';
 import { computed, ComputedRef, isProxy, reactive, Ref, ref, unref } from 'vue';
+import { LocationQuery, useRoute, useRouter } from 'vue-router';
 
 export function getErrorMessage(
   field: { $errors: ErrorObject[] },
@@ -104,37 +105,29 @@ export function useShowPassword(fields: Record<string, boolean>) {
 
   return { fields, bindShowPassword };
 }
-
-export function parseSearchForm<F extends Object>(form: F) {
-  function parse<T>(values: T) {
-    {
-      for (const key in values) {
-        const value = values[key];
-        if (_.isNil(value) || value === '') {
-          delete values[key];
-          continue;
-        }
-        if (_.isObject(value)) {
-          if (_.isEmpty(value)) {
-            delete values[key];
-          } else {
-            values[key] = parse(value);
-          }
-        }
-      }
-      return values;
-    }
-  }
-
-  return parse(_.cloneDeep(form)) satisfies F;
+export interface UseSearchFormOptions<F extends Record<string, any>> {
+  decodeQuery?: (query: LocationQuery) => F;
+  encodeQuery?: (form: F) => any;
 }
 
-export function useSearchForm<F extends Object>(initForm: F) {
+export function useSearchForm<F extends Record<string, any>>(
+  initForm: F,
+  options?: UseSearchFormOptions<F>,
+) {
   const form = reactive<F>(_.cloneDeep(initForm));
 
   function reset() {
     Object.assign(form, initForm);
   }
 
-  return { form, reset };
+  const route = useRoute();
+  const router = useRouter();
+  Object.assign(form, options?.decodeQuery?.(route.query) ?? initForm);
+
+  function setRouteQuery() {
+    const query = options?.encodeQuery?.(form) ?? form;
+    router.push({ name: route.name!, params: route.params, query: query });
+  }
+
+  return { form, reset, setRouteQuery };
 }

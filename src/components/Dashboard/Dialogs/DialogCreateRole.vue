@@ -25,12 +25,11 @@
 import { reactive } from 'vue';
 
 import { getErrorMessage, usePageLocale, useVuelidate } from '@/composables';
-import { ICreateRoleRequest, IRoleResponse } from '@/interfaces';
+import { ICreateRoleRequest } from '@/interfaces';
 import { maxLength, required } from '@/validators';
 
 defineProps<{
   modelValue: boolean;
-  value?: IRoleResponse;
 }>();
 
 const emit = defineEmits<{

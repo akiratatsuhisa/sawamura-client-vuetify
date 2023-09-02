@@ -36,6 +36,8 @@ export const messages: LocalePagesMessages = {
         captureVideo: 'Capture Video',
         sendAudio: 'Send audio record',
       },
+      unsupportedFileType: 'Unsupported file type',
+      fileExceededLimit: 'File exceeds the ${size} limit',
     },
     menus: {
       basicsInformation: {
@@ -50,7 +52,7 @@ export const messages: LocalePagesMessages = {
       support: { index: 'Support', outGroup: 'Out Group' },
       members: {
         index: 'Members',
-        addMember: 'Add Member',
+        insertMember: 'Insert  Member',
         changeNickName: 'Change NickName',
         changeRole: 'Change Role',
         removeMember: 'Remove Member',
@@ -108,7 +110,7 @@ export const messages: LocalePagesMessages = {
           submit: 'Choose',
         },
       },
-      addMember: {
+      insertMember: {
         title: 'Room Member',
         form: {
           roomId: {
@@ -120,7 +122,7 @@ export const messages: LocalePagesMessages = {
           role: {
             label: 'Role',
           },
-          submit: 'Add',
+          submit: 'Insert ',
         },
       },
       changeNickName: {
@@ -136,7 +138,7 @@ export const messages: LocalePagesMessages = {
             label: 'Nick name',
             hint: 'Click clear icon to clear nickname',
           },
-          submit: 'Edit',
+          submit: 'Change',
         },
       },
       changeRole: {

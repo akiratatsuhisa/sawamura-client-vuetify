@@ -2,10 +2,10 @@
   <v-menu>
     <template #activator="{ props, isActive }">
       <v-chip
-        :prepend-icon="hasSelected ? 'mdi-check' : icon"
+        :prepend-icon="hasSelected ? filterIcon ?? 'mdi-check' : icon"
         rounded="lg"
         variant="outlined"
-        class="my-1 mr-2"
+        class="v-chip--menu my-1 mr-2"
         :class="{ 'v-chip--selected': !!hasSelected }"
         :append-icon="isActive ? 'mdi-menu-up' : 'mdi-menu-down'"
         v-bind="{ ...attrs, ...props }"
@@ -33,7 +33,12 @@
     <slot>
       <v-list class="bg-surface-container-high bg-on-surface" density="compact">
         <template v-for="(item, index) in items" :key="index">
-          <slot name="item" :item="item" :is-active="isActive(item.value)">
+          <slot
+            name="item"
+            :item="item"
+            :is-active="isActive(item.value)"
+            :select-item="selectItem"
+          >
             <v-list-item
               :prepend-icon="item.icon"
               :value="item.value"
@@ -69,6 +74,7 @@ const props = defineProps<{
   multiple?: boolean;
   label?: string;
   icon?: string;
+  filterIcon?: string;
   items?: Array<{
     icon?: string;
     value: any;
@@ -122,3 +128,11 @@ const displaySelectedItem = computed(
     )!,
 );
 </script>
+
+<style lang="scss">
+.v-chip.v-chip--menu {
+  .v-chip__content {
+    flex-grow: 1;
+  }
+}
+</style>

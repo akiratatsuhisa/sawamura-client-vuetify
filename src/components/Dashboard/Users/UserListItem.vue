@@ -1,0 +1,186 @@
+<template>
+  <div class="px-1 px-md-3 py-1 d-flex flex-row align-center">
+    <v-avatar
+      :image="photoUrl"
+      color="secondary-container"
+      class="elevation-2"
+      :size="$vuetify.display.mobile ? 'default' : 'x-large'"
+    />
+    <div
+      class="h-100 px-2 flex-grow-1 text-subtitle-1 d-flex flex-column align-content-lg-space-between"
+    >
+      <i18n-t
+        keypath="pages.dashboard.users.list.username"
+        tag="div"
+        scope="global"
+        class="text-body-1"
+      >
+        {{ record.username }}
+      </i18n-t>
+      <div class="text-subtitle-1">{{ fullName }}</div>
+      <div class="text-subtitle-2 font-weight-light">
+        <v-icon size="x-small" icon="mdi-clock-outline" />
+        <i18n-t
+          keypath="pages.dashboard.users.list.timeAgo"
+          tag="span"
+          scope="global"
+          class="ml-1"
+        >
+          {{ timeAgo }}
+        </i18n-t>
+      </div>
+    </div>
+    <v-btn
+      v-if="$vuetify.display.mobile"
+      variant="outlined"
+      size="small"
+      icon="mdi-open-in-new"
+      :to="{ name: 'Users:Detail', params: { id: record.id } }"
+      target="_blank"
+    />
+    <v-btn
+      v-else
+      variant="outlined"
+      append-icon="mdi-open-in-new"
+      :to="{ name: 'Users:Detail', params: { id: record.id } }"
+      target="_blank"
+    >
+      {{ $t('common.data.view') }}
+    </v-btn>
+  </div>
+  <v-divider class="my-1 mx-2" />
+  <div class="px-1 d-flex flex-wrap align-end">
+    <v-chip
+      :prepend-icon="emailStateIcon"
+      rounded="lg"
+      variant="outlined"
+      class="my-1 mr-2"
+      @click="openEmail"
+    >
+      {{
+        record.email
+          ? _.truncate(record.email, { length: 40 })
+          : $t('common.verifyStates.none')
+      }}
+    </v-chip>
+    <v-chip
+      v-if="record.userRoles.length"
+      rounded="lg"
+      variant="outlined"
+      class="my-1 mr-2"
+      prepend-icon="mdi-account-cog-outline"
+      @click="openDialog(record.id)"
+    >
+      {{ record.userRoles[0].role.name }}
+    </v-chip>
+    <v-chip
+      v-else
+      rounded="lg"
+      variant="outlined"
+      class="my-1 mr-2"
+      prepend-icon="mdi-account-cog-outline"
+      @click="openDialog(record.id)"
+    >
+      {{ $t('common.verifyStates.none') }}
+    </v-chip>
+    <v-chip
+      v-if="record.userRoles.length > 1"
+      rounded="lg"
+      variant="outlined"
+      class="my-1 mr-2"
+      prepend-icon="mdi-account-cog-outline"
+      @click="openDialog(record.id)"
+    >
+      +{{ record.userRoles.length - 1 }}
+    </v-chip>
+    <v-chip
+      v-if="record.birthDate"
+      rounded="lg"
+      variant="outlined"
+      class="my-1 mr-2"
+      prepend-icon="mdi-cake-variant-outline"
+      @click="() => {}"
+    >
+      {{
+        Format.date(record.birthDate, {
+          locales: $i18n.locale,
+          dateStyle: 'medium',
+        })
+      }}
+    </v-chip>
+    <v-chip
+      v-if="record.salary"
+      rounded="lg"
+      variant="outlined"
+      class="my-1 mr-2"
+      prepend-icon="mdi-cash"
+      @click="() => {}"
+    >
+      {{ Format.currency(record.salary, { locales: $i18n.locale }) }}
+    </v-chip>
+    <v-chip
+      rounded="lg"
+      variant="outlined"
+      class="my-1 mr-2"
+      prepend-icon="mdi-database-clock-outline"
+      @click="() => {}"
+    >
+      {{
+        Format.dateTime(record.createdAt, {
+          locales: $i18n.locale,
+          dateStyle: 'short',
+          timeStyle: 'short',
+        })
+      }}
+    </v-chip>
+  </div>
+</template>
+
+<script lang="ts" setup>
+import { useTimeAgo } from '@vueuse/core';
+import _ from 'lodash';
+import { computed, inject } from 'vue';
+
+import { KEYS } from '@/constants';
+import { Format } from '@/helpers';
+import { IAdvancedUserResponse } from '@/interfaces';
+
+const props = defineProps<{
+  record: IAdvancedUserResponse;
+}>();
+
+const photoUrl = computed(() =>
+  props.record.photoUrl
+    ? `${import.meta.env.VITE_API_URL}/auth/photo?username=${
+        props.record.username
+      }`
+    : import.meta.env.VITE_NO_AVATAR_URL,
+);
+
+const fullName = computed(() =>
+  _.trim(`${props.record.lastName ?? ''} ${props.record.firstName ?? ''}`),
+);
+
+const timeAgo = useTimeAgo(computed(() => props.record.updatedAt));
+
+const emailStateIcon = computed(() => {
+  if (!props.record.email) {
+    return 'mdi-email-remove-outline';
+  }
+  if (!props.record.emailConfirmed) {
+    return 'mdi-email-alert-outline';
+  }
+  return 'mdi-email-check-outline';
+});
+
+function openEmail() {
+  if (!props.record.email) {
+    return;
+  }
+  window.open(`mailto:${props.record.email}`);
+}
+
+const openDialog = inject(
+  KEYS.DASHBOARD.USERS.DIALOGS.CHANGE_ROLES.OPEN_DIALOG,
+)!;
+</script>

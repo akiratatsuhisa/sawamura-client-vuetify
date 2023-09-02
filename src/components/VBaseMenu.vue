@@ -60,7 +60,7 @@ withDefaults(
     hideTopbar?: boolean;
     title?: string;
     persistent?: boolean | undefined;
-    location: Anchor;
+    location?: Anchor;
     width?: string | number | undefined;
     offset?: string | number | number[] | undefined;
     closeIcon?: string;
@@ -72,7 +72,7 @@ const model = ref(false);
 
 const display = useDisplay();
 
-const isDialog = computed(() => display.mobile.value);
+const isDialog = computed(() => display.smAndDown.value);
 
 function close() {
   model.value = false;

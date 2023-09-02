@@ -145,6 +145,7 @@ import {
   useSocketEventListener,
 } from '@/composables';
 import { KEYS, MESSAGE_FILE } from '@/constants';
+import { BinaryUnit, Format } from '@/helpers';
 import {
   BasicFile,
   BasicFileType,
@@ -177,7 +178,11 @@ const filesInput = shallowReactive<Array<BasicFile>>([]);
 function pushFile(file: File): BasicFile | undefined {
   if (!file || file.size > MESSAGE_FILE.MAX_FILE_SIZE) {
     createSnackbarWarning(
-      `file size must be less than or equals ${MESSAGE_FILE.MAX_FILE_SIZE} bytes`,
+      translate('input.fileExceededLimit', {
+        size: Format.binaryUnit(MESSAGE_FILE.MAX_FILE_SIZE, {
+          outputUnit: BinaryUnit.Mebibyte,
+        }),
+      }),
     );
     return;
   }
@@ -195,7 +200,7 @@ function pushFile(file: File): BasicFile | undefined {
     : null;
 
   if (_.isNull(type)) {
-    createSnackbarWarning('Invalid file type');
+    createSnackbarWarning(translate('input.unsupportedFileType'));
     return;
   }
 

@@ -2,7 +2,7 @@
   <v-card flat>
     <v-card-title>{{ translate('title') }}</v-card-title>
     <v-card-text class="px-2 px-md-4">
-      <form @submit.prevent="onSubmit">
+      <form @submit.prevent="onSubmit()">
         <v-row class="mt-3">
           <v-col md="6" cols="12" class="pt-0">
             <v-text-field
@@ -72,6 +72,7 @@
     </v-card-text>
     <v-divider />
     <v-card-text>
+      <v-base-limit-page v-model:skip="form.skip" v-model:take="form.take" />
       <v-menu-chip
         v-model="v$.sort.$model"
         icon="mdi-sort"
@@ -79,10 +80,11 @@
         :items="sortList"
       />
       <v-chip-group
+        v-model="v$.roleIds.$model"
+        class="d-inline"
         filter
         multiple
-        class="d-inline"
-        v-model="v$.roleIds.$model"
+        :max="10"
       >
         <v-chip
           v-for="{ id, name, ...value } in roleList"
@@ -95,31 +97,70 @@
           {{ name }}
         </v-chip>
       </v-chip-group>
+      <v-chip-group v-model="v$.roleMode.$model" class="d-inline">
+        <v-chip
+          value="all"
+          rounded="lg"
+          variant="outlined"
+          :append-icon="
+            form.roleMode === 'all'
+              ? 'mdi-checkbox-multiple-marked-outline'
+              : 'mdi-checkbox-marked-outline'
+          "
+          prepend-icon="mdi-account-cog-outline"
+        >
+          {{
+            form.roleMode === 'all'
+              ? $t('common.matches.all')
+              : $t('common.matches.any')
+          }}
+        </v-chip>
+      </v-chip-group>
     </v-card-text>
-    <v-card-text tag="pre">
-      {{ form }}
-    </v-card-text>
-    <v-card-text v-if="data">
-      {{ data.totalCount }}
-      <pre>{{ data.records }}</pre>
-    </v-card-text>
+
+    <user-list :data="data" />
+
+    <v-divider v-if="data?.count" />
+    <v-base-pagination
+      v-if="data?.count"
+      v-model:skip="form.skip"
+      v-model:take="form.take"
+      :count="data?.count"
+      :total-count="data?.totalCount"
+      class="pa-3"
+    />
   </v-card>
+
+  <template v-for="(dialog, name) in dialogs" :key="name">
+    <component
+      :is="dialog.component"
+      :model-value="isActiveDialog(name)"
+      @update:model-value="closeDialog"
+      @submit="dialog.onSubmit"
+    />
+  </template>
 </template>
 
 <script lang="ts" setup>
+import { useThrottleFn } from '@vueuse/core';
 import _ from 'lodash';
-import { computed, watch } from 'vue';
+import { computed, defineAsyncComponent, provide, watch } from 'vue';
 
+import UserList from '@/components/Dashboard/Users/UserList.vue';
+import VBaseLimitPage from '@/components/VBaseLimitPage.vue';
+import VBasePagination from '@/components/VBasePagination.vue';
 import VMenuChip from '@/components/VMenuChip.vue';
 import VSegmentedButton from '@/components/VSegmentedButton.vue';
 import {
   getErrorMessage,
-  parseSearchForm,
   useAxios,
   usePageLocale,
+  useRouterDialog,
   useSearchForm,
   useVuelidate,
 } from '@/composables';
+import { KEYS } from '@/constants';
+import { Router } from '@/helpers/router';
 import { ISearchAdvancedUsersRequest } from '@/interfaces';
 import { services } from '@/services';
 import { maxLength } from '@/validators';
@@ -204,16 +245,52 @@ const roleList = computed<
     : [],
 );
 
-const { form, reset } = useSearchForm<ISearchAdvancedUsersRequest>({
-  username: null,
-  name: null,
-  email: null,
-  emailStates: [],
-  roleIds: [],
-  sort: null,
-});
+const { form, reset, setRouteQuery } =
+  useSearchForm<ISearchAdvancedUsersRequest>(
+    {
+      username: null,
+      name: null,
+      email: null,
+      emailStates: [],
+      roleIds: [],
+      roleMode: null,
+      sort: null,
+      skip: Router.SKIP_DEFAULT,
+      take: Router.TAKE_DEFAULT,
+    },
+    {
+      decodeQuery: (query) => ({
+        username: Router.getQuery(query.username),
+        name: Router.getQuery(query.name),
+        email: Router.getQuery(query.email),
+        emailStates: Router.getQueryAll(query.emailStates),
+        roleIds: Router.getQueryAll(query.roleIds),
+        roleMode: Router.getQuery(query.roleMode),
+        sort:
+          Router.getQuery(query['sort[field]']) &&
+          Router.getQuery(query['sort[order]'])
+            ? {
+                field: Router.getQuery(query['sort[field]'])!,
+                order: Router.getQuery(query['sort[order]'])!,
+              }
+            : null,
+        skip: Router.getQuery(query.skip) ?? '0',
+        take: Router.getQuery(query.take) ?? '10',
+      }),
+      encodeQuery: (form) => ({
+        ...form,
+        sort: undefined,
+        ...(form.sort
+          ? {
+              ['sort[field]']: form.sort.field!,
+              ['sort[order]']: form.sort.order!,
+            }
+          : {}),
+      }),
+    },
+  );
 
-const [v$, { handleSubmit, isLoading: isLoadingForm }] =
+const [v$, { isLoading: isLoadingForm }] =
   useVuelidate<ISearchAdvancedUsersRequest>(
     {
       username: { maxLength: maxLength(pathFormField('username'), 255) },
@@ -221,6 +298,7 @@ const [v$, { handleSubmit, isLoading: isLoadingForm }] =
       email: { maxLength: maxLength(pathFormField('email'), 450) },
       emailStates: {},
       roleIds: {},
+      roleMode: {},
       sort: {},
     },
     form,
@@ -237,26 +315,61 @@ async function onReset() {
   reset();
 }
 
-const onSubmit = handleSubmit(async (values) => {
-  const params = parseSearchForm(values);
-  await refetchUsers(params);
-});
-
-async function search() {
+async function onSubmit(pagination: boolean = false) {
   await v$.value.$validate();
-
   if (v$.value.$invalid) {
     return;
   }
 
-  const params = parseSearchForm(form);
+  if (!pagination) {
+    form.skip = Router.SKIP_DEFAULT;
+  }
+
+  const params = Router.parseSearchForm(form);
+  setRouteQuery();
   await refetchUsers(params);
 }
-search();
 
-watch([() => form.roleIds?.length, () => form.sort], () => search());
+const onSubmitThrottle = useThrottleFn(
+  async (pagination: boolean = false) => {
+    await onSubmit(pagination);
+  },
+  1000,
+  true,
+);
+onSubmitThrottle();
+
+watch(
+  [() => form.roleIds?.length, () => form.roleMode, () => form.sort],
+  () => {
+    form.skip = Router.SKIP_DEFAULT;
+    onSubmitThrottle();
+  },
+);
+watch([() => form.skip, () => form.take], () => {
+  onSubmitThrottle(true);
+});
+
+const { openDialog, closeDialog, isActiveDialog } = useRouterDialog({
+  name: 'Dashboard:Users',
+  param: 'dialog',
+});
+
+const dialogs = {
+  changeRoles: {
+    component: defineAsyncComponent(
+      () => import('@/components/Dashboard/Dialogs/DialogChangeUserRoles.vue'),
+    ),
+    onSubmit: async () => {
+      setTimeout(() => onSubmit(true), 250);
+    },
+  },
+};
+
+provide(KEYS.DASHBOARD.USERS.DIALOGS.CHANGE_ROLES.ROLE_LIST, roleList);
+provide(KEYS.DASHBOARD.USERS.DIALOGS.CHANGE_ROLES.OPEN_DIALOG, (id: string) => {
+  openDialog('changeRoles', { params: { id } });
+});
 
 const isLoading = computed(() => isLoadingRoles.value || isLoadingForm.value);
 </script>
-
-<style lang="scss"></style>

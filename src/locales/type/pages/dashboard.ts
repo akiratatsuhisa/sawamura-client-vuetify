@@ -21,6 +21,7 @@ export type LocalePagesDashboard = {
       emailStates: { label: string };
       sort: { label: string };
       roleIds: { label: string };
+      roleMode: { label: string };
       clear: string;
       submit: string;
     };
@@ -31,6 +32,33 @@ export type LocalePagesDashboard = {
       createdAtDesc: string;
       updatedAtAsc: string;
       updatedAtDesc: string;
+    };
+    list: {
+      /**
+       * @param {Component} 0
+       */
+      username: string;
+      /**
+       * @param {Component} 0
+       */
+      timeAgo: string;
+      redirect: string;
+    };
+    changeRoles: {
+      title: string;
+      subtitle: string;
+      /**
+       * @param {string} username
+       */
+      message: string;
+      form: {
+        submit: string;
+      };
+      displayMode: string;
+      tags: {
+        default: string;
+        notDefault: string;
+      };
     };
     subchart: string;
     roles: {

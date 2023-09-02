@@ -19,15 +19,20 @@ export interface IUserResponse {
     };
   }>;
 }
+
+export interface IUserRequest {
+  id: string;
+}
 export interface ISearchAdvancedUsersRequest {
   username?: string | null;
   name?: string | null;
   email?: string | null;
   emailStates?: Array<string> | null;
   roleIds?: Array<string> | null;
+  roleMode?: string | null;
   sort?: { field: string; order: string } | null;
-  take?: string | null;
-  offset?: string | null;
+  skip?: string;
+  take?: string;
 }
 
 export interface IAdvancedUserResponse {
@@ -48,4 +53,9 @@ export interface IAdvancedUserResponse {
       name: string;
     };
   }>;
+}
+
+export interface IChangeUserRolesRequest {
+  id: string;
+  roleIds: Array<string>;
 }

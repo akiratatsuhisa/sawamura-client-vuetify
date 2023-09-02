@@ -80,7 +80,7 @@ const emit = defineEmits<{
 }>();
 
 const { translate, translateFormField, pathFormField } = usePageLocale({
-  prefix: 'messages.room.dialogs.addMember',
+  prefix: 'messages.room.dialogs.insertMember',
 });
 
 const room = inject(KEYS.CHAT.ROOM)!;

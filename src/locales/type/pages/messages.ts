@@ -33,6 +33,11 @@ export type LocalePagesMessages = {
         captureVideo: string;
         sendAudio: string;
       };
+      unsupportedFileType: string;
+      /**
+       * @param {string} size
+       */
+      fileExceededLimit: string;
     };
     menus: {
       basicsInformation: {
@@ -47,7 +52,7 @@ export type LocalePagesMessages = {
       support: { index: string; outGroup: string };
       members: {
         index: string;
-        addMember: string;
+        insertMember: string;
         changeNickName: string;
         changeRole: string;
         removeMember: string;
@@ -105,7 +110,7 @@ export type LocalePagesMessages = {
           submit: string;
         };
       };
-      addMember: {
+      insertMember: {
         title: string;
         form: {
           roomId: { label: string };

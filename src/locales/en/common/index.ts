@@ -23,9 +23,28 @@ export const common: LocaleCommon = {
     connected: 'Connected',
     unconnected: 'Unconnected',
   },
+  matches: {
+    all: 'Match All',
+    any: 'Match Any',
+  },
   roomRoles: {
     administrator: 'Administrator',
     moderator: 'Moderator',
     member: 'Member',
+  },
+  data: {
+    noRecord: 'No records match the search conditions',
+    create: 'Create',
+    insert: 'Insert',
+    update: 'Update',
+    change: 'Change',
+    delete: 'Delete',
+    remove: 'Remove',
+    view: 'View',
+  },
+  pagination: {
+    limit: '{limit} per pages',
+    show: 'Show {limit}',
+    showing: 'Showing {from} to {to} of {totalCount} records',
   },
 };

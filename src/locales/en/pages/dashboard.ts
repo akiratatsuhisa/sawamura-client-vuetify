@@ -35,6 +35,9 @@ export const dashboard: LocalePagesDashboard = {
       roleIds: {
         label: 'Roles',
       },
+      roleMode: {
+        label: 'Role Match Mode',
+      },
       clear: 'Clear',
       submit: 'Search',
     },
@@ -45,6 +48,24 @@ export const dashboard: LocalePagesDashboard = {
       createdAtDesc: 'Created at Desc',
       updatedAtAsc: 'Updated at Desc',
       updatedAtDesc: 'Updated at Desc',
+    },
+    list: {
+      username: 'Username: {0}',
+      timeAgo: 'Last update: {0}',
+      redirect: 'View',
+    },
+    changeRoles: {
+      title: 'Change User Roles',
+      subtitle: 'Role List',
+      message: "User {username}'s role change was successful",
+      form: {
+        submit: 'Change',
+      },
+      displayMode: 'Advanced Mode',
+      tags: {
+        default: 'Default',
+        notDefault: 'Not Default',
+      },
     },
     subchart: 'Chart User Roles',
     roles: {

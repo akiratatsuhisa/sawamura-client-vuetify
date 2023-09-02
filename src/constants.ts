@@ -58,6 +58,23 @@ export namespace KEYS {
     export const SELECT_MESSAGE_IMAGE_SRC: InjectionKey<(src: string) => void> =
       Symbol('chat:selectMessageImageSrc');
   }
+
+  export namespace DASHBOARD {
+    export namespace USERS {
+      export namespace DIALOGS {
+        export namespace CHANGE_ROLES {
+          export const ROLE_LIST: InjectionKey<
+            DeepReadonly<
+              Ref<Array<{ id: string; name: string; default: boolean }>>
+            >
+          > = Symbol('dashboard:users:dialogs:changeRoles:roleList');
+          export const OPEN_DIALOG: InjectionKey<(id: string) => void> = Symbol(
+            'dashboard:users:dialogs:changeRoles:openDialog',
+          );
+        }
+      }
+    }
+  }
 }
 
 export namespace MESSAGE_FILE {

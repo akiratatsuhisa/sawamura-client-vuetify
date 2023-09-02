@@ -16,7 +16,7 @@ export default {
   component: () => import('@/views/Dashboard/Index.vue'),
   children: [
     {
-      path: 'users',
+      path: `/dashboard/users/:id(${Regex.Uuid.source})?/:dialog(changeRoles)?`,
       name: 'Dashboard:Users',
       meta: {
         breadcrumb: {
@@ -24,10 +24,24 @@ export default {
           to: { name: 'Dashboard:Users' },
         },
       },
+      beforeEnter: (to) => {
+        const dialog = to.params.dialog as string | undefined;
+        const id = to.params.id as string | undefined;
+
+        if (!dialog && !id) {
+          return true;
+        }
+
+        if (dialog === 'changeRoles' && id !== '') {
+          return true;
+        }
+
+        return { name: to.name };
+      },
       component: () => import('@/views/Dashboard/Users.vue'),
       children: [
         {
-          path: `roles/:dialog(create|update|delete)?/:id(${Regex.Uuid.source})?`,
+          path: `/dashboard/users/roles/:dialog(create|update|delete)?/:id(${Regex.Uuid.source})?`,
           name: 'Dashboard:Users:Roles',
           meta: {
             breadcrumb: {

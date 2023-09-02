@@ -36,6 +36,8 @@ export const messages: LocalePagesMessages = {
         captureVideo: '動画を撮影',
         sendAudio: '音声録音を送信',
       },
+      unsupportedFileType: 'サポートされていないファイル形式',
+      fileExceededLimit: 'ファイルは${size}制限を超えています',
     },
     menus: {
       basicsInformation: {
@@ -50,10 +52,10 @@ export const messages: LocalePagesMessages = {
       support: { index: 'サポート', outGroup: 'グループから退出' },
       members: {
         index: 'メンバー',
-        addMember: 'メンバーを追加',
+        insertMember: 'メンバーを追加',
         changeNickName: 'ニックネームを変更',
         changeRole: '権限を変更',
-        removeMember: 'メンバーを削除',
+        removeMember: 'メンバーを解除',
       },
     },
     dialogs: {
@@ -108,7 +110,7 @@ export const messages: LocalePagesMessages = {
           submit: '選択',
         },
       },
-      addMember: {
+      insertMember: {
         title: 'ルームメンバー',
         form: {
           roomId: {
@@ -136,7 +138,7 @@ export const messages: LocalePagesMessages = {
             label: 'ニックネーム',
             hint: 'ニックネームをクリアするにはクリアアイコンをクリックしてください',
           },
-          submit: '編集',
+          submit: '変更',
         },
       },
       changeRole: {
@@ -156,7 +158,7 @@ export const messages: LocalePagesMessages = {
       },
       removeMember: {
         title: 'ルームメンバー',
-        message: '{member}を削除しますか？',
+        message: '{member}を解除しますか？',
         selfMessage: 'このグループから退出しますか？',
         form: {
           roomId: {
@@ -165,7 +167,7 @@ export const messages: LocalePagesMessages = {
           memberId: {
             label: 'メンバーid',
           },
-          submit: '削除',
+          submit: '解除',
         },
       },
     },

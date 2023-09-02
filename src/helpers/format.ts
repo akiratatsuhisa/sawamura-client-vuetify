@@ -54,8 +54,10 @@ export namespace Format {
     options?: { locales?: localesType; dateStyle?: dateTimeStyle },
   ): string {
     return dateTime(data, {
+      locales: options?.locales,
       dateStyle: options?.dateStyle ?? 'long',
       timeStyle: undefined,
+      timeZone: undefined,
     });
   }
 
