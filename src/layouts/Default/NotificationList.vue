@@ -1,29 +1,23 @@
 <template>
-  <v-menu :close-on-content-click="false">
-    <template v-slot:activator="{ props }">
-      <v-btn icon v-bind="props">
-        <v-avatar
-          color="secondary-container"
-          class="elevation-6"
-          icon="mdi-bell"
-        ></v-avatar>
-      </v-btn>
-    </template>
+  <v-btn icon>
+    <v-avatar color="secondary-container" class="elevation-6" icon="mdi-bell" />
 
-    <v-card
-      width="300"
-      class="overflow bg-surface-container-high text-on-surface"
-      rounded="xl"
-    >
-      <v-card-title>{{ translate('title') }}</v-card-title>
-      <v-card-text class="px-0 py-3">
-        <v-list height="350">
+    <v-base-menu :title="translate('title')">
+      <template #default="{ close, isMenu }">
+        <div v-if="isMenu">
+          <v-card-title>
+            {{ translate('title') }}
+          </v-card-title>
+          <v-divider />
+        </div>
+        <v-list max-height="350" class="mb-4">
           <v-notification-list-item
             v-for="notification in notifications"
             :key="notification.id"
             :item="notification"
             @update="(payload) => requestUpdateNotification(payload)"
             @delete="(payload) => onRequestDeleteNotification(payload)"
+            @click="close"
           />
           <v-list-item v-intersect="onIntersect" class="text-center">
             <v-btn
@@ -35,9 +29,9 @@
             />
           </v-list-item>
         </v-list>
-      </v-card-text>
-    </v-card>
-  </v-menu>
+      </template>
+    </v-base-menu>
+  </v-btn>
 </template>
 
 <script lang="ts" setup>

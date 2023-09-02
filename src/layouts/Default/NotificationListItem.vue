@@ -54,6 +54,7 @@ import {
 const props = defineProps<{ item: INotificationResponse }>();
 
 const emit = defineEmits<{
+  (event: 'click'): void;
   (
     event: 'update',
     payload: {
@@ -108,6 +109,7 @@ function onClick() {
   if (redirectUrl.value) {
     router.push(redirectUrl.value);
   }
+  emit('click');
 }
 
 function update() {
