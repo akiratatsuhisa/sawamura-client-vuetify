@@ -1,5 +1,8 @@
 import { RouteRecordRaw } from 'vue-router';
 
+import VSidebar from '@/layouts/Default/Sidebar.vue';
+import VTopbar from '@/layouts/Default/Topbar.vue';
+
 export default {
   path: '/',
   component: () => import('@/layouts/Auth/Index.vue'),
@@ -37,12 +40,20 @@ export const defaultAuthRoutes = [
     path: 'profile/:dialog(photo|cover|theme|edit)?',
     name: 'Profile',
     meta: { requiresAuth: true },
-    component: () => import('@/views/Auth/Profile.vue'),
+    components: {
+      topbar: VTopbar,
+      sidebar: VSidebar,
+      default: () => import('@/views/Auth/Profile.vue'),
+    },
   },
   {
     path: 'settings/:tab(account|display|languages|email|password|oauth\\-providers)?',
     name: 'Settings',
     meta: { requiresAuth: true },
-    component: () => import('@/views/Settings.vue'),
+    components: {
+      topbar: VTopbar,
+      sidebar: VSidebar,
+      default: () => import('@/views/Settings.vue'),
+    },
   },
 ] as Array<RouteRecordRaw>;

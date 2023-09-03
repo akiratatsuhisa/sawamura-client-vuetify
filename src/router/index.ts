@@ -1,6 +1,8 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router';
 
 import { useAuth } from '@/composables';
+import VSidebar from '@/layouts/Default/Sidebar.vue';
+import VTopbar from '@/layouts/Default/Topbar.vue';
 
 import authRoutes, { defaultAuthRoutes } from './auth';
 import { defaultCommonRoutes } from './common';
@@ -17,16 +19,24 @@ const routes: Array<RouteRecordRaw> = [
         path: '',
         name: 'Home',
         meta: { requiresAuth: true },
-        component: () => import('@/views/Home.vue'),
+        components: {
+          topbar: VTopbar,
+          sidebar: VSidebar,
+          default: () => import('@/views/Home.vue'),
+        },
       },
-      messagesRoutes,
+      ...messagesRoutes,
       dashboardRoutes,
       ...defaultAuthRoutes,
       {
         path: 'users/:id',
         name: 'Users:Detail',
         meta: { requiresAuth: true },
-        component: () => import('@/views/Users/Detail.vue'),
+        components: {
+          topbar: VTopbar,
+          sidebar: VSidebar,
+          default: () => import('@/views/Users/Detail.vue'),
+        },
       },
       ...defaultCommonRoutes,
     ],

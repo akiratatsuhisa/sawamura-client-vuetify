@@ -6,6 +6,7 @@ export const messages: LocalePagesMessages = {
     subtitle: 'チャットルーム',
     createGroup: 'グループ追加',
     fetchMore: 'さらに読み込む',
+    enterChat: 'チャットに入る',
     dialogs: {
       createGroup: {
         title: 'ルームグループを作成',
@@ -173,6 +174,7 @@ export const messages: LocalePagesMessages = {
     },
   },
   shared: {
+    searchPlaceholder: '調べる',
     chooseImage: '画像を選択',
     generateTheme: 'アップロードした画像からテーマを生成する',
     roomTypes: {

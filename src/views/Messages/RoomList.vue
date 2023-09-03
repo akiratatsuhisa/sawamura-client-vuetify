@@ -2,7 +2,7 @@
   <v-main>
     <v-container class="fill-height">
       <v-row>
-        <v-col class="mx-auto" md="8" lg="10">
+        <v-col class="mx-auto" cols="12" lg="10">
           <v-card rounded="xl">
             <div class="d-flex flex-column flex-sm-row">
               <v-card-title tag="h1">{{ translate('title') }}</v-card-title>
@@ -17,16 +17,16 @@
               </v-btn>
             </div>
 
-            <v-list lines="one">
+            <v-list lines="two">
               <v-list-subheader tag="h2">
                 {{ translate('subtitle') }}
               </v-list-subheader>
 
-              <template v-for="room in rooms" :key="room.id">
-                <v-room-item :room="room" />
-
-                <v-divider inset />
-              </template>
+              <v-room-list-item
+                v-for="room in rooms"
+                :key="room.id"
+                :room="room"
+              />
             </v-list>
 
             <v-card-actions class="justify-center">
@@ -51,9 +51,9 @@
 </template>
 
 <script lang="ts" setup>
-import { useThrottleFn } from '@vueuse/core';
 import _ from 'lodash';
-import { computed, defineAsyncComponent, inject, ref } from 'vue';
+import { storeToRefs } from 'pinia';
+import { computed, defineAsyncComponent } from 'vue';
 
 import {
   usePageLocale,
@@ -62,68 +62,51 @@ import {
   useSocketChat,
   useSocketEventListener,
 } from '@/composables';
-import { KEYS } from '@/constants';
 import {
   ICreateRoomRequest,
+  IRoomMessageResponse,
   IRoomResponse,
-  ISearchRoomsRequest,
 } from '@/interfaces';
-import VRoomItem from '@/views/Messages/RoomItem.vue';
-
-const { createSnackbarError } = useSnackbar();
-
-const socket = useSocketChat();
+import { useRoomsStore } from '@/store';
+import VRoomListItem from '@/views/Messages/RoomListItem.vue';
 
 const { translate } = usePageLocale({ prefix: 'messages.list' });
 
-const updateDrawerRooms = inject(KEYS.DRAWER.UPDATE_ROOMS)!;
+const roomsStore = useRoomsStore();
 
-const rooms = ref<Array<IRoomResponse>>([]);
+const { rooms, isLoadingRooms } = storeToRefs(roomsStore);
+const { fetchMore, updateListRoom } = roomsStore;
 
-const { request: requestRooms, isLoading: isLoadingRooms } =
-  useSocketEventListener<{ rooms: Array<IRoomResponse> }, ISearchRoomsRequest>(
-    socket,
-    'list:room',
-    {
-      response({ rooms: data }) {
-        rooms.value = _.uniqBy([...rooms.value, ...data], (room) => room.id);
-        updateDrawerRooms(rooms.value);
-      },
-      exception(error) {
-        createSnackbarError(error.message);
-      },
-      immediate: true,
-      paramsOrData: { take: 20 },
-    },
-  );
-
-const requestRoomsThrottle = useThrottleFn(requestRooms, 500);
-
-function fetchMore() {
-  const excludeIds = _.map(rooms.value, (room) => room.id);
-
-  requestRoomsThrottle({
-    take: 10,
-    excludeIds: excludeIds.length ? excludeIds : undefined,
-  });
-}
-
-function handleCreateRoom(data: IRoomResponse) {
-  rooms.value.unshift(data);
-}
+const { createSnackbarError } = useSnackbar();
+const socket = useSocketChat();
 
 const { request: requestCreateRoom, isLoading: isLoadingCreateRoom } =
   useSocketEventListener<IRoomResponse, ICreateRoomRequest>(
     socket,
     'create:room',
     {
-      response: handleCreateRoom,
-      listener: handleCreateRoom,
+      response: updateListRoom,
+      listener: updateListRoom,
       exception(error) {
         createSnackbarError(error.message);
       },
     },
   );
+useSocketEventListener<IRoomResponse>(socket, 'update:room:photo', {
+  listener: updateListRoom,
+});
+useSocketEventListener<IRoomResponse>(socket, 'update:room', {
+  listener: updateListRoom,
+});
+useSocketEventListener<IRoomResponse>(socket, 'delete:room', {
+  listener: updateListRoom,
+});
+useSocketEventListener<IRoomMessageResponse>(socket, 'create:message', {
+  listener: (data) => updateListRoom(data.room),
+});
+useSocketEventListener<IRoomMessageResponse>(socket, 'delete:message', {
+  listener: (data) => updateListRoom(data.room),
+});
 
 const { isActiveDialog, openDialog, closeDialog } = useRouterDialog({
   name: 'Messages',

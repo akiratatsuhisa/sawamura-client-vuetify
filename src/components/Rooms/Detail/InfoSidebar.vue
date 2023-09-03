@@ -6,19 +6,42 @@
   >
     <template #prepend>
       <v-toolbar color="surface" v-if="$vuetify.display.smAndDown">
-        <v-app-bar-nav-icon icon="mdi-arrow-left" @click="drawer = !drawer">
-        </v-app-bar-nav-icon>
+        <v-btn
+          icon="mdi-arrow-left"
+          color="primary"
+          @click="drawer = !drawer"
+        />
       </v-toolbar>
       <v-sheet class="pa-4 text-center">
-        <v-avatar
-          color="secondary-container"
-          class="elevation-6"
-          :image="roomPhotoUrl"
-          size="80"
-        ></v-avatar>
-        <h3>
+        <v-badge
+          location="bottom end"
+          offset-y="5"
+          offset-x="5"
+          :color="room?.isGroup ? 'tertiary' : 'secondary'"
+          :icon="room?.isGroup ? 'mdi-account-group' : 'mdi-account-key'"
+        >
+          <v-avatar
+            color="secondary-container"
+            class="elevation-4"
+            :image="roomPhotoUrl"
+            size="80"
+          />
+        </v-badge>
+        <v-card-subtitle tag="caption">
+          {{
+            room.isGroup
+              ? translateShared('roomTypes.group')
+              : translateShared('roomTypes.private')
+          }}
+        </v-card-subtitle>
+
+        <v-card-title tag="h3" class="text-wrap">
           {{ displayName }}
-        </h3>
+        </v-card-title>
+
+        <v-card-subtitle tag="caption">
+          {{ disyplayLastActivatedAgo }}
+        </v-card-subtitle>
       </v-sheet>
 
       <v-divider />
@@ -230,6 +253,7 @@ import {
   IUpdateRoomMemberRequest,
   IUpdateRoomRequest,
 } from '@/interfaces';
+import { useRoomsStore } from '@/store';
 
 const props = defineProps<{
   modelValue?: IRoomResponse;
@@ -242,7 +266,7 @@ const emit = defineEmits<{
   (event: 'update:drawer', value: boolean): void;
 }>();
 
-const { translate } = usePageLocale({
+const { translate, translateShared } = usePageLocale({
   prefix: 'messages.room',
 });
 
@@ -255,18 +279,22 @@ const drawer = computed({
   },
 });
 
-const { identityId } = useAuth();
-
 const router = useRouter();
 
+const { identityId } = useAuth();
 const { createSnackbarError } = useSnackbar();
 
-const socket = useSocketChat();
-
 const room = inject(KEYS.CHAT.ROOM)!;
+const {
+  roomMembers,
+  currentMember,
+  displayName,
+  roomPhotoUrl,
+  updateImage,
+  lastActivatedAgo,
+} = useRoom(room);
 
 const { isThemeSelectable } = useThemeModeStorage();
-
 const displayThemeColor = useDisplayThemeColor(
   computed(() => room.value.themeSource),
 );
@@ -277,8 +305,13 @@ function onSelectReactionIcon(data: { value: string }) {
   reactionIcon.value = data.value;
 }
 
-const { roomMembers, currentMember, displayName, roomPhotoUrl, updateImage } =
-  useRoom(room);
+const disyplayLastActivatedAgo = computed(() => {
+  return lastActivatedAgo.value === ''
+    ? ''
+    : translate('lastActivated', { lastActivated: lastActivatedAgo.value });
+});
+
+const { updateListRoom } = useRoomsStore();
 
 function setRoom(data: IRoomResponse) {
   if (data.id !== room.value?.id) {
@@ -288,6 +321,7 @@ function setRoom(data: IRoomResponse) {
 }
 
 function handleDeleteRoom(data: IRoomResponse) {
+  updateListRoom(data);
   if (data.id !== room.value?.id) {
     return;
   }
@@ -295,14 +329,18 @@ function handleDeleteRoom(data: IRoomResponse) {
   router.push({ name: 'Messages' });
 }
 
+const socket = useSocketChat();
+
 useSocketEventListener<IRoomResponse>(socket, 'update:room:photo', {
   listener(data) {
+    updateListRoom(data);
     if (data.id !== room.value?.id) {
       return;
     }
     room.value = data;
     updateImage('photo');
   },
+  response: updateListRoom,
 });
 
 useSocketEventListener<IRoomResponse>(socket, 'update:room:cover', {
@@ -320,8 +358,14 @@ const { request: requestUpdateRoom, isLoading: isLoadingUpdateRoom } =
     socket,
     'update:room',
     {
-      response: setRoom,
-      listener: setRoom,
+      response(data) {
+        updateListRoom(data);
+        setRoom(data);
+      },
+      listener(data) {
+        updateListRoom(data);
+        setRoom(data);
+      },
       exception(error) {
         if (error.data.id !== room.value?.id) {
           return;

@@ -4,6 +4,7 @@ export type LocalePagesMessages = {
     subtitle: string;
     createGroup: string;
     fetchMore: string;
+    enterChat: string;
     dialogs: {
       createGroup: {
         title: string;
@@ -153,6 +154,7 @@ export type LocalePagesMessages = {
     };
   };
   shared: {
+    searchPlaceholder: string;
     chooseImage: string;
     generateTheme: string;
     roomTypes: {

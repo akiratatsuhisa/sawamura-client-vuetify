@@ -6,6 +6,7 @@ export const messages: LocalePagesMessages = {
     subtitle: 'Rooms',
     createGroup: 'Create Group',
     fetchMore: 'Fetch More',
+    enterChat: 'Enter Chat',
     dialogs: {
       createGroup: {
         title: 'Create Room Group',
@@ -173,6 +174,7 @@ export const messages: LocalePagesMessages = {
     },
   },
   shared: {
+    searchPlaceholder: 'Search...',
     chooseImage: 'Choose image',
     generateTheme: 'Generate theme from uploaded image',
     roomTypes: {

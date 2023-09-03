@@ -72,7 +72,7 @@
   <v-message-input
     ref="messageInputRef"
     v-model:emoji-picker-show="emojiPickerShow"
-    @unshift-message="unshiftMessage"
+    @send="onSendMessage"
     @goto-last-message="gotoLastMessage"
     @typing="onTyping"
   />
@@ -109,10 +109,12 @@ import {
 } from '@/composables';
 import { KEYS } from '@/constants';
 import {
+  ICreateRoomMessageRequest,
   IDeleteRoomMessageRequest,
   IRoomMessageResponse,
   ISearchRoomMessagesRequest,
 } from '@/interfaces';
+import { useRoomsStore } from '@/store';
 
 const VMessageContent = defineAsyncComponent(
   () => import('@/components/Rooms/Detail/MessageContent.vue'),
@@ -124,21 +126,20 @@ const VTypingUsers = defineAsyncComponent(
   () => import('@/components/Rooms/Detail/TypingUsers.vue'),
 );
 
+const { updateListRoom } = useRoomsStore();
+
 const route = useRoute();
-
 const { createSnackbarError } = useSnackbar();
-
-const socket = useSocketChat();
 
 const roomId = computed<string>(() => route.params.roomId as string);
 const room = inject(KEYS.CHAT.ROOM)!;
-
 const { roomCoverUrl } = useRoom(room);
 
 const messagesRef = ref<HTMLDivElement>();
 const messages = ref<Array<IRoomMessageResponse>>([]);
-
 const isAllMessagesLoaded = ref<boolean>(false);
+
+const socket = useSocketChat();
 
 const { request: requestMessages, isLoading } = useSocketEventListener<
   { messages: Array<IRoomMessageResponse> },
@@ -185,7 +186,6 @@ watch(
 );
 
 const { y: scrollMessages } = useScroll(messagesRef);
-
 const isDisplayGotoLastMessage = computed(() => scrollMessages.value < -120);
 
 function gotoLastMessage() {
@@ -204,7 +204,6 @@ const { onIntersect } = useFetchIntersection({
 });
 
 const messageInputRef = ref<InstanceType<typeof VMessageInput>>();
-
 const emojiIndex = new EmojiIndex(data);
 const emojiPickerShow = ref(false);
 
@@ -212,7 +211,8 @@ async function selectEmoji(params: { native: string }) {
   messageInputRef.value?.selectEmoji(params.native);
 }
 
-function unshiftMessage(data: IRoomMessageResponse) {
+function createMessage(data: IRoomMessageResponse) {
+  updateListRoom(data.room);
   if (data.room.id !== room.value?.id) {
     return;
   }
@@ -222,6 +222,7 @@ function unshiftMessage(data: IRoomMessageResponse) {
 }
 
 function removeMessage(data: IRoomMessageResponse) {
+  updateListRoom(data.room);
   if (data.room.id !== room.value?.id) {
     return;
   }
@@ -233,6 +234,21 @@ function removeMessage(data: IRoomMessageResponse) {
   }
   messages.value.splice(index, 1, data);
 }
+
+const { request: requestCreateMessage } = useSocketEventListener<
+  IRoomMessageResponse,
+  ICreateRoomMessageRequest
+>(socket, 'create:message', {
+  response: createMessage,
+  listener: createMessage,
+  exception(error) {
+    if (error.data.roomId !== room.value?.id) {
+      return;
+    }
+
+    createSnackbarError(error.message);
+  },
+});
 
 const { request: requestDeleteMessage, isLoading: isLoadingDeleteMessage } =
   useSocketEventListener<IRoomMessageResponse, IDeleteRoomMessageRequest>(
@@ -250,6 +266,10 @@ const { request: requestDeleteMessage, isLoading: isLoadingDeleteMessage } =
       },
     },
   );
+
+function onSendMessage(data: ICreateRoomMessageRequest) {
+  requestCreateMessage(data);
+}
 
 const typingUsersRef = ref<InstanceType<typeof VTypingUsers>>();
 

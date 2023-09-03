@@ -137,27 +137,20 @@ import { VTextField } from 'vuetify/components';
 
 import VMessageInputFile from '@/components/Rooms/Detail/MessageInputFile.vue';
 import VMessageInputRecord from '@/components/Rooms/Detail/MessageInputRecord.vue';
-import {
-  useOpenFileDialog,
-  usePageLocale,
-  useSnackbar,
-  useSocketChat,
-  useSocketEventListener,
-} from '@/composables';
+import { useOpenFileDialog, usePageLocale, useSnackbar } from '@/composables';
 import { KEYS, MESSAGE_FILE } from '@/constants';
 import { BinaryUnit, Format } from '@/helpers';
 import {
   BasicFile,
   BasicFileType,
   ICreateRoomMessageRequest,
-  IRoomMessageResponse,
 } from '@/interfaces';
 
 const props = defineProps<{ emojiPickerShow: boolean }>();
 
 const emit = defineEmits<{
-  (event: 'update:emojiPickerShow', data: boolean): void;
-  (event: 'unshiftMessage', data: IRoomMessageResponse): void;
+  (event: 'send', payload: ICreateRoomMessageRequest): void;
+  (event: 'update:emojiPickerShow', payload: boolean): void;
   (event: 'gotoLastMessage'): void;
   (event: 'typing', payload: KeyboardEvent): void;
 }>();
@@ -168,9 +161,7 @@ const { translate } = usePageLocale({
 
 const room = inject(KEYS.CHAT.ROOM)!;
 
-const { createSnackbarWarning, createSnackbarError } = useSnackbar();
-
-const socket = useSocketChat();
+const { createSnackbarWarning } = useSnackbar();
 
 const isShowRecord = ref<boolean>(false);
 const filesInput = shallowReactive<Array<BasicFile>>([]);
@@ -297,31 +288,15 @@ function clearMessage() {
   messageInput.value = '';
 }
 
-const { request: requestCreateMessage } = useSocketEventListener<
-  IRoomMessageResponse,
-  ICreateRoomMessageRequest
->(socket, 'create:message', {
-  response: (data) => emit('unshiftMessage', data),
-  listener: (data) => emit('unshiftMessage', data),
-  exception(error) {
-    if (error.data.roomId !== room.value?.id) {
-      return;
-    }
-
-    createSnackbarError(error.message);
-  },
-});
-
 function sendMessage() {
   emit('gotoLastMessage');
 
   messageInput.value = messageInput.value.trim();
-
   if (isDisplayReactionIcon.value) {
     messageInput.value = reactionIcon.value || '👌';
   }
 
-  requestCreateMessage({
+  emit('send', {
     roomId: room.value.id,
     content: messageInput.value,
     files: !filesInput.length
@@ -337,7 +312,7 @@ function sendMessage() {
 }
 
 function sendRecord(audioFile: File) {
-  requestCreateMessage({
+  emit('send', {
     roomId: room.value.id,
     content: '',
     files: [

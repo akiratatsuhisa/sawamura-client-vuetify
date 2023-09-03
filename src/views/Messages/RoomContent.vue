@@ -3,25 +3,27 @@
 
   <v-main class="fill-height">
     <div class="d-flex flex-column h-100">
-      <v-toolbar color="surface">
-        <v-tooltip :text="disyplayLastActivatedAgo" location="bottom left">
-          <template v-slot:activator="{ props }">
-            <v-app-bar-nav-icon
-              :color="room?.isGroup ? 'tertiary' : 'secondary'"
-              :icon="room?.isGroup ? 'mdi-account-group' : 'mdi-account-key'"
-              v-bind="props"
-            >
-            </v-app-bar-nav-icon>
-          </template>
-        </v-tooltip>
+      <v-toolbar tag="h2" color="surface">
+        <v-btn
+          v-if="$vuetify.display.smAndDown"
+          color="primary"
+          icon="mdi-arrow-left"
+          :to="{ name: 'Messages' }"
+        />
+
+        <v-badge
+          location="bottom end"
+          :color="room?.isGroup ? 'tertiary' : 'secondary'"
+          :icon="room?.isGroup ? 'mdi-account-group' : 'mdi-account-key'"
+        >
+          <v-avatar
+            :image="roomPhotoUrl"
+            color="secondary-container"
+            class="elevation-4 ml-md-3"
+          />
+        </v-badge>
 
         <v-toolbar-title>{{ displayName }}</v-toolbar-title>
-
-        <v-spacer></v-spacer>
-
-        <v-card-subtitle v-if="$vuetify.display.mdAndUp">
-          {{ disyplayLastActivatedAgo }}
-        </v-card-subtitle>
 
         <v-btn
           color="primary"
@@ -45,18 +47,9 @@ import { useDisplay } from 'vuetify/lib/framework.mjs';
 
 import VInfoSidebar from '@/components/Rooms/Detail/InfoSidebar.vue';
 import VMainContent from '@/components/Rooms/Detail/MainContent.vue';
-import {
-  usePageLocale,
-  useRoom,
-  useSocketChat,
-  useSocketEventListener,
-} from '@/composables';
+import { useRoom, useSocketChat, useSocketEventListener } from '@/composables';
 import { KEYS } from '@/constants';
 import { IRoomRequest, IRoomResponse } from '@/interfaces';
-
-const { translate } = usePageLocale({
-  prefix: 'messages.room',
-});
 
 const display = useDisplay();
 
@@ -129,14 +122,8 @@ const room = ref<IRoomResponse>({
   themeStyle: null,
 });
 
-const { currentMember, targetMember, displayName, lastActivatedAgo } =
+const { currentMember, targetMember, roomPhotoUrl, displayName } =
   useRoom(room);
-
-const disyplayLastActivatedAgo = computed(() => {
-  return lastActivatedAgo.value === ''
-    ? ''
-    : translate('lastActivated', { lastActivated: lastActivatedAgo.value });
-});
 
 provide(KEYS.CHAT.ROOM, room);
 

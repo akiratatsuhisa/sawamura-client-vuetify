@@ -38,11 +38,6 @@ export namespace KEYS {
     export const IS_ACTIVE: InjectionKey<
       (item: RouteLocationNamedRaw, prefix?: boolean) => boolean
     > = Symbol('drawer:isActive');
-    export const ROOMS: InjectionKey<Ref<Array<IRoomResponse>>> =
-      Symbol('drawer:rooms');
-    export const UPDATE_ROOMS: InjectionKey<
-      (data: Array<IRoomResponse>) => void
-    > = Symbol('drawer:updateRooms');
   }
 
   export namespace CHAT {

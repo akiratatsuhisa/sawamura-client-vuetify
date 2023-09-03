@@ -1,6 +1,8 @@
 import { RouteRecordRaw } from 'vue-router';
 
 import { Regex } from '@/helpers';
+import VSidebar from '@/layouts/Default/Sidebar.vue';
+import VTopbar from '@/layouts/Default/Topbar.vue';
 
 export default {
   path: 'dashboard',
@@ -13,7 +15,11 @@ export default {
       to: { name: 'Dashboard' },
     },
   },
-  component: () => import('@/views/Dashboard/Index.vue'),
+  components: {
+    topbar: VTopbar,
+    sidebar: VSidebar,
+    default: () => import('@/views/Dashboard/Index.vue'),
+  },
   children: [
     {
       path: `/dashboard/users/:id(${Regex.Uuid.source})?/:dialog(changeRoles)?`,

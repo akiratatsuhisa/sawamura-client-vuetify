@@ -2,7 +2,7 @@
   <v-main>
     <v-container>
       <v-row>
-        <v-col md="8" lg="6" class="mx-auto">
+        <v-col cols="12" lg="10" class="mx-auto">
           <v-card rounded="xl">
             <v-img
               aspect-ratio="16/9"

@@ -70,12 +70,6 @@
           class="v-list-item--drawer"
           active-class="bg-secondary-container"
         />
-        <v-room-menu-item
-          v-else-if="item.type === 'room'"
-          :item="item"
-          class="v-list-item--drawer"
-          active-class="bg-secondary-container"
-        />
       </template>
     </v-list>
   </v-navigation-drawer>
@@ -88,19 +82,16 @@ import { RouteLocationNamedRaw, useRoute, useRouter } from 'vue-router';
 
 import { useAuth } from '@/composables';
 import { KEYS } from '@/constants';
-import { IRailMenuItem, IRoomMenuItem } from '@/interfaces';
+import { IRailMenuItem } from '@/interfaces';
 import VAvatarMenuItem from '@/layouts/Default/Menus/AvatarMenuItem.vue';
 import VIconMenuItem from '@/layouts/Default/Menus/IconMenuItem.vue';
 import VRailMenuItem from '@/layouts/Default/Menus/RailMenuItem.vue';
-import VRoomMenuItem from '@/layouts/Default/Menus/RoomMenuItem.vue';
 import VTitleMenuItem from '@/layouts/Default/Menus/TitleMenuItem.vue';
 
 const { photoUrl } = useAuth();
 
 const router = useRouter();
 const route = useRoute();
-
-const darwerRooms = inject(KEYS.DRAWER.ROOMS)!;
 
 const drawer = inject(KEYS.DRAWER.SHOW);
 const subDrawer = ref<boolean>(false);
@@ -125,26 +116,6 @@ const items = computed<Array<IRailMenuItem>>(() => [
     onClick() {
       subDrawer.value = true;
     },
-    children: [
-      {
-        type: 'icon',
-        key: 'Messages:List',
-        value: { name: 'Messages' },
-        icon: 'mdi-forum-outline',
-        title: 'Room List',
-        translate: 'menus.messages.subs.list',
-      },
-      ..._.map(
-        darwerRooms.value,
-        (room) =>
-          ({
-            type: 'room',
-            key: `Messages:Room:${room.id}`,
-            value: { name: 'Messages:Room', params: { roomId: room.id } },
-            room: room,
-          } satisfies IRoomMenuItem),
-      ),
-    ],
   },
   {
     type: 'rail',

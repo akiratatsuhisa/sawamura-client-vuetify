@@ -2,8 +2,9 @@
   <v-btn icon>
     <v-avatar
       color="secondary-container"
-      class="elevation-6"
+      class="elevation-2"
       :image="photoUrl"
+      :size="($attrs.size as any)"
     />
 
     <v-base-menu :title="$t('common.app.title')">
