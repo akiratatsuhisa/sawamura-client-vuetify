@@ -10,7 +10,11 @@ import {
 import { RouteLocationNamedRaw } from 'vue-router';
 
 import { AlertProps, SnackbarProps } from '@/composables';
-import { IRoomMemberResponse, IRoomResponse } from '@/interfaces';
+import {
+  IProfileUserResponse,
+  IRoomMemberResponse,
+  IRoomResponse,
+} from '@/interfaces';
 
 export namespace KEYS {
   export const AXIOS: InjectionKey<AxiosInstance> = Symbol('axios');
@@ -70,6 +74,17 @@ export namespace KEYS {
       }
     }
   }
+
+  export namespace USERS {
+    export namespace PAGE {
+      export const PROFILE_USER: InjectionKey<
+        DeepReadonly<Ref<IProfileUserResponse>>
+      > = Symbol('users:page:profileUser');
+      export const HAS_FOLLOWING: InjectionKey<Ref<boolean>> = Symbol(
+        'users:page:hasFollowing',
+      );
+    }
+  }
 }
 
 export namespace MESSAGE_FILE {
@@ -119,6 +134,7 @@ export namespace MESSAGE_FILE {
 
 export namespace AUTH_REGEX {
   export const USERNAME = /^[a-zA-Z][a-zA-Z0-9_-]*$/;
+  export const DISPLAY_NAME = /^[a-zA-Z][a-zA-Z0-9_-]*$/;
   export const PASSWORD =
     /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]+$/;
 }

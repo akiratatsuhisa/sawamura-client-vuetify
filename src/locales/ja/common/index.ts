@@ -1,5 +1,7 @@
 import { LocaleCommon } from '@/locales/type/common';
 
+import { user } from './user';
+
 export const common: LocaleCommon = {
   app: {
     title: '澤村',
@@ -51,4 +53,5 @@ export const common: LocaleCommon = {
     show: '{limit}件表示',
     showing: 'レコード{from}から{to}までを表示中（全{totalCount}件）',
   },
+  user,
 };

@@ -3,7 +3,7 @@
     <v-avatar
       color="secondary-container"
       class="elevation-2"
-      icon="mdi-message-text"
+      icon="mdi-forum"
     />
 
     <v-base-menu :title="translate('title')">
@@ -36,7 +36,6 @@
 </template>
 
 <script lang="ts" setup>
-import _ from 'lodash';
 import { storeToRefs } from 'pinia';
 
 import { useFetchIntersection, useLayoutLocale } from '@/composables';

@@ -77,7 +77,7 @@
     @typing="onTyping"
   />
 
-  <v-main-content-display-image v-model="selectedMessageImageSrc" />
+  <v-display-image v-model="selectedMessageImageSrc" />
 </template>
 
 <script lang="ts" setup>
@@ -99,7 +99,7 @@ import {
 } from 'vue';
 import { useRoute } from 'vue-router';
 
-import VMainContentDisplayImage from '@/components/Rooms/Detail/MainContentDisplayImage.vue';
+import VDisplayImage from '@/components/VDisplayImage.vue';
 import {
   useFetchIntersection,
   useRoom,

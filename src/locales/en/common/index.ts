@@ -1,5 +1,7 @@
 import { LocaleCommon } from '@/locales/type/common';
 
+import { user } from './user';
+
 export const common: LocaleCommon = {
   app: {
     title: 'Sawamura',
@@ -51,4 +53,5 @@ export const common: LocaleCommon = {
     show: 'Show {limit}',
     showing: 'Showing {from} to {to} of {totalCount} records',
   },
+  user,
 };

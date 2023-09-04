@@ -25,16 +25,11 @@
 </template>
 
 <script lang="ts" setup>
-import { defineAsyncComponent, inject } from 'vue';
+import { inject } from 'vue';
 
 import { KEYS } from '@/constants';
-
-const VProfileMenu = defineAsyncComponent(
-  () => import('@/layouts/Default/ProfileMenu.vue'),
-);
-const VNotificationList = defineAsyncComponent(
-  () => import('@/layouts/Default/NotificationList.vue'),
-);
+import VNotificationList from '@/layouts/Default/NotificationList.vue';
+import VProfileMenu from '@/layouts/Default/ProfileMenu.vue';
 
 const drawer = inject(KEYS.DRAWER.SHOW);
 </script>

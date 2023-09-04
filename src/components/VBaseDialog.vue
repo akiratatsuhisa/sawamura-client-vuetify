@@ -40,7 +40,7 @@
         <slot></slot>
       </v-card-text>
 
-      <v-card-actions class="px-6 justify-end">
+      <v-card-actions class="px-6 pb-4 pb-lg-2 justify-end">
         <v-btn
           type="submit"
           color="primary"

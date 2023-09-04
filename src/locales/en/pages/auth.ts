@@ -18,6 +18,7 @@ export const auth: LocalePagesAuth = {
     title: 'Register',
     form: {
       username: { label: 'Username' },
+      displayName: { label: 'Display Name' },
       email: { label: 'Email' },
       password: { label: 'Password' },
       confirmPassword: {

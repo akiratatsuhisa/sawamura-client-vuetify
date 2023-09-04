@@ -58,7 +58,6 @@
 
 <script lang="ts" setup>
 import { useStyleTag } from '@vueuse/core';
-import _ from 'lodash';
 import { computed, defineAsyncComponent } from 'vue';
 import { useDisplay } from 'vuetify';
 

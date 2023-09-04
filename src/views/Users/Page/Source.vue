@@ -1,65 +1,49 @@
 <template>
-  <v-card rounded="xl">
-    <v-img
-      aspect-ratio="16/9"
-      cover
-      :lazy-src="LAZY_BACKGROUND"
-      :src="coverUrl"
-      class="elevation-4 rounded-xl"
-    >
-    </v-img>
+  <v-display-profile :cover-url="coverUrl" :photo-url="photoUrl">
+    <template #actions>
+      <v-btn
+        size="36"
+        variant="tonal"
+        icon="mdi-account-circle-outline"
+        @click="dialogs.photo = true"
+      />
+      <v-btn
+        size="36"
+        variant="tonal"
+        icon="mdi-image-outline"
+        @click="dialogs.cover = true"
+      />
+      <v-spacer></v-spacer>
+      <v-btn variant="tonal" height="36">
+        {{ translate('editButton') }}
+      </v-btn>
+    </template>
+  </v-display-profile>
 
-    <v-sheet class="bg-surface-container-low text-on-surface">
-      <v-sheet class="mb-3 d-flex bg-surface-container-low text-on-surface">
-        <v-hover>
-          <template v-slot="{ isHovering, props }">
-            <v-avatar
-              size="96"
-              class="mx-2 mt-n12"
-              :class="[isHovering ? 'elevation-12' : 'elevation-6']"
-              v-bind="props"
-            >
-              <v-avatar
-                color="secondary-container"
-                class="elevation-6 cursor-none"
-                size="96"
-                :image="photoUrl"
-              />
-
-              <v-overlay
-                :model-value="isHovering"
-                contained
-                class="align-center justify-center"
-              >
-                <v-avatar color="secondary-container">
-                  <v-icon icon="mdi-image-edit" size="28" />
-                </v-avatar>
-              </v-overlay>
-            </v-avatar>
-          </template>
-        </v-hover>
-
-        <v-card-title tag="h2" class="flex-grow-1 pl-0">
-          {{ user.lastName }} {{ user.firstName }}
-        </v-card-title>
-      </v-sheet>
-
-      <v-card-subtitle tag="h1">
-        Username - {{ user.username }}
-      </v-card-subtitle>
-    </v-sheet>
-  </v-card>
+  <v-dialog-profile-cover v-model="dialogs.cover" />
+  <v-dialog-profile-photo v-model="dialogs.photo" />
 </template>
 
 <script lang="ts" setup>
-import { computed } from 'vue';
+import { useStyleTag } from '@vueuse/core';
+import { computed, reactive } from 'vue';
 
-import { useUser } from '@/composables';
-import { IAdvancedUserResponse } from '@/interfaces';
+import VDialogProfileCover from '@/components/Users/Dialogs/DialogProfileCover.vue';
+import VDialogProfilePhoto from '@/components/Users/Dialogs/DialogProfilePhoto.vue';
+import VDisplayProfile from '@/components/Users/Page/DisplayProfile.vue';
+import { useAuth, usePageLocale } from '@/composables';
 
-const LAZY_BACKGROUND = import.meta.env.VITE_NO_BACKGROUND_URL;
+const { translate } = usePageLocale({ prefix: 'users.profile' });
 
-const props = defineProps<{ user: IAdvancedUserResponse }>();
+const { coverUrl, photoUrl, user } = useAuth();
 
-const { coverUrl, photoUrl } = useUser(computed(() => props.user));
+const dialogs = reactive({
+  cover: false,
+  photo: false,
+});
+
+useStyleTag(
+  computed(() => user.value?.themeStyle ?? ''),
+  { id: 'vuetify-profile-style' },
+);
 </script>

@@ -1,9 +1,9 @@
 import { MaybeRef } from '@vueuse/core';
 import { computed, unref } from 'vue';
 
-import { IAdvancedUserResponse } from '@/interfaces';
+import { IProfileUserResponse } from '@/interfaces';
 
-export function useUser(user: MaybeRef<IAdvancedUserResponse>) {
+export function useUser(user: MaybeRef<IProfileUserResponse>) {
   const coverUrl = computed(() => {
     const unwrapUser = unref(user);
     return unwrapUser.coverUrl

@@ -59,7 +59,7 @@ const take = computed<number | undefined>({
   set: (value?: number) => emit('update:take', parseNumberToString(value)),
 });
 
-const from = computed(() => skip.value ?? 0);
+const from = computed(() => (skip.value ?? 0) + (props.count ? 1 : 0));
 const to = computed(() => (skip.value ?? 0) + (props.count ?? 0));
 
 const length = computed(() =>

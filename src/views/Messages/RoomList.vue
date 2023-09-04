@@ -3,7 +3,7 @@
     <v-container class="fill-height">
       <v-row>
         <v-col class="mx-auto" cols="12" lg="10">
-          <v-card rounded="xl">
+          <v-card rounded="xl" min-height="480">
             <div class="d-flex flex-column flex-sm-row align-md-center">
               <v-card-title tag="h1">{{ translate('title') }}</v-card-title>
               <v-spacer v-if="$vuetify.display.smAndDown" />
@@ -52,7 +52,6 @@
 </template>
 
 <script lang="ts" setup>
-import _ from 'lodash';
 import { storeToRefs } from 'pinia';
 import { computed, defineAsyncComponent } from 'vue';
 

@@ -15,6 +15,7 @@ import { config, Service } from '@/services';
 export type UseAxiosOptions<T> = {
   unauth?: boolean;
   message?: MaybeRef<Component | string>;
+  throwErrorMessage?: boolean;
 } & (
   | {
       immediate: true;
@@ -36,7 +37,7 @@ export function useAxios<
   type Req = Parameters<S[A]>['1'];
   type Res = Awaited<ReturnType<S[A]>>['data'];
 
-  const { unauth, message } = options ?? {};
+  const { unauth, message, throwErrorMessage = true } = options ?? {};
 
   const { getAccessTokenSilently } = useAuth();
 
@@ -104,7 +105,7 @@ export function useAxios<
         headers.value = new AxiosHeaders();
       }
 
-      if (error.value?.message) {
+      if (throwErrorMessage && error.value?.message) {
         createSnackbarError(error.value.message);
       }
 

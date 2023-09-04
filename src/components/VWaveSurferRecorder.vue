@@ -3,7 +3,6 @@
 </template>
 
 <script lang="ts" setup>
-import _ from 'lodash';
 import { ref } from 'vue';
 import { WaveSurferOptions } from 'wavesurfer.js';
 

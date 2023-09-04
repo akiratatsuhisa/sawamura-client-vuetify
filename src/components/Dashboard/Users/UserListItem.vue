@@ -9,15 +9,18 @@
     <div
       class="h-100 px-2 flex-grow-1 text-subtitle-1 d-flex flex-column align-content-lg-space-between"
     >
+      <div class="text-subtitle-1 font-weight-medium">
+        {{ record.displayName }}
+      </div>
       <i18n-t
         keypath="pages.dashboard.users.list.username"
         tag="div"
         scope="global"
-        class="text-body-1"
+        class="text-subtitle-2"
       >
         {{ record.username }}
       </i18n-t>
-      <div class="text-subtitle-1">{{ fullName }}</div>
+      <div class="text-body-2">{{ fullName }}</div>
       <div class="text-subtitle-2 font-weight-light">
         <v-icon size="x-small" icon="mdi-clock-outline" />
         <i18n-t

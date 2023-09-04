@@ -36,7 +36,7 @@ export function getDisplayRoomMemberNameByUser(
     ? translateShared('displayMessage.you')
     : roomMember.nickName
     ? roomMember.nickName
-    : roomMember.member.username;
+    : roomMember.member.displayName;
 }
 
 export function getDisplayRoomMessage(
@@ -161,7 +161,7 @@ export function useRoom(room: MaybeRef<IRoomResponse>) {
       ? unwrapRoom.name
       : targetMember.value?.nickName
       ? targetMember.value.nickName
-      : targetMember.value?.member.username;
+      : targetMember.value?.member.displayName;
   });
 
   const lastActivatedAgo = useTimeAgo(

@@ -1,17 +1,19 @@
 <template>
   <v-base-dialog
-    mobile-width="700"
+    fullscreen
     :model-value="modelValue"
     @update:model-value="emit('update:modelValue', $event)"
     :disabled-submit="isLoading || !submitable"
     @submit="onSubmit"
     @open="onOpen"
   >
-    <template #title>Profile Photo</template>
+    <template #title>{{ translateShared('dialogProfileCoverTitle') }}</template>
 
     <div class="mb-3">
       <div class="d-flex mb-3">
-        <v-btn color="primary" @click="openSelectImage">Choose image</v-btn>
+        <v-btn color="primary" @click="openSelectImage">
+          {{ $t('common.theme.chooseImage') }}
+        </v-btn>
       </div>
 
       <v-switch
@@ -21,7 +23,7 @@
         color="tertiary"
         true-icon="mdi-check"
         false-icon="mdi-close"
-        label="Generate theme from uploaded image"
+        :label="$t('common.theme.generateTheme')"
         inset
         hide-details
       />
@@ -29,26 +31,25 @@
 
     <v-cropper-container
       class="cropper-wrapper"
-      height="400px"
       :background-src="imageCropperSrc"
     >
       <v-cropper
         ref="cropperRef"
         class="cropper elevation-1"
         background-class="cropper-background"
-        :stencil-component="CircleStencil"
+        :stencil-component="RectangleStencil"
         :src="imageCropperSrc"
         :stencil-props="{
-          aspectRatio: 1 / 1,
-          width: IMAGE_FILE.PHOTO_DIMENSIONS.WIDTH,
-          height: IMAGE_FILE.PHOTO_DIMENSIONS.WIDTH,
+          aspectRatio: 16 / 9,
+          width: IMAGE_FILE.COVER_DIMENSIONS.WIDTH,
+          height: IMAGE_FILE.COVER_DIMENSIONS.HEIGHT,
         }"
         @ready="submitable = true"
         @error="submitable = false"
       />
     </v-cropper-container>
 
-    <template #action>Change</template>
+    <template #action>{{ $t('common.data.change') }}</template>
   </v-base-dialog>
 </template>
 
@@ -56,10 +57,15 @@
 import 'vue-advanced-cropper/dist/style.css';
 import 'vue-advanced-cropper/dist/theme.compact.css';
 
-import { CircleStencil, Cropper as VCropper } from 'vue-advanced-cropper';
+import { Cropper as VCropper, RectangleStencil } from 'vue-advanced-cropper';
 
 import VCropperContainer from '@/components/VCropperContainer.vue';
-import { useAuth, useAxios, useImageCropper } from '@/composables';
+import {
+  useAuth,
+  useAxios,
+  useImageCropper,
+  usePageLocale,
+} from '@/composables';
 import { IMAGE_FILE } from '@/helpers';
 import { services } from '@/services';
 
@@ -71,8 +77,8 @@ const emit = defineEmits<{
   (event: 'update:modelValue', value: boolean): void;
 }>();
 
+const { translateShared } = usePageLocale({ prefix: 'users.profile' });
 const { fetchAccessToken, updateImage } = useAuth();
-
 const {
   isThemeSelectable,
   isThemeModeGenerate,
@@ -83,28 +89,27 @@ const {
   resetSelectImage,
   getImage,
 } = useImageCropper();
-
-const { isLoading, excute: updatePhoto } = useAxios(
+const { isLoading, excute: updateCover } = useAxios(
   services.auth,
-  'updatePhoto',
+  'updateCover',
 );
 
 async function onSubmit() {
   const image = await getImage({
     mimeType: IMAGE_FILE.MIME_TYPE,
     dimensions: {
-      width: IMAGE_FILE.PHOTO_DIMENSIONS.WIDTH,
-      height: IMAGE_FILE.PHOTO_DIMENSIONS.HEIGHT,
+      width: IMAGE_FILE.COVER_DIMENSIONS.WIDTH,
+      height: IMAGE_FILE.COVER_DIMENSIONS.HEIGHT,
     },
   });
 
   (async () => {
-    await updatePhoto({
+    await updateCover({
       image,
       theme: isThemeSelectable.value && isThemeModeGenerate.value,
     });
     await fetchAccessToken();
-    updateImage('photo');
+    updateImage('cover');
   })();
 
   emit('update:modelValue', false);

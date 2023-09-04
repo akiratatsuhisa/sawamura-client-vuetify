@@ -18,10 +18,9 @@
                 :image="photoUrl"
               ></v-avatar>
             </template>
-            <v-list-item-title v-if="fullName">
-              {{ fullName }}
+            <v-list-item-title>
+              {{ user?.displayName }}
             </v-list-item-title>
-            <v-list-item-title v-else>{{ user?.username }}</v-list-item-title>
             <v-list-item-subtitle>{{ user?.username }}</v-list-item-subtitle>
 
             <template #append>
@@ -135,7 +134,7 @@ const {
 const { languages, selectedLanguage, selectedLanguageDetail } =
   useLanguageStorage();
 
-const { logout, user, fullName, photoUrl } = useAuth();
+const { logout, user, photoUrl } = useAuth();
 
 async function onLogout() {
   await logout();

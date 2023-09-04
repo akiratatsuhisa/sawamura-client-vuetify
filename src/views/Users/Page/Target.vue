@@ -1,65 +1,108 @@
 <template>
-  <v-card rounded="xl">
-    <v-img
-      aspect-ratio="16/9"
-      cover
-      :lazy-src="LAZY_BACKGROUND"
-      :src="coverUrl"
-      class="elevation-4 rounded-xl"
-    >
-    </v-img>
-
-    <v-sheet class="bg-surface-container-low text-on-surface">
-      <v-sheet class="mb-3 d-flex bg-surface-container-low text-on-surface">
-        <v-hover>
-          <template v-slot="{ isHovering, props }">
-            <v-avatar
-              size="96"
-              class="mx-2 mt-n12"
-              :class="[isHovering ? 'elevation-12' : 'elevation-6']"
-              v-bind="props"
-            >
-              <v-avatar
-                color="secondary-container"
-                class="elevation-6 cursor-none"
-                size="96"
-                :image="photoUrl"
-              />
-
-              <v-overlay
-                :model-value="isHovering"
-                contained
-                class="align-center justify-center"
-              >
-                <v-avatar color="secondary-container">
-                  <v-icon icon="mdi-image-edit" size="28" />
-                </v-avatar>
-              </v-overlay>
-            </v-avatar>
+  <v-display-profile>
+    <template #actions>
+      <v-btn size="36" variant="tonal" icon="mdi-dots-vertical" />
+      <v-btn
+        size="36"
+        variant="tonal"
+        icon="mdi-message-text"
+        :loading="isLoadingPrivateChat"
+        @click="openPrivateChat"
+      />
+      <v-spacer></v-spacer>
+      <v-hover #default="{ isHovering, props }">
+        <v-btn
+          height="36"
+          :variant="hasFollowing || isHovering ? 'flat' : 'outlined'"
+          :color="isHovering && hasFollowing ? 'error' : 'primary'"
+          :loading="isLoadingChangeRelationship"
+          @click="onChangeRelationship"
+          v-bind="props"
+        >
+          <template v-if="hasFollowing">
+            {{
+              $t(
+                `common.user.relationshipStates.${
+                  isHovering ? 'unfollow' : 'following'
+                }`,
+              )
+            }}
           </template>
-        </v-hover>
-
-        <v-card-title tag="h2" class="flex-grow-1 pl-0">
-          {{ user.lastName }} {{ user.firstName }}
-        </v-card-title>
-      </v-sheet>
-
-      <v-card-subtitle tag="h1">
-        Username - {{ user.username }}
-      </v-card-subtitle>
-    </v-sheet>
-  </v-card>
+          <template v-else>
+            {{
+              $t(
+                `common.user.relationshipStates.${
+                  isHovering ? 'following' : 'follow'
+                }`,
+              )
+            }}
+          </template>
+        </v-btn>
+      </v-hover>
+    </template>
+  </v-display-profile>
 </template>
 
 <script lang="ts" setup>
-import { computed } from 'vue';
+import { useStyleTag } from '@vueuse/core';
+import { computed, inject } from 'vue';
+import { useRouter } from 'vue-router';
 
-import { useUser } from '@/composables';
-import { IAdvancedUserResponse } from '@/interfaces';
+import VDisplayProfile from '@/components/Users/Page/DisplayProfile.vue';
+import { useAxios, useSocketChat, useSocketEventListener } from '@/composables';
+import { KEYS } from '@/constants';
+import {
+  IRoomPrivateRequest,
+  IRoomResponse,
+  UserRelationshipState,
+} from '@/interfaces';
+import { services } from '@/services';
 
-const LAZY_BACKGROUND = import.meta.env.VITE_NO_BACKGROUND_URL;
+const profileUser = inject(KEYS.USERS.PAGE.PROFILE_USER)!;
+const hasFollowing = inject(KEYS.USERS.PAGE.HAS_FOLLOWING)!;
 
-const props = defineProps<{ user: IAdvancedUserResponse }>();
+const {
+  excute: reuqestChangeRelationship,
+  isLoading: isLoadingChangeRelationship,
+} = useAxios(services.users, 'changeRelationship', {
+  throwErrorMessage: false,
+});
 
-const { coverUrl, photoUrl } = useUser(computed(() => props.user));
+async function onChangeRelationship() {
+  const username = profileUser.value.username;
+
+  await reuqestChangeRelationship({
+    username,
+    relationshipState: hasFollowing.value
+      ? UserRelationshipState.Unfollow
+      : UserRelationshipState.Follow,
+  });
+
+  if (username === profileUser.value.username) {
+    hasFollowing.value = !hasFollowing.value;
+  }
+}
+
+const router = useRouter();
+const socket = useSocketChat();
+
+const { request: requestPrivateChat, isLoading: isLoadingPrivateChat } =
+  useSocketEventListener<IRoomResponse, IRoomPrivateRequest>(
+    socket,
+    'read:room:private',
+    {
+      response(data) {
+        router.push({ name: 'Messages:Room', params: { roomId: data.id } });
+      },
+    },
+  );
+
+async function openPrivateChat() {
+  await requestPrivateChat({ otherUserId: profileUser.value.id });
+}
+
+useStyleTag(
+  computed(() => profileUser.value?.themeStyle ?? ''),
+  { id: 'vuetify-profile-style' },
+);
 </script>

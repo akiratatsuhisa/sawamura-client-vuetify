@@ -35,6 +35,10 @@ export interface IRoomRequest {
   id: string;
 }
 
+export interface IRoomPrivateRequest {
+  otherUserId: string;
+}
+
 export interface ICreateRoomRequest {
   name: string;
   isGroup: boolean;
@@ -58,6 +62,7 @@ export interface ISearchRoomsRequest extends IPaginationExcludeIds {}
 export interface IRoomUserResponse {
   id: string;
   username: string;
+  displayName: string;
   photoUrl: string | null;
 }
 

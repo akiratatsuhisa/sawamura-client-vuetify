@@ -22,6 +22,16 @@
               />
               <v-text-field
                 class="mb-3"
+                v-model="v$.displayName.$model"
+                :label="translateFormField('displayName')"
+                :error-messages="getErrorMessage(v$.displayName)"
+                @blur="v$.displayName.$validate"
+                clearable
+                persistent-hint
+                autocomplete="displayName"
+              />
+              <v-text-field
+                class="mb-3"
                 v-model="v$.email.$model"
                 :label="translateFormField('email')"
                 :error-messages="getErrorMessage(v$.email)"
@@ -130,6 +140,7 @@ const { bindShowPassword } = useShowPassword(
 const form = reactive<IRegisterRequest & { confirmPassword: string }>({
   username: '',
   email: '',
+  displayName: '',
   password: '',
   confirmPassword: '',
 });
@@ -143,6 +154,11 @@ const [v$, { handleSubmit }] = useVuelidate<
       minLength: minLength(pathFormField('username'), 3),
       maxLength: maxLength(pathFormField('username'), 255),
       regex: regex(pathFormField('username'), AUTH_REGEX.USERNAME),
+    },
+    displayName: {
+      required: required(pathFormField('displayName')),
+      maxLength: maxLength(pathFormField('displayName'), 128),
+      regex: regex(pathFormField('displayName'), AUTH_REGEX.DISPLAY_NAME),
     },
     email: { email, maxLength: maxLength(pathFormField('email'), 255) },
     password: {

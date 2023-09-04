@@ -23,7 +23,7 @@
     <v-list-item-subtitle>
       {{ $t(`common.roomRoles.${_.camelCase(roomMember.role)}`) }}
       -
-      {{ roomMember.member.username }}
+      {{ roomMember.member.displayName }}
     </v-list-item-subtitle>
 
     <template #append>

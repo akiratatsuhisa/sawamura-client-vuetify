@@ -1,3 +1,5 @@
+import { LocaleCommonUser } from './user';
+
 export type LocaleCommon = {
   app: {
     title: string;
@@ -56,4 +58,5 @@ export type LocaleCommon = {
      */
     showing: string;
   };
+  user: LocaleCommonUser;
 };

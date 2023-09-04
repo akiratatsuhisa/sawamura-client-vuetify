@@ -5,8 +5,6 @@
 </template>
 
 <script lang="ts" setup>
-import _ from 'lodash';
-
 defineProps<{
   fileSrc?: string;
 }>();

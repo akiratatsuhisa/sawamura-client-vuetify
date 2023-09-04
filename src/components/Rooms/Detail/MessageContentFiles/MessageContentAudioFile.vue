@@ -27,7 +27,6 @@
 </template>
 
 <script lang="ts" setup>
-import _ from 'lodash';
 import { computed, ref, unref } from 'vue';
 
 import VWaveSurferPlayer from '@/components/VWaveSurferPlayer.vue';

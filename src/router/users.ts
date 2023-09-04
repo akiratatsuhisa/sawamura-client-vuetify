@@ -15,17 +15,4 @@ export default [
       default: () => import('@/views/Users/Page/Index.vue'),
     },
   },
-  /**
-   * @deprecated
-   */
-  // {
-  //   path: 'profile/:dialog(photo|cover|theme|edit)?',
-  //   name: 'Users:Profile',
-  //   meta: { requiresAuth: true },
-  //   components: {
-  //     topbar: VTopbar,
-  //     sidebar: VSidebar,
-  //     default: () => import('@/views/Users/Profile.vue'),
-  //   },
-  // },
 ] as Array<RouteRecordRaw>;

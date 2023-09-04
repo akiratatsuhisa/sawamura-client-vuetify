@@ -23,6 +23,7 @@ export type LocalePagesAuth = {
     title: string;
     form: {
       username: { label: string };
+      displayName: { label: string };
       email: { label: string };
       password: { label: string };
       confirmPassword: { label: string; hint: string };

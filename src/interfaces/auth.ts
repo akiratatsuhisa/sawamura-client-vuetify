@@ -1,6 +1,7 @@
 export type IdentityUser = {
   id: string | null;
   username: string | null;
+  displayName: string | null;
   hasPassword: boolean | null;
   email: string | null;
   emailConfirmed: boolean | null;
@@ -31,7 +32,8 @@ export interface IAuthResponse {
 
 export interface IRegisterRequest {
   username: string;
-  email: string;
+  displayName: string;
+  email?: string | null;
   password: string;
 }
 

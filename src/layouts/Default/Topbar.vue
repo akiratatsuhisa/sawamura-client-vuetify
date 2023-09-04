@@ -23,19 +23,12 @@
 </template>
 
 <script lang="ts" setup>
-import { defineAsyncComponent, inject } from 'vue';
+import { inject } from 'vue';
 
 import { KEYS } from '@/constants';
-
-const VNotificationList = defineAsyncComponent(
-  () => import('@/layouts/Default/NotificationList.vue'),
-);
-const VMessageListMenu = defineAsyncComponent(
-  () => import('@/layouts/Default/Messages/MessageListMenu.vue'),
-);
-const VProfileMenu = defineAsyncComponent(
-  () => import('@/layouts/Default/ProfileMenu.vue'),
-);
+import VMessageListMenu from '@/layouts/Default/Messages/MessageListMenu.vue';
+import VNotificationList from '@/layouts/Default/NotificationList.vue';
+import VProfileMenu from '@/layouts/Default/ProfileMenu.vue';
 
 const drawer = inject(KEYS.DRAWER.SHOW);
 </script>

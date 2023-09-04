@@ -5,7 +5,7 @@ export interface ISearchAdvancedUsersRequest {
 export interface IAdvancedUserResponse {
   id: string;
   username: string;
-  email: string | null;
+  displayName: string | null;
   firstName: string | null;
   lastName: string | null;
   photoUrl: string | null;
@@ -14,15 +14,38 @@ export interface IAdvancedUserResponse {
   themeStyle: string | null;
   createdAt: string;
   updatedAt: string;
-  userRoles: Array<{
-    role: {
-      name: string;
-    };
-  }>;
 }
 
-export interface ISearchAdvancedUserRequest {
+export interface ISearchProfileUserRequest {
   username: string;
+}
+
+export interface IProfileUserResponse {
+  id: string;
+  username: string;
+  displayName: string | null;
+  firstName: string | null;
+  lastName: string | null;
+  birthDate: string | null;
+  location: string | null;
+  salary: string | null;
+  biography: string | null;
+  websiteLink: string | null;
+  photoUrl: string | null;
+  coverUrl: string | null;
+  themeSource: string | null;
+  themeStyle: string | null;
+  createdAt: string | null;
+  updatedAt: string | null;
+  _count: {
+    followers: number;
+    followees: number;
+  };
+}
+
+export interface IChangeUserRolesRequest {
+  id: string;
+  roleIds: Array<string>;
 }
 
 export interface IUserRequest {
@@ -44,12 +67,16 @@ export interface ISearchUsersRequest {
 export interface IUserResponse {
   id: string;
   username: string;
+  displayName: string | null;
   email: string | null;
   emailConfirmed: boolean;
   firstName: string | null;
   lastName: string | null;
   birthDate: string | null;
-  salary: number | null;
+  location: string | null;
+  salary: string | null;
+  biography: string | null;
+  websiteLink: string | null;
   photoUrl: string | null;
   coverUrl: string | null;
   createdAt: string;
@@ -61,7 +88,12 @@ export interface IUserResponse {
   }>;
 }
 
-export interface IChangeUserRolesRequest {
-  id: string;
-  roleIds: Array<string>;
+export enum UserRelationshipState {
+  Follow = 'follow',
+  Unfollow = 'unfollow',
+}
+
+export interface IChangeUserRelationshipRequest {
+  username: string;
+  relationshipState: UserRelationshipState;
 }

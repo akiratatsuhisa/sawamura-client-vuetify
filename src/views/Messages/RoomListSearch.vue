@@ -79,7 +79,7 @@ const { search, searchClearable } = storeToRefs(roomsStore);
   left: 0;
   right: 0;
   min-height: 300px;
-  max-height: 6s00px;
+  max-height: 450px;
   z-index: 100;
 }
 input.input {
