@@ -31,6 +31,11 @@
       {{ lastActivatedAgo ? '-' : undefined }}
       {{ lastActivatedAgo }}
     </v-list-item-subtitle>
+    <v-list-item-subtitle v-if="lastMessage">
+      {{ getDisplayRoomMemberNameByUser(room.roomMembers, lastMessage.user) }}
+      -
+      {{ getDisplayRoomMessage(lastMessage) }}
+    </v-list-item-subtitle>
 
     <template #append>
       <v-btn
@@ -51,9 +56,15 @@
 </template>
 
 <script lang="ts" setup>
+import _ from 'lodash';
 import { computed } from 'vue';
 
-import { usePageLocale, useRoom } from '@/composables';
+import {
+  getDisplayRoomMemberNameByUser,
+  getDisplayRoomMessage,
+  usePageLocale,
+  useRoom,
+} from '@/composables';
 import { IRoomResponse } from '@/interfaces';
 
 const props = defineProps<{
@@ -64,7 +75,7 @@ const { translate, translateShared } = usePageLocale({
   prefix: 'messages.list',
 });
 
-const { displayName, roomPhotoUrl, lastActivatedAgo } = useRoom(
+const { displayName, roomPhotoUrl, lastActivatedAgo, lastMessage } = useRoom(
   computed(() => props.room),
 );
 </script>

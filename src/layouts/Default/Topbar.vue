@@ -16,6 +16,8 @@
 
     <v-notification-list />
 
+    <v-message-list-menu />
+
     <v-profile-menu />
   </v-app-bar>
 </template>
@@ -25,11 +27,14 @@ import { defineAsyncComponent, inject } from 'vue';
 
 import { KEYS } from '@/constants';
 
-const VProfileMenu = defineAsyncComponent(
-  () => import('@/layouts/Default/ProfileMenu.vue'),
-);
 const VNotificationList = defineAsyncComponent(
   () => import('@/layouts/Default/NotificationList.vue'),
+);
+const VMessageListMenu = defineAsyncComponent(
+  () => import('@/layouts/Default/Messages/MessageListMenu.vue'),
+);
+const VProfileMenu = defineAsyncComponent(
+  () => import('@/layouts/Default/ProfileMenu.vue'),
 );
 
 const drawer = inject(KEYS.DRAWER.SHOW);

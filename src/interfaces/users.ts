@@ -1,16 +1,17 @@
-export interface ISearchUsersRequest {
+export interface ISearchAdvancedUsersRequest {
   search?: string;
 }
 
-export interface IUserResponse {
+export interface IAdvancedUserResponse {
   id: string;
   username: string;
-  password: string | null;
   email: string | null;
   firstName: string | null;
   lastName: string | null;
-  birthDate: string | null;
-  salary: string | null;
+  photoUrl: string | null;
+  coverUrl: string | null;
+  themeSource: number | null;
+  themeStyle: string | null;
   createdAt: string;
   updatedAt: string;
   userRoles: Array<{
@@ -20,10 +21,15 @@ export interface IUserResponse {
   }>;
 }
 
+export interface ISearchAdvancedUserRequest {
+  username: string;
+}
+
 export interface IUserRequest {
   id: string;
 }
-export interface ISearchAdvancedUsersRequest {
+
+export interface ISearchUsersRequest {
   username?: string | null;
   name?: string | null;
   email?: string | null;
@@ -35,7 +41,7 @@ export interface ISearchAdvancedUsersRequest {
   take?: string;
 }
 
-export interface IAdvancedUserResponse {
+export interface IUserResponse {
   id: string;
   username: string;
   email: string | null;

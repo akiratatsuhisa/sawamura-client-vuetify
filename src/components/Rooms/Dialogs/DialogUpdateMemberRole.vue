@@ -18,7 +18,7 @@
       <v-radio
         v-if="currentMember?.role === 'Administrator'"
         :label="$t('common.roomRoles.administrator')"
-        value="Admin"
+        value="Administrator"
         :error="v$.role.$error"
       />
       <v-radio

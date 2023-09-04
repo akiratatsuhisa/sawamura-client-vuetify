@@ -321,7 +321,6 @@ function setRoom(data: IRoomResponse) {
 }
 
 function handleDeleteRoom(data: IRoomResponse) {
-  updateListRoom(data);
   if (data.id !== room.value?.id) {
     return;
   }
@@ -340,7 +339,6 @@ useSocketEventListener<IRoomResponse>(socket, 'update:room:photo', {
     room.value = data;
     updateImage('photo');
   },
-  response: updateListRoom,
 });
 
 useSocketEventListener<IRoomResponse>(socket, 'update:room:cover', {
@@ -362,10 +360,7 @@ const { request: requestUpdateRoom, isLoading: isLoadingUpdateRoom } =
         updateListRoom(data);
         setRoom(data);
       },
-      listener(data) {
-        updateListRoom(data);
-        setRoom(data);
-      },
+      listener: setRoom,
       exception(error) {
         if (error.data.id !== room.value?.id) {
           return;

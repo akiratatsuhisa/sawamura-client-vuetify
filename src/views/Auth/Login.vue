@@ -18,6 +18,7 @@
                 :error-messages="getErrorMessage(v$.username)"
                 @blur="v$.username.$validate"
                 clearable
+                autocomplete="username"
               />
               <v-text-field
                 class="mb-3"

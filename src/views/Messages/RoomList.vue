@@ -4,9 +4,10 @@
       <v-row>
         <v-col class="mx-auto" cols="12" lg="10">
           <v-card rounded="xl">
-            <div class="d-flex flex-column flex-sm-row">
+            <div class="d-flex flex-column flex-sm-row align-md-center">
               <v-card-title tag="h1">{{ translate('title') }}</v-card-title>
-              <v-spacer></v-spacer>
+              <v-spacer v-if="$vuetify.display.smAndDown" />
+              <v-room-list-search />
               <v-btn
                 class="ma-4"
                 prepend-icon="mdi-account-group"
@@ -62,13 +63,10 @@ import {
   useSocketChat,
   useSocketEventListener,
 } from '@/composables';
-import {
-  ICreateRoomRequest,
-  IRoomMessageResponse,
-  IRoomResponse,
-} from '@/interfaces';
+import { ICreateRoomRequest, IRoomResponse } from '@/interfaces';
 import { useRoomsStore } from '@/store';
 import VRoomListItem from '@/views/Messages/RoomListItem.vue';
+import VRoomListSearch from '@/views/Messages/RoomListSearch.vue';
 
 const { translate } = usePageLocale({ prefix: 'messages.list' });
 
@@ -86,27 +84,11 @@ const { request: requestCreateRoom, isLoading: isLoadingCreateRoom } =
     'create:room',
     {
       response: updateListRoom,
-      listener: updateListRoom,
       exception(error) {
         createSnackbarError(error.message);
       },
     },
   );
-useSocketEventListener<IRoomResponse>(socket, 'update:room:photo', {
-  listener: updateListRoom,
-});
-useSocketEventListener<IRoomResponse>(socket, 'update:room', {
-  listener: updateListRoom,
-});
-useSocketEventListener<IRoomResponse>(socket, 'delete:room', {
-  listener: updateListRoom,
-});
-useSocketEventListener<IRoomMessageResponse>(socket, 'create:message', {
-  listener: (data) => updateListRoom(data.room),
-});
-useSocketEventListener<IRoomMessageResponse>(socket, 'delete:message', {
-  listener: (data) => updateListRoom(data.room),
-});
 
 const { isActiveDialog, openDialog, closeDialog } = useRouterDialog({
   name: 'Messages',

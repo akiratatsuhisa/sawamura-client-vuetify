@@ -175,11 +175,21 @@ export const messages: LocalePagesMessages = {
   },
   shared: {
     searchPlaceholder: 'Search...',
-    chooseImage: 'Choose image',
-    generateTheme: 'Generate theme from uploaded image',
     roomTypes: {
       group: 'Group',
       private: 'Private',
+    },
+    displayMessage: {
+      you: 'You',
+      removedMember: 'Removed Member',
+      sent: 'sent {type}',
+      types: {
+        images: '{length} image | {length} images',
+        files: '{length} file | {length} files',
+        audios: '{length} audio | {length} audios',
+        videos: '{length} video | {length} videos',
+        none: 'message has been deleted',
+      },
     },
   },
 };

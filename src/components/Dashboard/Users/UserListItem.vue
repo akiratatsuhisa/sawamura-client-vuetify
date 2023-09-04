@@ -35,14 +35,14 @@
       variant="outlined"
       size="small"
       icon="mdi-open-in-new"
-      :to="{ name: 'Users:Detail', params: { id: record.id } }"
+      :to="{ name: 'Users:Page', params: { username: record.username } }"
       target="_blank"
     />
     <v-btn
       v-else
       variant="outlined"
       append-icon="mdi-open-in-new"
-      :to="{ name: 'Users:Detail', params: { id: record.id } }"
+      :to="{ name: 'Users:Page', params: { username: record.username } }"
       target="_blank"
     >
       {{ $t('common.data.view') }}
@@ -143,10 +143,10 @@ import { computed, inject } from 'vue';
 
 import { KEYS } from '@/constants';
 import { Format } from '@/helpers';
-import { IAdvancedUserResponse } from '@/interfaces';
+import { IUserResponse } from '@/interfaces';
 
 const props = defineProps<{
-  record: IAdvancedUserResponse;
+  record: IUserResponse;
 }>();
 
 const photoUrl = computed(() =>

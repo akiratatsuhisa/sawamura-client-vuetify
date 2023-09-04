@@ -63,9 +63,9 @@ import {
 } from '@/composables';
 import { KEYS } from '@/constants';
 import {
+  IAdvancedUserResponse,
   ICreateRoomMemberRequest,
-  ISearchUsersRequest,
-  IUserResponse,
+  ISearchAdvancedUsersRequest,
 } from '@/interfaces';
 import { services } from '@/services';
 import { required } from '@/validators';
@@ -88,7 +88,7 @@ const room = inject(KEYS.CHAT.ROOM)!;
 const form = reactive<
   Omit<ICreateRoomMemberRequest, 'memberId'> & {
     role: string;
-    member: IUserResponse | null;
+    member: IAdvancedUserResponse | null;
   }
 >({
   member: null,
@@ -122,15 +122,18 @@ const onSubmit = handleSubmit((formData) => {
   emit('update:modelValue', false);
 });
 
-const { excute: excuteSearchUsers } = useAxios(services.users, 'getAll');
+const { excute: excuteSearchUsers } = useAxios(
+  services.users,
+  'searchAdvanced',
+);
 
 const userSearch = ref<string>('');
-const usersResult = ref<Array<IUserResponse>>([]);
+const usersResult = ref<Array<IAdvancedUserResponse>>([]);
 
 const isLoadingSearch = ref<boolean>(false);
 
 const excuteSearchUsersDebounce = useDebounceFn(
-  async (params: ISearchUsersRequest) => {
+  async (params: ISearchAdvancedUsersRequest) => {
     usersResult.value = await excuteSearchUsers(params);
     isLoadingSearch.value = false;
   },

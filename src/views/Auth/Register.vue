@@ -18,6 +18,7 @@
                 clearable
                 persistent-hint
                 :hint="translateShared('usernameHint')"
+                autocomplete="username"
               />
               <v-text-field
                 class="mb-3"
@@ -26,6 +27,7 @@
                 :error-messages="getErrorMessage(v$.email)"
                 @blur="v$.email.$validate"
                 clearable
+                autocomplete="email"
               />
               <v-text-field
                 class="mb-3"

@@ -175,11 +175,21 @@ export const messages: LocalePagesMessages = {
   },
   shared: {
     searchPlaceholder: '調べる',
-    chooseImage: '画像を選択',
-    generateTheme: 'アップロードした画像からテーマを生成する',
     roomTypes: {
       group: 'グループ',
       private: 'プライベート',
+    },
+    displayMessage: {
+      you: 'あなた',
+      removedMember: 'メンバーを削除しました',
+      sent: '{type}を送信しました',
+      types: {
+        images: '{length}枚の画像',
+        files: '{length}件のファイル',
+        audios: '{length}件のオーディオ',
+        videos: '{length}件のビデオ',
+        none: 'メッセージが削除されました',
+      },
     },
   },
 };

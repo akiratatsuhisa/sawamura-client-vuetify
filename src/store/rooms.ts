@@ -8,12 +8,17 @@ import {
   useSocketChat,
   useSocketEventListener,
 } from '@/composables';
-import { IRoomResponse, ISearchRoomsRequest } from '@/interfaces';
+import {
+  IRoomMessageResponse,
+  IRoomResponse,
+  ISearchRoomsRequest,
+} from '@/interfaces';
 
 export const useRoomsStore = defineStore('rooms', () => {
   const socket = useSocketChat();
   const { createSnackbarError } = useSnackbar();
 
+  const isRoomsAllLoaded = ref<boolean>(false);
   const rooms = ref<Array<IRoomResponse>>([]);
 
   const { request: requestRooms, isLoading: isLoadingRooms } =
@@ -22,12 +27,29 @@ export const useRoomsStore = defineStore('rooms', () => {
       ISearchRoomsRequest
     >(socket, 'list:room', {
       response({ rooms: data }) {
+        if (!data.length) {
+          isRoomsAllLoaded.value = true;
+          return;
+        }
+        isRoomsAllLoaded.value = false;
         rooms.value = _.uniqBy([...rooms.value, ...data], (room) => room.id);
       },
       exception(error) {
         createSnackbarError(error.message);
       },
     });
+
+  const requestRoomsThrottle = useThrottleFn(requestRooms, 500);
+
+  function fetchMore() {
+    const excludeIds = _.map(rooms.value, (room) => room.id);
+
+    requestRoomsThrottle({
+      take: 10,
+      excludeIds: excludeIds.length ? excludeIds : undefined,
+    });
+  }
+  fetchMore();
 
   function updateListRoom(data: IRoomResponse) {
     rooms.value = _(rooms.value)
@@ -50,17 +72,21 @@ export const useRoomsStore = defineStore('rooms', () => {
       .value();
   }
 
-  const requestRoomsThrottle = useThrottleFn(requestRooms, 500);
-
-  function fetchMore() {
-    const excludeIds = _.map(rooms.value, (room) => room.id);
-
-    requestRoomsThrottle({
-      take: 10,
-      excludeIds: excludeIds.length ? excludeIds : undefined,
-    });
-  }
-  fetchMore();
+  useSocketEventListener<IRoomResponse>(socket, 'create:room', {
+    listener: updateListRoom,
+  });
+  useSocketEventListener<IRoomResponse>(socket, 'update:room:photo', {
+    listener: updateListRoom,
+  });
+  useSocketEventListener<IRoomResponse>(socket, 'update:room', {
+    listener: updateListRoom,
+  });
+  useSocketEventListener<IRoomMessageResponse>(socket, 'create:message', {
+    listener: (data) => updateListRoom(data.room),
+  });
+  useSocketEventListener<IRoomMessageResponse>(socket, 'delete:message', {
+    listener: (data) => updateListRoom(data.room),
+  });
 
   const search = ref<string>('');
   const searchClearable = computed(() => _.trim(search.value).length);
@@ -68,6 +94,7 @@ export const useRoomsStore = defineStore('rooms', () => {
   return {
     rooms,
     isLoadingRooms,
+    isRoomsAllLoaded,
     fetchMore,
     updateListRoom,
     search,

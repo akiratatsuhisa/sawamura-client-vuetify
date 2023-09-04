@@ -161,7 +161,7 @@ import {
 } from '@/composables';
 import { KEYS } from '@/constants';
 import { Router } from '@/helpers/router';
-import { ISearchAdvancedUsersRequest } from '@/interfaces';
+import { ISearchUsersRequest } from '@/interfaces';
 import { services } from '@/services';
 import { maxLength } from '@/validators';
 
@@ -245,69 +245,64 @@ const roleList = computed<
     : [],
 );
 
-const { form, reset, setRouteQuery } =
-  useSearchForm<ISearchAdvancedUsersRequest>(
-    {
-      username: null,
-      name: null,
-      email: null,
-      emailStates: [],
-      roleIds: [],
-      roleMode: null,
-      sort: null,
-      skip: Router.SKIP_DEFAULT,
-      take: Router.TAKE_DEFAULT,
-    },
-    {
-      decodeQuery: (query) => ({
-        username: Router.getQuery(query.username),
-        name: Router.getQuery(query.name),
-        email: Router.getQuery(query.email),
-        emailStates: Router.getQueryAll(query.emailStates),
-        roleIds: Router.getQueryAll(query.roleIds),
-        roleMode: Router.getQuery(query.roleMode),
-        sort:
-          Router.getQuery(query['sort[field]']) &&
-          Router.getQuery(query['sort[order]'])
-            ? {
-                field: Router.getQuery(query['sort[field]'])!,
-                order: Router.getQuery(query['sort[order]'])!,
-              }
-            : null,
-        skip: Router.getQuery(query.skip) ?? '0',
-        take: Router.getQuery(query.take) ?? '10',
-      }),
-      encodeQuery: (form) => ({
-        ...form,
-        sort: undefined,
-        ...(form.sort
+const { form, reset, setRouteQuery } = useSearchForm<ISearchUsersRequest>(
+  {
+    username: null,
+    name: null,
+    email: null,
+    emailStates: [],
+    roleIds: [],
+    roleMode: null,
+    sort: null,
+    skip: Router.SKIP_DEFAULT,
+    take: Router.TAKE_DEFAULT,
+  },
+  {
+    decodeQuery: (query) => ({
+      username: Router.getQuery(query.username),
+      name: Router.getQuery(query.name),
+      email: Router.getQuery(query.email),
+      emailStates: Router.getQueryAll(query.emailStates),
+      roleIds: Router.getQueryAll(query.roleIds),
+      roleMode: Router.getQuery(query.roleMode),
+      sort:
+        Router.getQuery(query['sort[field]']) &&
+        Router.getQuery(query['sort[order]'])
           ? {
-              ['sort[field]']: form.sort.field!,
-              ['sort[order]']: form.sort.order!,
+              field: Router.getQuery(query['sort[field]'])!,
+              order: Router.getQuery(query['sort[order]'])!,
             }
-          : {}),
-      }),
-    },
-  );
-
-const [v$, { isLoading: isLoadingForm }] =
-  useVuelidate<ISearchAdvancedUsersRequest>(
-    {
-      username: { maxLength: maxLength(pathFormField('username'), 255) },
-      name: { maxLength: maxLength(pathFormField('name'), 255) },
-      email: { maxLength: maxLength(pathFormField('email'), 450) },
-      emailStates: {},
-      roleIds: {},
-      roleMode: {},
-      sort: {},
-    },
-    form,
-  );
-
-const { excute: refetchUsers, data } = useAxios(
-  services.users,
-  'searchAdvanced',
+          : null,
+      skip: Router.getQuery(query.skip) ?? '0',
+      take: Router.getQuery(query.take) ?? '10',
+    }),
+    encodeQuery: (form) => ({
+      ...form,
+      sort: undefined,
+      ...(form.sort
+        ? {
+            ['sort[field]']: form.sort.field!,
+            ['sort[order]']: form.sort.order!,
+          }
+        : {}),
+    }),
+  },
 );
+
+const [v$, { isLoading: isLoadingForm }] = useVuelidate<ISearchUsersRequest>(
+  {
+    username: { maxLength: maxLength(pathFormField('username'), 255) },
+    name: { maxLength: maxLength(pathFormField('name'), 255) },
+    email: { maxLength: maxLength(pathFormField('email'), 450) },
+    emailStates: {},
+    roleIds: {},
+    roleMode: {},
+    sort: {},
+  },
+  form,
+);
+
+const { excute: refetchUsers, data } = useAxios(services.users, 'getAll');
 
 async function onReset() {
   await refetchRoles({});

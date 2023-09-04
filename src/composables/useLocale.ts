@@ -99,6 +99,7 @@ export function usePageLocale(options: IUseLocaleOptions) {
   }
 
   return {
+    t,
     path,
     translate,
     pathShared,
@@ -120,7 +121,6 @@ export function useLayoutLocale(options: IUseLocaleOptions) {
     translate,
     pathShared,
     translateShared,
-
     pathAlert,
     makeTranslateAlert,
   } = useLocale({ prefix, module });
@@ -137,6 +137,7 @@ export function useLayoutLocale(options: IUseLocaleOptions) {
   }
 
   return {
+    t,
     path,
     translate,
     pathShared,

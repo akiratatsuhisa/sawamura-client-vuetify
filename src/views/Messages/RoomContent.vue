@@ -120,6 +120,7 @@ const room = ref<IRoomResponse>({
   createdAt: '',
   themeSource: null,
   themeStyle: null,
+  roomMessages: [],
 });
 
 const { currentMember, targetMember, roomPhotoUrl, displayName } =

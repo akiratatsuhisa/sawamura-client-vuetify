@@ -8,8 +8,8 @@
         :image="getPhotoUrlByRoomUser(roomMember.member)"
         @click="
           $router.push({
-            name: 'Users:Detail',
-            params: { id: roomMember.id },
+            name: 'Users:Page',
+            params: { username: roomMember.member.username },
           })
         "
       >

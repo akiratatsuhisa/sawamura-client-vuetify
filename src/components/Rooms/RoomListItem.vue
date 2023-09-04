@@ -20,20 +20,29 @@
     <v-list-item-subtitle>
       {{ lastActivatedAgo }}
     </v-list-item-subtitle>
+    <v-list-item-subtitle v-if="lastMessage">
+      {{ getDisplayRoomMemberNameByUser(room.roomMembers, lastMessage.user) }}
+      -
+      {{ getDisplayRoomMessage(lastMessage) }}
+    </v-list-item-subtitle>
   </v-list-item>
 </template>
 
 <script lang="ts" setup>
 import { computed } from 'vue';
 
-import { useRoom } from '@/composables';
+import {
+  getDisplayRoomMemberNameByUser,
+  getDisplayRoomMessage,
+  useRoom,
+} from '@/composables';
 import { IRoomResponse } from '@/interfaces';
 
 const props = defineProps<{
   room: IRoomResponse;
 }>();
 
-const { displayName, roomPhotoUrl, lastActivatedAgo } = useRoom(
+const { displayName, roomPhotoUrl, lastActivatedAgo, lastMessage } = useRoom(
   computed(() => props.room),
 );
 </script>

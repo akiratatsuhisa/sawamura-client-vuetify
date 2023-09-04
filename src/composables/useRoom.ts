@@ -3,13 +3,82 @@ import dayjs from 'dayjs';
 import _ from 'lodash';
 import { computed, unref } from 'vue';
 
-import { useAuth } from '@/composables';
-import { IRoomResponse, IRoomUserResponse } from '@/interfaces';
+import { useAuth, usePageLocale } from '@/composables';
+import {
+  IRoomMemberResponse,
+  IRoomMessageResponse,
+  IRoomResponse,
+  IRoomUserResponse,
+} from '@/interfaces';
 
 export function getPhotoUrlByRoomUser(user: IRoomUserResponse) {
   return user.photoUrl
     ? `${import.meta.env.VITE_API_URL}/auth/photo?username=${user.username}`
     : import.meta.env.VITE_NO_AVATAR_URL;
+}
+
+export function getDisplayRoomMemberNameByUser(
+  roomMembers: Array<IRoomMemberResponse>,
+  user: IRoomUserResponse,
+) {
+  const { identityId } = useAuth();
+  const { translateShared } = usePageLocale({
+    prefix: 'messages',
+  });
+
+  const roomMember = _(roomMembers).find(
+    (roomMember) => roomMember.member.id === user.id,
+  );
+
+  return !roomMember
+    ? translateShared('displayMessage.removedMember')
+    : roomMember.member.id === identityId.value
+    ? translateShared('displayMessage.you')
+    : roomMember.nickName
+    ? roomMember.nickName
+    : roomMember.member.username;
+}
+
+export function getDisplayRoomMessage(
+  roomMessage: Omit<IRoomMessageResponse, 'room'>,
+) {
+  const { t, pathShared, translateShared } = usePageLocale({
+    prefix: 'messages',
+  });
+
+  function getByType(type: string) {
+    const length: number = roomMessage.content?.length ?? 0;
+
+    return translateShared('displayMessage.sent', {
+      type: t(
+        pathShared(`displayMessage.types.${type}`),
+        {
+          length: length,
+        },
+        length,
+      ),
+    });
+  }
+
+  switch (roomMessage.type) {
+    case 'Text':
+    case 'Icon':
+    case 'Icons':
+    case 'Link':
+      return roomMessage.content;
+    case 'Image':
+    case 'Images':
+      return getByType('images');
+    case 'Files':
+      return getByType('files');
+    case 'Audios':
+      return getByType('audios');
+    case 'Videos':
+      return getByType('videos');
+    case 'None':
+    default:
+      return translateShared('displayMessage.types.none');
+  }
 }
 
 export function useRoom(room: MaybeRef<IRoomResponse>) {
@@ -99,12 +168,15 @@ export function useRoom(room: MaybeRef<IRoomResponse>) {
     computed(() => unref(room).lastActivatedAt ?? ''),
   );
 
+  const lastMessage = computed(() => unref(room).roomMessages.at(0));
+
   return {
     roomMembers,
     currentMember,
     targetMember,
     displayName,
     lastActivatedAgo,
+    lastMessage,
     roomPhotoUrl,
     roomCoverUrl,
     updateImage,

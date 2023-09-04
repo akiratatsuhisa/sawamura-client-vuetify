@@ -7,7 +7,7 @@
     class="bg-surface-container-low text-on-surface"
   >
     <template #prepend>
-      <v-list-item nav @click="router.push({ name: 'Profile' })">
+      <v-list-item nav @click="gotoUserAuth">
         <div class="pa-1 d-flex justify-center">
           <v-avatar
             :image="photoUrl"
@@ -88,7 +88,7 @@ import VIconMenuItem from '@/layouts/Default/Menus/IconMenuItem.vue';
 import VRailMenuItem from '@/layouts/Default/Menus/RailMenuItem.vue';
 import VTitleMenuItem from '@/layouts/Default/Menus/TitleMenuItem.vue';
 
-const { photoUrl } = useAuth();
+const { user, photoUrl } = useAuth();
 
 const router = useRouter();
 const route = useRoute();
@@ -187,6 +187,12 @@ function isActive(item: RouteLocationNamedRaw, prefix: boolean = false) {
     ? routeName === itemName
     : routeName === itemName && _.isEqual(route.params, item.params);
 }
-
 provide(KEYS.DRAWER.IS_ACTIVE, isActive);
+
+function gotoUserAuth() {
+  router.push({
+    name: 'Users:Page',
+    params: { username: user.value?.username },
+  });
+}
 </script>

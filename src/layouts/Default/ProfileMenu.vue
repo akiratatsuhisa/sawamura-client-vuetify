@@ -10,7 +10,7 @@
     <v-base-menu :title="$t('common.app.title')">
       <template #default="{ close }">
         <v-list>
-          <v-list-item :to="{ name: 'Profile' }" @click="close">
+          <v-list-item @click="gotoUserAuth(close)">
             <template #prepend>
               <v-avatar
                 color="secondary-container"
@@ -141,5 +141,13 @@ async function onLogout() {
   await logout();
 
   router.push({ name: 'Login', query: { redirectUrl: redirectUrl.value } });
+}
+
+function gotoUserAuth(callback: Function) {
+  router.push({
+    name: 'Users:Page',
+    params: { username: user.value?.username },
+  });
+  callback();
 }
 </script>

@@ -59,9 +59,9 @@ import {
   useVuelidate,
 } from '@/composables';
 import {
+  IAdvancedUserResponse,
   ICreateRoomRequest,
-  ISearchUsersRequest,
-  IUserResponse,
+  ISearchAdvancedUsersRequest,
 } from '@/interfaces';
 import { services } from '@/services';
 import { required } from '@/validators';
@@ -82,7 +82,9 @@ const { translate, translateFormField, pathFormField } = usePageLocale({
 const { identityId } = useAuth();
 
 const form = reactive<
-  Omit<ICreateRoomRequest, 'members'> & { members: Array<IUserResponse> }
+  Omit<ICreateRoomRequest, 'members'> & {
+    members: Array<IAdvancedUserResponse>;
+  }
 >({
   name: '',
   isGroup: true,
@@ -120,15 +122,18 @@ const onSubmit = handleSubmit((formData) => {
   emit('update:modelValue', false);
 });
 
-const { excute: excuteSearchUsers } = useAxios(services.users, 'getAll');
+const { excute: excuteSearchUsers } = useAxios(
+  services.users,
+  'searchAdvanced',
+);
 
 const userSearch = ref<string>('');
-const usersResult = ref<Array<IUserResponse>>([]);
+const usersResult = ref<Array<IAdvancedUserResponse>>([]);
 
 const isLoadingSearch = ref<boolean>(false);
 
 const excuteSearchUsersDebounce = useDebounceFn(
-  async (params: ISearchUsersRequest) => {
+  async (params: ISearchAdvancedUsersRequest) => {
     usersResult.value = await excuteSearchUsers(params);
     isLoadingSearch.value = false;
   },

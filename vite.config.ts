@@ -67,7 +67,6 @@ export default defineConfig({
             './src/views/Dashboard/Messages.vue',
           ],
           auth: [
-            './src/views/Auth/Profile.vue',
             './src/views/Auth/Login.vue',
             './src/views/Auth/Register.vue',
             './src/views/Auth/ForgotPassword.vue',
@@ -78,6 +77,7 @@ export default defineConfig({
             './src/views/Oauth/Callback.vue',
             './src/views/Oauth/Error.vue',
           ],
+          users: ['./src/views/Users/Page/Index.vue'],
         },
       },
     },

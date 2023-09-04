@@ -2,13 +2,6 @@ import { LocaleLayoutDefault } from '@/locales/type/layout/default';
 
 export const defaultLayout: LocaleLayoutDefault = {
   topbar: {
-    profile: {
-      items: {
-        theme: 'Theme {name}',
-        settings: 'Settings',
-        logout: 'Logout',
-      },
-    },
     notification: {
       title: 'Notification',
       alerts: {
@@ -17,6 +10,16 @@ export const defaultLayout: LocaleLayoutDefault = {
           cancel: 'Cancel',
           confirm: 'Agree',
         },
+      },
+    },
+    message: {
+      title: 'Chat Rooms',
+    },
+    profile: {
+      items: {
+        theme: 'Theme {name}',
+        settings: 'Settings',
+        logout: 'Logout',
       },
     },
   },

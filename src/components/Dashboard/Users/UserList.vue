@@ -16,13 +16,13 @@
 
 <script lang="ts" setup>
 import UserListItem from '@/components/Dashboard/Users/UserListItem.vue';
-import { IAdvancedUserResponse } from '@/interfaces';
+import { IUserResponse } from '@/interfaces';
 
 defineProps<{
   data?: {
     count: number;
     totalCount: number;
-    records: Array<IAdvancedUserResponse>;
+    records: Array<IUserResponse>;
   };
 }>();
 </script>

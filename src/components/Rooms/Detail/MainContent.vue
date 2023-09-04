@@ -212,7 +212,6 @@ async function selectEmoji(params: { native: string }) {
 }
 
 function createMessage(data: IRoomMessageResponse) {
-  updateListRoom(data.room);
   if (data.room.id !== room.value?.id) {
     return;
   }
@@ -222,7 +221,6 @@ function createMessage(data: IRoomMessageResponse) {
 }
 
 function removeMessage(data: IRoomMessageResponse) {
-  updateListRoom(data.room);
   if (data.room.id !== room.value?.id) {
     return;
   }
@@ -239,7 +237,10 @@ const { request: requestCreateMessage } = useSocketEventListener<
   IRoomMessageResponse,
   ICreateRoomMessageRequest
 >(socket, 'create:message', {
-  response: createMessage,
+  response(data) {
+    updateListRoom(data.room);
+    createMessage(data);
+  },
   listener: createMessage,
   exception(error) {
     if (error.data.roomId !== room.value?.id) {
@@ -255,7 +256,10 @@ const { request: requestDeleteMessage, isLoading: isLoadingDeleteMessage } =
     socket,
     'delete:message',
     {
-      response: removeMessage,
+      response(data) {
+        updateListRoom(data.room);
+        removeMessage(data);
+      },
       listener: removeMessage,
       exception(error) {
         if (error.data.roomId !== room.value?.id) {

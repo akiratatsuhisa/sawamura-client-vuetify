@@ -9,12 +9,16 @@
         class="search bg-surface-container-high text-on-surface rounded-pill d-flex flex-row align-center cursor-pointer"
       >
         <v-icon class="mx-4" icon="mdi-menu" @click="drawer = !drawer" />
-        <div @click="isSearchOpen = !isSearchOpen" class="flex-grow-1">
+        <div
+          @click="isSearchFieldOpen = !isSearchFieldOpen"
+          class="flex-grow-1"
+        >
           <input
             :value="search"
             class="input"
             type="text"
             readonly
+            spellcheck="false"
             :placeholder="$t('pages.messages.shared.searchPlaceholder')"
           />
         </div>
@@ -25,7 +29,7 @@
   </v-app-bar>
 
   <v-dialog
-    :model-value="isSearchOpen && $vuetify.display.mdAndDown"
+    :model-value="isSearchFieldOpen && $vuetify.display.mdAndDown"
     fullscreen
     transition="slide-y-transition"
   >
@@ -33,16 +37,17 @@
       <v-toolbar class="px-3 bg-surface-container-high text-on-surface">
         <v-input
           prepend-icon="mdi-arrow-left"
-          @click:prepend="isSearchOpen = !isSearchOpen"
+          @click:prepend="isSearchFieldOpen = !isSearchFieldOpen"
           :append-icon="searchClearable ? 'mdi-close' : undefined"
           @click:append="search = ''"
           hide-details
         >
           <input
             v-model="search"
-            ref="searchInputRef"
+            ref="searchFieldRef"
             class="input"
             type="text"
+            spellcheck="false"
             :placeholder="$t('pages.messages.shared.searchPlaceholder')"
           />
         </v-input>
@@ -55,8 +60,9 @@
 <script lang="ts" setup>
 import { useWindowScroll } from '@vueuse/core';
 import { storeToRefs } from 'pinia';
-import { inject, ref, watch } from 'vue';
+import { inject } from 'vue';
 
+import { useSearchField } from '@/composables';
 import { KEYS } from '@/constants';
 import VProfileMenu from '@/layouts/Default/ProfileMenu.vue';
 import { useRoomsStore } from '@/store';
@@ -64,14 +70,7 @@ import { useRoomsStore } from '@/store';
 const { y } = useWindowScroll();
 const drawer = inject(KEYS.DRAWER.SHOW);
 
-const isSearchOpen = ref(false);
-const searchInputRef = ref<HTMLInputElement>();
-watch([isSearchOpen, searchInputRef], ([isOpened]) => {
-  if (isOpened) {
-    searchInputRef.value?.focus();
-  }
-});
-
+const { isSearchFieldOpen, searchFieldRef } = useSearchField();
 const roomsStore = useRoomsStore();
 const { search, searchClearable } = storeToRefs(roomsStore);
 </script>

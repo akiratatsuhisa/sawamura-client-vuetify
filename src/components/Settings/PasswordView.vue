@@ -5,6 +5,7 @@
   </span>
 
   <form @submit.prevent="onSubmit" class="mt-6">
+    <input hidden name="username" autocomplete="username" />
     <template v-if="user?.hasPassword">
       <v-row no-gutters>
         <v-col cols="12" md="8" lg="6">

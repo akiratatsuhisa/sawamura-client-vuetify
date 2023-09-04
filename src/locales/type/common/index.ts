@@ -2,6 +2,10 @@ export type LocaleCommon = {
   app: {
     title: string;
   };
+  theme: {
+    chooseImage: string;
+    generateTheme: string;
+  };
   themes: { light: string; dark: string; coffee: string };
   languages: { en: string; ja: string };
   activeStates: {

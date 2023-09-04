@@ -4,6 +4,10 @@ export const common: LocaleCommon = {
   app: {
     title: '澤村',
   },
+  theme: {
+    chooseImage: '画像を選択',
+    generateTheme: 'アップロードした画像からテーマを生成する',
+  },
   themes: {
     light: 'ライト',
     dark: 'ダーク',

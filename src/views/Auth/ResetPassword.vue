@@ -9,6 +9,7 @@
           </v-card-subtitle>
           <v-card-text>
             <form @submit.prevent="onSubmit">
+              <input hidden name="username" autocomplete="username" />
               <v-text-field
                 class="mb-3"
                 :label="translateFormField('password')"

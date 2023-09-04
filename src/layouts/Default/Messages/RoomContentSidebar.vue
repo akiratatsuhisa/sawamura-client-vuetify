@@ -19,7 +19,7 @@
       <div class="position-relative px-3 py-3">
         <div
           class="search bg-surface-container-high text-on-surface rounded-pill d-flex flex-row align-center cursor-pointer"
-          @click.stop="isSearchOpen = !isSearchOpen"
+          @click.stop="isSearchFieldOpen = !isSearchFieldOpen"
         >
           <div class="pl-4 flex-grow-1">
             <input
@@ -27,6 +27,7 @@
               class="input"
               type="text"
               readonly
+              spellcheck="false"
               :placeholder="$t('pages.messages.shared.searchPlaceholder')"
             />
           </div>
@@ -35,8 +36,8 @@
 
         <v-slide-y-transition>
           <div
-            v-if="isSearchOpen"
-            ref="searchContainerRef"
+            v-if="isSearchFieldOpen"
+            ref="searchFieldContainerRef"
             class="search-container position-absolute mx-3 my-3 rounded-xl bg-surface-container-high elevation-2"
           >
             <div
@@ -45,14 +46,15 @@
               <v-icon
                 class="mx-2"
                 icon="mdi-arrow-left"
-                @click="isSearchOpen = !isSearchOpen"
+                @click="isSearchFieldOpen = !isSearchFieldOpen"
               />
               <div class="flex-grow-1">
                 <input
                   v-model="search"
-                  ref="searchInputRef"
+                  ref="searchFieldRef"
                   class="input"
                   type="text"
+                  spellcheck="false"
                   :placeholder="$t('pages.messages.shared.searchPlaceholder')"
                 />
               </div>
@@ -88,30 +90,17 @@
 </template>
 
 <script lang="ts" setup>
-import { onClickOutside } from '@vueuse/core';
 import { storeToRefs } from 'pinia';
-import { ref, watch } from 'vue';
 
 import VRoomListItem from '@/components/Rooms/RoomListItem.vue';
-import { usePageLocale } from '@/composables';
+import { usePageLocale, useSearchField } from '@/composables';
 import VSidebar from '@/layouts/Default/Sidebar.vue';
 import { useRoomsStore } from '@/store';
 
 const { translate } = usePageLocale({ prefix: 'messages.list' });
 
-const isSearchOpen = ref(false);
-const searchInputRef = ref<HTMLInputElement>();
-watch([isSearchOpen, searchInputRef], ([isOpened]) => {
-  if (isOpened) {
-    searchInputRef.value?.focus();
-  }
-});
-
-const searchContainerRef = ref<HTMLDivElement>();
-onClickOutside(
-  searchContainerRef,
-  () => (isSearchOpen.value = !isSearchOpen.value),
-);
+const { isSearchFieldOpen, searchFieldContainerRef, searchFieldRef } =
+  useSearchField();
 
 const roomsStore = useRoomsStore();
 const { rooms, isLoadingRooms, search, searchClearable } =

@@ -155,11 +155,21 @@ export type LocalePagesMessages = {
   };
   shared: {
     searchPlaceholder: string;
-    chooseImage: string;
-    generateTheme: string;
     roomTypes: {
       group: string;
       private: string;
+    };
+    displayMessage: {
+      you: string;
+      removedMember: string;
+      sent: string;
+      types: {
+        images: string;
+        files: string;
+        audios: string;
+        videos: string;
+        none: string;
+      };
     };
   };
 };

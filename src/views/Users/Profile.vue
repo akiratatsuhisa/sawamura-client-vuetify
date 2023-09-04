@@ -155,7 +155,7 @@ const { user, photoUrl, coverUrl, getUserSilently } = useAuth();
 const { isThemeSelectable } = useThemeModeStorage();
 
 const { isActiveDialog, openDialog, closeDialog } = useRouterDialog({
-  name: 'Profile',
+  name: 'Users:Profile',
   param: 'dialog',
 });
 

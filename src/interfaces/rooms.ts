@@ -28,6 +28,7 @@ export interface IRoomResponse {
   themeStyle: string | null;
   lastActivatedAt: string | null;
   createdAt: string;
+  roomMessages: Array<Omit<IRoomMessageResponse, 'room'>>;
 }
 
 export interface IRoomRequest {

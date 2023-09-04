@@ -1,15 +1,5 @@
 export type LocaleLayoutDefault = {
   topbar: {
-    profile: {
-      items: {
-        /**
-         * @param {string} name
-         */
-        theme: string;
-        settings: string;
-        logout: string;
-      };
-    };
     notification: {
       title: string;
       alerts: {
@@ -18,6 +8,19 @@ export type LocaleLayoutDefault = {
           cancel: string;
           confirm: string;
         };
+      };
+    };
+    message: {
+      title: string;
+    };
+    profile: {
+      items: {
+        /**
+         * @param {string} name
+         */
+        theme: string;
+        settings: string;
+        logout: string;
       };
     };
   };

@@ -9,6 +9,7 @@ import { defaultCommonRoutes } from './common';
 import dashboardRoutes from './dashboard';
 import messagesRoutes from './messages';
 import oauthRoutes from './oauth';
+import usersRoutes from './users';
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -26,18 +27,9 @@ const routes: Array<RouteRecordRaw> = [
         },
       },
       ...messagesRoutes,
+      ...usersRoutes,
       dashboardRoutes,
       ...defaultAuthRoutes,
-      {
-        path: 'users/:id',
-        name: 'Users:Detail',
-        meta: { requiresAuth: true },
-        components: {
-          topbar: VTopbar,
-          sidebar: VSidebar,
-          default: () => import('@/views/Users/Detail.vue'),
-        },
-      },
       ...defaultCommonRoutes,
     ],
   },

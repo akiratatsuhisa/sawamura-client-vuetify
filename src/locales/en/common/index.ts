@@ -4,6 +4,10 @@ export const common: LocaleCommon = {
   app: {
     title: 'Sawamura',
   },
+  theme: {
+    chooseImage: 'Choose image',
+    generateTheme: 'Generate theme from uploaded image',
+  },
   themes: {
     light: 'Light',
     dark: 'Dark',

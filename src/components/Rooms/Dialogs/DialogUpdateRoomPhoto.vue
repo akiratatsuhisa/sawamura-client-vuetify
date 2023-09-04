@@ -12,7 +12,7 @@
     <div class="mb-3">
       <div class="d-flex mb-3">
         <v-btn color="primary" @click="openSelectImage">
-          {{ translateShared('chooseImage') }}
+          {{ $t('common.theme.chooseImage') }}
         </v-btn>
       </div>
 
@@ -23,7 +23,7 @@
         color="tertiary"
         true-icon="mdi-check"
         false-icon="mdi-close"
-        :label="translateShared('generateTheme')"
+        :label="$t('common.theme.generateTheme')"
         inset
         hide-details
       />
@@ -76,7 +76,7 @@ const emit = defineEmits<{
   (event: 'submit', data: any): void;
 }>();
 
-const { translate, translateShared } = usePageLocale({
+const { translate } = usePageLocale({
   prefix: 'messages.room.dialogs.changePhoto',
 });
 

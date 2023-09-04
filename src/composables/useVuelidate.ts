@@ -100,6 +100,7 @@ export function useShowPassword(fields: Record<string, boolean>) {
       type: fields[field] ? 'text' : 'password',
       appendInnerIcon: fields[field] ? 'mdi-eye' : 'mdi-eye-off',
       'onClick:appendInner': () => (fields[field] = !fields[field]),
+      autocomplete: field === 'current' ? 'current-password' : 'new-password',
     };
   }
 

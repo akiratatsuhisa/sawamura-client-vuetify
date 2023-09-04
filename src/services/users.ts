@@ -3,6 +3,7 @@ import { AxiosRequestConfig } from 'axios';
 import {
   IAdvancedUserResponse,
   IChangeUserRolesRequest,
+  ISearchAdvancedUserRequest,
   ISearchAdvancedUsersRequest,
   ISearchUsersRequest,
   IUserRequest,
@@ -12,7 +13,11 @@ import { Service } from '@/services/common';
 
 export class UsersService extends Service {
   getAll(config: AxiosRequestConfig, params: ISearchUsersRequest) {
-    return this.fetch<Array<IUserResponse>>({
+    return this.fetch<{
+      count: number;
+      totalCount: number;
+      records: Array<IUserResponse>;
+    }>({
       ...config,
       url: 'users',
       method: 'GET',
@@ -25,7 +30,6 @@ export class UsersService extends Service {
       ...config,
       url: `users/${params.id}`,
       method: 'GET',
-      params,
     });
   }
 
@@ -33,15 +37,22 @@ export class UsersService extends Service {
     config: AxiosRequestConfig,
     params: ISearchAdvancedUsersRequest,
   ) {
-    return this.fetch<{
-      count: number;
-      totalCount: number;
-      records: Array<IAdvancedUserResponse>;
-    }>({
+    return this.fetch<Array<IAdvancedUserResponse>>({
       ...config,
       url: 'users/advanced',
       method: 'GET',
       params,
+    });
+  }
+
+  searchByUsername(
+    config: AxiosRequestConfig,
+    params: ISearchAdvancedUserRequest,
+  ) {
+    return this.fetch<IAdvancedUserResponse>({
+      ...config,
+      url: `users/page/${params.username}`,
+      method: 'GET',
     });
   }
 
