@@ -35,7 +35,7 @@
     </div>
     <v-btn
       v-if="$vuetify.display.mobile"
-      variant="outlined"
+      variant="tonal"
       size="small"
       icon="mdi-open-in-new"
       :to="{ name: 'Users:Page', params: { username: record.username } }"
@@ -43,7 +43,7 @@
     />
     <v-btn
       v-else
-      variant="outlined"
+      variant="tonal"
       append-icon="mdi-open-in-new"
       :to="{ name: 'Users:Page', params: { username: record.username } }"
       target="_blank"

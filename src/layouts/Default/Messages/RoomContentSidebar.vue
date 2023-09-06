@@ -11,8 +11,9 @@
             :class="{ 'text-primary': isHovering }"
             @click="$router.push({ name: 'Messages' })"
             v-bind="props"
-            >{{ translate('subtitle') }}</v-card-title
           >
+            {{ translate('subtitle') }}
+          </v-card-title>
         </template>
       </v-hover>
 
@@ -38,10 +39,10 @@
           <div
             v-if="isSearchFieldOpen"
             ref="searchFieldContainerRef"
-            class="search-container position-absolute mx-3 my-3 rounded-xl bg-surface-container-high elevation-2"
+            class="search-container d-flex flex-column position-absolute mx-3 my-3 rounded-xl bg-surface-container-high elevation-2"
           >
             <div
-              class="search bg-surface-container-high text-on-surface rounded-t-xl d-flex flex-row align-center cursor-pointer"
+              class="search flex-shrink-0 bg-surface-container-high text-on-surface rounded-t-xl d-flex flex-row align-center cursor-pointer"
             >
               <v-icon
                 class="mx-2"
@@ -64,9 +65,35 @@
                 icon="mdi-close"
                 @click="search = ''"
               />
-              <v-icon class="mx-2" icon="mdi-magnify" />
+              <v-icon
+                class="mx-2"
+                icon="mdi-magnify"
+                @click="() => requestSearchAdvancedThrottle(search)"
+              />
             </div>
             <v-divider />
+
+            <div class="overflow-y-auto flex-grow-1">
+              <v-list>
+                <v-avanced-room-list-item
+                  v-for="room in searchResult"
+                  :key="room.id"
+                  :room="room"
+                />
+                <v-list-item class="text-center">
+                  <v-btn
+                    v-if="searchResult.length"
+                    variant="text"
+                    :loading="isLoadingSearchAdvanced"
+                    @click="fetchMoreSearchResult"
+                  >
+                    {{ translateShared('fetchMore') }}
+                  </v-btn>
+                </v-list-item>
+              </v-list>
+            </div>
+
+            <div class="py-2 flex-shrink-0"></div>
           </div>
         </v-slide-y-transition>
       </div>
@@ -82,7 +109,7 @@
 
     <div class="pa-3">
       <v-btn variant="plain" block :loading="isLoadingRooms" @click="fetchMore">
-        {{ translate('fetchMore') }}
+        {{ translateShared('fetchMore') }}
       </v-btn>
     </div>
     <template #append></template>
@@ -92,20 +119,29 @@
 <script lang="ts" setup>
 import { storeToRefs } from 'pinia';
 
+import VAvancedRoomListItem from '@/components/Rooms/AvancedRoomListItem.vue';
 import VRoomListItem from '@/components/Rooms/RoomListItem.vue';
 import { usePageLocale, useSearchField } from '@/composables';
 import VSidebar from '@/layouts/Default/Sidebar.vue';
 import { useRoomsStore } from '@/store';
 
-const { translate } = usePageLocale({ prefix: 'messages.list' });
+const { translate, translateShared } = usePageLocale({
+  prefix: 'messages.list',
+});
 
 const { isSearchFieldOpen, searchFieldContainerRef, searchFieldRef } =
   useSearchField();
-
 const roomsStore = useRoomsStore();
-const { rooms, isLoadingRooms, search, searchClearable } =
-  storeToRefs(roomsStore);
-const { fetchMore } = roomsStore;
+const {
+  rooms,
+  isLoadingRooms,
+  search,
+  searchClearable,
+  searchResult,
+  isLoadingSearchAdvanced,
+} = storeToRefs(roomsStore);
+const { fetchMore, requestSearchAdvancedThrottle, fetchMoreSearchResult } =
+  roomsStore;
 </script>
 
 <style lang="scss" scoped>
@@ -117,7 +153,7 @@ const { fetchMore } = roomsStore;
   top: 0;
   left: 0;
   right: 0;
-  min-height: 200px;
+  min-height: 300px;
   max-height: 400px;
   z-index: 100;
 }

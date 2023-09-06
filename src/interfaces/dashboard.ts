@@ -25,6 +25,9 @@ export interface IChartMessgesResponse {
     label: string;
     value: number;
     countMessages: number;
+    countImages: number;
+    countAudios: number;
+    countVideos: number;
     countFiles: number;
   }>;
 }

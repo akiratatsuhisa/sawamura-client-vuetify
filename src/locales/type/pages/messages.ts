@@ -3,7 +3,6 @@ export type LocalePagesMessages = {
     title: string;
     subtitle: string;
     createGroup: string;
-    fetchMore: string;
     enterChat: string;
     dialogs: {
       createGroup: {
@@ -155,6 +154,7 @@ export type LocalePagesMessages = {
   };
   shared: {
     searchPlaceholder: string;
+    fetchMore: string;
     roomTypes: {
       group: string;
       private: string;

@@ -5,7 +5,6 @@ export const messages: LocalePagesMessages = {
     title: 'Messages',
     subtitle: 'Rooms',
     createGroup: 'Create Group',
-    fetchMore: 'Fetch More',
     enterChat: 'Enter Chat',
     dialogs: {
       createGroup: {
@@ -175,6 +174,7 @@ export const messages: LocalePagesMessages = {
   },
   shared: {
     searchPlaceholder: 'Search...',
+    fetchMore: 'Fetch More',
     roomTypes: {
       group: 'Group',
       private: 'Private',

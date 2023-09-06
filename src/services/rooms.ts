@@ -1,8 +1,24 @@
 import { AxiosRequestConfig } from 'axios';
 
+import {
+  IAdvancedRoomResponse,
+  ISearchAdvancedRoomRequest,
+} from '@/interfaces';
 import { Service } from '@/services/common';
 
 export class RoomsService extends Service {
+  searchAdvanced(
+    config: AxiosRequestConfig,
+    params: ISearchAdvancedRoomRequest,
+  ) {
+    return this.fetch<Array<IAdvancedRoomResponse>>({
+      ...config,
+      url: 'rooms/advanced',
+      method: 'GET',
+      params,
+    });
+  }
+
   updatePhoto(
     config: AxiosRequestConfig,
     data: { id: string; theme: boolean; image: File },

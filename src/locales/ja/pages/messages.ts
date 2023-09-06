@@ -4,8 +4,7 @@ export const messages: LocalePagesMessages = {
   list: {
     title: 'メッセージ',
     subtitle: 'チャットルーム',
-    createGroup: 'グループ追加',
-    fetchMore: 'さらに読み込む',
+    createGroup: 'グループを追加',
     enterChat: 'チャットに入る',
     dialogs: {
       createGroup: {
@@ -175,6 +174,7 @@ export const messages: LocalePagesMessages = {
   },
   shared: {
     searchPlaceholder: '調べる',
+    fetchMore: 'さらに読み込む',
     roomTypes: {
       group: 'グループ',
       private: 'プライベート',

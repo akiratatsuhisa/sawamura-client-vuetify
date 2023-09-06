@@ -1,5 +1,22 @@
 import { IPaginationCursor, IPaginationExcludeIds } from '@/interfaces';
 
+export interface ISearchAdvancedRoomRequest {
+  search: string;
+  groupRoomId?: string | null;
+  privateRoomId?: string | null;
+}
+
+export interface IAdvancedRoomResponse {
+  id: string;
+  name: string;
+  isGroup: boolean;
+  photoUrl: string | null;
+  lastActivatedAt: string | null;
+  createdAt: string;
+  roomMembers: Array<IRoomMemberResponse>;
+  roomMessages: Array<Omit<IRoomMessageResponse, 'room'>>;
+}
+
 export type BasicFileType = 'images' | 'audios' | 'videos' | 'files';
 
 export type BasicFile = {
@@ -21,13 +38,13 @@ export interface IRoomResponse {
   id: string;
   name: string;
   isGroup: boolean;
-  roomMembers: Array<IRoomMemberResponse>;
   photoUrl: string | null;
   coverUrl: string | null;
   themeSource: number | null;
   themeStyle: string | null;
   lastActivatedAt: string | null;
   createdAt: string;
+  roomMembers: Array<IRoomMemberResponse>;
   roomMessages: Array<Omit<IRoomMessageResponse, 'room'>>;
 }
 

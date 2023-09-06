@@ -5,6 +5,7 @@ import { computed, unref } from 'vue';
 
 import { useAuth, usePageLocale } from '@/composables';
 import {
+  IAdvancedRoomResponse,
   IRoomMemberResponse,
   IRoomMessageResponse,
   IRoomResponse,
@@ -79,6 +80,81 @@ export function getDisplayRoomMessage(
     default:
       return translateShared('displayMessage.types.none');
   }
+}
+
+export function useAdvancedRoom(room: MaybeRef<IAdvancedRoomResponse>) {
+  const { identityId } = useAuth();
+
+  const roomMembers = computed(() => {
+    const unwrapRoom = unref(room);
+
+    return _.filter(
+      unwrapRoom.roomMembers ?? [],
+      (roomMember) => roomMember.role !== 'None',
+    );
+  });
+
+  const currentMember = computed(() => {
+    const unwrapRoom = unref(room);
+
+    return _.find(
+      unwrapRoom.roomMembers,
+      (roomMember) => roomMember.member.id === identityId.value,
+    );
+  });
+
+  const targetMember = computed(() => {
+    const unwrapRoom = unref(room);
+
+    return unwrapRoom.isGroup
+      ? undefined
+      : _.find(
+          unwrapRoom.roomMembers,
+          (roomMember) => roomMember.member.id !== identityId.value,
+        );
+  });
+
+  const roomPhotoUrl = computed(() => {
+    const unwrapRoom = unref(room);
+
+    if (!unwrapRoom.isGroup) {
+      return targetMember.value?.member.photoUrl
+        ? `${import.meta.env.VITE_API_URL}/auth/photo?username=${
+            targetMember.value.member.username
+          }`
+        : import.meta.env.VITE_NO_AVATAR_URL;
+    }
+
+    return unwrapRoom.photoUrl
+      ? `${import.meta.env.VITE_API_URL}/rooms/${unwrapRoom.id}/photo`
+      : import.meta.env.VITE_NO_BACKGROUND_URL;
+  });
+
+  const displayName = computed(() => {
+    const unwrapRoom = unref(room);
+    return unwrapRoom.isGroup
+      ? unwrapRoom.name
+      : targetMember.value?.nickName
+      ? targetMember.value.nickName
+      : targetMember.value?.member.displayName;
+  });
+
+  const lastActivatedAgo = useTimeAgo(
+    computed(() => unref(room).lastActivatedAt ?? ''),
+  );
+
+  const lastMessage = computed(() => unref(room).roomMessages.at(0));
+
+  return {
+    roomMembers,
+    currentMember,
+    targetMember,
+    displayName,
+    lastActivatedAgo,
+    lastMessage,
+    roomPhotoUrl,
+    getPhotoUrlByRoomUser,
+  };
 }
 
 export function useRoom(room: MaybeRef<IRoomResponse>) {

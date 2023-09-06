@@ -32,13 +32,37 @@
 
             <v-card-actions class="justify-center">
               <v-btn @click="fetchMore" :loading="isLoading">
-                {{ translate('fetchMore') }}
+                {{ translateShared('fetchMore') }}
               </v-btn>
             </v-card-actions>
           </v-card>
         </v-col>
       </v-row>
     </v-container>
+
+    <v-fade-transition>
+      <v-btn
+        v-if="$vuetify.display.smAndDown && isFabShow"
+        position="fixed"
+        location="bottom right"
+        color="primary-container"
+        elevation="3"
+        :min-width="isFabShowDetail ? undefined : 56"
+        min-height="56"
+        class="v-btn--fab ma-3"
+        @click="openDialog('create')"
+      >
+        <v-slide-x-reverse-transition>
+          <v-icon :start="isFabShowDetail">mdi-account-group</v-icon>
+        </v-slide-x-reverse-transition>
+
+        <v-slide-x-transition>
+          <span v-if="isFabShowDetail">
+            {{ translate('createGroup') }}
+          </span>
+        </v-slide-x-transition>
+      </v-btn>
+    </v-fade-transition>
   </v-main>
 
   <template v-for="(dialog, name) in dialogs" :key="name">
@@ -62,15 +86,19 @@ import {
   useSocketChat,
   useSocketEventListener,
 } from '@/composables';
+import { useScrollBehavior } from '@/composables/useBehavior';
 import { ICreateRoomRequest, IRoomResponse } from '@/interfaces';
 import { useRoomsStore } from '@/store';
 import VRoomListItem from '@/views/Messages/RoomListItem.vue';
 import VRoomListSearch from '@/views/Messages/RoomListSearch.vue';
 
-const { translate } = usePageLocale({ prefix: 'messages.list' });
+const { translate, translateShared } = usePageLocale({
+  prefix: 'messages.list',
+});
+
+const { isFabShow, isFabShowDetail } = useScrollBehavior();
 
 const roomsStore = useRoomsStore();
-
 const { rooms, isLoadingRooms } = storeToRefs(roomsStore);
 const { fetchMore, updateListRoom } = roomsStore;
 
@@ -107,3 +135,9 @@ const isLoading = computed(
   () => isLoadingRooms.value || isLoadingCreateRoom.value,
 );
 </script>
+
+<style lang="scss" scoped>
+.v-btn--fab {
+  border-radius: 16px !important;
+}
+</style>

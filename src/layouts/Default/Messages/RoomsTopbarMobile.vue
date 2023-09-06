@@ -2,7 +2,7 @@
   <v-app-bar
     v-if="!$vuetify.display.mdAndUp"
     height="80"
-    :class="{ 'bg-surface-container-lowest elevation-1': y }"
+    :class="{ 'bg-surface-container-lowest elevation-1': isTopbarElevation }"
   >
     <div class="h-100 w-100 px-3 py-3">
       <div
@@ -53,26 +53,48 @@
         </v-input>
       </v-toolbar>
       <v-divider />
+
+      <div class="overflow-y-auto">
+        <v-list>
+          <v-avanced-room-list-item
+            v-for="room in searchResult"
+            :key="room.id"
+            :room="room"
+          />
+          <v-list-item class="text-center">
+            <v-btn
+              v-if="searchResult.length"
+              variant="text"
+              :loading="isLoadingSearchAdvanced"
+              @click="fetchMoreSearchResult"
+            >
+              {{ $t('pages.messages.shared.fetchMore') }}
+            </v-btn>
+          </v-list-item>
+        </v-list>
+      </div>
     </v-card>
   </v-dialog>
 </template>
 
 <script lang="ts" setup>
-import { useWindowScroll } from '@vueuse/core';
 import { storeToRefs } from 'pinia';
 import { inject } from 'vue';
 
-import { useSearchField } from '@/composables';
+import VAvancedRoomListItem from '@/components/Rooms/AvancedRoomListItem.vue';
+import { useScrollBehavior, useSearchField } from '@/composables';
 import { KEYS } from '@/constants';
 import VProfileMenu from '@/layouts/Default/ProfileMenu.vue';
 import { useRoomsStore } from '@/store';
 
-const { y } = useWindowScroll();
+const { isTopbarElevation } = useScrollBehavior();
 const drawer = inject(KEYS.DRAWER.SHOW);
 
 const { isSearchFieldOpen, searchFieldRef } = useSearchField();
 const roomsStore = useRoomsStore();
-const { search, searchClearable } = storeToRefs(roomsStore);
+const { search, searchClearable, searchResult, isLoadingSearchAdvanced } =
+  storeToRefs(roomsStore);
+const { fetchMoreSearchResult } = roomsStore;
 </script>
 
 <style lang="scss" scoped>

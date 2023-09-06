@@ -125,6 +125,8 @@ const emit = defineEmits<{
   (event: 'removeMessage', data: IDeleteRoomMessageRequest): void;
 }>();
 
+const room = inject(KEYS.CHAT.ROOM)!;
+
 const { translate } = usePageLocale({ prefix: 'messages.room.messages' });
 
 const currentUser = inject(KEYS.CHAT.CURRENT_MEMBER)!;
@@ -173,15 +175,29 @@ const files = computed(() =>
     : [],
 );
 
-const isMessageRemoveable = computed(
-  () =>
-    props.message.type !== 'None' &&
-    (isCurrentUserMessage.value ||
-      _.some(
-        ['Administrator', 'Moderator'],
-        (role) => currentUser.value?.role === role,
-      )),
-);
+const isMessageRemoveable = computed(() => {
+  if (props.message.type === 'None') {
+    return false;
+  }
+  if (!room.value.isGroup && !isCurrentUserMessage.value) {
+    return false;
+  }
+  if (room.value.isGroup) {
+    if (currentUser.value?.role === 'Member' && !isCurrentUserMessage.value) {
+      return false;
+    }
+    if (
+      currentUser.value?.role === 'Moderator' &&
+      _.find(
+        room.value.roomMembers,
+        (roomMember) => roomMember.member.id === props.message.user.id,
+      )?.role === 'Administrator'
+    ) {
+      return false;
+    }
+  }
+  return true;
+});
 
 function removeMessage() {
   emit('removeMessage', {

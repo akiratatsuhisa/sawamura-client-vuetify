@@ -22,10 +22,10 @@
         <div
           v-if="isSearchFieldOpen"
           ref="searchFieldContainerRef"
-          class="search-container position-absolute mx-3 my-3 rounded-xl bg-surface-container-high elevation-4"
+          class="search-container d-flex flex-column position-absolute mx-3 my-3 rounded-xl bg-surface-container-high elevation-4"
         >
           <div
-            class="search bg-surface-container-high text-on-surface rounded-t-xl d-flex flex-row align-center cursor-pointer"
+            class="search flex-shrink-0 bg-surface-container-high text-on-surface rounded-t-xl d-flex flex-row align-center cursor-pointer"
           >
             <v-icon
               class="mx-4"
@@ -48,9 +48,35 @@
               icon="mdi-close"
               @click="search = ''"
             />
-            <v-icon class="mx-4" icon="mdi-magnify" />
+            <v-icon
+              class="mx-4"
+              icon="mdi-magnify"
+              @click="() => requestSearchAdvancedThrottle(search)"
+            />
           </div>
           <v-divider />
+
+          <div class="overflow-y-auto flex-grow-1">
+            <v-list>
+              <v-avanced-room-list-item
+                v-for="room in searchResult"
+                :key="room.id"
+                :room="room"
+              />
+              <v-list-item class="text-center">
+                <v-btn
+                  v-if="searchResult.length"
+                  variant="text"
+                  :loading="isLoadingSearchAdvanced"
+                  @click="fetchMoreSearchResult"
+                >
+                  {{ $t('pages.messages.shared.fetchMore') }}
+                </v-btn>
+              </v-list-item>
+            </v-list>
+          </div>
+
+          <div class="py-2 flex-shrink-0"></div>
         </div>
       </v-slide-y-transition>
     </div>
@@ -60,13 +86,16 @@
 <script lang="ts" setup>
 import { storeToRefs } from 'pinia';
 
+import VAvancedRoomListItem from '@/components/Rooms/AvancedRoomListItem.vue';
 import { useSearchField } from '@/composables';
 import { useRoomsStore } from '@/store';
 
 const { isSearchFieldOpen, searchFieldContainerRef, searchFieldRef } =
   useSearchField();
 const roomsStore = useRoomsStore();
-const { search, searchClearable } = storeToRefs(roomsStore);
+const { search, searchClearable, searchResult, isLoadingSearchAdvanced } =
+  storeToRefs(roomsStore);
+const { requestSearchAdvancedThrottle, fetchMoreSearchResult } = roomsStore;
 </script>
 
 <style lang="scss" scoped>

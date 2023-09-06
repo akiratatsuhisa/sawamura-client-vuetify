@@ -40,7 +40,7 @@
         <apexchart
           v-if="isExpand"
           class="mt-3 messages-chart"
-          height="500"
+          height="600"
           :options="options"
           :series="series"
         />
@@ -88,10 +88,6 @@ const options = computed<ApexOptions>(() => ({
       },
     },
   },
-  colors: [
-    theme.current.value.colors.primary,
-    theme.current.value.colors.secondary,
-  ],
   stroke: {
     show: true,
     width: 1,
@@ -117,6 +113,27 @@ const { isLoading: isLoadingChartMessages, request: requestChartMessages } =
             data: _.map(records, (data) => ({
               x: data.label,
               y: data.countMessages,
+            })),
+          },
+          {
+            name: 'images',
+            data: _.map(records, (data) => ({
+              x: data.label,
+              y: data.countImages,
+            })),
+          },
+          {
+            name: 'audios',
+            data: _.map(records, (data) => ({
+              x: data.label,
+              y: data.countAudios,
+            })),
+          },
+          {
+            name: 'videos',
+            data: _.map(records, (data) => ({
+              x: data.label,
+              y: data.countVideos,
             })),
           },
           {

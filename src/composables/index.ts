@@ -2,6 +2,7 @@ export * from '@/composables/useAlert';
 export * from '@/composables/useAppStorage';
 export * from '@/composables/useAuth';
 export * from '@/composables/useAxios';
+export * from '@/composables/useBehavior';
 export * from '@/composables/useColor';
 export * from '@/composables/useFetchIntersection';
 export * from '@/composables/useFileDialog';

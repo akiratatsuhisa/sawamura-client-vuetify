@@ -91,7 +91,12 @@
         <div v-if="user.birthDate">
           <v-icon color="primary" icon="mdi-cake-variant-outline" />
           <span class="ml-1">
-            {{ Format.date(user.birthDate, { dateStyle: 'long' }) }}
+            {{
+              Format.date(user.birthDate, {
+                locales: $i18n.locale,
+                dateStyle: 'long',
+              })
+            }}
           </span>
         </div>
         <div v-if="user.location">
@@ -109,7 +114,12 @@
         <div>
           <v-icon color="primary" icon="mdi-calendar-month" />
           <span class="ml-1">
-            {{ Format.date(user.createdAt, { dateStyle: 'long' }) }}
+            {{
+              Format.date(user.createdAt, {
+                locales: $i18n.locale,
+                dateStyle: 'long',
+              })
+            }}
           </span>
         </div>
       </div>

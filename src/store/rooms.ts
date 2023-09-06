@@ -1,18 +1,21 @@
 import { useThrottleFn } from '@vueuse/core';
 import _ from 'lodash';
 import { defineStore } from 'pinia';
-import { computed, ref } from 'vue';
+import { computed, ref, watch } from 'vue';
 
 import {
+  useAxios,
   useSnackbar,
   useSocketChat,
   useSocketEventListener,
 } from '@/composables';
 import {
+  IAdvancedRoomResponse,
   IRoomMessageResponse,
   IRoomResponse,
   ISearchRoomsRequest,
 } from '@/interfaces';
+import { services } from '@/services';
 
 export const useRoomsStore = defineStore('rooms', () => {
   const socket = useSocketChat();
@@ -88,8 +91,47 @@ export const useRoomsStore = defineStore('rooms', () => {
     listener: (data) => updateListRoom(data.room),
   });
 
+  const searchResult = ref<Array<IAdvancedRoomResponse>>([]);
   const search = ref<string>('');
   const searchClearable = computed(() => _.trim(search.value).length);
+
+  const { excute: excuteSearchAdvanced, isLoading: isLoadingSearchAdvanced } =
+    useAxios(services.rooms, 'searchAdvanced');
+
+  const requestSearchAdvancedThrottle = useThrottleFn(
+    async (text: string) => {
+      if (!_.trim(text)) {
+        searchResult.value = [];
+        return;
+      }
+
+      searchResult.value = await excuteSearchAdvanced({ search: text });
+    },
+    500,
+    true,
+  );
+
+  watch(search, (search) => {
+    requestSearchAdvancedThrottle(search);
+  });
+
+  async function fetchMoreSearchResult() {
+    const groupRoomId = _.findLast(
+      searchResult.value,
+      (room) => room.isGroup,
+    )?.id;
+    const privateRoomId = _.findLast(
+      searchResult.value,
+      (room) => !room.isGroup,
+    )?.id;
+
+    const newResult = await excuteSearchAdvanced({
+      search: search.value,
+      groupRoomId,
+      privateRoomId,
+    });
+    searchResult.value = _.uniqBy([...searchResult.value, ...newResult], 'id');
+  }
 
   return {
     rooms,
@@ -99,5 +141,9 @@ export const useRoomsStore = defineStore('rooms', () => {
     updateListRoom,
     search,
     searchClearable,
+    searchResult,
+    isLoadingSearchAdvanced,
+    requestSearchAdvancedThrottle,
+    fetchMoreSearchResult,
   };
 });
