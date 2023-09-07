@@ -47,7 +47,8 @@ const message = computed(() =>
   currentMember.value?.id === roomMember.value?.id
     ? translate('selfMessage')
     : translate('message', {
-        member: roomMember.value?.nickName ?? roomMember.value?.member.username,
+        member:
+          roomMember.value?.nickName ?? roomMember.value?.member.displayName,
       }),
 );
 

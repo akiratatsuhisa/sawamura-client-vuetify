@@ -45,6 +45,7 @@
 import { computed } from 'vue';
 import { RouteLocationRaw, useRouter } from 'vue-router';
 
+import { useUserImage } from '@/composables';
 import {
   INotificationResponse,
   NotificationEntityName,
@@ -76,13 +77,7 @@ const emit = defineEmits<{
 
 const router = useRouter();
 
-const photoUrl = computed(() =>
-  props.item.sourceUser?.photoUrl
-    ? `${import.meta.env.VITE_API_URL}/auth/photo?username=${
-        props.item.sourceUser.username
-      }`
-    : import.meta.env.VITE_NO_AVATAR_URL,
-);
+const photoUrl = useUserImage('photo', props.item.sourceUser);
 
 const redirectUrl = computed<RouteLocationRaw | undefined>(() => {
   switch (props.item.entity) {

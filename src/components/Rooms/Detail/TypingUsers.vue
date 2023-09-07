@@ -2,20 +2,10 @@
   <v-slide-x-transition>
     <div v-if="_.size(displayUsers)" class="d-flex mt-2 align-center">
       <template
-        v-for="({ photoUrl, name }, userId) in displayUsers"
+        v-for="({ member, name }, userId) in displayUsers"
         :key="userId"
       >
-        <v-tooltip :text="name" location="top center">
-          <template v-slot:activator="{ props }">
-            <v-avatar
-              color="secondary-container"
-              class="avatar"
-              :image="photoUrl"
-              v-bind="props"
-              size="20"
-            ></v-avatar>
-          </template>
-        </v-tooltip>
+        <v-typing-users-avatar :name="name" :member="member" />
       </template>
       <v-sheet
         class="typing pa-2 ml-2 rounded-pill"
@@ -44,19 +34,21 @@ import dayjs from 'dayjs';
 import _ from 'lodash';
 import { computed, inject, reactive, watch } from 'vue';
 
+import VTypingUsersAvatar from '@/components/Rooms/Detail/TypingUsersAvatar.vue';
 import { useRoom, useSocketChat } from '@/composables';
 import { KEYS } from '@/constants';
+import { IRoomUserResponse } from '@/interfaces';
 
 const room = inject(KEYS.CHAT.ROOM)!;
 
-const { currentMember, roomMembers, getPhotoUrlByRoomUser } = useRoom(room);
+const { currentMember, roomMembers } = useRoom(room);
 
 const socket = useSocketChat();
 
 const typingUsers = reactive<Record<string, number>>({});
 
 const displayUsers = computed(() => {
-  const obj: Record<string, { name: string; photoUrl: string }> = {};
+  const obj: Record<string, { name: string; member: IRoomUserResponse }> = {};
 
   for (const userId in typingUsers) {
     const roomMember = roomMembers.value.find((member) => member.id === userId);
@@ -65,8 +57,8 @@ const displayUsers = computed(() => {
     }
 
     obj[userId] = {
-      name: roomMember.nickName ?? roomMember.member.username,
-      photoUrl: getPhotoUrlByRoomUser(roomMember.member),
+      name: roomMember.nickName ?? roomMember.member.displayName,
+      member: roomMember.member,
     };
   }
 
@@ -124,10 +116,6 @@ defineExpose({ onTyping });
 </script>
 
 <style lang="scss" scoped>
-.avatar:not(:first-child) {
-  margin-left: -8px;
-}
-
 .typing {
   display: flex;
 

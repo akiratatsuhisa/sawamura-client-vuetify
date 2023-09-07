@@ -1,65 +1,67 @@
 <template>
   <v-container class="fill-height">
-    <v-row class="h-100 align-content-center">
-      <v-col class="mx-auto" md="6" lg="4">
-        <v-card rounded="xl">
-          <v-card-title>{{ translate('title') }}</v-card-title>
-          <v-card-subtitle class="text-wrap">
-            {{ translate('subtitle') }}
-          </v-card-subtitle>
-          <v-card-text>
-            <form @submit.prevent="onSubmit">
-              <input hidden name="username" autocomplete="username" />
-              <v-text-field
-                class="mb-3"
-                :label="translateFormField('password')"
-                v-model="v$.password.$model"
-                :error-messages="getErrorMessage(v$.password)"
-                @blur="v$.password.$validate"
-                clearable
-                persistent-hint
-                :hint="translateShared('passwordHint')"
-                v-bind="bindShowPassword('new')"
-              />
-              <v-text-field
-                class="mb-3"
-                :label="translateFormField('confirmPassword')"
-                v-model="v$.confirmPassword.$model"
-                :error-messages="getErrorMessage(v$.confirmPassword)"
-                @blur="v$.confirmPassword.$validate"
-                clearable
-                persistent-hint
-                :hint="translateFormField('confirmPassword', 'hint')"
-                v-bind="bindShowPassword('confirm')"
-              />
+    <v-responsive>
+      <v-row class="h-100 align-content-center">
+        <v-col class="mx-auto" md="6" lg="4">
+          <v-card rounded="xl">
+            <v-card-title>{{ translate('title') }}</v-card-title>
+            <v-card-subtitle class="text-wrap">
+              {{ translate('subtitle') }}
+            </v-card-subtitle>
+            <v-card-text>
+              <form @submit.prevent="onSubmit">
+                <input hidden name="username" autocomplete="username" />
+                <v-text-field
+                  class="mb-3"
+                  :label="translateFormField('password')"
+                  v-model="v$.password.$model"
+                  :error-messages="getErrorMessage(v$.password)"
+                  @blur="v$.password.$validate"
+                  clearable
+                  persistent-hint
+                  :hint="translateShared('passwordHint')"
+                  v-bind="bindShowPassword('new')"
+                />
+                <v-text-field
+                  class="mb-3"
+                  :label="translateFormField('confirmPassword')"
+                  v-model="v$.confirmPassword.$model"
+                  :error-messages="getErrorMessage(v$.confirmPassword)"
+                  @blur="v$.confirmPassword.$validate"
+                  clearable
+                  persistent-hint
+                  :hint="translateFormField('confirmPassword', 'hint')"
+                  v-bind="bindShowPassword('confirm')"
+                />
 
-              <v-btn
-                type="submit"
-                :loading="isLoading"
-                variant="elevated"
-                block
-                class="mb-3"
-              >
-                {{ translate('form.submit') }}
-              </v-btn>
-
-              <i18n-t
-                :keypath="pathShared('returnToLogin')"
-                tag="span"
-                scope="global"
-              >
-                <router-link
-                  class="text-primary"
-                  :to="{ name: 'Login', query: { redirectUrl } }"
+                <v-btn
+                  type="submit"
+                  :loading="isLoading"
+                  variant="elevated"
+                  block
+                  class="mb-3"
                 >
-                  {{ $t('pages.auth.login.title') }}
-                </router-link>
-              </i18n-t>
-            </form>
-          </v-card-text>
-        </v-card>
-      </v-col>
-    </v-row>
+                  {{ translate('form.submit') }}
+                </v-btn>
+
+                <i18n-t
+                  :keypath="pathShared('returnToLogin')"
+                  tag="span"
+                  scope="global"
+                >
+                  <router-link
+                    class="text-primary"
+                    :to="{ name: 'Login', query: { redirectUrl } }"
+                  >
+                    {{ $t('pages.auth.login.title') }}
+                  </router-link>
+                </i18n-t>
+              </form>
+            </v-card-text>
+          </v-card>
+        </v-col>
+      </v-row>
+    </v-responsive>
   </v-container>
 </template>
 

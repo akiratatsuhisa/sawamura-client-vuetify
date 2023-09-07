@@ -14,14 +14,15 @@
   <div
     class="d-flex flex-column flex-md-row justify-space-around justify-md-space-between py-2 align-stretch align-md-center"
   >
-    <v-list-item class="pa-0">
+    <v-list-item class="pa-0" lines="three">
       <template #prepend>
         <v-avatar size="64" :image="photoUrl" class="elevation-4" />
       </template>
-      <template #title>{{ user?.username }}</template>
-      <template #subtitle>
+      <template #title>{{ user?.displayName }}</template>
+      <v-list-item-subtitle>@{{ user?.username }}</v-list-item-subtitle>
+      <v-list-item-subtitle class="font-weight-medium">
         {{ fullName }}
-      </template>
+      </v-list-item-subtitle>
     </v-list-item>
 
     <div>

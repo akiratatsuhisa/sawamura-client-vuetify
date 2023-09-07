@@ -290,7 +290,6 @@ const {
   currentMember,
   displayName,
   roomPhotoUrl,
-  updateImage,
   lastActivatedAgo,
 } = useRoom(room);
 
@@ -337,7 +336,6 @@ useSocketEventListener<IRoomResponse>(socket, 'update:room:photo', {
       return;
     }
     room.value = data;
-    updateImage('photo');
   },
 });
 
@@ -347,7 +345,6 @@ useSocketEventListener<IRoomResponse>(socket, 'update:room:cover', {
       return;
     }
     room.value = data;
-    updateImage('cover');
   },
 });
 

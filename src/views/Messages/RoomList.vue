@@ -1,43 +1,45 @@
 <template>
   <v-main>
     <v-container class="fill-height">
-      <v-row>
-        <v-col class="mx-auto" cols="12" lg="10">
-          <v-card rounded="xl" min-height="480">
-            <div class="d-flex flex-column flex-sm-row align-md-center">
-              <v-card-title tag="h1">{{ translate('title') }}</v-card-title>
-              <v-spacer v-if="$vuetify.display.smAndDown" />
-              <v-room-list-search />
-              <v-btn
-                class="ma-4"
-                prepend-icon="mdi-account-group"
-                @click="openDialog('create')"
-                :loading="isLoading"
-              >
-                {{ translate('createGroup') }}
-              </v-btn>
-            </div>
+      <v-responsive>
+        <v-row>
+          <v-col class="mx-auto" cols="12" lg="10">
+            <v-card rounded="xl" min-height="480">
+              <div class="d-flex flex-column flex-sm-row align-md-center">
+                <v-card-title tag="h1">{{ translate('title') }}</v-card-title>
+                <v-spacer v-if="$vuetify.display.smAndDown" />
+                <v-room-list-search />
+                <v-btn
+                  class="ma-4"
+                  prepend-icon="mdi-account-group"
+                  @click="openDialog('create')"
+                  :loading="isLoading"
+                >
+                  {{ translate('createGroup') }}
+                </v-btn>
+              </div>
 
-            <v-list lines="two">
-              <v-list-subheader tag="h2">
-                {{ translate('subtitle') }}
-              </v-list-subheader>
+              <v-list lines="two">
+                <v-list-subheader tag="h2">
+                  {{ translate('subtitle') }}
+                </v-list-subheader>
 
-              <v-room-list-item
-                v-for="room in rooms"
-                :key="room.id"
-                :room="room"
-              />
-            </v-list>
+                <v-room-list-item
+                  v-for="room in rooms"
+                  :key="room.id"
+                  :room="room"
+                />
+              </v-list>
 
-            <v-card-actions class="justify-center">
-              <v-btn @click="fetchMore" :loading="isLoading">
-                {{ translateShared('fetchMore') }}
-              </v-btn>
-            </v-card-actions>
-          </v-card>
-        </v-col>
-      </v-row>
+              <v-card-actions class="justify-center">
+                <v-btn @click="fetchMore" :loading="isLoading">
+                  {{ translateShared('fetchMore') }}
+                </v-btn>
+              </v-card-actions>
+            </v-card>
+          </v-col>
+        </v-row>
+      </v-responsive>
     </v-container>
 
     <v-fade-transition>

@@ -177,7 +177,7 @@
 import { inject, ref } from 'vue';
 
 import VDisplayImage from '@/components/VDisplayImage.vue';
-import { useUser } from '@/composables';
+import { useUserImage } from '@/composables';
 import { KEYS } from '@/constants';
 import { Format } from '@/helpers';
 
@@ -186,7 +186,8 @@ const LAZY_BACKGROUND = import.meta.env.VITE_NO_BACKGROUND_URL;
 const props = defineProps<{ coverUrl?: string; photoUrl?: string }>();
 
 const user = inject(KEYS.USERS.PAGE.PROFILE_USER)!;
-const { coverUrl, photoUrl } = useUser(user);
+const photoUrl = useUserImage('photo', user);
+const coverUrl = useUserImage('cover', user);
 
 const selectedImageSrc = ref<string>();
 </script>

@@ -1,14 +1,16 @@
 <template>
   <v-main>
     <v-container v-if="!data" class="fill-height">
-      <div class="h-100 w-100 d-flex justify-center align-center">
-        <v-progress-circular
-          size="88"
-          width="6"
-          color="primary"
-          indeterminate
-        />
-      </div>
+      <v-responsive>
+        <div class="h-100 w-100 d-flex justify-center align-center">
+          <v-progress-circular
+            size="88"
+            width="6"
+            color="primary"
+            indeterminate
+          />
+        </div>
+      </v-responsive>
     </v-container>
     <v-container v-else>
       <v-row>

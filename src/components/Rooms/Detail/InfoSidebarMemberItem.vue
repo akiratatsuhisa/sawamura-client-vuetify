@@ -5,7 +5,7 @@
         color="secondary-container"
         class="elevation-6"
         tag="button"
-        :image="getPhotoUrlByRoomUser(roomMember.member)"
+        :image="photoUrl"
         @click="
           $router.push({
             name: 'Users:Page',
@@ -17,7 +17,7 @@
     </template>
 
     <v-list-item-title>
-      {{ roomMember.nickName ?? roomMember.member.username }}
+      {{ roomMember.nickName ?? roomMember.member.displayName }}
     </v-list-item-title>
 
     <v-list-item-subtitle>
@@ -67,7 +67,7 @@
 import _ from 'lodash';
 import { computed, inject } from 'vue';
 
-import { getPhotoUrlByRoomUser, usePageLocale } from '@/composables';
+import { usePageLocale, useUserImage } from '@/composables';
 import { KEYS } from '@/constants';
 import { IRoomMemberResponse } from '@/interfaces';
 
@@ -86,6 +86,11 @@ const emit = defineEmits<{
     },
   ): void;
 }>();
+
+const photoUrl = useUserImage(
+  'photo',
+  computed(() => props.roomMember.member),
+);
 
 function onOpenDialog(dialog: string) {
   emit('openDialog', {

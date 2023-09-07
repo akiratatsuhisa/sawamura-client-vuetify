@@ -1,7 +1,7 @@
 export type IdentityUser = {
-  id: string | null;
-  username: string | null;
-  displayName: string | null;
+  id: string;
+  username: string;
+  displayName: string;
   hasPassword: boolean | null;
   email: string | null;
   emailConfirmed: boolean | null;

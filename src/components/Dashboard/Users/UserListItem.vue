@@ -144,6 +144,7 @@ import { useTimeAgo } from '@vueuse/core';
 import _ from 'lodash';
 import { computed, inject } from 'vue';
 
+import { useUserImage } from '@/composables';
 import { KEYS } from '@/constants';
 import { Format } from '@/helpers';
 import { IUserResponse } from '@/interfaces';
@@ -152,12 +153,9 @@ const props = defineProps<{
   record: IUserResponse;
 }>();
 
-const photoUrl = computed(() =>
-  props.record.photoUrl
-    ? `${import.meta.env.VITE_API_URL}/auth/photo?username=${
-        props.record.username
-      }`
-    : import.meta.env.VITE_NO_AVATAR_URL,
+const photoUrl = useUserImage(
+  'photo',
+  computed(() => props.record),
 );
 
 const fullName = computed(() =>

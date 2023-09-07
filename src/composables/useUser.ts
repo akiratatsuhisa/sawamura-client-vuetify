@@ -1,29 +1,36 @@
-import { MaybeRef } from '@vueuse/core';
-import { computed, unref } from 'vue';
+import { computedAsync, MaybeRef } from '@vueuse/core';
+import { unref } from 'vue';
 
-import { IProfileUserResponse } from '@/interfaces';
+import { axiosInstacne } from '@/services';
 
-export function useUser(user: MaybeRef<IProfileUserResponse>) {
-  const coverUrl = computed(() => {
+const NO_AVATAR_URL = import.meta.env.VITE_NO_AVATAR_URL as string;
+const NO_BACKGROUND_URL = import.meta.env.VITE_NO_BACKGROUND_URL as string;
+
+export function useUserImage(
+  type: 'photo' | 'cover',
+  user: MaybeRef<{
+    username: string;
+    photoUrl?: string | null;
+    coverUrl?: string | null;
+  }>,
+) {
+  const defaultImage = type === 'photo' ? NO_AVATAR_URL : NO_BACKGROUND_URL;
+
+  return computedAsync(async () => {
     const unwrapUser = unref(user);
-    return unwrapUser.coverUrl
-      ? `${import.meta.env.VITE_API_URL}/auth/cover?username=${
-          unwrapUser.username
-        }`
-      : import.meta.env.VITE_NO_BACKGROUND_URL;
-  });
 
-  const photoUrl = computed(() => {
-    const unwrapUser = unref(user);
-    return unwrapUser.photoUrl
-      ? `${import.meta.env.VITE_API_URL}/auth/photo?username=${
-          unwrapUser.username
-        }`
-      : import.meta.env.VITE_NO_AVATAR_URL;
-  });
+    if (!unwrapUser[`${type}Url`]) {
+      return defaultImage;
+    }
 
-  return {
-    coverUrl,
-    photoUrl,
-  };
+    return await axiosInstacne
+      .request<string>({
+        url: `/auth/${type}`,
+        params: {
+          username: unwrapUser.username,
+        },
+      })
+      .then((data) => data.data)
+      .catch(() => defaultImage);
+  }, defaultImage);
 }

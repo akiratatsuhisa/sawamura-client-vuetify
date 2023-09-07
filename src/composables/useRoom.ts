@@ -1,5 +1,4 @@
-import { MaybeRef, useLocalStorage, useTimeAgo } from '@vueuse/core';
-import dayjs from 'dayjs';
+import { computedAsync, MaybeRef, useTimeAgo } from '@vueuse/core';
 import _ from 'lodash';
 import { computed, unref } from 'vue';
 
@@ -11,12 +10,10 @@ import {
   IRoomResponse,
   IRoomUserResponse,
 } from '@/interfaces';
+import { axiosInstacne } from '@/services';
 
-export function getPhotoUrlByRoomUser(user: IRoomUserResponse) {
-  return user.photoUrl
-    ? `${import.meta.env.VITE_API_URL}/auth/photo?username=${user.username}`
-    : import.meta.env.VITE_NO_AVATAR_URL;
-}
+const NO_AVATAR_URL = import.meta.env.VITE_NO_AVATAR_URL as string;
+const NO_BACKGROUND_URL = import.meta.env.VITE_NO_BACKGROUND_URL as string;
 
 export function getDisplayRoomMemberNameByUser(
   roomMembers: Array<IRoomMemberResponse>,
@@ -93,7 +90,6 @@ export function useAdvancedRoom(room: MaybeRef<IAdvancedRoomResponse>) {
       (roomMember) => roomMember.role !== 'None',
     );
   });
-
   const currentMember = computed(() => {
     const unwrapRoom = unref(room);
 
@@ -102,7 +98,6 @@ export function useAdvancedRoom(room: MaybeRef<IAdvancedRoomResponse>) {
       (roomMember) => roomMember.member.id === identityId.value,
     );
   });
-
   const targetMember = computed(() => {
     const unwrapRoom = unref(room);
 
@@ -114,21 +109,33 @@ export function useAdvancedRoom(room: MaybeRef<IAdvancedRoomResponse>) {
         );
   });
 
-  const roomPhotoUrl = computed(() => {
+  const roomPhotoUrl = computedAsync(async () => {
     const unwrapRoom = unref(room);
-
     if (!unwrapRoom.isGroup) {
-      return targetMember.value?.member.photoUrl
-        ? `${import.meta.env.VITE_API_URL}/auth/photo?username=${
-            targetMember.value.member.username
-          }`
-        : import.meta.env.VITE_NO_AVATAR_URL;
+      if (!targetMember.value?.member.photoUrl) {
+        return NO_AVATAR_URL;
+      }
+      return await axiosInstacne
+        .request<string>({
+          url: '/auth/photo',
+          params: {
+            username: targetMember.value.member.username,
+          },
+        })
+        .then((data) => data.data)
+        .catch(() => NO_BACKGROUND_URL);
+    } else {
+      if (!unwrapRoom.photoUrl) {
+        return NO_BACKGROUND_URL;
+      }
+      return await axiosInstacne
+        .request<string>({
+          url: `/rooms/${unwrapRoom.id}/photo`,
+        })
+        .then((data) => data.data)
+        .catch(() => NO_AVATAR_URL);
     }
-
-    return unwrapRoom.photoUrl
-      ? `${import.meta.env.VITE_API_URL}/rooms/${unwrapRoom.id}/photo`
-      : import.meta.env.VITE_NO_BACKGROUND_URL;
-  });
+  }, '');
 
   const displayName = computed(() => {
     const unwrapRoom = unref(room);
@@ -153,7 +160,6 @@ export function useAdvancedRoom(room: MaybeRef<IAdvancedRoomResponse>) {
     lastActivatedAgo,
     lastMessage,
     roomPhotoUrl,
-    getPhotoUrlByRoomUser,
   };
 }
 
@@ -168,7 +174,6 @@ export function useRoom(room: MaybeRef<IRoomResponse>) {
       (roomMember) => roomMember.role !== 'None',
     );
   });
-
   const currentMember = computed(() => {
     const unwrapRoom = unref(room);
 
@@ -177,7 +182,6 @@ export function useRoom(room: MaybeRef<IRoomResponse>) {
       (roomMember) => roomMember.member.id === identityId.value,
     );
   });
-
   const targetMember = computed(() => {
     const unwrapRoom = unref(room);
 
@@ -189,47 +193,45 @@ export function useRoom(room: MaybeRef<IRoomResponse>) {
         );
   });
 
-  const updatedImages = useLocalStorage<{
-    [key: string]: { photo: string; cover: string };
-  }>('list:room:images', {});
-
-  const roomPhotoUrl = computed(() => {
+  const roomPhotoUrl = computedAsync(async () => {
     const unwrapRoom = unref(room);
-
     if (!unwrapRoom.isGroup) {
-      return targetMember.value?.member.photoUrl
-        ? `${import.meta.env.VITE_API_URL}/auth/photo?username=${
-            targetMember.value.member.username
-          }`
-        : import.meta.env.VITE_NO_AVATAR_URL;
+      if (!targetMember.value?.member.photoUrl) {
+        return NO_AVATAR_URL;
+      }
+      return await axiosInstacne
+        .request<string>({
+          url: '/auth/photo',
+          params: {
+            username: targetMember.value.member.username,
+          },
+        })
+        .then((data) => data.data)
+        .catch(() => NO_BACKGROUND_URL);
+    } else {
+      if (!unwrapRoom.photoUrl) {
+        return NO_BACKGROUND_URL;
+      }
+      return await axiosInstacne
+        .request<string>({
+          url: `/rooms/${unwrapRoom.id}/photo`,
+        })
+        .then((data) => data.data)
+        .catch(() => NO_AVATAR_URL);
     }
-
-    return unwrapRoom.photoUrl
-      ? `${import.meta.env.VITE_API_URL}/rooms/${unwrapRoom.id}/photo` +
-          (updatedImages.value[unwrapRoom.id]?.photo
-            ? `?updated=${updatedImages.value[unwrapRoom.id].photo}`
-            : '')
-      : import.meta.env.VITE_NO_BACKGROUND_URL;
-  });
-
-  function updateImage(type: 'photo' | 'cover') {
-    if (!updatedImages.value[unref(room).id]) {
-      updatedImages.value[unref(room).id] = { photo: '', cover: '' };
-    }
-
-    updatedImages.value[unref(room).id][type] = dayjs().unix().toString();
-  }
-
-  const roomCoverUrl = computed(() => {
+  }, '');
+  const roomCoverUrl = computedAsync(async () => {
     const unwrapRoom = unref(room);
-
-    return unwrapRoom.coverUrl
-      ? `${import.meta.env.VITE_API_URL}/rooms/${unwrapRoom.id}/cover` +
-          (updatedImages.value[unwrapRoom.id]?.cover
-            ? `?updated=${updatedImages.value[unwrapRoom.id].cover}`
-            : '')
-      : '';
-  });
+    if (!unwrapRoom.coverUrl) {
+      return '';
+    }
+    return await axiosInstacne
+      .request<string>({
+        url: `/rooms/${unwrapRoom.id}/cover`,
+      })
+      .then((data) => data.data)
+      .catch(() => NO_BACKGROUND_URL);
+  }, '');
 
   const displayName = computed(() => {
     const unwrapRoom = unref(room);
@@ -255,7 +257,5 @@ export function useRoom(room: MaybeRef<IRoomResponse>) {
     lastMessage,
     roomPhotoUrl,
     roomCoverUrl,
-    updateImage,
-    getPhotoUrlByRoomUser,
   };
 }

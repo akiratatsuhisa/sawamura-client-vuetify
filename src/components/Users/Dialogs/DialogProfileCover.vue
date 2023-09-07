@@ -78,7 +78,7 @@ const emit = defineEmits<{
 }>();
 
 const { translateShared } = usePageLocale({ prefix: 'users.profile' });
-const { fetchAccessToken, updateImage } = useAuth();
+const { fetchAccessToken } = useAuth();
 const {
   isThemeSelectable,
   isThemeModeGenerate,
@@ -109,7 +109,6 @@ async function onSubmit() {
       theme: isThemeSelectable.value && isThemeModeGenerate.value,
     });
     await fetchAccessToken();
-    updateImage('cover');
   })();
 
   emit('update:modelValue', false);

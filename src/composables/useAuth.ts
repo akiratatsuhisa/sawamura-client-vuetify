@@ -1,4 +1,5 @@
 import {
+  computedAsync,
   createSharedComposable,
   MaybeRef,
   useLocalStorage,
@@ -18,6 +19,9 @@ import {
   ILoginRequest,
 } from '@/interfaces';
 import { config, services } from '@/services';
+
+const NO_AVATAR_URL = import.meta.env.VITE_NO_AVATAR_URL as string;
+const NO_BACKGROUND_URL = import.meta.env.VITE_NO_BACKGROUND_URL as string;
 
 export const useAuth = createSharedComposable(() => {
   const accessToken = useLocalStorage('auth:profile:accessToken', '');
@@ -130,40 +134,40 @@ export const useAuth = createSharedComposable(() => {
     createSnackbarSuccess('Login Successfully');
   }
 
-  const updatedImages = useLocalStorage('auth:profile:images', {
-    photo: '',
-    cover: '',
-  });
-
   const fullName = computed(() =>
     _.trim(`${user.value?.lastName ?? ''} ${user.value?.firstName ?? ''}`),
   );
 
-  const photoUrl = computed(() =>
-    user.value?.photoUrl
-      ? `${import.meta.env.VITE_API_URL}/auth/photo?username=${
-          user.value.username
-        }` +
-        (updatedImages.value.photo
-          ? `&updated=${updatedImages.value.photo}`
-          : '')
-      : import.meta.env.VITE_NO_AVATAR_URL,
-  );
+  const photoUrl = computedAsync(async () => {
+    if (!user.value || !user.value?.photoUrl) {
+      return NO_AVATAR_URL;
+    }
 
-  const coverUrl = computed(() =>
-    user.value?.coverUrl
-      ? `${import.meta.env.VITE_API_URL}/auth/cover?username=${
-          user.value.username
-        }` +
-        (updatedImages.value.cover
-          ? `&updated=${updatedImages.value.cover}`
-          : '')
-      : import.meta.env.VITE_NO_BACKGROUND_URL,
-  );
+    return await axiosInstacne
+      .request<string>({
+        url: '/auth/photo',
+        params: {
+          username: user.value.username,
+        },
+      })
+      .then((data) => data.data)
+      .catch(() => NO_AVATAR_URL);
+  }, NO_AVATAR_URL);
+  const coverUrl = computedAsync(async () => {
+    if (!user.value || !user.value?.coverUrl) {
+      return NO_BACKGROUND_URL;
+    }
 
-  function updateImage(type: 'photo' | 'cover') {
-    updatedImages.value[type] = dayjs().unix().toString();
-  }
+    return await axiosInstacne
+      .request<string>({
+        url: '/auth/cover',
+        params: {
+          username: user.value.username,
+        },
+      })
+      .then((data) => data.data)
+      .catch(() => NO_BACKGROUND_URL);
+  }, NO_BACKGROUND_URL);
 
   return {
     isAuthenticated,
@@ -180,7 +184,6 @@ export const useAuth = createSharedComposable(() => {
     fullName,
     photoUrl,
     coverUrl,
-    updateImage,
   };
 });
 

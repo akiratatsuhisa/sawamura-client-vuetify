@@ -107,7 +107,7 @@ import _ from 'lodash';
 import { computed, inject } from 'vue';
 
 import VMessageContentFile from '@/components/Rooms/Detail/MessageContentFile.vue';
-import { usePageLocale } from '@/composables';
+import { usePageLocale, useUserImage } from '@/composables';
 import { KEYS } from '@/constants';
 import {
   IDeleteRoomMessageRequest,
@@ -134,12 +134,9 @@ const isCurrentUserMessage = computed(
   () => currentUser.value?.member.id === props.message.user.id,
 );
 
-const photoUrl = computed(() =>
-  props.message.user.photoUrl
-    ? `${import.meta.env.VITE_API_URL}/auth/photo?username=${
-        props.message.user.username
-      }`
-    : import.meta.env.VITE_NO_AVATAR_URL,
+const photoUrl = useUserImage(
+  'photo',
+  computed(() => props.message.user),
 );
 
 const timeAgo = useTimeAgo(props.message.createdAt);
