@@ -2,11 +2,12 @@ import _ from 'lodash';
 import { RouteRecordRaw } from 'vue-router';
 
 import { Regex } from '@/helpers';
-import VRoomContentSidebar from '@/layouts/Default/Messages/RoomContentSidebar.vue';
-import VRoomContentTopbar from '@/layouts/Default/Messages/RoomContentTopbar.vue';
-import VRoomsTopbarDesktop from '@/layouts/Default/Messages/RoomsTopbarDesktop.vue';
-import VRoomsTopbarMobile from '@/layouts/Default/Messages/RoomsTopbarMobile.vue';
-import VSidebar from '@/layouts/Default/Sidebar.vue';
+import VBottomAppBar from '@/layouts/Default/BottomAppBar.vue';
+import VRoomDetailLeftAppBar from '@/views/Messages/layouts/RoomDetailLeftAppBar.vue';
+import VRoomDetailTopAppBar from '@/views/Messages/layouts/RoomDetailTopAppBar.vue';
+import VRoomsLeftAppBar from '@/views/Messages/layouts/RoomsLeftAppBar.vue';
+import VRoomsTopAppBar from '@/views/Messages/layouts/RoomsTopAppBar.vue';
+import VRoomsTopInnerAppBar from '@/views/Messages/layouts/RoomsTopInnerAppBar.vue';
 
 export default [
   {
@@ -14,19 +15,20 @@ export default [
     name: 'Messages',
     meta: { requiresAuth: true },
     components: {
-      topbar: VRoomsTopbarDesktop,
-      topbarMobile: VRoomsTopbarMobile,
-      sidebar: VSidebar,
-      default: () => import('@/views/Messages/RoomList.vue'),
+      top: VRoomsTopAppBar,
+      topInner: VRoomsTopInnerAppBar,
+      left: VRoomsLeftAppBar,
+      bottom: VBottomAppBar,
+      default: () => import('@/views/Messages/Index.vue'),
     },
   },
   {
     path: `/messages/:roomId(${Regex.Uuid.source})/:dialog(update|photo|cover|theme|delete|icon|members)?/:memberDialog(create|update|role|delete)?/:memberId(${Regex.Uuid.source})?`,
     name: 'Messages:Room',
     components: {
-      topbar: VRoomContentTopbar,
-      sidebar: VRoomContentSidebar,
-      default: () => import('@/views/Messages/RoomContent.vue'),
+      top: VRoomDetailTopAppBar,
+      left: VRoomDetailLeftAppBar,
+      default: () => import('@/views/Messages/Detail/Index.vue'),
     },
     beforeEnter: (to) => {
       const dialog = to.params.dialog as string | undefined;

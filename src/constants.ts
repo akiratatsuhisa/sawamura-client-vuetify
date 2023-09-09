@@ -7,7 +7,6 @@ import {
   ShallowRef,
   WritableComputedRef,
 } from 'vue';
-import { RouteLocationNamedRaw } from 'vue-router';
 
 import { AlertProps, SnackbarProps } from '@/composables';
 import {
@@ -36,14 +35,6 @@ export namespace KEYS {
     'socket:notifications',
   );
 
-  export namespace DRAWER {
-    export const SHOW: InjectionKey<Ref<boolean | null>> =
-      Symbol('drawer:show');
-    export const IS_ACTIVE: InjectionKey<
-      (item: RouteLocationNamedRaw, prefix?: boolean) => boolean
-    > = Symbol('drawer:isActive');
-  }
-
   export namespace CHAT {
     export const ROOM: InjectionKey<Ref<IRoomResponse>> = Symbol('chat:room');
     export const CURRENT_MEMBER: InjectionKey<
@@ -71,6 +62,11 @@ export namespace KEYS {
             'dashboard:users:dialogs:changeRoles:openDialog',
           );
         }
+      }
+
+      export namespace ROLES {
+        export const SOFTABLE_REF: InjectionKey<Ref<HTMLElement | undefined>> =
+          Symbol('dashboard:users:roles:softableRef');
       }
     }
   }

@@ -1,7 +1,7 @@
 import { LocaleLayoutDefault } from '@/locales/type/layout/default';
 
 export const defaultLayout: LocaleLayoutDefault = {
-  topbar: {
+  topAppBar: {
     notification: {
       title: '通知',
       alerts: {
@@ -23,10 +23,13 @@ export const defaultLayout: LocaleLayoutDefault = {
       },
     },
   },
-  sidebar: {
+  navigations: {
     menus: {
       home: {
         title: 'ホーム',
+      },
+      search: {
+        title: '検索',
       },
       messages: {
         title: 'メッセージ',

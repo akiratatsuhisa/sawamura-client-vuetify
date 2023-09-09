@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { LocationQueryValue } from 'vue-router';
+import { LocationQueryValue, RouteLocationNormalized } from 'vue-router';
 
 export namespace Router {
   export const TAKE_LIMITS = [
@@ -54,5 +54,25 @@ export namespace Router {
     }
 
     return parse(_.cloneDeep(form)) satisfies F;
+  }
+
+  export const ExcludeBackRouteNames = [
+    'Auth',
+    'Oauth',
+    'Settings',
+    'Users:Detail',
+  ];
+
+  export function setBackRoute(
+    to: RouteLocationNormalized,
+    from: RouteLocationNormalized,
+  ) {
+    if (
+      !_.some(ExcludeBackRouteNames, (name) =>
+        from.name?.toString().startsWith(name),
+      )
+    ) {
+      to.meta.backRoute = from;
+    }
   }
 }

@@ -1,7 +1,8 @@
 import { RouteRecordRaw } from 'vue-router';
 
-import VSidebar from '@/layouts/Default/Sidebar.vue';
-import VTopbar from '@/layouts/Default/Topbar.vue';
+import VBottomAppBar from '@/layouts/Default/BottomAppBar.vue';
+import VLeftAppBar from '@/layouts/Default/LeftAppBar.vue';
+import VTopAppBar from '@/layouts/Default/TopAppBar.vue';
 import AccessDenied from '@/views/Errors/AccessDenied.vue';
 import InternalServer from '@/views/Errors/InternalServer.vue';
 import NotFound from '@/views/Errors/NotFound.vue';
@@ -12,8 +13,9 @@ export const defaultCommonRoutes = [
     name: 'AccessDenied',
     meta: { requiresAuth: true },
     components: {
-      topbar: VTopbar,
-      sidebar: VSidebar,
+      top: VTopAppBar,
+      left: VLeftAppBar,
+      bottom: VBottomAppBar,
       default: AccessDenied,
     },
   },
@@ -22,8 +24,9 @@ export const defaultCommonRoutes = [
     name: 'InternalServer',
     meta: { requiresAuth: true },
     components: {
-      topbar: VTopbar,
-      sidebar: VSidebar,
+      top: VTopAppBar,
+      left: VLeftAppBar,
+      bottom: VBottomAppBar,
       default: InternalServer,
     },
   },
@@ -32,8 +35,9 @@ export const defaultCommonRoutes = [
     name: 'NotFound',
     meta: { requiresAuth: true },
     components: {
-      topbar: VTopbar,
-      sidebar: VSidebar,
+      top: VTopAppBar,
+      left: VLeftAppBar,
+      bottom: VBottomAppBar,
       default: NotFound,
     },
   },

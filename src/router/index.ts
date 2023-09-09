@@ -1,8 +1,9 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router';
 
 import { useAuth } from '@/composables';
-import VSidebar from '@/layouts/Default/Sidebar.vue';
-import VTopbar from '@/layouts/Default/Topbar.vue';
+import VBottomAppBar from '@/layouts/Default/BottomAppBar.vue';
+import VLeftAppBar from '@/layouts/Default/LeftAppBar.vue';
+import VTopAppBar from '@/layouts/Default/TopAppBar.vue';
 
 import authRoutes, { defaultAuthRoutes } from './auth';
 import { defaultCommonRoutes } from './common';
@@ -21,9 +22,21 @@ const routes: Array<RouteRecordRaw> = [
         name: 'Home',
         meta: { requiresAuth: true },
         components: {
-          topbar: VTopbar,
-          sidebar: VSidebar,
-          default: () => import('@/views/Home.vue'),
+          top: VTopAppBar,
+          left: VLeftAppBar,
+          bottom: VBottomAppBar,
+          default: () => import('@/views/Home/Index.vue'),
+        },
+      },
+      {
+        path: 'search',
+        name: 'Search',
+        meta: { requiresAuth: true },
+        components: {
+          top: VTopAppBar,
+          left: VLeftAppBar,
+          bottom: VBottomAppBar,
+          default: () => import('@/views/Search/Index.vue'),
         },
       },
       ...messagesRoutes,
@@ -53,7 +66,7 @@ router.beforeEach(async (to, from) => {
 
   if (requiresAuth && !isAuthenticated.value) {
     return {
-      name: 'Login',
+      name: 'Auth:Login',
       query: { redirectUrl: to.fullPath },
     };
   }

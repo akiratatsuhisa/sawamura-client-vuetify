@@ -53,6 +53,7 @@ export type LocalePagesMessages = {
       members: {
         index: string;
         insertMember: string;
+        profileUser: string;
         changeNickName: string;
         changeRole: string;
         removeMember: string;
@@ -154,6 +155,7 @@ export type LocalePagesMessages = {
   };
   shared: {
     searchPlaceholder: string;
+    results: string;
     fetchMore: string;
     roomTypes: {
       group: string;

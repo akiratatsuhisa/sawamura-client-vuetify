@@ -25,10 +25,7 @@ export function useUserImage(
 
     return await axiosInstacne
       .request<string>({
-        url: `/auth/${type}`,
-        params: {
-          username: unwrapUser.username,
-        },
+        url: `/users/profile/${unwrapUser.username}/${type}`,
       })
       .then((data) => data.data)
       .catch(() => defaultImage);

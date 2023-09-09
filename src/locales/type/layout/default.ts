@@ -1,5 +1,5 @@
 export type LocaleLayoutDefault = {
-  topbar: {
+  topAppBar: {
     notification: {
       title: string;
       alerts: {
@@ -24,9 +24,12 @@ export type LocaleLayoutDefault = {
       };
     };
   };
-  sidebar: {
+  navigations: {
     menus: {
       home: {
+        title: string;
+      };
+      search: {
         title: string;
       };
       messages: {

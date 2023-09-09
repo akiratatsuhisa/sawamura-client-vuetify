@@ -25,7 +25,7 @@ export function useRouterTab(options: IUseRouterTabOptions) {
     value?: string,
     args?: { query?: LocationQueryRaw; params?: RouteParamsRaw },
   ) {
-    router.push({
+    router.replace({
       name: options.name,
       params: {
         ...defaultParams.value,

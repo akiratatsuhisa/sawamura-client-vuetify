@@ -53,6 +53,7 @@ export const messages: LocalePagesMessages = {
       members: {
         index: 'Members',
         insertMember: 'Insert  Member',
+        profileUser: 'View Personal Page',
         changeNickName: 'Change NickName',
         changeRole: 'Change Role',
         removeMember: 'Remove Member',
@@ -174,6 +175,7 @@ export const messages: LocalePagesMessages = {
   },
   shared: {
     searchPlaceholder: 'Search...',
+    results: 'Results',
     fetchMore: 'Fetch More',
     roomTypes: {
       group: 'Group',

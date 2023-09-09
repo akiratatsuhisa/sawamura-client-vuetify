@@ -1,8 +1,9 @@
 import { RouteRecordRaw } from 'vue-router';
 
 import { Regex } from '@/helpers';
-import VSidebar from '@/layouts/Default/Sidebar.vue';
-import VTopbar from '@/layouts/Default/Topbar.vue';
+import VBottomAppBar from '@/layouts/Default/BottomAppBar.vue';
+import VLeftAppBar from '@/layouts/Default/LeftAppBar.vue';
+import VTopAppBar from '@/layouts/Default/TopAppBar.vue';
 
 export default {
   path: 'dashboard',
@@ -16,8 +17,9 @@ export default {
     },
   },
   components: {
-    topbar: VTopbar,
-    sidebar: VSidebar,
+    top: VTopAppBar,
+    left: VLeftAppBar,
+    bottom: VBottomAppBar,
     default: () => import('@/views/Dashboard/Index.vue'),
   },
   children: [
@@ -44,7 +46,7 @@ export default {
 
         return { name: to.name };
       },
-      component: () => import('@/views/Dashboard/Users.vue'),
+      component: () => import('@/views/Dashboard/Users/Index.vue'),
       children: [
         {
           path: `/dashboard/users/roles/:dialog(create|update|delete)?/:id(${Regex.Uuid.source})?`,
@@ -86,7 +88,7 @@ export default {
           to: { name: 'Dashboard:Messages' },
         },
       },
-      component: () => import('@/views/Dashboard/Messages.vue'),
+      component: () => import('@/views/Dashboard/Messages/Index.vue'),
     },
   ],
 } as RouteRecordRaw;

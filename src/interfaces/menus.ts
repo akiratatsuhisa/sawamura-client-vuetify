@@ -6,9 +6,10 @@ export interface IMenuItem {
   translate?: string;
 }
 
-export interface IRailMenuItem extends IMenuItem {
-  type: 'rail';
+export interface INavigationMenuItem extends IMenuItem {
+  type: 'navigation';
   icon: string;
+  mobile?: boolean;
   children?: Array<ITitleMenuItem | IIconMenuItem | IAvatarMenuItem>;
   onClick?(): void;
 }

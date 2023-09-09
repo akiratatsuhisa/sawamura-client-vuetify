@@ -27,7 +27,7 @@ import _ from 'lodash';
 import { computed } from 'vue';
 
 import VMenuChip from '@/components/VMenuChip.vue';
-import { Router } from '@/helpers/router';
+import { Router } from '@/helpers';
 
 const props = defineProps<{
   skip?: string;

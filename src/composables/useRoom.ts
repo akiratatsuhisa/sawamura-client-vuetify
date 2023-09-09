@@ -117,10 +117,7 @@ export function useAdvancedRoom(room: MaybeRef<IAdvancedRoomResponse>) {
       }
       return await axiosInstacne
         .request<string>({
-          url: '/auth/photo',
-          params: {
-            username: targetMember.value.member.username,
-          },
+          url: `/users/profile/${targetMember.value.member.username}/photo`,
         })
         .then((data) => data.data)
         .catch(() => NO_BACKGROUND_URL);
@@ -201,10 +198,7 @@ export function useRoom(room: MaybeRef<IRoomResponse>) {
       }
       return await axiosInstacne
         .request<string>({
-          url: '/auth/photo',
-          params: {
-            username: targetMember.value.member.username,
-          },
+          url: `/users/profile/${targetMember.value.member.username}/photo`,
         })
         .then((data) => data.data)
         .catch(() => NO_BACKGROUND_URL);

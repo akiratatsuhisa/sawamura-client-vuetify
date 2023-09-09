@@ -53,6 +53,7 @@ export const messages: LocalePagesMessages = {
       members: {
         index: 'メンバー',
         insertMember: 'メンバーを追加',
+        profileUser: '個人ページを表示',
         changeNickName: 'ニックネームを変更',
         changeRole: '権限を変更',
         removeMember: 'メンバーを解除',
@@ -174,6 +175,7 @@ export const messages: LocalePagesMessages = {
   },
   shared: {
     searchPlaceholder: '調べる',
+    results: '結果',
     fetchMore: 'さらに読み込む',
     roomTypes: {
       group: 'グループ',

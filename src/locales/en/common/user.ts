@@ -7,7 +7,7 @@ export const user: LocaleCommonUser = {
     unfollow: 'Unfollow',
   },
   count: {
-    following: '{count} Following | {count} Following | {count} Followings',
+    following: '{count} Following | {count} Following | {count} Following',
     follower: '{count} Follower | {count} Follower | {count} Followers',
   },
 };

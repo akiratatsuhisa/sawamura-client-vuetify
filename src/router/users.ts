@@ -1,18 +1,33 @@
 import { RouteRecordRaw } from 'vue-router';
 
-import VSidebar from '@/layouts/Default/Sidebar.vue';
-import VTopbar from '@/layouts/Default/Topbar.vue';
+import { Router } from '@/helpers';
+import VLeftAppBar from '@/layouts/Default/LeftAppBar.vue';
+import VRelationshipTopAppBar from '@/views/Users/layouts/RelationshipTopAppBar.vue';
+import VUsersTopAppBar from '@/views/Users/layouts/UsersTopAppBar.vue';
 
 export default [
   {
     path: '/users/:username',
     alias: '/u/:username',
-    name: 'Users:Page',
+    name: 'Users:Detail',
     meta: { requiresAuth: true },
     components: {
-      topbar: VTopbar,
-      sidebar: VSidebar,
-      default: () => import('@/views/Users/Page/Index.vue'),
+      top: VUsersTopAppBar,
+      left: VLeftAppBar,
+      default: () => import('@/views/Users/Index.vue'),
+    },
+    beforeEnter(to, from) {
+      Router.setBackRoute(to, from);
+    },
+  },
+  {
+    path: '/users/:username/:tab(following|followers|followers-you-follow)',
+    name: 'Users:Detail:Relationship',
+    meta: { requiresAuth: true },
+    components: {
+      top: VRelationshipTopAppBar,
+      left: VLeftAppBar,
+      default: () => import('@/views/Users/Relationship.vue'),
     },
   },
 ] as Array<RouteRecordRaw>;

@@ -1,7 +1,8 @@
 import { RouteRecordRaw } from 'vue-router';
 
-import VSidebar from '@/layouts/Default/Sidebar.vue';
-import VTopbar from '@/layouts/Default/Topbar.vue';
+import { Router } from '@/helpers';
+import VLeftAppBar from '@/layouts/Default/LeftAppBar.vue';
+import VSettingsTopAppBar from '@/views/Settings/layouts/SettingsTopAppBar.vue';
 
 export default {
   path: '/',
@@ -9,27 +10,27 @@ export default {
   children: [
     {
       path: 'login',
-      name: 'Login',
+      name: 'Auth:Login',
       component: () => import('@/views/Auth/Login.vue'),
     },
     {
       path: 'register',
-      name: 'Register',
+      name: 'Auth:Register',
       component: () => import('@/views/Auth/Register.vue'),
     },
     {
       path: 'forgotPassword',
-      name: 'ForgotPassword',
+      name: 'Auth:ForgotPassword',
       component: () => import('@/views/Auth/ForgotPassword.vue'),
     },
     {
       path: 'confirmEmail',
-      name: 'ConfirmEmail',
+      name: 'Auth:ConfirmEmail',
       component: () => import('@/views/Auth/ConfirmEmail.vue'),
     },
     {
       path: 'resetPassword',
-      name: 'ResetPassword',
+      name: 'Auth:ResetPassword',
       component: () => import('@/views/Auth/ResetPassword.vue'),
     },
   ],
@@ -41,9 +42,12 @@ export const defaultAuthRoutes = [
     name: 'Settings',
     meta: { requiresAuth: true },
     components: {
-      topbar: VTopbar,
-      sidebar: VSidebar,
-      default: () => import('@/views/Settings.vue'),
+      top: VSettingsTopAppBar,
+      left: VLeftAppBar,
+      default: () => import('@/views/Settings/Index.vue'),
+    },
+    beforeEnter(to, from) {
+      Router.setBackRoute(to, from);
     },
   },
 ] as Array<RouteRecordRaw>;

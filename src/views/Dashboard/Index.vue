@@ -112,8 +112,6 @@ import _ from 'lodash';
 import { computed, reactive } from 'vue';
 import { useRoute } from 'vue-router';
 
-import VDefaultComponent from '@/components/Dashboard/Default.vue';
-import VInfoCard, { InfoCardProps } from '@/components/Dashboard/InfoCard.vue';
 import {
   initSocketDashboard,
   usePageLocale,
@@ -126,6 +124,10 @@ import {
   IStorageDropboxRequest,
   IStorageDropboxResponse,
 } from '@/interfaces';
+import VDefaultComponent from '@/views/Dashboard/components/Default.vue';
+import VInfoCard, {
+  InfoCardProps,
+} from '@/views/Dashboard/components/InfoCard.vue';
 
 const route = useRoute();
 const { translate } = usePageLocale({ prefix: 'dashboard.index' });

@@ -145,10 +145,7 @@ export const useAuth = createSharedComposable(() => {
 
     return await axiosInstacne
       .request<string>({
-        url: '/auth/photo',
-        params: {
-          username: user.value.username,
-        },
+        url: `/users/profile/${user.value.username}/photo`,
       })
       .then((data) => data.data)
       .catch(() => NO_AVATAR_URL);
@@ -160,10 +157,7 @@ export const useAuth = createSharedComposable(() => {
 
     return await axiosInstacne
       .request<string>({
-        url: '/auth/cover',
-        params: {
-          username: user.value.username,
-        },
+        url: `/users/profile/${user.value.username}/cover`,
       })
       .then((data) => data.data)
       .catch(() => NO_BACKGROUND_URL);

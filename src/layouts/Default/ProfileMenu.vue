@@ -72,7 +72,10 @@
             </template>
           </v-list-item>
 
-          <v-list-item :to="{ name: 'Settings' }" @click="close">
+          <v-list-item
+            :to="{ name: 'Settings', params: { tab: 'account' } }"
+            @click="close"
+          >
             <v-list-item-title>
               {{ translateItem('settings') }}
             </v-list-item-title>
@@ -116,7 +119,9 @@ import {
 const router = useRouter();
 const route = useRoute();
 
-const { translateItem } = useLayoutLocale({ prefix: 'default.topbar.profile' });
+const { translateItem } = useLayoutLocale({
+  prefix: 'default.topAppBar.profile',
+});
 
 const redirectUrl = computed(() =>
   _.isArray(route.query.redirectUrl)
@@ -139,12 +144,15 @@ const { logout, user, photoUrl } = useAuth();
 async function onLogout() {
   await logout();
 
-  router.push({ name: 'Login', query: { redirectUrl: redirectUrl.value } });
+  router.push({
+    name: 'Auth:Login',
+    query: { redirectUrl: redirectUrl.value },
+  });
 }
 
 function gotoUserAuth(callback: Function) {
   router.push({
-    name: 'Users:Page',
+    name: 'Users:Detail',
     params: { username: user.value?.username },
   });
   callback();

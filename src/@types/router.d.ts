@@ -10,5 +10,6 @@ declare module 'vue-router' {
       title: string;
       disabled?: boolean;
     } & Partial<LinkProps>;
+    backRoute?: RouteLocationNormalized;
   }
 }

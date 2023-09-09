@@ -1,3 +1,5 @@
+import { Component } from 'vue';
+
 export interface ISearchAdvancedUsersRequest {
   search?: string;
 }
@@ -42,6 +44,17 @@ export interface IProfileUserResponse {
     followees: number;
   };
 }
+
+export type ProfileUserRelationshipTab = {
+  name: string;
+  icon: string;
+  component: Component;
+};
+
+export type ProfileUserRelationshipTabs = Record<
+  'followers-you-follow' | 'followers' | 'following',
+  ProfileUserRelationshipTab
+>;
 
 export interface IChangeUserRolesRequest {
   id: string;
