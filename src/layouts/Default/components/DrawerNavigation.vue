@@ -1,15 +1,24 @@
 <template>
   <v-navigation-drawer
     :model-value="subNavigationItems.length > 0 && drawer"
+    :touchless="!subNavigationItems.length"
     @update:model-value="drawer = $event"
     class="bg-surface-container-low text-on-surface rounded-e-xl"
   >
     <template #prepend>
       <v-list-item nav>
+        <v-app-bar-title
+          v-if="$vuetify.display.smAndDown"
+          class="text-primary pa-2"
+        >
+          {{ $t('common.app.title') }}
+        </v-app-bar-title>
         <template v-slot:append>
           <v-btn
             variant="text"
-            icon="mdi-chevron-left"
+            :icon="
+              $vuetify.display.smAndDown ? 'mdi-menu-open' : 'mdi-chevron-left'
+            "
             @click="drawer = !drawer"
           ></v-btn>
         </template>
@@ -18,7 +27,7 @@
       <v-divider />
     </template>
 
-    <v-list nav @click:select="handleNavigationSelect">
+    <v-list class="py-3" nav @click:select="handleNavigationSelect">
       <template v-for="item in subNavigationItems" :key="item.key">
         <v-title-menu-item
           v-if="item.type === 'title'"

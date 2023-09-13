@@ -1,6 +1,6 @@
 <template>
   <v-rail-navigation v-if="$vuetify.display.mdAndUp" />
-  <v-drawer-navigation />
+  <v-drawer-navigation v-if="$vuetify.display.mdAndUp" />
 </template>
 
 <script lang="ts" setup>

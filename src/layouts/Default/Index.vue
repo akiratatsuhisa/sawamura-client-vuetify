@@ -1,5 +1,7 @@
 <template>
   <v-app>
+    <router-view name="leftOuter" />
+
     <router-view name="top" />
 
     <router-view name="left" />

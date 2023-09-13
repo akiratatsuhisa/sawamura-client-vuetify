@@ -76,6 +76,7 @@ export namespace KEYS {
       export const PROFILE_USER: InjectionKey<
         DeepReadonly<Ref<IProfileUserResponse>>
       > = Symbol('users:page:profileUser');
+
       export const HAS_FOLLOWING: InjectionKey<Ref<boolean>> = Symbol(
         'users:page:hasFollowing',
       );

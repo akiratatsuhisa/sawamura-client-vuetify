@@ -4,7 +4,9 @@
     elevation="1"
     class="bg-surface-container text-on-surface"
   >
-    <v-app-bar-title>{{ $t('common.app.title') }}</v-app-bar-title>
+    <v-app-bar-title @click="$router.push({ name: 'Home' })">
+      {{ $t('common.app.title') }}
+    </v-app-bar-title>
 
     <v-notifications-menu />
 

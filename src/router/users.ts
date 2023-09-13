@@ -2,7 +2,7 @@ import { RouteRecordRaw } from 'vue-router';
 
 import { Router } from '@/helpers';
 import VLeftAppBar from '@/layouts/Default/LeftAppBar.vue';
-import VRelationshipTopAppBar from '@/views/Users/layouts/RelationshipTopAppBar.vue';
+import VRelationshipsTopAppBar from '@/views/Users/layouts/RelationshipsTopAppBar.vue';
 import VUsersTopAppBar from '@/views/Users/layouts/UsersTopAppBar.vue';
 
 export default [
@@ -25,9 +25,9 @@ export default [
     name: 'Users:Detail:Relationship',
     meta: { requiresAuth: true },
     components: {
-      top: VRelationshipTopAppBar,
+      top: VRelationshipsTopAppBar,
       left: VLeftAppBar,
-      default: () => import('@/views/Users/Relationship.vue'),
+      default: () => import('@/views/Users/Relationships.vue'),
     },
   },
 ] as Array<RouteRecordRaw>;

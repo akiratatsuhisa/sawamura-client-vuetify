@@ -34,6 +34,7 @@
 
               <v-window
                 :model-value="tab"
+                @update:model-value="(value: unknown) => changeTab(value as string)"
                 :direction="isMobile ? 'horizontal' : 'vertical'"
                 class="flex-grow-1 flex-shrink-1"
               >

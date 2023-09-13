@@ -5,6 +5,7 @@ export * from '@/interfaces/error';
 export * from '@/interfaces/menus';
 export * from '@/interfaces/notifications';
 export * from '@/interfaces/oauth';
+export * from '@/interfaces/profileUsers';
 export * from '@/interfaces/roles';
 export * from '@/interfaces/rooms';
 export * from '@/interfaces/settings';

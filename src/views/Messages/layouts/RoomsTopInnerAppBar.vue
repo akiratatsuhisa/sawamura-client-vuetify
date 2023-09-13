@@ -8,7 +8,19 @@
       <div
         class="search bg-surface-container-high text-on-surface rounded-pill d-flex flex-row align-center cursor-pointer"
       >
-        <v-icon class="mx-4" icon="mdi-magnify" @click="() => undefined" />
+        <v-btn
+          class="ma-2"
+          size="small"
+          icon
+          @click="isSearchFieldOpen = !isSearchFieldOpen"
+        >
+          <v-icon
+            class="mx-4"
+            size="24"
+            icon="mdi-magnify"
+            color="on-surface"
+          />
+        </v-btn>
         <div
           @click="isSearchFieldOpen = !isSearchFieldOpen"
           class="flex-grow-1"
@@ -23,7 +35,7 @@
           />
         </div>
 
-        <v-profile-menu class="mx-3" size="32" />
+        <v-profile-menu class="ma-2" size="40" />
       </div>
     </div>
   </v-app-bar>

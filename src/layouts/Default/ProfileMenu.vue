@@ -142,12 +142,11 @@ const { languages, selectedLanguage, selectedLanguageDetail } =
 const { logout, user, photoUrl } = useAuth();
 
 async function onLogout() {
-  await logout();
-
-  router.push({
+  await router.push({
     name: 'Auth:Login',
     query: { redirectUrl: redirectUrl.value },
   });
+  await logout();
 }
 
 function gotoUserAuth(callback: Function) {

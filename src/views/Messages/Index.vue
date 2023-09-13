@@ -71,6 +71,7 @@
 <script lang="ts" setup>
 import { storeToRefs } from 'pinia';
 import { computed, defineAsyncComponent } from 'vue';
+import { useRouter } from 'vue-router';
 
 import {
   usePageLocale,
@@ -84,6 +85,8 @@ import { ICreateRoomRequest, IRoomResponse } from '@/interfaces';
 import { useRoomsStore } from '@/store';
 import VRoomList from '@/views/Messages/components/RoomList.vue';
 import VRoomSearch from '@/views/Messages/components/RoomSearch.vue';
+
+const router = useRouter();
 
 const { translate, translateShared } = usePageLocale({
   prefix: 'messages.list',
@@ -103,7 +106,15 @@ const { request: requestCreateRoom, isLoading: isLoadingCreateRoom } =
     socket,
     'create:room',
     {
-      response: updateListRoom,
+      response: (data) => {
+        updateListRoom(data);
+        router.push({
+          name: 'Messages:Room',
+          params: {
+            roomId: data.id,
+          },
+        });
+      },
       exception(error) {
         createSnackbarError(error.message);
       },

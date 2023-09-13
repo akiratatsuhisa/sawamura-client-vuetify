@@ -63,7 +63,7 @@ const route = useRoute();
 const { user: identityUser } = useAuth();
 
 const { excute, data, headers } = useAxios(
-  services.users,
+  services.profileUsers,
   'searchProfileByUsername',
 );
 

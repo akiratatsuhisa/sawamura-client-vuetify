@@ -8,7 +8,7 @@
           v-if="$vuetify.display.smAndDown"
           color="primary"
           icon="mdi-arrow-left"
-          :to="{ name: 'Messages' }"
+          @click="$router.back()"
         />
 
         <v-badge

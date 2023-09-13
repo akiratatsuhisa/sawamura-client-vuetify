@@ -4,12 +4,13 @@ export const users: LocalePagesUsers = {
   profile: {
     editButton: 'Edit Profile',
   },
-  relationship: {
+  relationships: {
     menus: {
       followersYouFollow: 'Followers You Follow',
       followers: 'Followers',
       following: 'Following',
     },
+    fetchMore: 'Fetch More',
   },
   shared: {
     dialogProfileCoverTitle: 'Profile Cover',

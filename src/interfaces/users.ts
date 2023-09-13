@@ -1,61 +1,3 @@
-import { Component } from 'vue';
-
-export interface ISearchAdvancedUsersRequest {
-  search?: string;
-}
-
-export interface IAdvancedUserResponse {
-  id: string;
-  username: string;
-  displayName: string | null;
-  firstName: string | null;
-  lastName: string | null;
-  photoUrl: string | null;
-  coverUrl: string | null;
-  themeSource: number | null;
-  themeStyle: string | null;
-  createdAt: string;
-  updatedAt: string;
-}
-
-export interface ISearchProfileUserRequest {
-  username: string;
-}
-
-export interface IProfileUserResponse {
-  id: string;
-  username: string;
-  displayName: string | null;
-  firstName: string | null;
-  lastName: string | null;
-  birthDate: string | null;
-  location: string | null;
-  salary: string | null;
-  biography: string | null;
-  websiteLink: string | null;
-  photoUrl: string | null;
-  coverUrl: string | null;
-  themeSource: string | null;
-  themeStyle: string | null;
-  createdAt: string | null;
-  updatedAt: string | null;
-  _count: {
-    followers: number;
-    followees: number;
-  };
-}
-
-export type ProfileUserRelationshipTab = {
-  name: string;
-  icon: string;
-  component: Component;
-};
-
-export type ProfileUserRelationshipTabs = Record<
-  'followers-you-follow' | 'followers' | 'following',
-  ProfileUserRelationshipTab
->;
-
 export interface IChangeUserRolesRequest {
   id: string;
   roleIds: Array<string>;
@@ -99,14 +41,4 @@ export interface IUserResponse {
       name: string;
     };
   }>;
-}
-
-export enum UserRelationshipState {
-  Follow = 'follow',
-  Unfollow = 'unfollow',
-}
-
-export interface IChangeUserRelationshipRequest {
-  username: string;
-  relationshipState: UserRelationshipState;
 }

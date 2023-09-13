@@ -2,14 +2,14 @@ import { AxiosRequestConfig } from 'axios';
 
 import {
   IAdvancedRoomResponse,
-  ISearchAdvancedRoomRequest,
+  ISearchAdvancedRoomsRequest,
 } from '@/interfaces';
 import { Service } from '@/services/common';
 
 export class RoomsService extends Service {
   searchAdvanced(
     config: AxiosRequestConfig,
-    params: ISearchAdvancedRoomRequest,
+    params: ISearchAdvancedRoomsRequest,
   ) {
     return this.fetch<Array<IAdvancedRoomResponse>>({
       ...config,

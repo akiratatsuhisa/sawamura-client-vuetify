@@ -53,7 +53,7 @@ import { KEYS } from '@/constants';
 import {
   IRoomPrivateRequest,
   IRoomResponse,
-  UserRelationshipState,
+  ProfileUserRelationshipState,
 } from '@/interfaces';
 import { services } from '@/services';
 import VDisplayProfile from '@/views/Users/components/DisplayProfile.vue';
@@ -64,7 +64,7 @@ const hasFollowing = inject(KEYS.USERS.PAGE.HAS_FOLLOWING)!;
 const {
   excute: reuqestChangeRelationship,
   isLoading: isLoadingChangeRelationship,
-} = useAxios(services.users, 'changeRelationship', {
+} = useAxios(services.profileUsers, 'changeRelationship', {
   throwErrorMessage: false,
 });
 
@@ -74,8 +74,8 @@ async function onChangeRelationship() {
   await reuqestChangeRelationship({
     username,
     relationshipState: hasFollowing.value
-      ? UserRelationshipState.Unfollow
-      : UserRelationshipState.Follow,
+      ? ProfileUserRelationshipState.Unfollow
+      : ProfileUserRelationshipState.Follow,
   });
 
   if (username === profileUser.value.username) {

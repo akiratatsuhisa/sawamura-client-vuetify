@@ -42,7 +42,7 @@ export interface INotificationResponse {
   reference: any;
 }
 
-export interface ISearchNotificationRequest extends IPaginationExcludeIds {}
+export interface ISearchNotificationsRequest extends IPaginationExcludeIds {}
 
 export interface IUpdateNotificationRequest {
   id: string;

@@ -1,13 +1,6 @@
 <template>
   <v-app-bar elevation="1" class="bg-surface-container text-on-surface">
-    <v-app-bar-nav-icon
-      @click="
-        $router.replace({
-          name: 'Users:Detail',
-          params: { username: user?.username },
-        })
-      "
-    >
+    <v-app-bar-nav-icon @click="$router.back()">
       <v-icon icon="mdi-arrow-left" />
     </v-app-bar-nav-icon>
 
@@ -19,7 +12,7 @@
         @{{ user?.username }}
       </h2>
     </v-app-bar-title>
-    <v-app-bar-title v-else>
+    <v-app-bar-title v-else @click="$router.push({ name: 'Home' })">
       {{ $t('common.app.title') }}
     </v-app-bar-title>
 

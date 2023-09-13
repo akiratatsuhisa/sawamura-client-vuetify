@@ -11,16 +11,19 @@
       />
     </template>
 
-    <v-app-bar-nav-icon
-      @click="$router.replace($route.meta.backRoute ?? { name: 'Home' })"
-    >
+    <v-app-bar-nav-icon @click="$router.back()">
       <v-icon icon="mdi-arrow-left" />
     </v-app-bar-nav-icon>
 
     <v-app-bar-title v-if="$vuetify.display.smAndDown && isTopbarElevation">
-      {{ user?.displayName }}
+      <h1 class="v-toolbar-title text-truncate">
+        {{ user?.displayName }}
+      </h1>
+      <h2 class="text-subtitle-2 font-weight-light text-truncate">
+        @{{ user?.username }}
+      </h2>
     </v-app-bar-title>
-    <v-app-bar-title v-else>
+    <v-app-bar-title v-else @click="$router.push({ name: 'Home' })">
       {{ $t('common.app.title') }}
     </v-app-bar-title>
 

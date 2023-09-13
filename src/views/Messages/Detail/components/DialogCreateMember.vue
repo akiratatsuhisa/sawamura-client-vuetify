@@ -123,7 +123,7 @@ const onSubmit = handleSubmit((formData) => {
 });
 
 const { excute: excuteSearchUsers } = useAxios(
-  services.users,
+  services.profileUsers,
   'searchAdvanced',
 );
 

@@ -7,13 +7,16 @@
   >
     <template #prepend>
       <v-list-item
+        height="56"
         nav
-        :to="{
-          name: 'Users:Detail',
-          params: { username: user?.username },
-        }"
+        @click="
+          $router.push({
+            name: 'Users:Detail',
+            params: { username: user?.username },
+          })
+        "
       >
-        <div class="pa-1 d-flex justify-center">
+        <div class="d-flex justify-center">
           <v-avatar
             :image="photoUrl"
             color="secondary-container"
@@ -28,6 +31,7 @@
     </template>
 
     <v-list
+      class="px-0 py-3"
       density="compact"
       nav
       @click:select="handleNavigationSelect($event, true)"

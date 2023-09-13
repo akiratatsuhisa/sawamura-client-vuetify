@@ -51,7 +51,7 @@ import {
 import {
   IDeleteNotificationRequest,
   INotificationResponse,
-  ISearchNotificationRequest,
+  ISearchNotificationsRequest,
   IUpdateNotificationRequest,
   NotificationStatus,
 } from '@/interfaces';
@@ -71,7 +71,7 @@ const { isLoading, request: requestNotifications } = useSocketEventListener<
   {
     notifications: Array<INotificationResponse>;
   },
-  ISearchNotificationRequest
+  ISearchNotificationsRequest
 >(socket, 'list:notification', {
   response({ notifications: data }) {
     notifications.value = _.uniqBy(

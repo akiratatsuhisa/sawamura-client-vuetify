@@ -74,7 +74,7 @@ export function useRouterDialog(options: IUseRouterDialogOptions) {
     value: string,
     args?: { query?: LocationQueryRaw; params?: RouteParamsRaw },
   ) {
-    router.push({
+    router.replace({
       name: options.name,
       params: {
         ...defaultParams.value,
@@ -86,7 +86,7 @@ export function useRouterDialog(options: IUseRouterDialogOptions) {
   }
 
   function closeDialog() {
-    router.push({
+    router.replace({
       name: options.name,
       params: { ...defaultParams.value, [options.param]: undefined },
     });

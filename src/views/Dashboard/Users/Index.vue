@@ -14,7 +14,10 @@
         </v-tabs>
         <v-divider />
 
-        <v-window :model-value="tab">
+        <v-window
+          :model-value="tab"
+          @update:model-value="(value:any) => router.push({ name: value as string })"
+        >
           <v-window-item :value="tabs.Information.name">
             <v-user-view />
           </v-window-item>

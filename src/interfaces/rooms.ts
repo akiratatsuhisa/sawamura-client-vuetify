@@ -1,6 +1,6 @@
 import { IPaginationCursor, IPaginationExcludeIds } from '@/interfaces';
 
-export interface ISearchAdvancedRoomRequest {
+export interface ISearchAdvancedRoomsRequest {
   search: string;
   groupRoomId?: string | null;
   privateRoomId?: string | null;
