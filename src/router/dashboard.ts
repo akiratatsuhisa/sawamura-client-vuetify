@@ -3,7 +3,7 @@ import { RouteRecordRaw } from 'vue-router';
 import { Regex } from '@/helpers';
 import VBottomAppBar from '@/layouts/Default/BottomAppBar.vue';
 import VLeftAppBar from '@/layouts/Default/LeftAppBar.vue';
-import VLeftOuterAppBar from '@/layouts/Default/LeftOuterAppBar.vue';
+import VLeftInnerAppBar from '@/layouts/Default/LeftInnerAppBar.vue';
 import VTopAppBar from '@/layouts/Default/TopAppBar.vue';
 
 export default {
@@ -18,9 +18,9 @@ export default {
     },
   },
   components: {
-    leftOuter: VLeftOuterAppBar,
-    top: VTopAppBar,
     left: VLeftAppBar,
+    top: VTopAppBar,
+    leftInner: VLeftInnerAppBar,
     bottom: VBottomAppBar,
     default: () => import('@/views/Dashboard/Index.vue'),
   },

@@ -42,8 +42,8 @@ export const defaultAuthRoutes = [
     name: 'Settings',
     meta: { requiresAuth: true },
     components: {
-      top: VSettingsTopAppBar,
       left: VLeftAppBar,
+      top: VSettingsTopAppBar,
       default: () => import('@/views/Settings/Index.vue'),
     },
     beforeEnter(to, from) {

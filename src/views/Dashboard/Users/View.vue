@@ -1,10 +1,10 @@
 <template>
-  <v-card flat>
+  <v-card class="bg-surface" variant="flat">
     <v-card-title>{{ translate('title') }}</v-card-title>
-    <v-card-text class="px-2 px-md-4">
+    <v-card-text>
       <form @submit.prevent="onSubmit()">
         <v-row class="mt-3">
-          <v-col md="6" cols="12" class="pt-0">
+          <v-col lg="6" cols="12" class="pt-0">
             <v-text-field
               density="comfortable"
               prepend-inner-icon="mdi-account-circle-outline"
@@ -14,7 +14,7 @@
               @blur="v$.username.$validate"
             />
           </v-col>
-          <v-col md="6" cols="12" class="pt-0">
+          <v-col lg="6" cols="12" class="pt-0">
             <v-text-field
               density="comfortable"
               prepend-inner-icon="mdi-card-account-details-outline"
@@ -34,7 +34,7 @@
               @blur="v$.email.$validate"
             />
           </v-col>
-          <v-col lg="6" md="8" cols="12" class="pt-0">
+          <v-col lg="6" xl="8" cols="12" class="pt-0">
             <v-segmented-button
               block
               multiple
@@ -45,7 +45,7 @@
           </v-col>
           <v-col
             lg="6"
-            md="4"
+            xl="4"
             cols="12"
             class="pt-md-0 d-flex justify-end align-end"
           >
@@ -60,7 +60,7 @@
             </v-btn>
             <v-btn
               type="submit"
-              variant="elevated"
+              variant="flat"
               class="ml-1 ml-lg-3 flex-grow-1"
               :loading="isLoading"
             >

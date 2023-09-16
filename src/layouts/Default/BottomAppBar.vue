@@ -1,5 +1,5 @@
 <template>
-  <c-bottom-navigation v-if="$vuetify.display.smAndDown" />
+  <c-bottom-navigation v-if="$vuetify.display.xs" />
 </template>
 
 <script lang="ts" setup>

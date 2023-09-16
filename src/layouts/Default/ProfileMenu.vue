@@ -14,7 +14,7 @@
             <template #prepend>
               <v-avatar
                 color="secondary-container"
-                class="elevation-6"
+                class="elevation-1"
                 :image="photoUrl"
               ></v-avatar>
             </template>

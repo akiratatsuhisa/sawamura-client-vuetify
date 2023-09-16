@@ -12,7 +12,7 @@
       <v-avatar
         :image="photoUrl"
         color="secondary-container"
-        class="elevation-1 flex-grow-0 flex-shrink-0 mr-2"
+        class="flex-grow-0 flex-shrink-0 mr-2"
       />
 
       <div class="flex-grow-1 flex-shrink-1">

@@ -2,7 +2,7 @@
   <v-container class="fill-height">
     <v-row>
       <v-col class="mx-auto" md="6" lg="4">
-        <v-card rounded="xl">
+        <v-card class="bg-surface" variant="flat" rounded="xl">
           <v-card-title>
             {{ translate('title') }}
           </v-card-title>
@@ -61,10 +61,10 @@
 
               <v-btn
                 type="submit"
-                :loading="isLoading"
-                variant="elevated"
+                variant="flat"
                 block
-                class="my-3"
+                class="mb-3"
+                :loading="isLoading"
               >
                 {{ translate('form.submit') }}
               </v-btn>
@@ -91,18 +91,20 @@
                 v-for="(detail, provider) in providers"
                 :key="provider"
                 :loading="isLoading"
-                variant="outlined"
-                color="secondary"
+                variant="flat"
+                color="tertiary"
                 block
                 class="my-3 btn-social"
                 @click="linkProvider(provider)"
               >
                 <template #prepend>
-                  <v-avatar
-                    :image="detail.image"
-                    size="24"
-                    rounded="0"
-                  ></v-avatar>
+                  <v-avatar size="30" color="white">
+                    <v-avatar
+                      :image="detail.image"
+                      size="24"
+                      rounded="0"
+                    ></v-avatar>
+                  </v-avatar>
                 </template>
                 {{ detail.name }}
               </v-btn>

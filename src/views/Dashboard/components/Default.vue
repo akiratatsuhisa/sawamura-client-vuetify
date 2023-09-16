@@ -1,7 +1,7 @@
 <template>
   <v-row class="flex-column-reverse flex-md-row">
     <v-col cols="12" md="6">
-      <v-card rounded="xl">
+      <v-card class="bg-surface" variant="flat" rounded="xl">
         <v-card-title>Default</v-card-title>
         <v-card-text>
           Lorem ipsum dolor sit amet consectetur adipisicing elit. Reiciendis,

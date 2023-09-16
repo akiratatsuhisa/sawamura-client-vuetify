@@ -1,7 +1,7 @@
 <template>
   <v-sheet
     class="wrapper flex-grow-1 flex-shrink-1"
-    min-height="320"
+    min-height="200"
     :style="{
       'background-image': roomCoverUrl ? `url(${roomCoverUrl})` : undefined,
     }"
@@ -47,7 +47,6 @@
         <v-btn
           v-if="isDisplayGotoLastMessage"
           variant="elevated"
-          elevation="6"
           size="small"
           icon="mdi-arrow-down"
           @click="gotoLastMessage"

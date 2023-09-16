@@ -1,7 +1,7 @@
 <template>
   <v-row class="flex-column-reverse flex-md-row">
     <v-col cols="12" sm="12" md="7" lg="8">
-      <v-card rounded="xl">
+      <v-card class="bg-surface" variant="flat" rounded="xl">
         <v-tabs
           bg-color="transparent"
           :model-value="tab"
@@ -29,8 +29,8 @@
     </v-col>
 
     <v-col cols="12" sm="12" md="5" lg="4">
-      <v-card rounded="xl">
-        <v-toolbar>
+      <v-card class="bg-surface" variant="flat" rounded="xl">
+        <v-toolbar class="bg-surface">
           <v-btn
             size="small"
             :icon="isActive ? 'mdi-chart-donut' : 'mdi-pause-circle-outline'"
@@ -107,7 +107,7 @@ const labels = ref<Array<string>>([]);
 const options = computed<ApexOptions>(() => ({
   chart: {
     type: 'donut',
-    background: theme.current.value.colors['surface-container-low'],
+    background: theme.current.value.colors['surface'],
     foreColor: theme.current.value.colors['on-surface'],
   },
   theme: {

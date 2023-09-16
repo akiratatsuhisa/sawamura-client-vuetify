@@ -9,7 +9,7 @@
         <v-avatar
           :image="roomPhotoUrl"
           color="secondary-container"
-          class="elevation-4"
+          class="elevation-1"
         />
       </v-badge>
     </template>

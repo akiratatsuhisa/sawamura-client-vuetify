@@ -1,5 +1,5 @@
 <template>
-  <v-drawer-navigation v-if="$vuetify.display.smAndDown" />
+  <v-drawer-navigation v-if="$vuetify.display.smAndUp" />
 </template>
 
 <script lang="ts" setup>

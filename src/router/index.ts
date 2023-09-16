@@ -22,8 +22,8 @@ const routes: Array<RouteRecordRaw> = [
         name: 'Home',
         meta: { requiresAuth: true },
         components: {
-          top: VTopAppBar,
           left: VLeftAppBar,
+          top: VTopAppBar,
           bottom: VBottomAppBar,
           default: () => import('@/views/Home/Index.vue'),
         },
@@ -33,8 +33,8 @@ const routes: Array<RouteRecordRaw> = [
         name: 'Search',
         meta: { requiresAuth: true },
         components: {
-          top: VTopAppBar,
           left: VLeftAppBar,
+          top: VTopAppBar,
           bottom: VBottomAppBar,
           default: () => import('@/views/Search/Index.vue'),
         },

@@ -16,7 +16,7 @@
   >
     <v-list-item class="pa-0" lines="three">
       <template #prepend>
-        <v-avatar size="64" :image="photoUrl" class="elevation-4" />
+        <v-avatar size="64" :image="photoUrl" />
       </template>
       <template #title>{{ user?.displayName }}</template>
       <v-list-item-subtitle>@{{ user?.username }}</v-list-item-subtitle>
@@ -30,7 +30,7 @@
 
       <v-btn
         :loading="isLoading"
-        variant="tonal"
+        variant="flat"
         color="error"
         :block="$vuetify.display.smAndDown"
         @click="onRequestDeleteAccount"

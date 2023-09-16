@@ -1,9 +1,9 @@
 <template>
-  <v-rail-navigation v-if="$vuetify.display.mdAndUp">
+  <v-rail-navigation v-if="$vuetify.display.smAndUp">
     <template #fab>
       <v-fade-transition>
         <v-btn
-          v-if="isFabShow"
+          v-if="$vuetify.display.mdAndUp && isFabShow"
           variant="flat"
           color="primary-container"
           min-width="56"

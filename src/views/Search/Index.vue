@@ -1,13 +1,11 @@
 <template>
-  <v-main>
-    <v-container>
-      <v-row>
-        <v-col class="mx-auto" cols="12" lg="10">
-          <v-card rounded="xl">
-            <v-card-title>Search</v-card-title>
-          </v-card>
-        </v-col>
-      </v-row>
+  <v-main class="bg-surface-container">
+    <v-container fluid class="fill-height text-center">
+      <v-responsive
+        class="rounded-lg bg-surface h-100 d-flex align-center justify-center"
+      >
+        <h1>Search</h1>
+      </v-responsive>
     </v-container>
   </v-main>
 </template>

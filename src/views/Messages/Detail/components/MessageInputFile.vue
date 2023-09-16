@@ -9,7 +9,7 @@
         <v-card
           class="flex-grow-0 flex-shrink-0"
           :class="'file-' + file.type"
-          :elevation="isHovering ? 8 : 4"
+          :elevation="isHovering ? 4 : 2"
           rounded="lg"
           v-bind="props"
         >

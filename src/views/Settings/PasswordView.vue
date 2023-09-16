@@ -62,8 +62,9 @@
     <v-row no-gutters>
       <v-col cols="12" md="8" lg="6" class="text-right">
         <v-btn
-          :loading="isLoadingUpdatePassword || isLoading"
           type="submit"
+          variant="flat"
+          :loading="isLoadingUpdatePassword || isLoading"
           :block="$vuetify.display.smAndDown"
           :disabled="!submitable"
         >

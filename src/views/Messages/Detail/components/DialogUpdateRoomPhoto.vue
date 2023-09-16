@@ -11,7 +11,7 @@
 
     <div class="mb-3">
       <div class="d-flex mb-3">
-        <v-btn color="primary" @click="openSelectImage">
+        <v-btn color="primary" variant="flat" @click="openSelectImage">
           {{ $t('common.theme.chooseImage') }}
         </v-btn>
       </div>

@@ -1,10 +1,6 @@
 <template>
   <v-btn icon>
-    <v-avatar
-      color="secondary-container"
-      class="elevation-2"
-      icon="mdi-forum"
-    />
+    <v-avatar color="primary" icon="mdi-forum" />
 
     <v-base-menu :title="translate('title')">
       <template #default="{ isMenu }">

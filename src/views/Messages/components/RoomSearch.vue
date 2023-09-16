@@ -1,8 +1,8 @@
 <template>
-  <div v-if="$vuetify.display.mdAndUp" class="flex-grow-1">
+  <div v-if="$vuetify.display.smAndUp" class="flex-grow-1">
     <div class="position-relative px-3 py-3">
       <div
-        class="search bg-surface-container-high text-on-surface rounded-pill d-flex flex-row align-center elevation-2 cursor-pointer"
+        class="search bg-surface-container-high text-on-surface rounded-pill d-flex flex-row align-center cursor-pointer"
         @click.stop="isSearchFieldOpen = !isSearchFieldOpen"
       >
         <div class="pl-12 flex-grow-1">
@@ -22,7 +22,7 @@
         <div
           v-if="isSearchFieldOpen"
           ref="searchFieldContainerRef"
-          class="search-container d-flex flex-column position-absolute mx-3 my-3 rounded-xl bg-surface-container-high elevation-4"
+          class="search-container d-flex flex-column position-absolute mx-3 my-3 rounded-xl bg-surface-container-high elevation-1"
         >
           <div
             class="search flex-shrink-0 bg-surface-container-high text-on-surface rounded-t-xl d-flex flex-row align-center cursor-pointer"

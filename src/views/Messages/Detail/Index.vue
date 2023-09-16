@@ -19,7 +19,7 @@
           <v-avatar
             :image="roomPhotoUrl"
             color="secondary-container"
-            class="elevation-4 ml-md-3"
+            class="elevation-2 ml-md-3"
           />
         </v-badge>
 
@@ -61,7 +61,7 @@ const route = useRoute();
 const roomId = computed<string>(() => route.params.roomId as string);
 
 const drawerRooms = useLocalStorage<Record<string, boolean>>(
-  'list:room:drawer',
+  'messages:room:drawer',
   {},
 );
 
@@ -74,7 +74,10 @@ const drawer = computed<boolean>({
   },
 });
 
-const iconRooms = useLocalStorage<Record<string, string>>('list:room:icon', {});
+const iconRooms = useLocalStorage<Record<string, string>>(
+  'messages:room:icon',
+  {},
+);
 
 const reactionIcon = computed<string>({
   get() {

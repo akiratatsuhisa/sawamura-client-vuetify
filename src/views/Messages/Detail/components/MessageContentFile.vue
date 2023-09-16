@@ -4,7 +4,7 @@
       <v-card
         v-bind="props"
         rounded="lg"
-        :elevation="isHovering ? 8 : 4"
+        :elevation="isHovering ? 4 : 2"
         class="flex-grow-0 flex-shrink-0"
         :class="[fileType]"
       >

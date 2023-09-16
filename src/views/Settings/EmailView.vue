@@ -98,8 +98,9 @@
         <v-divider v-if="$vuetify.display.smAndDown" class="mb-3" />
 
         <v-btn
-          class="mt-0 mt-md-3"
           type="submit"
+          class="mt-0 mt-md-3"
+          variant="flat"
           :loading="isLoadingUpdateEmail || isLoading"
           :block="$vuetify.display.smAndDown"
           :disabled="!submitable"

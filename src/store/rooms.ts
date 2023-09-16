@@ -4,6 +4,7 @@ import { defineStore } from 'pinia';
 import { computed, ref, watch } from 'vue';
 
 import {
+  useAuth,
   useAxios,
   useSnackbar,
   useSocketChat,
@@ -52,7 +53,16 @@ export const useRoomsStore = defineStore('rooms', () => {
       excludeIds: excludeIds.length ? excludeIds : undefined,
     });
   }
-  fetchMore();
+
+  const { identityId } = useAuth();
+  watch(
+    identityId,
+    () => {
+      rooms.value = [];
+      fetchMore();
+    },
+    { immediate: true },
+  );
 
   function updateListRoom(data: IRoomResponse) {
     rooms.value = _(rooms.value)

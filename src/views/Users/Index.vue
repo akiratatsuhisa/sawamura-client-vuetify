@@ -1,5 +1,7 @@
 <template>
-  <v-main>
+  <v-main
+    :class="[$vuetify.display.xs ? 'bg-surface' : 'bg-surface-container']"
+  >
     <v-container
       v-if="!data"
       class="fill-height d-flex align-center justify-center"
@@ -9,7 +11,7 @@
     <v-container
       v-else
       :fluid="$vuetify.display.mdAndDown"
-      class="pa-0 pa-md-4 px-xl-12"
+      class="pa-0 pa-sm-4 px-xl-12"
     >
       <div class="d-flex">
         <div class="flex-grow-1 flex-shrink-1">
@@ -20,8 +22,8 @@
         </div>
         <div
           v-if="$vuetify.display.mdAndUp"
-          :style="{ width: $vuetify.display.mdAndDown ? '300px' : '450px' }"
-          class="flex-grow-0 flex-shrink-0 ml-0 ml-md-4 ml-lg-12"
+          :style="{ width: $vuetify.display.lgAndDown ? '300px' : '450px' }"
+          class="flex-grow-0 flex-shrink-0 ml-0 ml-sm-4 ml-lg-12"
         >
           <v-display-last-images />
           <v-recommend-follows />

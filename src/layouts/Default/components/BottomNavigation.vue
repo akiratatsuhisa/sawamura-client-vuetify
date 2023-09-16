@@ -1,7 +1,7 @@
 <template>
   <v-bottom-navigation
     height="80"
-    class="bg-surface-container text-on-surface elevation-4"
+    class="bg-surface-container text-on-surface elevation-0"
   >
     <v-bottom-menu-item
       v-for="item in mainNavigationItems"

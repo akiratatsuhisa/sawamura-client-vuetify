@@ -4,10 +4,10 @@ import { RouteRecordRaw } from 'vue-router';
 import { Regex } from '@/helpers';
 import VBottomAppBar from '@/layouts/Default/BottomAppBar.vue';
 import VRoomDetailLeftAppBar from '@/views/Messages/layouts/RoomDetailLeftAppBar.vue';
+import VRoomDetailLeftInnerAppBar from '@/views/Messages/layouts/RoomDetailLeftInnerAppBar.vue';
 import VRoomDetailTopAppBar from '@/views/Messages/layouts/RoomDetailTopAppBar.vue';
 import VRoomsLeftAppBar from '@/views/Messages/layouts/RoomsLeftAppBar.vue';
 import VRoomsTopAppBar from '@/views/Messages/layouts/RoomsTopAppBar.vue';
-import VRoomsTopInnerAppBar from '@/views/Messages/layouts/RoomsTopInnerAppBar.vue';
 
 export default [
   {
@@ -15,9 +15,8 @@ export default [
     name: 'Messages',
     meta: { requiresAuth: true },
     components: {
-      top: VRoomsTopAppBar,
-      topInner: VRoomsTopInnerAppBar,
       left: VRoomsLeftAppBar,
+      top: VRoomsTopAppBar,
       bottom: VBottomAppBar,
       default: () => import('@/views/Messages/Index.vue'),
     },
@@ -26,8 +25,9 @@ export default [
     path: `/messages/:roomId(${Regex.Uuid.source})/:dialog(update|photo|cover|theme|delete|icon|members)?/:memberDialog(create|update|role|delete)?/:memberId(${Regex.Uuid.source})?`,
     name: 'Messages:Room',
     components: {
-      top: VRoomDetailTopAppBar,
       left: VRoomDetailLeftAppBar,
+      top: VRoomDetailTopAppBar,
+      leftInner: VRoomDetailLeftInnerAppBar,
       default: () => import('@/views/Messages/Detail/Index.vue'),
     },
     beforeEnter: (to) => {

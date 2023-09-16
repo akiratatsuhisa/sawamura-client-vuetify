@@ -1,27 +1,24 @@
 <template>
-  <v-main>
-    <v-container>
-      <v-row>
-        <v-col class="mx-auto" cols="12" md="6">
-          <v-card class="text-center" rounded="xl">
-            <v-card-text>
-              <v-icon icon="mdi-alert-circle" color="error" size="128" />
-            </v-card-text>
-            <v-card-title tag="h1">
-              <span class="text-error">500</span>
-              {{ translate('title') }}
-            </v-card-title>
-            <v-card-subtitle tag="h2">
-              {{ translate('subtitle') }}
-            </v-card-subtitle>
-            <v-card-text>
-              <v-btn :to="{ name: 'Home' }">
-                {{ translateShared('returnToHome') }}
-              </v-btn>
-            </v-card-text>
-          </v-card>
-        </v-col>
-      </v-row>
+  <v-main class="bg-surface-container">
+    <v-container fluid class="fill-height text-center">
+      <v-responsive
+        class="h-100 pa-3 rounded-lg bg-surface d-flex align-center justify-center"
+      >
+        <v-icon icon="mdi-alert-circle" color="error" size="128" />
+
+        <h1 class="h1">
+          <span class="text-error">500</span>
+          {{ translate('title') }}
+        </h1>
+
+        <h2 class="h2 font-weight-light text-medium-emphasis">
+          {{ translate('subtitle') }}
+        </h2>
+
+        <v-btn class="mt-3" :to="{ name: 'Home' }">
+          {{ translateShared('returnToHome') }}
+        </v-btn>
+      </v-responsive>
     </v-container>
   </v-main>
 </template>

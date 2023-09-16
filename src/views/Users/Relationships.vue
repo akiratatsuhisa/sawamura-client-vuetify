@@ -1,5 +1,7 @@
 <template>
-  <v-main>
+  <v-main
+    :class="[$vuetify.display.xs ? 'bg-surface' : 'bg-surface-container']"
+  >
     <v-container
       v-if="!data"
       class="fill-height d-flex align-center justify-center"
@@ -9,21 +11,17 @@
     <v-container
       v-else
       :fluid="$vuetify.display.mdAndDown"
-      class="pa-0 pa-md-4 px-xl-12"
+      class="pa-0 pa-sm-4 px-xl-12"
     >
       <div class="d-block d-md-flex">
         <div class="flex-grow-1 flex-shrink-1">
           <v-sheet
-            :rounded="$vuetify.display.smAndDown ? '0' : 'xl'"
-            :elevation="$vuetify.display.smAndDown ? 0 : 1"
-            :class="[
-              $vuetify.display.smAndDown
-                ? 'bg-transparent'
-                : 'bg-surface-container-low text-on-surface',
-            ]"
+            class="profile-page bg-surface"
+            variant="flat"
+            :rounded="$vuetify.display.xs ? '0' : 'xl'"
           >
-            <template v-if="$vuetify.display.mdAndUp">
-              <v-toolbar rounded="xl">
+            <template v-if="$vuetify.display.smAndUp">
+              <v-toolbar class="bg-surface" rounded="xl">
                 <v-toolbar-title style="width: 0">
                   <h1 class="v-toolbar-title text-truncate">
                     {{ user?.displayName }}
@@ -38,12 +36,12 @@
 
             <v-sheet
               class="position-sticky"
-              :color="
-                $vuetify.display.smAndDown ? 'surface' : 'surface-container-low'
-              "
+              :color="$vuetify.display.xs ? 'surface' : 'surface-container'"
               style="top: 64px; z-index: 1"
             >
               <v-tabs
+                class="bg-surface"
+                :class="{ 'rounded-t-xl': threshold > 80 }"
                 :model-value="tab"
                 fixed-tabs
                 @update:model-value="(value: unknown) => changeTab(value as string)"
@@ -78,7 +76,7 @@
                 :value="key"
                 class=""
               >
-                <v-sheet class="bg-transparent elevation-0 rounded-0">
+                <v-sheet class="bg-transparent rounded-0">
                   <component v-if="isActiveTab(key)" :is="detail.component" />
                 </v-sheet>
               </v-window-item>
@@ -87,7 +85,7 @@
         </div>
         <div
           v-if="$vuetify.display.mdAndUp"
-          :style="{ width: $vuetify.display.mdAndDown ? '300px' : '450px' }"
+          :style="{ width: $vuetify.display.lgAndDown ? '300px' : '450px' }"
           class="flex-grow-0 flex-shrink-0 ml-0 ml-md-4 ml-lg-12 mt-n4"
         >
           <v-trends />
@@ -98,7 +96,7 @@
 </template>
 
 <script lang="ts" setup>
-import { useStyleTag } from '@vueuse/core';
+import { useStyleTag, useWindowScroll } from '@vueuse/core';
 import { storeToRefs } from 'pinia';
 import { computed, defineAsyncComponent, h, watch } from 'vue';
 import { useRoute } from 'vue-router';
@@ -112,6 +110,8 @@ import VRelationshipList from '@/views/Users/components/RelationshipList.vue';
 const VTrends = defineAsyncComponent(
   () => import('@/views/Users/components/Trends.vue'),
 );
+
+const { y: threshold } = useWindowScroll();
 
 const profileUserStore = useProfileUserStore();
 const { user } = storeToRefs(profileUserStore);

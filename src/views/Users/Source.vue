@@ -28,9 +28,9 @@
 import { useStyleTag } from '@vueuse/core';
 import { computed, reactive } from 'vue';
 
-import VDialogProfileCover from '@/components/Users/DialogProfileCover.vue';
-import VDialogProfilePhoto from '@/components/Users/DialogProfilePhoto.vue';
 import { useAuth, usePageLocale } from '@/composables';
+import VDialogProfileCover from '@/views/Users/components/DialogProfileCover.vue';
+import VDialogProfilePhoto from '@/views/Users/components/DialogProfilePhoto.vue';
 import VDisplayProfile from '@/views/Users/components/DisplayProfile.vue';
 
 const { translate } = usePageLocale({ prefix: 'users.profile' });

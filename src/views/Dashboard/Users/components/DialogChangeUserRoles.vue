@@ -60,8 +60,9 @@
 </template>
 
 <script lang="ts" setup>
+import { useLocalStorage } from '@vueuse/core';
 import _ from 'lodash';
-import { computed, inject, reactive, ref } from 'vue';
+import { computed, inject, reactive } from 'vue';
 import { useRoute } from 'vue-router';
 
 import { useAxios, usePageLocale } from '@/composables';
@@ -82,7 +83,10 @@ const { translate } = usePageLocale({
   prefix: 'dashboard.users.changeRoles',
 });
 
-const displayMode = ref<boolean>(false);
+const displayMode = useLocalStorage<boolean>(
+  'dashboard:users:changeRoles:displayMode',
+  false,
+);
 
 const roleList = inject(KEYS.DASHBOARD.USERS.DIALOGS.CHANGE_ROLES.ROLE_LIST)!;
 const roleListByTag = computed(() => {

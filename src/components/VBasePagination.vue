@@ -1,7 +1,7 @@
 <template>
-  <div class="d-flex flex-column-reverse flex-md-column">
+  <div class="d-flex flex-column-reverse flex-sm-column">
     <div
-      class="d-flex flex-column flex-md-row justify-md-space-between align-md-center"
+      class="d-flex flex-column flex-sm-row justify-sm-space-between align-sm-center"
     >
       <v-base-limit-page
         :skip="props.skip"
@@ -10,7 +10,7 @@
         @update:take="(value) => emit('update:take', value)"
       />
 
-      <div class="text-body-2 font-weight-medium mt-2 mt-md-0">
+      <div class="text-body-2 font-weight-medium mt-2 mt-sm-0">
         {{ $t('common.pagination.showing', { from, to, totalCount }) }}
       </div>
     </div>

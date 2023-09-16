@@ -14,6 +14,7 @@
         <template v-slot:activator="{ props }">
           <v-btn
             v-bind="props"
+            variant="flat"
             color="primary-container"
             prepend-icon="mdi-palette"
           >
@@ -23,7 +24,7 @@
                 v-if="themeSource"
                 :color="displayThemeColor"
                 size="x-small"
-                class="elevation-4"
+                class="elevation-1"
               ></v-avatar>
             </template>
           </v-btn>

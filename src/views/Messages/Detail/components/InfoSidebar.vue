@@ -22,7 +22,7 @@
         >
           <v-avatar
             color="secondary-container"
-            class="elevation-4"
+            class="elevation-2"
             :image="roomPhotoUrl"
             size="80"
           />
@@ -110,7 +110,7 @@
                     v-if="room.themeSource"
                     :color="displayThemeColor"
                     size="x-small"
-                    class="elevation-4"
+                    class="elevation-1"
                   ></v-avatar>
                   <v-icon icon="mdi-palette" v-else />
                 </v-avatar>

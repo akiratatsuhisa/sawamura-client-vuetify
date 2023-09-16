@@ -47,6 +47,7 @@
               :loading="isLoadingTheme"
               v-bind="props"
               color="primary-container"
+              variant="flat"
               prepend-icon="mdi-palette"
             >
               {{ translateThemeFormField('select') }}

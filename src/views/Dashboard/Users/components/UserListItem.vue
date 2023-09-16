@@ -3,7 +3,7 @@
     <v-avatar
       :image="photoUrl"
       color="secondary-container"
-      class="elevation-2"
+      class="elevation-1"
       :size="$vuetify.display.mobile ? 'default' : 'x-large'"
     />
     <div

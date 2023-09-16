@@ -5,7 +5,7 @@
   >
     <v-avatar
       color="secondary-container"
-      class="align-self-end elevation-4 mb-1"
+      class="align-self-end elevation-1 mb-1"
       size="28"
       :image="photoUrl"
     >

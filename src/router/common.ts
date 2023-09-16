@@ -13,8 +13,8 @@ export const defaultCommonRoutes = [
     name: 'AccessDenied',
     meta: { requiresAuth: true },
     components: {
-      top: VTopAppBar,
       left: VLeftAppBar,
+      top: VTopAppBar,
       bottom: VBottomAppBar,
       default: AccessDenied,
     },
@@ -24,8 +24,8 @@ export const defaultCommonRoutes = [
     name: 'InternalServer',
     meta: { requiresAuth: true },
     components: {
-      top: VTopAppBar,
       left: VLeftAppBar,
+      top: VTopAppBar,
       bottom: VBottomAppBar,
       default: InternalServer,
     },
@@ -35,8 +35,8 @@ export const defaultCommonRoutes = [
     name: 'NotFound',
     meta: { requiresAuth: true },
     components: {
-      top: VTopAppBar,
       left: VLeftAppBar,
+      top: VTopAppBar,
       bottom: VBottomAppBar,
       default: NotFound,
     },

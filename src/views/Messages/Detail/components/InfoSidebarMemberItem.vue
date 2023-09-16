@@ -12,12 +12,7 @@
           params: { username: roomMember.member.username },
         }"
       >
-        <v-avatar
-          color="secondary-container"
-          class="elevation-4"
-          tag="button"
-          :image="photoUrl"
-        />
+        <v-avatar color="secondary-container" tag="button" :image="photoUrl" />
       </v-btn>
     </template>
 

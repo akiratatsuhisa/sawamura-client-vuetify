@@ -1,20 +1,15 @@
 <template>
   <v-card
-    :rounded="$vuetify.display.smAndDown ? '0' : 'xl'"
-    class="profile-page"
-    :variant="$vuetify.display.smAndDown ? 'flat' : 'elevated'"
-    :class="[
-      $vuetify.display.smAndDown
-        ? 'bg-transparent'
-        : 'bg-surface-container-low text-on-surface',
-    ]"
+    class="profile-page bg-surface"
+    variant="flat"
+    :rounded="$vuetify.display.xs ? '0' : 'xl'"
   >
     <v-hover v-slot="{ isHovering, props: hoverProps }">
       <v-sheet
         color="transparent"
         class="position-relative"
         :class="{
-          'rounded-xl': $vuetify.display.mdAndUp,
+          'rounded-xl': $vuetify.display.smAndUp,
         }"
         v-bind="hoverProps"
       >
@@ -23,9 +18,9 @@
           cover
           :lazy-src="LAZY_BACKGROUND"
           :src="props.coverUrl ?? coverUrl"
-          class="elevation-4"
+          class="elevation-2"
           :class="{
-            'rounded-xl': $vuetify.display.mdAndUp,
+            'rounded-xl': $vuetify.display.smAndUp,
           }"
         >
         </v-img>
@@ -50,12 +45,12 @@
         <v-avatar
           size="96"
           class="avatar mx-0 mx-md-3"
-          :class="[isHovering ? 'elevation-12' : 'elevation-6']"
+          :class="[isHovering ? 'elevation-4' : 'elevation-2']"
           v-bind="hoverProps"
         >
           <v-avatar
             color="secondary-container"
-            class="elevation-6 cursor-none"
+            class="elevation-2 cursor-none"
             size="96"
             :image="props.photoUrl ?? photoUrl"
           />
@@ -75,13 +70,13 @@
         </v-avatar>
       </v-hover>
 
-      <div v-if="$vuetify.display.mdAndUp" class="actions d-flex align-center">
+      <div v-if="$vuetify.display.smAndUp" class="actions d-flex align-center">
         <slot name="actions"></slot>
       </div>
     </div>
 
     <div
-      v-if="$vuetify.display.smAndDown"
+      v-if="$vuetify.display.xs"
       class="pl-5 pr-4 actions d-flex align-center"
     >
       <slot name="actions"></slot>

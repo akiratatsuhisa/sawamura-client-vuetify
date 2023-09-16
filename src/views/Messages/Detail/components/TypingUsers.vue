@@ -14,7 +14,6 @@
             ? 'bg-grey-darken-3'
             : 'bg-grey-lighten-3',
         ]"
-        elevation="4"
       >
         <span
           v-for="index in 3"

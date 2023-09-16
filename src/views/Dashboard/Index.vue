@@ -1,11 +1,7 @@
 <template>
-  <v-main>
+  <v-main class="bg-surface-container">
     <v-container fluid>
-      <v-sheet
-        class="bg-surface-container-low text-on-surface"
-        elevation="2"
-        rounded="xl"
-      >
+      <v-sheet class="bg-surface" rounded="xl">
         <div>
           <v-breadcrumbs :items="breadcrumbs">
             <template #divider>

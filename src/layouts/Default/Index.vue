@@ -1,12 +1,12 @@
 <template>
   <v-app>
-    <router-view name="leftOuter" />
-
-    <router-view name="top" />
+    <router-view name="topOuter" />
 
     <router-view name="left" />
 
-    <router-view name="topInner" />
+    <router-view name="top" />
+
+    <router-view name="leftInner" />
 
     <router-view />
 

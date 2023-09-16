@@ -44,7 +44,7 @@
         <v-btn
           type="submit"
           color="primary"
-          :variant="fullscreen ? 'elevated' : 'text'"
+          :variant="fullscreen ? 'flat' : 'text'"
           :block="fullscreen"
           :disabled="disabledSubmit"
         >

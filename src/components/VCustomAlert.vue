@@ -19,7 +19,7 @@
           </v-icon>
         </div>
         <v-img
-          class="elevation-4 rounded-lg mb-3"
+          class="elevation-2 rounded-lg mb-3"
           v-else-if="props.image"
           cover
           :aspect-ratio="props.image.ratio"

@@ -1,5 +1,5 @@
 <template>
-  <v-card flat>
+  <v-card class="bg-surface" variant="flat">
     <v-card-text class="d-flex justify-space-between align-baseline">
       <i18n-t
         :keypath="path('subtitle')"
@@ -11,6 +11,7 @@
       </i18n-t>
 
       <v-btn
+        variant="flat"
         prepend-icon="mdi-content-save"
         :loading="isLoading"
         @click="openDialog('create')"

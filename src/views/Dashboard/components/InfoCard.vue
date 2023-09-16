@@ -2,7 +2,7 @@
   <v-sheet
     class="h-100 d-flex flex-nowrap"
     :color="`${color}-lighten-1`"
-    elevation="2"
+    elevation="1"
     rounded="xl"
   >
     <v-avatar

@@ -3,7 +3,8 @@
     permanent
     rail
     rail-width="80"
-    class="bg-surface-container-low text-on-surface"
+    floating
+    class="bg-surface-container text-on-surface"
   >
     <template #prepend>
       <v-list-item
@@ -24,8 +25,6 @@
           />
         </div>
       </v-list-item>
-
-      <v-divider />
 
       <slot name="fab" />
     </template>

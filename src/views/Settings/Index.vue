@@ -1,10 +1,10 @@
 <template>
-  <v-main>
+  <v-main class="bg-surface-container">
     <v-container>
-      <v-row>
+      <v-row no-gutters>
         <v-col cols="12" lg="10" class="mx-auto">
-          <v-card rounded="xl">
-            <v-toolbar>
+          <v-card class="bg-surface" variant="flat" rounded="xl">
+            <v-toolbar class="bg-surface">
               <v-toolbar-title tag="h1">
                 {{ translate('title') }}
               </v-toolbar-title>
@@ -44,7 +44,7 @@
                   :value="key"
                   class=""
                 >
-                  <v-sheet class="bg-transparent elevation-0 rounded-0 pa-3">
+                  <v-sheet class="bg-transparent pa-3">
                     <component v-if="isActiveTab(key)" :is="detail.component" />
                   </v-sheet>
                 </v-window-item>
@@ -67,7 +67,7 @@ import { SettingsTabs } from '@/interfaces';
 
 const display = useDisplay();
 
-const isMobile = computed(() => display.mobile.value);
+const isMobile = computed(() => display.smAndDown.value);
 
 const { tab, changeTab, isActiveTab } = useRouterTab({
   name: 'Settings',

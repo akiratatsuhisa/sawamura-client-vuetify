@@ -1,12 +1,12 @@
 <template>
   <v-app-bar
-    :elevation="$vuetify.display.smAndDown && isTopbarElevation ? 4 : 1"
+    :elevation="$vuetify.display.xs && isTopbarElevation ? 2 : 0"
     class="bg-surface-container text-on-surface"
     :image="appBarImage"
   >
     <template v-slot:image>
       <v-img
-        v-if="$vuetify.display.smAndDown && isTopbarElevation"
+        v-if="$vuetify.display.xs && isTopbarElevation"
         gradient="to top right, rgba(var(--v-theme-surface-container),.5), rgba(var(--v-theme-surface-container),.9)"
       />
     </template>
@@ -15,7 +15,7 @@
       <v-icon icon="mdi-arrow-left" />
     </v-app-bar-nav-icon>
 
-    <v-app-bar-title v-if="$vuetify.display.smAndDown && isTopbarElevation">
+    <v-app-bar-title v-if="$vuetify.display.xs && isTopbarElevation">
       <h1 class="v-toolbar-title text-truncate">
         {{ user?.displayName }}
       </h1>
@@ -23,7 +23,11 @@
         @{{ user?.username }}
       </h2>
     </v-app-bar-title>
-    <v-app-bar-title v-else @click="$router.push({ name: 'Home' })">
+    <v-app-bar-title
+      v-else
+      class="cursor-pointer prevent-select"
+      @click="$router.push({ name: 'Home' })"
+    >
       {{ $t('common.app.title') }}
     </v-app-bar-title>
 
@@ -69,7 +73,7 @@ const coverUrl = useUserImage(
 );
 
 const appBarImage = computed(() => {
-  if (!(display.smAndDown.value && isTopbarElevation.value)) {
+  if (!(display.xs.value && isTopbarElevation.value)) {
     return undefined;
   }
   return coverUrl.value;

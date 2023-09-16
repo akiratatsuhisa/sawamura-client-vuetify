@@ -1,10 +1,10 @@
 <template>
-  <v-app-bar elevation="1" class="bg-surface-container text-on-surface">
+  <v-app-bar class="bg-surface-container text-on-surface">
     <v-app-bar-nav-icon @click="$router.back()">
       <v-icon icon="mdi-arrow-left" />
     </v-app-bar-nav-icon>
 
-    <v-app-bar-title v-if="$vuetify.display.smAndDown">
+    <v-app-bar-title v-if="$vuetify.display.xs">
       <h1 class="v-toolbar-title text-truncate">
         {{ user?.displayName }}
       </h1>
@@ -12,11 +12,15 @@
         @{{ user?.username }}
       </h2>
     </v-app-bar-title>
-    <v-app-bar-title v-else @click="$router.push({ name: 'Home' })">
+    <v-app-bar-title
+      v-else
+      class="cursor-pointer prevent-select"
+      @click="$router.push({ name: 'Home' })"
+    >
       {{ $t('common.app.title') }}
     </v-app-bar-title>
 
-    <template v-if="$vuetify.display.mdAndUp">
+    <template v-if="$vuetify.display.smAndUp">
       <v-messages-menu />
       <v-profile-menu />
     </template>

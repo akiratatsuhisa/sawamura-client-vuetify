@@ -12,8 +12,8 @@ export default [
     name: 'Users:Detail',
     meta: { requiresAuth: true },
     components: {
-      top: VUsersTopAppBar,
       left: VLeftAppBar,
+      top: VUsersTopAppBar,
       default: () => import('@/views/Users/Index.vue'),
     },
     beforeEnter(to, from) {
@@ -25,8 +25,8 @@ export default [
     name: 'Users:Detail:Relationship',
     meta: { requiresAuth: true },
     components: {
-      top: VRelationshipsTopAppBar,
       left: VLeftAppBar,
+      top: VRelationshipsTopAppBar,
       default: () => import('@/views/Users/Relationships.vue'),
     },
   },
