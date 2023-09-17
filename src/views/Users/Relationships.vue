@@ -2,17 +2,10 @@
   <v-main
     :class="[$vuetify.display.xs ? 'bg-surface' : 'bg-surface-container']"
   >
-    <v-container
-      v-if="!data"
-      class="fill-height d-flex align-center justify-center"
-    >
+    <div v-if="!data" class="fill-height d-flex align-center justify-center">
       <v-progress-circular size="88" width="6" color="primary" indeterminate />
-    </v-container>
-    <v-container
-      v-else
-      :fluid="$vuetify.display.mdAndDown"
-      class="pa-0 pa-sm-4 px-xl-12"
-    >
+    </div>
+    <v-container v-else fluid class="pa-0 pa-sm-4">
       <div class="d-block d-md-flex">
         <div class="flex-grow-1 flex-shrink-1">
           <v-sheet
@@ -43,8 +36,10 @@
                 class="bg-surface"
                 :class="{ 'rounded-t-xl': threshold > 80 }"
                 :model-value="tab"
-                fixed-tabs
-                @update:model-value="(value: unknown) => changeTab(value as string)"
+                @update:model-value="
+                  (value: unknown) => changeTab(value as string)
+                "
+                grow
               >
                 <v-tab
                   v-for="(detail, key) in tabs"
@@ -66,7 +61,9 @@
 
             <v-window
               :model-value="tab"
-              @update:model-value="(value: unknown) => changeTab(value as string)"
+              @update:model-value="
+                (value: unknown) => changeTab(value as string)
+              "
               direction="horizontal"
               class="flex-grow-1 flex-shrink-1"
             >

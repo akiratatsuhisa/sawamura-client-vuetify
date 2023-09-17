@@ -1,43 +1,40 @@
 <template>
   <v-main class="fill-height bg-surface-container">
     <v-container
+      fluid
       class="h-100"
       :class="[$vuetify?.display.xs ? 'pa-0' : 'pa-4']"
     >
-      <v-row no-gutters class="h-100">
-        <v-col class="mx-auto" cols="12" lg="10">
-          <v-card
-            class="bg-surface h-100"
+      <v-sheet
+        class="bg-surface h-100"
+        variant="flat"
+        :rounded="$vuetify?.display.xs ? '0' : 'lg'"
+      >
+        <div class="d-flex flex-column flex-md-row align-md-center">
+          <v-card-title tag="h1">{{ translate('title') }}</v-card-title>
+          <v-spacer v-if="$vuetify.display.xs" />
+
+          <v-room-search />
+
+          <v-btn
+            class="ma-4"
             variant="flat"
-            :rounded="$vuetify?.display.xs ? '0' : 'lg'"
+            prepend-icon="mdi-account-group"
+            @click="openDialog('create')"
+            :loading="isLoading"
           >
-            <div class="d-flex flex-column flex-md-row align-md-center">
-              <v-card-title tag="h1">{{ translate('title') }}</v-card-title>
-              <v-spacer v-if="$vuetify.display.xs" />
+            {{ translate('createGroup') }}
+          </v-btn>
+        </div>
 
-              <v-room-search />
+        <v-room-list />
 
-              <v-btn
-                class="ma-4"
-                variant="flat"
-                prepend-icon="mdi-account-group"
-                @click="openDialog('create')"
-                :loading="isLoading"
-              >
-                {{ translate('createGroup') }}
-              </v-btn>
-            </div>
-
-            <v-room-list />
-
-            <v-card-actions class="justify-center">
-              <v-btn @click="fetchMore" :loading="isLoading">
-                {{ translateShared('fetchMore') }}
-              </v-btn>
-            </v-card-actions>
-          </v-card>
-        </v-col>
-      </v-row>
+        <v-card-actions class="justify-center">
+          <v-btn @click="fetchMore" :loading="isLoading">
+            {{ translateShared('fetchMore') }}
+          </v-btn>
+        </v-card-actions>
+      </v-sheet>
     </v-container>
 
     <v-fade-transition>

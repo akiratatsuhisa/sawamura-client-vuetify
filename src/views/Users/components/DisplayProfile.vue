@@ -17,7 +17,7 @@
           aspect-ratio="16/9"
           cover
           :lazy-src="LAZY_BACKGROUND"
-          :src="props.coverUrl ?? coverUrl"
+          :src="props.coverUrl ?? userCoverUrl"
           class="elevation-2"
           :class="{
             'rounded-xl': $vuetify.display.smAndUp,
@@ -31,7 +31,7 @@
         >
           <v-avatar
             color="secondary-container"
-            @click="selectedImageSrc = props.coverUrl ?? coverUrl"
+            @click="selectedImageSrc = props.coverUrl ?? userCoverUrl"
             size="48"
           >
             <v-icon icon="mdi-image-edit" />
@@ -52,7 +52,7 @@
             color="secondary-container"
             class="elevation-2 cursor-none"
             size="96"
-            :image="props.photoUrl ?? photoUrl"
+            :image="props.photoUrl ?? userPhotoUrl"
           />
 
           <v-overlay
@@ -62,7 +62,7 @@
           >
             <v-avatar
               color="secondary-container"
-              @click="selectedImageSrc = props.photoUrl ?? photoUrl"
+              @click="selectedImageSrc = props.photoUrl ?? userPhotoUrl"
             >
               <v-icon icon="mdi-image-edit" />
             </v-avatar>
@@ -205,8 +205,8 @@ const LAZY_BACKGROUND = import.meta.env.VITE_NO_BACKGROUND_URL;
 const props = defineProps<{ coverUrl?: string; photoUrl?: string }>();
 
 const user = inject(KEYS.USERS.PAGE.PROFILE_USER)!;
-const photoUrl = useUserImage('photo', user);
-const coverUrl = useUserImage('cover', user);
+const userPhotoUrl = useUserImage('photo', user);
+const userCoverUrl = useUserImage('cover', user);
 
 const selectedImageSrc = ref<string>();
 </script>

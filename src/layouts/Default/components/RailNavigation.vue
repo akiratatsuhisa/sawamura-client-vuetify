@@ -21,7 +21,7 @@
           <v-avatar
             :image="photoUrl"
             color="secondary-container"
-            class="elevation-2"
+            class="ma-1 elevation-2"
           />
         </div>
       </v-list-item>

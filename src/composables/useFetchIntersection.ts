@@ -1,10 +1,10 @@
-import { FunctionArgs, MaybeComputedRef, useThrottleFn } from '@vueuse/core';
+import { FunctionArgs, MaybeRef, useThrottleFn } from '@vueuse/core';
 import { Ref, ref, watch } from 'vue';
 
 export interface IUseFetchIntersectionOptions {
   isLoading: Ref<boolean>;
   fetch: FunctionArgs;
-  ms?: MaybeComputedRef<number>;
+  ms?: MaybeRef<number>;
   isAllLoaded: Ref<boolean>;
 }
 

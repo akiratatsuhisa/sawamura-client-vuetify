@@ -27,7 +27,8 @@ export type UseSocketEventListenerOptions<D, R, E> = {
 export function useSocketEventListener<
   WsResponse extends Record<string, any> = Record<string, any>,
   WsRequest extends Record<string, any> = Record<string, any>,
-  WsException extends IWsExceptionResponse<WsRequest> = IWsExceptionResponse<WsRequest>,
+  WsException extends
+    IWsExceptionResponse<WsRequest> = IWsExceptionResponse<WsRequest>,
 >(
   socket: MaybeRef<Socket>,
   event: string,

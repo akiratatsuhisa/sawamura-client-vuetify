@@ -21,6 +21,7 @@ export default defineConfig({
       devOptions: {
         enabled: true,
       },
+      workbox: { disableDevLogs: true },
       includeAssets: ['favicon.ico'],
       manifest: {
         name: 'Sawamura Application',

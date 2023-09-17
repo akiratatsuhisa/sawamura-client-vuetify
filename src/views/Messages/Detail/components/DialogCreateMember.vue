@@ -11,7 +11,7 @@
 
     <v-autocomplete
       class="mt-3"
-      v-model="v$.member.$model"
+      v-model="form.member"
       v-model:search="userSearch"
       :loading="isLoadingSearch"
       variant="outlined"
@@ -137,7 +137,7 @@ const excuteSearchUsersDebounce = useDebounceFn(
     usersResult.value = await excuteSearchUsers(params);
     isLoadingSearch.value = false;
   },
-  1000,
+  250,
 );
 
 watch(userSearch, (search) => {

@@ -126,10 +126,8 @@ export const useRoomsStore = defineStore('rooms', () => {
   });
 
   async function fetchMoreSearchResult() {
-    const groupRoomId = _.findLast(
-      searchResult.value,
-      (room) => room.isGroup,
-    )?.id;
+    const groupRoomId = _.findLast(searchResult.value, (room) => room.isGroup)
+      ?.id;
     const privateRoomId = _.findLast(
       searchResult.value,
       (room) => !room.isGroup,

@@ -2,17 +2,10 @@
   <v-main
     :class="[$vuetify.display.xs ? 'bg-surface' : 'bg-surface-container']"
   >
-    <v-container
-      v-if="!data"
-      class="fill-height d-flex align-center justify-center"
-    >
+    <div v-if="!data" class="fill-height d-flex align-center justify-center">
       <v-progress-circular size="88" width="6" color="primary" indeterminate />
-    </v-container>
-    <v-container
-      v-else
-      :fluid="$vuetify.display.mdAndDown"
-      class="pa-0 pa-sm-4 px-xl-12"
-    >
+    </div>
+    <v-container v-else fluid class="pa-0 pa-sm-4">
       <div class="d-flex">
         <div class="flex-grow-1 flex-shrink-1">
           <v-source v-if="identityUser?.username === data?.username" />

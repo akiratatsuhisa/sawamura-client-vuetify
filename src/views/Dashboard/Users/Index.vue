@@ -5,7 +5,9 @@
         <v-tabs
           bg-color="transparent"
           :model-value="tab"
-          @update:model-value="(value:any) => router.push({ name: value as string })"
+          @update:model-value="
+            (value: any) => router.push({ name: value as string })
+          "
           grow
         >
           <v-tab v-for="tab in tabs" :key="tab.title" :value="tab.name">
@@ -16,7 +18,9 @@
 
         <v-window
           :model-value="tab"
-          @update:model-value="(value:any) => router.push({ name: value as string })"
+          @update:model-value="
+            (value: any) => router.push({ name: value as string })
+          "
         >
           <v-window-item :value="tabs.Information.name">
             <v-user-view />

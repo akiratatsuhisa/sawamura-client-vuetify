@@ -19,7 +19,8 @@
 
     <v-autocomplete
       class="mt-3"
-      v-model="v$.members.$model"
+      multiple
+      v-model="form.members"
       v-model:search="userSearch"
       :loading="isLoadingSearch"
       variant="outlined"
@@ -31,7 +32,6 @@
       hide-no-data
       :error-messages="getErrorMessage(v$.members)"
       @blur="v$.members.$validate"
-      multiple
     >
       <template v-slot:chip="{ props, item }">
         <v-chip v-bind="props" :text="item.raw.username"></v-chip>
@@ -136,7 +136,7 @@ const excuteSearchUsersDebounce = useDebounceFn(
     usersResult.value = await excuteSearchUsers(params);
     isLoadingSearch.value = false;
   },
-  1000,
+  250,
 );
 
 watch(userSearch, (search) => {

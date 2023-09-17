@@ -251,8 +251,8 @@ const { isOverDropZone: isOverDropMessage } = useDropZone(
 
 const messageInput = ref('');
 const messageInputRef = ref<InstanceType<typeof VTextField>>();
-const messageTextAreaElement = computed(() =>
-  (messageInputRef.value?.$el as HTMLElement)?.querySelector('textarea'),
+const messageTextAreaElement = computed(
+  () => (messageInputRef.value?.$el as HTMLElement)?.querySelector('textarea'),
 );
 const isShowActions = computed(() => !_.trim(messageInput.value));
 

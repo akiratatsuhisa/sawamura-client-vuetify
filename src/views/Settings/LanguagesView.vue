@@ -13,7 +13,7 @@
     <v-row no-gutters class="ma-0 mt-3 mx-md-6">
       <v-col
         cols="12"
-        sm="4"
+        md="4"
         v-for="(detail, language, index) in languages"
         :key="language"
       >
@@ -23,8 +23,8 @@
             isActiveLanguage(language)
               ? 'bg-tertiary'
               : 'bg-tertiary-container',
-            index !== 0 ? 'ml-0 ml-sm-3' : 'ml-0',
-            index !== 0 ? 'mt-3 mt-sm-0' : 'mt-sm-0',
+            index !== 0 ? 'ml-0 ml-md-3' : 'ml-0',
+            index !== 0 ? 'mt-3 mt-md-0' : 'mt-md-0',
           ]"
           @click.stop.prevent="() => (selectedLanguage = language)"
         >

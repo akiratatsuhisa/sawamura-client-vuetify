@@ -68,8 +68,9 @@ export namespace Router {
     from: RouteLocationNormalized,
   ) {
     if (
-      !_.some(ExcludeBackRouteNames, (name) =>
-        from.name?.toString().startsWith(name),
+      !_.some(
+        ExcludeBackRouteNames,
+        (name) => from.name?.toString().startsWith(name),
       )
     ) {
       to.meta.backRoute = from;
