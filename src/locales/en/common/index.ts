@@ -15,6 +15,7 @@ export const common: LocaleCommon = {
     dark: 'Dark',
     coffee: 'Coffee',
   },
+  providers: { google: 'Google', github: 'Github' },
   languages: { en: 'English', ja: 'Japanese' },
   activeStates: {
     enable: 'Enable',

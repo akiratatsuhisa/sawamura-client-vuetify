@@ -88,6 +88,11 @@ const options = computed<ApexOptions>(() => ({
       },
     },
   },
+  dataLabels: {
+    style: {
+      colors: [theme.current.value.colors['on-surface']],
+    },
+  },
   stroke: {
     show: true,
     width: 1,
@@ -164,6 +169,7 @@ const { isActive, pause, resume } = useIntervalFn(
 .messages-chart {
   .apexcharts-menu {
     border: none !important;
+    border-radius: 8px !important;
     background-color: rgb(var(--v-theme-surface-container-high)) !important;
     color: rgb(var(--v-theme-on-surface)) !important;
 
@@ -174,6 +180,7 @@ const { isActive, pause, resume } = useIntervalFn(
 
   .apexcharts-tooltip {
     border: none !important;
+    border-radius: 8px !important;
     background-color: rgb(var(--v-theme-surface-container-high)) !important;
     color: rgb(var(--v-theme-on-surface)) !important;
 

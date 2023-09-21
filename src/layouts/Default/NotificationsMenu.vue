@@ -2,37 +2,35 @@
   <v-btn icon>
     <v-avatar color="primary" icon="mdi-bell" />
 
-    <v-base-menu :title="translate('title')">
-      <template #default="{ close, isMenu }">
-        <div v-if="isMenu">
-          <v-card-title>
-            {{ translate('title') }}
-          </v-card-title>
-          <v-divider />
-        </div>
-        <v-list
-          :max-height="$vuetify.display.mdAndUp ? 350 : undefined"
-          class="mb-4"
-        >
-          <v-notification-list-item
-            v-for="notification in notifications"
-            :key="notification.id"
-            :item="notification"
-            @update="(payload) => requestUpdateNotification(payload)"
-            @delete="(payload) => onRequestDeleteNotification(payload)"
-            @click="close"
+    <v-base-menu :title="translate('title')" #default="{ close, isMenu }">
+      <div v-if="isMenu">
+        <v-card-title>
+          {{ translate('title') }}
+        </v-card-title>
+        <v-divider />
+      </div>
+      <v-list
+        :max-height="$vuetify.display.mdAndUp ? 350 : undefined"
+        class="mb-4"
+      >
+        <v-notification-list-item
+          v-for="notification in notifications"
+          :key="notification.id"
+          :item="notification"
+          @update="(payload) => requestUpdateNotification(payload)"
+          @delete="(payload) => onRequestDeleteNotification(payload)"
+          @click="close"
+        />
+        <v-list-item v-intersect="onIntersect" class="text-center">
+          <v-btn
+            :loading="isLoading"
+            icon="mdi-arrow-down"
+            size="small"
+            variant="plain"
+            @click="fetchMoreNotifications"
           />
-          <v-list-item v-intersect="onIntersect" class="text-center">
-            <v-btn
-              :loading="isLoading"
-              icon="mdi-arrow-down"
-              size="small"
-              variant="plain"
-              @click="fetchMoreNotifications"
-            />
-          </v-list-item>
-        </v-list>
-      </template>
+        </v-list-item>
+      </v-list>
     </v-base-menu>
   </v-btn>
 </template>

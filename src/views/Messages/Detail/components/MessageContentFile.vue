@@ -1,65 +1,63 @@
 <template>
-  <v-hover>
-    <template v-slot:default="{ isHovering, props }">
-      <v-card
-        v-bind="props"
-        rounded="lg"
-        :elevation="isHovering ? 4 : 2"
-        class="flex-grow-0 flex-shrink-0"
-        :class="[fileType]"
+  <v-hover #default="{ isHovering, props }">
+    <v-card
+      v-bind="props"
+      rounded="lg"
+      :elevation="isHovering ? 4 : 2"
+      class="flex-grow-0 flex-shrink-0"
+      :class="[fileType]"
+    >
+      <div
+        v-if="isLoading"
+        class="h-100 px-2 d-flex justify-center align-center"
       >
-        <div
-          v-if="isLoading"
-          class="h-100 px-2 d-flex justify-center align-center"
-        >
-          <v-progress-linear
-            v-if="isAudios"
-            indeterminate
-            color="primary"
-          ></v-progress-linear>
-          <v-progress-circular
-            v-else
-            indeterminate
-            color="primary"
-          ></v-progress-circular>
-        </div>
-        <div
-          v-else-if="!isLoading && !fileSrc"
-          class="h-100 d-flex justify-center align-center"
-          :class="[
-            isCurrentUserMessage ? 'bg-tertiary' : 'bg-tertiary-container',
-          ]"
-        >
-          <v-icon :icon="notFoundIcon" size="32" />
-        </div>
-        <template v-else>
-          <v-message-content-image-file
-            v-if="isImages"
-            :file-src="fileSrc"
-            :is-hovering="isHovering"
-          />
+        <v-progress-linear
+          v-if="isAudios"
+          indeterminate
+          color="primary"
+        ></v-progress-linear>
+        <v-progress-circular
+          v-else
+          indeterminate
+          color="primary"
+        ></v-progress-circular>
+      </div>
+      <div
+        v-else-if="!isLoading && !fileSrc"
+        class="h-100 d-flex justify-center align-center"
+        :class="[
+          isCurrentUserMessage ? 'bg-tertiary' : 'bg-tertiary-container',
+        ]"
+      >
+        <v-icon :icon="notFoundIcon" size="32" />
+      </div>
+      <template v-else>
+        <v-message-content-image-file
+          v-if="isImages"
+          :file-src="fileSrc"
+          :is-hovering="isHovering"
+        />
 
-          <v-message-content-audio-file
-            v-else-if="type === 'Audios'"
-            :file-src="fileSrc"
-            :is-current-user-message="isCurrentUserMessage"
-          />
+        <v-message-content-audio-file
+          v-else-if="type === 'Audios'"
+          :file-src="fileSrc"
+          :is-current-user-message="isCurrentUserMessage"
+        />
 
-          <v-message-content-video-file
-            v-else-if="type === 'Videos'"
-            :file-src="fileSrc"
-          />
+        <v-message-content-video-file
+          v-else-if="type === 'Videos'"
+          :file-src="fileSrc"
+        />
 
-          <v-message-content-office-file
-            v-else
-            :isCurrentUserMessage="isCurrentUserMessage"
-            :file-name="file.name"
-            :file-src="fileSrc"
-            :is-hovering="isHovering"
-          />
-        </template>
-      </v-card>
-    </template>
+        <v-message-content-office-file
+          v-else
+          :isCurrentUserMessage="isCurrentUserMessage"
+          :file-name="file.name"
+          :file-src="fileSrc"
+          :is-hovering="isHovering"
+        />
+      </template>
+    </v-card>
   </v-hover>
 </template>
 

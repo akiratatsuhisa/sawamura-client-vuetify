@@ -13,7 +13,11 @@
       <v-hover #default="{ isHovering, props }">
         <v-btn
           height="36"
-          :variant="hasFollowing || isHovering ? 'flat' : 'outlined'"
+          :variant="
+            (hasFollowing && isHovering) || (!hasFollowing && !isHovering)
+              ? 'flat'
+              : 'outlined'
+          "
           :color="isHovering && hasFollowing ? 'error' : 'primary'"
           :loading="isLoadingChangeRelationship"
           @click="onChangeRelationship"

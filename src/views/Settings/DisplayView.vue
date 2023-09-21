@@ -42,7 +42,7 @@
 
       <div class="d-flex flex-column flex-sm-row mt-3">
         <v-menu :close-on-content-click="false" offset="16">
-          <template v-slot:activator="{ props }">
+          <template #activator="{ props }">
             <v-btn
               :loading="isLoadingTheme"
               v-bind="props"

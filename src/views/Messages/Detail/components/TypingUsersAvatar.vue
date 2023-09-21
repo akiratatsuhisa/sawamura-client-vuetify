@@ -1,6 +1,6 @@
 <template>
   <v-tooltip :text="name" location="top center">
-    <template v-slot:activator="{ props }">
+    <template #activator="{ props }">
       <v-avatar
         color="secondary-container"
         class="avatar"

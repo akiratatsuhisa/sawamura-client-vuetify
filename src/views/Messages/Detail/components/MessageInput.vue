@@ -34,7 +34,7 @@
         <template #prepend>
           <div class="mx-n3">
             <v-menu location="top left" :offset="24">
-              <template v-slot:activator="{ props }">
+              <template #activator="{ props }">
                 <v-btn
                   v-bind="props"
                   icon
@@ -54,7 +54,7 @@
                   :key="key"
                   @click="() => onClick()"
                 >
-                  <template v-slot:prepend>
+                  <template #prepend>
                     <v-icon :icon="icon" />
                   </template>
                   <v-list-item-title>{{ translate(title) }}</v-list-item-title>
@@ -79,10 +79,24 @@
         </template>
 
         <template #append-inner>
-          <v-icon
-            icon="mdi-emoticon-happy"
-            @click="emit('update:emojiPickerShow', !emojiPickerShow)"
-          />
+          <v-icon icon="mdi-emoticon-happy" class="cursor-pointer" />
+
+          <v-base-menu
+            ref="reactionMenuRef"
+            hide-topbar
+            width="auto"
+            location="top right"
+            offset="16"
+            #default="{ isDialog }"
+          >
+            <emoji-picker
+              :data="emojiIndex"
+              set="twitter"
+              class="rounded-xl elevation-2"
+              @select="selectEmoji"
+              :style="{ width: isDialog ? 'auto' : '350px' }"
+            />
+          </v-base-menu>
         </template>
 
         <template #append>
@@ -121,7 +135,12 @@
 </template>
 
 <script lang="ts" setup>
+import 'emoji-mart-vue-fast/css/emoji-mart.css';
+
 import { useDropZone } from '@vueuse/core';
+import data from 'emoji-mart-vue-fast/data/twitter.json';
+// @ts-ignore
+import { EmojiIndex, Picker as EmojiPicker } from 'emoji-mart-vue-fast/src';
 import _ from 'lodash';
 import { v4 as uuidv4 } from 'uuid';
 import {
@@ -135,6 +154,7 @@ import {
 } from 'vue';
 import { VTextField } from 'vuetify/components';
 
+import VBaseMenu from '@/components/VBaseMenu.vue';
 import { useOpenFileDialog, usePageLocale, useSnackbar } from '@/composables';
 import { KEYS, MESSAGE_FILE } from '@/constants';
 import { BinaryUnit, Format } from '@/helpers';
@@ -146,11 +166,8 @@ import {
 import VMessageInputFile from '@/views/Messages/Detail/components/MessageInputFile.vue';
 import VMessageInputRecord from '@/views/Messages/Detail/components/MessageInputRecord.vue';
 
-const props = defineProps<{ emojiPickerShow: boolean }>();
-
 const emit = defineEmits<{
   (event: 'send', payload: ICreateRoomMessageRequest): void;
-  (event: 'update:emojiPickerShow', payload: boolean): void;
   (event: 'gotoLastMessage'): void;
   (event: 'typing', payload: KeyboardEvent): void;
 }>();
@@ -218,13 +235,6 @@ function selectFiles(files?: FileList | File[] | null) {
   _.forEach(files, pushFile);
 }
 
-function onTyping(event: KeyboardEvent) {
-  emit('typing', event);
-  if (props.emojiPickerShow) {
-    emit('update:emojiPickerShow', false);
-  }
-}
-
 function pasteMessage(event: ClipboardEvent) {
   const clipboardData = event.clipboardData!;
 
@@ -256,9 +266,13 @@ const messageTextAreaElement = computed(
 );
 const isShowActions = computed(() => !_.trim(messageInput.value));
 
+const emojiIndex = new EmojiIndex(data);
+const reactionMenuRef = ref<InstanceType<typeof VBaseMenu>>();
 const reactionIcon = inject(KEYS.CHAT.REACTION_ICON)!;
 
-async function selectEmoji(emoji: string) {
+async function selectEmoji(params: { native: string }) {
+  const emoji = params.native;
+
   messageInput.value =
     messageInput.value.substring(
       0,
@@ -378,6 +392,11 @@ const actions = shallowRef<Array<ActionType>>([
   },
 ]);
 
+function onTyping(event: KeyboardEvent) {
+  emit('typing', event);
+  reactionMenuRef.value?.close();
+}
+
 const menuActions = computed<Array<ActionType>>(() => [
   {
     key: 'sendFiles',
@@ -387,10 +406,6 @@ const menuActions = computed<Array<ActionType>>(() => [
   },
   ...(!isShowActions.value ? actions.value : []),
 ]);
-
-defineExpose({
-  selectEmoji,
-});
 </script>
 
 <style lang="scss" scoped>

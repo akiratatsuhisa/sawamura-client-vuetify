@@ -15,7 +15,7 @@
       :text="timeAgo"
       :location="isCurrentUserMessage ? 'left center' : 'right center'"
     >
-      <template v-slot:activator="{ props: tooltipProps }">
+      <template #activator="{ props: tooltipProps }">
         <div class="px-2 flex-shrink-1" v-bind="tooltipProps">
           <v-card
             v-if="isStringType"
@@ -77,7 +77,7 @@
       v-if="isMessageRemoveable"
       :location="isCurrentUserMessage ? 'left center' : 'right center'"
     >
-      <template v-slot:activator="{ props }">
+      <template #activator="{ props }">
         <v-btn
           class="align-self-center"
           icon="mdi-dots-vertical"

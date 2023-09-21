@@ -53,23 +53,9 @@
         ></v-btn>
       </v-fab-transition>
     </v-sheet>
-
-    <emoji-picker
-      :data="emojiIndex"
-      set="twitter"
-      class="ma-2 position-absolute rounded-xl elevation-2"
-      :class="{ 'd-none': !emojiPickerShow }"
-      :style="{
-        right: $vuetify.display.mdAndUp ? '3.5rem' : '0',
-        bottom: '0',
-      }"
-      @select="selectEmoji"
-    />
   </v-sheet>
 
   <v-message-input
-    ref="messageInputRef"
-    v-model:emoji-picker-show="emojiPickerShow"
     @send="onSendMessage"
     @goto-last-message="gotoLastMessage"
     @typing="onTyping"
@@ -79,12 +65,7 @@
 </template>
 
 <script lang="ts" setup>
-import 'emoji-mart-vue-fast/css/emoji-mart.css';
-
 import { useScroll } from '@vueuse/core';
-import data from 'emoji-mart-vue-fast/data/twitter.json';
-// @ts-ignore
-import { EmojiIndex, Picker as EmojiPicker } from 'emoji-mart-vue-fast/src';
 import findIndex from 'lodash/findIndex';
 import uniqBy from 'lodash/uniqBy';
 import {
@@ -200,14 +181,6 @@ const { onIntersect } = useFetchIntersection({
   isLoading,
   isAllLoaded: isAllMessagesLoaded,
 });
-
-const messageInputRef = ref<InstanceType<typeof VMessageInput>>();
-const emojiIndex = new EmojiIndex(data);
-const emojiPickerShow = ref(false);
-
-async function selectEmoji(params: { native: string }) {
-  messageInputRef.value?.selectEmoji(params.native);
-}
 
 function createMessage(data: IRoomMessageResponse) {
   if (data.room.id !== room.value?.id) {

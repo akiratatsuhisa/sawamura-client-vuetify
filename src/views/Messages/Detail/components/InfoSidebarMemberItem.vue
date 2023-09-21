@@ -28,7 +28,7 @@
 
     <template #append>
       <v-menu>
-        <template v-slot:activator="{ props }">
+        <template #activator="{ props }">
           <v-btn
             class="align-self-center"
             icon="mdi-dots-vertical"

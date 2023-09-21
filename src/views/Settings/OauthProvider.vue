@@ -10,7 +10,7 @@
         <template #prepend>
           <v-avatar :image="detail.image" size="24" rounded="0" />
         </template>
-        <template #title>{{ detail.name }}</template>
+        <template #title>{{ $t(`common.providers.${detail.name}`) }}</template>
         <template #subtitle>
           <div
             v-if="isProviderLinked(provider)"

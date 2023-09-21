@@ -9,6 +9,7 @@ export type LocaleCommon = {
     generateTheme: string;
   };
   themes: { light: string; dark: string; coffee: string };
+  providers: { google: string; github: string };
   languages: { en: string; ja: string };
   activeStates: {
     enable: string;

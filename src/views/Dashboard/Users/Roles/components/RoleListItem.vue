@@ -11,7 +11,7 @@
         :text="translate('actions.default')"
         content-class="elevation-2"
       >
-        <template v-slot:activator="{ props }">
+        <template #activator="{ props }">
           <v-btn
             icon="mdi-shield-lock-outline"
             variant="plain"
@@ -20,7 +20,7 @@
         </template>
       </v-tooltip>
       <v-menu v-else location="start bottom">
-        <template v-slot:activator="{ props }">
+        <template #activator="{ props }">
           <v-btn
             icon="mdi-dots-vertical"
             variant="plain"

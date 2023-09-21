@@ -1,18 +1,16 @@
 <template>
   <v-navigation-drawer v-if="$vuetify.display.mdAndUp" permanent width="340">
     <template #prepend>
-      <v-hover>
-        <template #default="{ isHovering, props }">
-          <v-card-title
-            tag="h1"
-            class="cursor-pointer py-2"
-            :class="{ 'text-primary': isHovering }"
-            @click="$router.push({ name: 'Messages' })"
-            v-bind="props"
-          >
-            {{ translate('subtitle') }}
-          </v-card-title>
-        </template>
+      <v-hover #default="{ isHovering, props }">
+        <v-card-title
+          tag="h1"
+          class="cursor-pointer py-2"
+          :class="{ 'text-primary': isHovering }"
+          @click="$router.push({ name: 'Messages' })"
+          v-bind="props"
+        >
+          {{ translate('subtitle') }}
+        </v-card-title>
       </v-hover>
 
       <div class="position-relative px-3 py-3">

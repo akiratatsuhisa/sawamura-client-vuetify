@@ -9,17 +9,9 @@
       tag="form"
       :rounded="fullscreen ? '0' : 'xl'"
       @submit.prevent="emit('submit')"
-      :class="[
-        fullscreen ? 'bg-surface' : 'bg-surface-container-high',
-        'text-on-surface',
-      ]"
+      class="bg-surface"
     >
-      <v-toolbar
-        :class="[
-          fullscreen ? 'bg-surface' : 'bg-surface-container-high',
-          'text-on-surface',
-        ]"
-      >
+      <v-toolbar class="bg-surface">
         <v-app-bar-nav-icon
           :icon="fullscreen ? 'mdi-arrow-left' : 'mdi-close'"
           @click="emit('update:modelValue', false)"

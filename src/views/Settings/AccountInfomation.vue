@@ -12,7 +12,7 @@
   </span>
 
   <div
-    class="d-flex flex-column flex-md-row justify-space-around justify-md-space-between py-2 align-stretch align-md-center"
+    class="d-flex flex-column flex-md-row justify-space-around justify-md-space-between align-stretch align-md-center"
   >
     <v-list-item class="pa-0" lines="three">
       <template #prepend>

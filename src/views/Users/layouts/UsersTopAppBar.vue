@@ -4,7 +4,7 @@
     class="bg-surface-container text-on-surface"
     :image="appBarImage"
   >
-    <template v-slot:image>
+    <template #image>
       <v-img
         v-if="$vuetify.display.xs && isTopbarElevation"
         gradient="to top right, rgba(var(--v-theme-surface-container),.5), rgba(var(--v-theme-surface-container),.9)"

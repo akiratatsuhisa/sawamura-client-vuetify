@@ -11,7 +11,7 @@
 
     <div class="d-flex mb-12 flex-column flex-md-row">
       <v-menu :close-on-content-click="false" offset="16">
-        <template v-slot:activator="{ props }">
+        <template #activator="{ props }">
           <v-btn
             v-bind="props"
             variant="flat"

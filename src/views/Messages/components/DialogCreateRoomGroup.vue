@@ -33,11 +33,11 @@
       :error-messages="getErrorMessage(v$.members)"
       @blur="v$.members.$validate"
     >
-      <template v-slot:chip="{ props, item }">
+      <template #chip="{ props, item }">
         <v-chip v-bind="props" :text="item.raw.username"></v-chip>
       </template>
 
-      <template v-slot:item="{ props, item }">
+      <template #item="{ props, item }">
         <v-list-item v-bind="props" :title="item?.raw?.username"></v-list-item>
       </template>
     </v-autocomplete>

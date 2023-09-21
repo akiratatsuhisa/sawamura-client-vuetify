@@ -151,13 +151,13 @@ const [v$, { handleSubmit }] = useVuelidate<
   {
     username: {
       required: required(pathFormField('username')),
-      minLength: minLength(pathFormField('username'), 3),
-      maxLength: maxLength(pathFormField('username'), 255),
+      minLength: minLength(pathFormField('username'), 4),
+      maxLength: maxLength(pathFormField('username'), 16),
       regex: regex(pathFormField('username'), AUTH_REGEX.USERNAME),
     },
     displayName: {
       required: required(pathFormField('displayName')),
-      maxLength: maxLength(pathFormField('displayName'), 128),
+      maxLength: maxLength(pathFormField('displayName'), 64),
     },
     email: { email, maxLength: maxLength(pathFormField('email'), 255) },
     password: {

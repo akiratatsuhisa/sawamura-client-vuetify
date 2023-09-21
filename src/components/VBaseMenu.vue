@@ -77,4 +77,6 @@ const isDialog = computed(() => display.smAndDown.value);
 function close() {
   model.value = false;
 }
+
+defineExpose({ close });
 </script>

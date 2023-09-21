@@ -106,7 +106,7 @@
                     ></v-avatar>
                   </v-avatar>
                 </template>
-                {{ detail.name }}
+                {{ $t(`common.providers.${detail.name}`) }}
               </v-btn>
             </div>
           </v-card-text>

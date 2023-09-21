@@ -8,7 +8,7 @@
   >
     <template #prepend>
       <v-list-item v-if="$vuetify.display.xs" nav>
-        <template v-slot:prepend>
+        <template #prepend>
           <v-btn
             variant="text"
             icon="mdi-menu-open"

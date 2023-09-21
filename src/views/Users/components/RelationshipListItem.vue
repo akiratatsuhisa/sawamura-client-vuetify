@@ -24,7 +24,7 @@
 
       <v-btn
         v-if="state !== 'none'"
-        :variant="state === 'following' ? 'flat' : 'outlined'"
+        :variant="state === 'following' ? 'outlined' : 'flat'"
         :loading="isLoading"
         class="flex-grow-0 flex-shrink-0 ml-2"
         @click.prevent="onChangeRelationship"

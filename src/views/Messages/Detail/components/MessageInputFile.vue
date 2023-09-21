@@ -1,50 +1,48 @@
 <template>
-  <v-hover :key="file.id">
-    <template v-slot:default="{ isHovering, props }">
-      <v-badge v-bind="props" color="primary" class="cursor-pointer">
-        <template #badge>
-          <v-icon icon="mdi-close" @click="emit('removeFile', file.id)" />
+  <v-hover :key="file.id" #default="{ isHovering, props }">
+    <v-badge v-bind="props" color="primary" class="cursor-pointer">
+      <template #badge>
+        <v-icon icon="mdi-close" @click="emit('removeFile', file.id)" />
+      </template>
+
+      <v-card
+        class="flex-grow-0 flex-shrink-0"
+        :class="'file-' + file.type"
+        :elevation="isHovering ? 4 : 2"
+        rounded="lg"
+        v-bind="props"
+      >
+        <template v-if="isImages">
+          <img :src="file.src" class="d-block" />
         </template>
 
-        <v-card
-          class="flex-grow-0 flex-shrink-0"
-          :class="'file-' + file.type"
-          :elevation="isHovering ? 4 : 2"
-          rounded="lg"
-          v-bind="props"
-        >
-          <template v-if="isImages">
-            <img :src="file.src" class="d-block" />
-          </template>
-
-          <template v-else>
-            <div
-              class="h-100 d-flex flex-column flex-nowrap bg-surface-container-highest"
-            >
-              <div class="h-100 d-flex justify-center align-center">
-                <v-avatar color="secondary" size="large">
-                  <v-icon color="on-secondary" :icon="icon" size="large" />
-                </v-avatar>
-              </div>
-              <div class="px-2 pb-2 text-truncate">
-                {{ file.file.name }}
-              </div>
-            </div>
-          </template>
-
-          <v-overlay
-            :model-value="isHovering && isImages"
-            contained
-            class="align-center justify-center cursor-pointer"
-            @click="selectMessageImageSrc(file.src)"
+        <template v-else>
+          <div
+            class="h-100 d-flex flex-column flex-nowrap bg-surface-container-highest"
           >
-            <v-avatar color="secondary">
-              <v-icon icon="mdi-image"></v-icon>
-            </v-avatar>
-          </v-overlay>
-        </v-card>
-      </v-badge>
-    </template>
+            <div class="h-100 d-flex justify-center align-center">
+              <v-avatar color="secondary" size="large">
+                <v-icon color="on-secondary" :icon="icon" size="large" />
+              </v-avatar>
+            </div>
+            <div class="px-2 pb-2 text-truncate">
+              {{ file.file.name }}
+            </div>
+          </div>
+        </template>
+
+        <v-overlay
+          :model-value="isHovering && isImages"
+          contained
+          class="align-center justify-center cursor-pointer"
+          @click="selectMessageImageSrc(file.src)"
+        >
+          <v-avatar color="secondary">
+            <v-icon icon="mdi-image"></v-icon>
+          </v-avatar>
+        </v-overlay>
+      </v-card>
+    </v-badge>
   </v-hover>
 </template>
 

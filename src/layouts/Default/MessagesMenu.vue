@@ -2,34 +2,32 @@
   <v-btn icon>
     <v-avatar color="primary" icon="mdi-forum" />
 
-    <v-base-menu :title="translate('title')">
-      <template #default="{ isMenu }">
-        <div v-if="isMenu">
-          <v-card-title>
-            {{ translate('title') }}
-          </v-card-title>
-          <v-divider />
-        </div>
-        <v-list
-          :max-height="$vuetify.display.mdAndUp ? 350 : undefined"
-          class="mb-4"
-        >
-          <v-message-list-item
-            v-for="room in rooms"
-            :key="room.id"
-            :room="room"
+    <v-base-menu :title="translate('title')" #default="{ isMenu }">
+      <div v-if="isMenu">
+        <v-card-title>
+          {{ translate('title') }}
+        </v-card-title>
+        <v-divider />
+      </div>
+      <v-list
+        :max-height="$vuetify.display.mdAndUp ? 350 : undefined"
+        class="mb-4"
+      >
+        <v-message-list-item
+          v-for="room in rooms"
+          :key="room.id"
+          :room="room"
+        />
+        <v-list-item v-intersect="onIntersect" class="text-center">
+          <v-btn
+            :loading="isLoadingRooms"
+            icon="mdi-arrow-down"
+            size="small"
+            variant="plain"
+            @click="fetchMore"
           />
-          <v-list-item v-intersect="onIntersect" class="text-center">
-            <v-btn
-              :loading="isLoadingRooms"
-              icon="mdi-arrow-down"
-              size="small"
-              variant="plain"
-              @click="fetchMore"
-            />
-          </v-list-item>
-        </v-list>
-      </template>
+        </v-list-item>
+      </v-list>
     </v-base-menu>
   </v-btn>
 </template>

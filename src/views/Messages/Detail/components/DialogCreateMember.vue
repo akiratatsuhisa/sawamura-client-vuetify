@@ -23,7 +23,7 @@
       :error-messages="getErrorMessage(v$.member)"
       @blur="v$.member.$validate"
     >
-      <template v-slot:item="{ props, item }">
+      <template #item="{ props, item }">
         <v-list-item v-bind="props" :title="item?.raw?.username"></v-list-item>
       </template>
     </v-autocomplete>

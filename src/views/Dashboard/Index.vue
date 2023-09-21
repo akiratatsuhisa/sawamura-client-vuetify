@@ -30,12 +30,11 @@
               :max="statisticalData.dropbox.max as number"
               rounded="pill"
               class="my-auto"
+              #default="{ value }"
             >
-              <template v-slot:default="{ value }">
-                <strong class="text-black text-overline">
-                  {{ value.toFixed(2) }} %
-                </strong>
-              </template>
+              <strong class="text-black text-overline">
+                {{ value.toFixed(2) }} %
+              </strong>
             </v-progress-linear>
             <span class="text-caption text-end"
               >{{
@@ -61,12 +60,11 @@
               :max="statisticalData.cache.max as number"
               rounded="pill"
               class="my-auto"
+              #default="{ value }"
             >
-              <template v-slot:default="{ value }">
-                <strong class="text-black text-overline">
-                  {{ value.toFixed(4) }} %
-                </strong>
-              </template>
+              <strong class="text-black text-overline">
+                {{ value.toFixed(4) }} %
+              </strong>
             </v-progress-linear>
             <span class="text-caption text-end">
               {{
