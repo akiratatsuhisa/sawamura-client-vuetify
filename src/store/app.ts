@@ -3,13 +3,15 @@ import { defineStore } from 'pinia';
 import { computed, ref } from 'vue';
 import { RouteLocationNamedRaw, useRoute, useRouter } from 'vue-router';
 
-import { useAuth } from '@/composables';
+import { IUseNavigationRailFabProps, useAuth } from '@/composables';
 import { INavigationMenuItem } from '@/interfaces';
 
 export const useAppStore = defineStore('app', () => {
   const router = useRouter();
   const route = useRoute();
   const { user } = useAuth();
+
+  const navigationRailFabProps = ref<IUseNavigationRailFabProps>();
 
   const drawer = ref<boolean>(false);
 
@@ -94,7 +96,23 @@ export const useAppStore = defineStore('app', () => {
       : [];
   });
 
-  const isDrawerOpen = drawer.value && subNavigationItems.value.length;
+  function isNavigationActive(
+    item: RouteLocationNamedRaw,
+    prefix: boolean = false,
+  ) {
+    if (!route.name || !item.name) {
+      return false;
+    }
+
+    const routeName = route.name.toString();
+    const itemName = item.name.toString();
+
+    return prefix
+      ? routeName.startsWith(itemName)
+      : _.isEmpty(route.params)
+      ? routeName === itemName
+      : routeName === itemName && _.isEqual(route.params, item.params);
+  }
 
   function handleNavigationSelect(
     event: { id: unknown; value: boolean; path: unknown[] },
@@ -114,30 +132,12 @@ export const useAppStore = defineStore('app', () => {
     router.push(routeLocation);
   }
 
-  function isNavigationActive(
-    item: RouteLocationNamedRaw,
-    prefix: boolean = false,
-  ) {
-    if (!route.name || !item.name) {
-      return false;
-    }
-
-    const routeName = route.name.toString();
-    const itemName = item.name.toString();
-
-    return prefix
-      ? routeName.startsWith(itemName)
-      : _.isEmpty(route.params)
-      ? routeName === itemName
-      : routeName === itemName && _.isEqual(route.params, item.params);
-  }
-
   return {
-    mainNavigationItems,
+    navigationRailFabProps,
     drawer,
-    isDrawerOpen,
-    handleNavigationSelect,
-    isNavigationActive,
+    mainNavigationItems,
     subNavigationItems,
+    isNavigationActive,
+    handleNavigationSelect,
   };
 });

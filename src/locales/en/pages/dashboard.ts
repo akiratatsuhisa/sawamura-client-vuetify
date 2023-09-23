@@ -57,7 +57,6 @@ export const dashboard: LocalePagesDashboard = {
     changeRoles: {
       title: 'Change User Roles',
       subtitle: 'Role List',
-      message: "User {username}'s role change was successful",
       form: {
         submit: 'Change',
       },
@@ -75,11 +74,6 @@ export const dashboard: LocalePagesDashboard = {
         create: 'Create',
         update: 'Update',
         delete: 'Delete',
-      },
-      messages: {
-        create: 'Create Role Completed',
-        update: 'Update Role Completed',
-        delete: 'Delete Role Completed',
       },
       create: {
         title: 'Role @:pages.dashboard.users.roles.actions.create',

@@ -73,7 +73,12 @@
                 :value="key"
                 class=""
               >
-                <v-sheet class="bg-transparent rounded-0">
+                <v-sheet
+                  class="bg-transparent rounded-0"
+                  :min-height="
+                    $vuetify.display.xs ? windowHeight - 114 : undefined
+                  "
+                >
                   <component v-if="isActiveTab(key)" :is="detail.component" />
                 </v-sheet>
               </v-window-item>
@@ -93,7 +98,7 @@
 </template>
 
 <script lang="ts" setup>
-import { useStyleTag, useWindowScroll } from '@vueuse/core';
+import { useStyleTag, useWindowScroll, useWindowSize } from '@vueuse/core';
 import { storeToRefs } from 'pinia';
 import { computed, defineAsyncComponent, h, watch } from 'vue';
 import { useRoute } from 'vue-router';
@@ -108,6 +113,7 @@ const VTrends = defineAsyncComponent(
   () => import('@/views/Users/components/Trends.vue'),
 );
 
+const { height: windowHeight } = useWindowSize();
 const { y: threshold } = useWindowScroll();
 
 const profileUserStore = useProfileUserStore();
@@ -125,17 +131,26 @@ const tabs: ProfileUserRelationshipTabs = {
   'followers-you-follow': {
     name: 'followersYouFollow',
     icon: 'mdi-account-filter-outline',
-    component: h(VRelationshipList, { type: 'followers-you-follow' }),
+    component: h(VRelationshipList, {
+      name: 'followersYouFollow',
+      type: 'followers-you-follow',
+    }),
   },
   followers: {
     name: 'followers',
     icon: 'mdi-account-heart-outline',
-    component: h(VRelationshipList, { type: 'followers' }),
+    component: h(VRelationshipList, {
+      name: 'followers',
+      type: 'followers',
+    }),
   },
   following: {
     name: 'following',
     icon: 'mdi-account-eye-outline',
-    component: h(VRelationshipList, { type: 'following' }),
+    component: h(VRelationshipList, {
+      name: 'following',
+      type: 'following',
+    }),
   },
 };
 

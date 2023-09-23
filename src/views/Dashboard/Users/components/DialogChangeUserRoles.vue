@@ -1,6 +1,6 @@
 <template>
   <v-base-dialog
-    mobile-width="500"
+    desktop-width="500"
     :model-value="modelValue"
     :disabled-submit="isLoading"
     @update:model-value="emit('update:modelValue', $event)"
@@ -124,9 +124,10 @@ async function onOpen() {
 
 const { excute: requestChangeRoles, isLoading: isLoadingChangeRoles } =
   useAxios(services.users, 'changeRoles', {
-    message: computed(() =>
-      translate('message', { username: user.value?.username ?? '' }),
-    ),
+    translateMessage: 'success.changeUserRoles',
+    translateMessageParams: computed(() => ({
+      username: user.value?.username ?? '',
+    })),
   });
 
 async function onSubmit() {

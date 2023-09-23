@@ -43,7 +43,7 @@
 import { useLocalStorage, useStyleTag } from '@vueuse/core';
 import { computed, provide, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import { useDisplay } from 'vuetify/lib/framework.mjs';
+import { useDisplay } from 'vuetify';
 
 import { useRoom, useSocketChat, useSocketEventListener } from '@/composables';
 import { KEYS } from '@/constants';

@@ -10,6 +10,7 @@ import VueApexCharts from 'vue3-apexcharts';
 
 import VBaseDialog from '@/components/VBaseDialog.vue';
 import VBaseMenu from '@/components/VBaseMenu.vue';
+import VFloatingActionButton from '@/components/VFloatingActionButton.vue';
 import i18n from '@/locales';
 import axios from '@/plugins/axios';
 import notification from '@/plugins/notification';
@@ -33,4 +34,5 @@ export function registerPlugins(app: App) {
 
   app.component('VBaseDialog', VBaseDialog);
   app.component('VBaseMenu', VBaseMenu);
+  app.component('VFloatingActionButton', VFloatingActionButton);
 }

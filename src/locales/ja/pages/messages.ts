@@ -36,8 +36,6 @@ export const messages: LocalePagesMessages = {
         captureVideo: '動画を撮影',
         sendAudio: '音声録音を送信',
       },
-      unsupportedFileType: 'サポートされていないファイル形式',
-      fileExceededLimit: 'ファイルは${size}制限を超えています',
     },
     menus: {
       basicsInformation: {

@@ -1,5 +1,6 @@
 import { LocaleCommon } from '@/locales/type/common';
 
+import { messages } from './messages';
 import { user } from './user';
 
 export const common: LocaleCommon = {
@@ -8,7 +9,7 @@ export const common: LocaleCommon = {
   },
   theme: {
     chooseImage: 'Choose image',
-    generateTheme: 'Generate theme from uploaded image',
+    generateTheme: 'Generate theme',
   },
   themes: {
     light: 'Light',
@@ -55,4 +56,5 @@ export const common: LocaleCommon = {
     showing: 'Showing {from} to {to} of {totalCount} records',
   },
   user,
+  messages,
 };

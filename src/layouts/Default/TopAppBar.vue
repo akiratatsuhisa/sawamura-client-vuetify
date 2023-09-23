@@ -17,8 +17,6 @@
       {{ $t('common.app.title') }}
     </v-app-bar-title>
 
-    <v-notifications-menu />
-
     <v-messages-menu />
 
     <v-profile-menu />
@@ -29,7 +27,6 @@
 import { storeToRefs } from 'pinia';
 
 import VMessagesMenu from '@/layouts/Default/MessagesMenu.vue';
-import VNotificationsMenu from '@/layouts/Default/NotificationsMenu.vue';
 import VProfileMenu from '@/layouts/Default/ProfileMenu.vue';
 import { useAppStore } from '@/store';
 

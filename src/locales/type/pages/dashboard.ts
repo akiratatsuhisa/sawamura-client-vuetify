@@ -50,7 +50,6 @@ export type LocalePagesDashboard = {
       /**
        * @param {string} username
        */
-      message: string;
       form: {
         submit: string;
       };
@@ -68,11 +67,6 @@ export type LocalePagesDashboard = {
       subtitle: string;
       actions: {
         default: string;
-        create: string;
-        update: string;
-        delete: string;
-      };
-      messages: {
         create: string;
         update: string;
         delete: string;

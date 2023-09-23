@@ -57,7 +57,6 @@ export const dashboard: LocalePagesDashboard = {
     changeRoles: {
       title: 'ユーザー権限を変更',
       subtitle: '権限リスト',
-      message: 'ユーザー{username}の権限変更が成功しました',
       form: {
         submit: '変更',
       },
@@ -82,11 +81,6 @@ export const dashboard: LocalePagesDashboard = {
           name: { label: '権限名' },
           submit: '@:pages.dashboard.users.roles.actions.create',
         },
-      },
-      messages: {
-        create: '権限の登録が完了しました',
-        update: '権限の編集が完了しました',
-        delete: '権限の削除が完了しました',
       },
       update: {
         title: '権限@:pages.dashboard.users.roles.actions.update',

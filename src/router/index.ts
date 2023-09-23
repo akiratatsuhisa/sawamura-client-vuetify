@@ -2,8 +2,12 @@ import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router';
 
 import { useAuth } from '@/composables';
 import VBottomAppBar from '@/layouts/Default/BottomAppBar.vue';
+import VDefaultLayout from '@/layouts/Default/Index.vue';
 import VLeftAppBar from '@/layouts/Default/LeftAppBar.vue';
 import VTopAppBar from '@/layouts/Default/TopAppBar.vue';
+import VHome from '@/views/Home/Index.vue';
+import VSearch from '@/views/Search/Index.vue';
+import VSearchTopAppBar from '@/views/Search/layouts/SearchTopAppBar.vue';
 
 import authRoutes, { defaultAuthRoutes } from './auth';
 import { defaultCommonRoutes } from './common';
@@ -15,7 +19,7 @@ import usersRoutes from './users';
 const routes: Array<RouteRecordRaw> = [
   {
     path: '/',
-    component: () => import('@/layouts/Default/Index.vue'),
+    component: VDefaultLayout,
     children: [
       {
         path: '',
@@ -25,7 +29,15 @@ const routes: Array<RouteRecordRaw> = [
           left: VLeftAppBar,
           top: VTopAppBar,
           bottom: VBottomAppBar,
-          default: () => import('@/views/Home/Index.vue'),
+          default: VHome,
+        },
+      },
+      {
+        path: '/compose/whinny',
+        name: 'Compose:Whinny',
+        meta: { requiresAuth: true },
+        components: {
+          default: () => import('@/views/Compose/Whinny/Index.vue'),
         },
       },
       {
@@ -34,9 +46,9 @@ const routes: Array<RouteRecordRaw> = [
         meta: { requiresAuth: true },
         components: {
           left: VLeftAppBar,
-          top: VTopAppBar,
+          top: VSearchTopAppBar,
           bottom: VBottomAppBar,
-          default: () => import('@/views/Search/Index.vue'),
+          default: VSearch,
         },
       },
       ...messagesRoutes,

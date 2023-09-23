@@ -20,7 +20,7 @@ import { services } from '@/services';
 
 export const useRoomsStore = defineStore('rooms', () => {
   const socket = useSocketChat();
-  const { createSnackbarError } = useSnackbar();
+  const { createSnackbarByException } = useSnackbar();
 
   const isRoomsAllLoaded = ref<boolean>(false);
   const rooms = ref<Array<IRoomResponse>>([]);
@@ -38,9 +38,7 @@ export const useRoomsStore = defineStore('rooms', () => {
         isRoomsAllLoaded.value = false;
         rooms.value = _.uniqBy([...rooms.value, ...data], (room) => room.id);
       },
-      exception(error) {
-        createSnackbarError(error.message);
-      },
+      exception: createSnackbarByException,
     });
 
   const requestRoomsThrottle = useThrottleFn(requestRooms, 500);

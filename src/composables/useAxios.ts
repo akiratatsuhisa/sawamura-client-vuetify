@@ -8,14 +8,18 @@ import axios, {
 } from 'axios';
 import { Component, ref, unref } from 'vue';
 
-import { useAuth, useSnackbar } from '@/composables';
+import { useAuth, useLayoutLocale, useSnackbar } from '@/composables';
 import { IExceptionResponseDetail } from '@/interfaces';
 import { config, Service } from '@/services';
 
 export type UseAxiosOptions<T> = {
   unauth?: boolean;
+
+  displayMessageFromResponse?: boolean;
+  displayMessageFromException?: boolean;
+  translateMessage?: MaybeRef<string>;
+  translateMessageParams?: MaybeRef<Record<string, any> | Array<any>>;
   message?: MaybeRef<Component | string>;
-  throwErrorMessage?: boolean;
 } & (
   | {
       immediate: true;
@@ -37,11 +41,19 @@ export function useAxios<
   type Req = Parameters<S[A]>['1'];
   type Res = Awaited<ReturnType<S[A]>>['data'];
 
-  const { unauth, message, throwErrorMessage = true } = options ?? {};
+  const {
+    unauth,
+    displayMessageFromResponse = false,
+    displayMessageFromException = true,
+    translateMessage,
+    translateMessageParams,
+    message,
+  } = options ?? {};
 
   const { getAccessTokenSilently } = useAuth();
 
-  const { createSnackbarSuccess, createSnackbarError } = useSnackbar();
+  const { t } = useLayoutLocale({ prefix: 'default' });
+  const { createSnackbar, createSnackbarSuccess } = useSnackbar();
 
   const axiosInstacne = axios.create(config);
 
@@ -87,15 +99,36 @@ export function useAxios<
       headers.value = response.headers;
       error.value = undefined;
 
-      const content = unref(message);
-      if (content) {
-        createSnackbarSuccess(content);
+      const unwrapTranslateMessage = unref(translateMessage);
+      const unwrapMessage = unref(message);
+
+      if (
+        displayMessageFromResponse &&
+        typeof response.data.message === 'string'
+      ) {
+        const { message, params } = response.data;
+
+        createSnackbar(t(`common.messages.${message}`, params as any), {
+          isOnce: true,
+          color: message.split('.')[0],
+        });
+      } else if (unwrapTranslateMessage) {
+        const unwrapTranslateParams = unref(translateMessageParams);
+
+        createSnackbar(
+          t(
+            `common.messages.${unwrapTranslateMessage}`,
+            unwrapTranslateParams as any,
+          ),
+          { isOnce: true, color: unwrapTranslateMessage.split('.')[0] },
+        );
+      } else if (unwrapMessage) {
+        createSnackbarSuccess(unwrapMessage);
       }
 
       return response.data;
     } catch (exception: unknown) {
       percent.value = undefined;
-
       data.value = undefined;
       if (isAxiosError(exception)) {
         error.value = exception.response?.data as IExceptionResponseDetail;
@@ -105,8 +138,12 @@ export function useAxios<
         headers.value = new AxiosHeaders();
       }
 
-      if (throwErrorMessage && error.value?.message) {
-        createSnackbarError(error.value.message);
+      if (displayMessageFromException && error.value?.message) {
+        const params = error.value.params;
+        createSnackbar(
+          t(`common.messages.${error.value.message}`, params as any),
+          { isOnce: true, color: error.value.message.split('.')[0] },
+        );
       }
 
       throw exception;

@@ -282,7 +282,7 @@ const drawer = computed({
 const router = useRouter();
 
 const { identityId } = useAuth();
-const { createSnackbarError } = useSnackbar();
+const { createSnackbarByException } = useSnackbar();
 
 const room = inject(KEYS.CHAT.ROOM)!;
 const {
@@ -363,7 +363,7 @@ const { request: requestUpdateRoom, isLoading: isLoadingUpdateRoom } =
           return;
         }
 
-        createSnackbarError(error.message);
+        createSnackbarByException(error);
       },
     },
   );
@@ -380,7 +380,7 @@ const { request: requestDeleteRoom, isLoading: isLoadingDeleteRoom } =
           return;
         }
 
-        createSnackbarError(error.message);
+        createSnackbarByException(error);
       },
     },
   );
@@ -397,7 +397,7 @@ const { request: requestCreateMember, isLoading: isLoadingCreateMember } =
           return;
         }
 
-        createSnackbarError(error.message);
+        createSnackbarByException(error);
       },
     },
   );
@@ -414,7 +414,7 @@ const { request: requestUpdateMember, isLoading: isLoadingUpdateMember } =
           return;
         }
 
-        createSnackbarError(error.message);
+        createSnackbarByException(error);
       },
     },
   );
@@ -431,7 +431,7 @@ const { request: requestDeleteMember, isLoading: isLoadingDeleteMember } =
           return;
         }
 
-        createSnackbarError(error.message);
+        createSnackbarByException(error);
       },
     },
   );

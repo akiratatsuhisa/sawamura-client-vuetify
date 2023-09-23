@@ -3,18 +3,18 @@
     <v-container
       fluid
       class="h-100"
-      :class="[$vuetify?.display.xs ? 'pa-0' : 'pa-4']"
+      :class="[$vuetify?.display.smAndDown ? 'pa-0' : 'pa-4']"
     >
       <v-sheet
         class="bg-surface h-100"
         variant="flat"
-        :rounded="$vuetify?.display.xs ? '0' : 'lg'"
+        :rounded="$vuetify?.display.smAndDown ? '0' : 'lg'"
       >
         <div class="d-flex flex-column flex-md-row align-md-center">
           <v-card-title tag="h1">{{ translate('title') }}</v-card-title>
-          <v-spacer v-if="$vuetify.display.xs" />
+          <v-spacer v-if="$vuetify.display.smAndDown" />
 
-          <v-room-search />
+          <v-room-search v-if="$vuetify.display.mdAndUp" />
 
           <v-btn
             class="ma-4"
@@ -38,28 +38,14 @@
     </v-container>
 
     <v-fade-transition>
-      <v-btn
-        v-if="$vuetify.display.smAndDown && isFabShow"
-        position="fixed"
-        location="bottom right"
-        color="primary-container"
-        elevation="3"
-        :min-width="isFabShowDetail ? undefined : 56"
-        min-height="56"
-        class="v-btn--fab ma-3"
+      <v-floating-action-button
+        :title="translate('createGroup')"
+        icon="mdi-account-group"
+        :is-fab-show="display.smAndDown.value && isFabShow"
+        :is-fab-show-detail="isFabShowDetail"
         :style="{ bottom: $vuetify.display.xs ? '80px' : '0' }"
         @click="openDialog('create')"
-      >
-        <v-slide-x-reverse-transition>
-          <v-icon :start="isFabShowDetail">mdi-account-group</v-icon>
-        </v-slide-x-reverse-transition>
-
-        <v-slide-x-transition>
-          <span v-if="isFabShowDetail">
-            {{ translate('createGroup') }}
-          </span>
-        </v-slide-x-transition>
-      </v-btn>
+      />
     </v-fade-transition>
   </v-main>
 
@@ -77,8 +63,10 @@
 import { storeToRefs } from 'pinia';
 import { computed, defineAsyncComponent } from 'vue';
 import { useRouter } from 'vue-router';
+import { useDisplay } from 'vuetify';
 
 import {
+  useNavigationRailFab,
   usePageLocale,
   useRouterDialog,
   useSnackbar,
@@ -97,13 +85,11 @@ const { translate, translateShared } = usePageLocale({
   prefix: 'messages.list',
 });
 
-const { isFabShow, isFabShowDetail } = useScrollBehavior();
-
 const roomsStore = useRoomsStore();
 const { isLoadingRooms } = storeToRefs(roomsStore);
 const { fetchMore, updateListRoom } = roomsStore;
 
-const { createSnackbarError } = useSnackbar();
+const { createSnackbarByException } = useSnackbar();
 const socket = useSocketChat();
 
 const { request: requestCreateRoom, isLoading: isLoadingCreateRoom } =
@@ -120,9 +106,7 @@ const { request: requestCreateRoom, isLoading: isLoadingCreateRoom } =
           },
         });
       },
-      exception(error) {
-        createSnackbarError(error.message);
-      },
+      exception: createSnackbarByException,
     },
   );
 
@@ -143,10 +127,16 @@ const dialogs = {
 const isLoading = computed(
   () => isLoadingRooms.value || isLoadingCreateRoom.value,
 );
-</script>
 
-<style lang="scss" scoped>
-.v-btn--fab {
-  border-radius: 16px !important;
-}
-</style>
+const { isFabShow, isFabShowDetail } = useScrollBehavior();
+const display = useDisplay();
+useNavigationRailFab(
+  computed(() => ({
+    isFabShow: display.mdAndUp.value && isFabShow.value,
+    icon: 'mdi-account-group',
+    onClick: () => {
+      openDialog('create');
+    },
+  })),
+);
+</script>

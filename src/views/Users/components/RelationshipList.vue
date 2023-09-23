@@ -1,5 +1,5 @@
 <template>
-  <v-list>
+  <v-list v-if="items.length">
     <v-relationship-list-item
       v-for="item in items"
       :key="item.id"
@@ -11,6 +11,18 @@
       </v-btn>
     </v-list-item>
   </v-list>
+  <div v-else class="pa-4">
+    <div class="text-h6 mb-2">
+      {{
+        $t(`pages.users.relationships.noData.${name}.title`, {
+          username: `@${route.params.username}`,
+        })
+      }}
+    </div>
+    <div class="text-subtitle-1 text-medium-emphasis">
+      {{ $t(`pages.users.relationships.noData.${name}.subtitle`) }}
+    </div>
+  </div>
 </template>
 
 <script lang="ts" setup>
@@ -26,7 +38,10 @@ import {
 import { services } from '@/services';
 import VRelationshipListItem from '@/views/Users/components/RelationshipListItem.vue';
 
-const props = defineProps<{ type: ProfileUserRelationshipType }>();
+const props = defineProps<{
+  name: string;
+  type: ProfileUserRelationshipType;
+}>();
 
 const route = useRoute();
 

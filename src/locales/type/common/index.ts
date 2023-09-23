@@ -1,3 +1,4 @@
+import { LocaleCommonMessages } from './messages';
 import { LocaleCommonUser } from './user';
 
 export type LocaleCommon = {
@@ -60,4 +61,5 @@ export type LocaleCommon = {
     showing: string;
   };
   user: LocaleCommonUser;
+  messages: LocaleCommonMessages;
 };

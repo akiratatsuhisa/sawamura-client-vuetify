@@ -113,7 +113,7 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, reactive, ref } from 'vue';
+import { reactive, ref } from 'vue';
 
 import {
   getErrorMessage,
@@ -149,7 +149,7 @@ const { user, fetchAccessToken } = useAuth();
 
 const { excute: requestVerifyEmail, isLoading: isLoadingVerifyEmail } =
   useAxios(services.auth, 'verifyEmail', {
-    message: computed(() => translateVerifyEmail('message')),
+    translateMessage: 'success.verifyEmail',
   });
 
 const hasSent = ref(false);
@@ -165,7 +165,7 @@ async function onSubmitRequestVerifyEmail() {
 
 const { excute: requestUpdateEmail, isLoading: isLoadingUpdateEmail } =
   useAxios(services.auth, 'updateEmail', {
-    message: computed(() => translateChangeEmail('message')),
+    translateMessage: 'success.updateEmail',
   });
 
 const form = reactive<IUpdateEmailRequest>({

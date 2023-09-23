@@ -1,5 +1,6 @@
 import { LocaleCommon } from '@/locales/type/common';
 
+import { messages } from './messages';
 import { user } from './user';
 
 export const common: LocaleCommon = {
@@ -8,7 +9,7 @@ export const common: LocaleCommon = {
   },
   theme: {
     chooseImage: '画像を選択',
-    generateTheme: 'アップロードした画像からテーマを生成する',
+    generateTheme: 'テーマを生成',
   },
   themes: {
     light: 'ライト',
@@ -55,4 +56,5 @@ export const common: LocaleCommon = {
     showing: 'レコード{from}から{to}までを表示中（全{totalCount}件）',
   },
   user,
+  messages,
 };

@@ -108,7 +108,7 @@ const VTypingUsers = defineAsyncComponent(
 const { updateListRoom } = useRoomsStore();
 
 const route = useRoute();
-const { createSnackbarError } = useSnackbar();
+const { createSnackbarByException } = useSnackbar();
 
 const roomId = computed<string>(() => route.params.roomId as string);
 const room = inject(KEYS.CHAT.ROOM)!;
@@ -134,9 +134,7 @@ const { request: requestMessages, isLoading } = useSocketEventListener<
       isAllMessagesLoaded.value = true;
     }
   },
-  exception(error) {
-    createSnackbarError(error.message);
-  },
+  exception: createSnackbarByException,
 });
 
 function fetchMoreMessages() {
@@ -218,7 +216,7 @@ const { request: requestCreateMessage } = useSocketEventListener<
       return;
     }
 
-    createSnackbarError(error.message);
+    createSnackbarByException(error);
   },
 });
 
@@ -237,7 +235,7 @@ const { request: requestDeleteMessage, isLoading: isLoadingDeleteMessage } =
           return;
         }
 
-        createSnackbarError(error.message);
+        createSnackbarByException(error);
       },
     },
   );

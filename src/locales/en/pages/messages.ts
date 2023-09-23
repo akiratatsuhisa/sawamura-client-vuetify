@@ -36,8 +36,6 @@ export const messages: LocalePagesMessages = {
         captureVideo: 'Capture Video',
         sendAudio: 'Send audio record',
       },
-      unsupportedFileType: 'Unsupported file type',
-      fileExceededLimit: 'File exceeds the ${size} limit',
     },
     menus: {
       basicsInformation: {

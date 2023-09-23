@@ -84,6 +84,7 @@
           <v-base-menu
             ref="reactionMenuRef"
             hide-topbar
+            :auto-scroll="false"
             width="auto"
             location="top right"
             offset="16"
@@ -94,7 +95,11 @@
               set="twitter"
               class="rounded-xl elevation-2"
               @select="selectEmoji"
-              :style="{ width: isDialog ? 'auto' : '350px' }"
+              :style="{
+                width: isDialog ? 'auto' : '350px',
+                height: isDialog ? 'calc(100vh - 48px)' : '420px',
+                maxHeight: '420px',
+              }"
             />
           </v-base-menu>
         </template>
@@ -172,7 +177,7 @@ const emit = defineEmits<{
   (event: 'typing', payload: KeyboardEvent): void;
 }>();
 
-const { translate } = usePageLocale({
+const { t, translate } = usePageLocale({
   prefix: 'messages.room',
 });
 
@@ -186,7 +191,7 @@ const filesInput = shallowReactive<Array<BasicFile>>([]);
 function pushFile(file: File): BasicFile | undefined {
   if (!file || file.size > MESSAGE_FILE.MAX_FILE_SIZE) {
     createSnackbarWarning(
-      translate('input.fileExceededLimit', {
+      t('common.messages.warning.fileExceededLimit', {
         size: Format.binaryUnit(MESSAGE_FILE.MAX_FILE_SIZE, {
           outputUnit: BinaryUnit.Mebibyte,
         }),
@@ -208,7 +213,7 @@ function pushFile(file: File): BasicFile | undefined {
     : null;
 
   if (_.isNull(type)) {
-    createSnackbarWarning(translate('input.unsupportedFileType'));
+    createSnackbarWarning(t('common.messages.warning.unsupportedFileType'));
     return;
   }
 

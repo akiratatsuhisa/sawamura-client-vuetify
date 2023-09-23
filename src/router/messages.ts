@@ -3,10 +3,10 @@ import { RouteRecordRaw } from 'vue-router';
 
 import { Regex } from '@/helpers';
 import VBottomAppBar from '@/layouts/Default/BottomAppBar.vue';
+import VLeftAppBar from '@/layouts/Default/LeftAppBar.vue';
 import VRoomDetailLeftAppBar from '@/views/Messages/layouts/RoomDetailLeftAppBar.vue';
 import VRoomDetailLeftInnerAppBar from '@/views/Messages/layouts/RoomDetailLeftInnerAppBar.vue';
 import VRoomDetailTopAppBar from '@/views/Messages/layouts/RoomDetailTopAppBar.vue';
-import VRoomsLeftAppBar from '@/views/Messages/layouts/RoomsLeftAppBar.vue';
 import VRoomsTopAppBar from '@/views/Messages/layouts/RoomsTopAppBar.vue';
 
 export default [
@@ -15,7 +15,7 @@ export default [
     name: 'Messages',
     meta: { requiresAuth: true },
     components: {
-      left: VRoomsLeftAppBar,
+      left: VLeftAppBar,
       top: VRoomsTopAppBar,
       bottom: VBottomAppBar,
       default: () => import('@/views/Messages/Index.vue'),

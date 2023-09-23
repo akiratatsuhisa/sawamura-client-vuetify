@@ -103,19 +103,19 @@ useSortable(sortableRef, roles, {
 const { excute: requestCreateRole, isLoading: isLoadingCreateRole } = useAxios(
   services.roles,
   'create',
-  { message: computed(() => translate('messages.create')) },
+  { translateMessage: 'success.createRole' },
 );
 
 const { excute: requestUpdateRole, isLoading: isLoadingUpdateRole } = useAxios(
   services.roles,
   'update',
-  { message: computed(() => translate('messages.update')) },
+  { translateMessage: 'success.updateRole' },
 );
 
 const { excute: requestDeleteRole, isLoading: isLoadingDeleteRole } = useAxios(
   services.roles,
   'delete',
-  { message: computed(() => translate('messages.delete')) },
+  { translateMessage: 'success.deleteRole' },
 );
 
 const { openDialog, closeDialog, isActiveDialog } = useRouterDialog({

@@ -1,9 +1,10 @@
 <template>
   <v-dialog
-    :width="fullscreen ? undefined : mobileWidth"
+    :width="fullscreen ? undefined : desktopWidth"
+    :fullscreen="fullscreen"
+    :close-on-back="false"
     :model-value="modelValue"
     @update:model-value="emit('update:modelValue', $event)"
-    :fullscreen="fullscreen"
   >
     <v-card
       tag="form"
@@ -55,7 +56,7 @@ const props = defineProps<{
   modelValue: boolean;
   fullscreen?: boolean;
   disabledSubmit?: boolean;
-  mobileWidth?: number | string;
+  desktopWidth?: number | string;
   contentClass?: any;
 }>();
 

@@ -65,7 +65,7 @@ const { excute: reuqestChangeRelationship, isLoading } = useAxios(
   services.profileUsers,
   'changeRelationship',
   {
-    throwErrorMessage: false,
+    displayMessageFromException: false,
   },
 );
 

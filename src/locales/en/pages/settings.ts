@@ -60,14 +60,12 @@ export const settings: LocalePagesSettings = {
         unverified:
           'You should confirm this {0} email to be able to experience all the features fully',
       },
-      message: 'Verification mail has been sent',
       form: { submit: 'Send' },
     },
     changeEmail: {
       title: 'Change Email',
       subtitle:
         'Your current email is {0}. What would you like to update it to?',
-      message: 'Email has been changed, a verification mail has been sent',
       form: {
         email: {
           label: 'Current',
@@ -90,7 +88,6 @@ export const settings: LocalePagesSettings = {
       title: 'Change Password',
       subtitle:
         'Changing your password will log you out of all your active Sawamura sessions except the one you’re using at this time.',
-      message: 'Password has been changed',
       forgotPassword: 'Forgot password?',
       form: {
         currentPassword: { label: 'Current Password' },

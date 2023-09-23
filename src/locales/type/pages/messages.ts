@@ -33,11 +33,6 @@ export type LocalePagesMessages = {
         captureVideo: string;
         sendAudio: string;
       };
-      unsupportedFileType: string;
-      /**
-       * @param {string} size
-       */
-      fileExceededLimit: string;
     };
     menus: {
       basicsInformation: {

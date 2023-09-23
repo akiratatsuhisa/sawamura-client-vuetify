@@ -18,7 +18,7 @@
           cover
           :lazy-src="LAZY_BACKGROUND"
           :src="props.coverUrl ?? userCoverUrl"
-          class="elevation-2"
+          class="elevation-1"
           :class="{
             'rounded-xl': $vuetify.display.smAndUp,
           }"
@@ -44,16 +44,17 @@
       <v-hover v-slot="{ isHovering, props: hoverProps }">
         <v-avatar
           size="96"
-          class="avatar mx-0 mx-md-3"
-          :class="[isHovering ? 'elevation-4' : 'elevation-2']"
+          class="bg-surface avatar mx-0 mx-md-3"
           v-bind="hoverProps"
         >
           <v-avatar
             color="secondary-container"
-            class="elevation-2 cursor-none"
-            size="96"
+            class="cursor-none"
+            :class="[isHovering ? 'elevation-2' : 'elevation-1']"
+            size="88"
             :image="props.photoUrl ?? userPhotoUrl"
-          />
+          >
+          </v-avatar>
 
           <v-overlay
             :model-value="isHovering"
@@ -94,7 +95,7 @@
         {{ user.biography }}
       </p>
 
-      <div class="profile">
+      <div class="profile my-n1 d-flex flex-column flex-md-row">
         <div v-if="user.birthDate">
           <v-icon color="primary" icon="mdi-cake-variant-outline" />
           <span class="ml-1">
@@ -225,6 +226,7 @@ const selectedImageSrc = ref<string>();
     }
 
     & > * {
+      padding: 0.25rem 0;
       display: flex;
       align-items: center;
     }

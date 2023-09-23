@@ -1,6 +1,6 @@
 <template>
   <v-base-dialog
-    mobile-width="500"
+    desktop-width="500"
     :model-value="modelValue"
     :disabled-submit="!submitable"
     @update:model-value="emit('update:modelValue', $event)"

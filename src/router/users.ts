@@ -2,6 +2,7 @@ import { RouteRecordRaw } from 'vue-router';
 
 import { Router } from '@/helpers';
 import VLeftAppBar from '@/layouts/Default/LeftAppBar.vue';
+import VUsers from '@/views/Users/Index.vue';
 import VRelationshipsTopAppBar from '@/views/Users/layouts/RelationshipsTopAppBar.vue';
 import VUsersTopAppBar from '@/views/Users/layouts/UsersTopAppBar.vue';
 
@@ -14,7 +15,7 @@ export default [
     components: {
       left: VLeftAppBar,
       top: VUsersTopAppBar,
-      default: () => import('@/views/Users/Index.vue'),
+      default: VUsers,
     },
     beforeEnter(to, from) {
       Router.setBackRoute(to, from);

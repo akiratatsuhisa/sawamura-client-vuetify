@@ -1,6 +1,6 @@
 <template>
   <v-base-dialog
-    mobile-width="700"
+    desktop-width="700"
     :model-value="modelValue"
     @update:model-value="emit('update:modelValue', $event)"
     :disabled-submit="isLoading || !submitable"
@@ -27,6 +27,7 @@
         inset
         hide-details
       />
+      <div v-else style="height: 40px"></div>
     </div>
 
     <v-cropper-container
@@ -124,6 +125,6 @@ function onOpen() {
 <style lang="scss" scoped>
 .cropper-wrapper {
   width: 100%;
-  height: calc(100vh - 270px);
+  height: calc(100vh - 260px);
 }
 </style>

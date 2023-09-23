@@ -8,6 +8,20 @@ export type LocalePagesUsers = {
       followers: string;
       following: string;
     };
+    noData: {
+      followersYouFollow: {
+        title: string;
+        subtitle: string;
+      };
+      followers: {
+        title: string;
+        subtitle: string;
+      };
+      following: {
+        title: string;
+        subtitle: string;
+      };
+    };
     fetchMore: string;
   };
   shared: {

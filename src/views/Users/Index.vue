@@ -24,15 +24,29 @@
         </div>
       </div>
     </v-container>
+
+    <v-fade-transition>
+      <v-floating-action-button
+        icon="mdi-pencil-plus-outline"
+        :is-fab-show="display.smAndDown.value"
+        @click="openModalComposeWhinny"
+      />
+    </v-fade-transition>
   </v-main>
 </template>
 
 <script lang="ts" setup>
 import { storeToRefs } from 'pinia';
-import { defineAsyncComponent, provide, Ref, ref, watch } from 'vue';
-import { useRoute } from 'vue-router';
+import { computed, defineAsyncComponent, provide, Ref, ref, watch } from 'vue';
+import { useDisplay } from 'vuetify';
 
-import { useAuth, useAxios } from '@/composables';
+import {
+  useAuth,
+  useAxios,
+  useBackgroundRoute,
+  useNavigationRailFab,
+  useRouterModal,
+} from '@/composables';
 import { KEYS } from '@/constants';
 import { IProfileUserResponse } from '@/interfaces';
 import { services } from '@/services';
@@ -54,7 +68,7 @@ const VTrends = defineAsyncComponent(
 const profileUserStore = useProfileUserStore();
 const { user } = storeToRefs(profileUserStore);
 
-const route = useRoute();
+const route = useBackgroundRoute();
 const { user: identityUser } = useAuth();
 
 const { excute, data, headers } = useAxios(
@@ -65,7 +79,7 @@ const { excute, data, headers } = useAxios(
 const hasFollowing = ref<boolean>(false);
 
 watch(
-  () => route.params.username as string,
+  () => route.value.params.username as string,
   async (username, _prev, onCleanup) => {
     if (!username) {
       return;
@@ -84,4 +98,26 @@ watch(
 
 provide(KEYS.USERS.PAGE.PROFILE_USER, data as Ref<IProfileUserResponse>);
 provide(KEYS.USERS.PAGE.HAS_FOLLOWING, hasFollowing);
+
+const { openModal } = useRouterModal();
+function openModalComposeWhinny() {
+  openModal(
+    { name: 'Compose:Whinny' },
+    {
+      username:
+        route.value.params.username !== identityUser.value?.username
+          ? route.value.params.username
+          : undefined,
+    },
+  );
+}
+
+const display = useDisplay();
+useNavigationRailFab(
+  computed(() => ({
+    isFabShow: display.mdAndUp.value,
+    icon: 'mdi-pencil-plus-outline',
+    onClick: openModalComposeWhinny,
+  })),
+);
 </script>

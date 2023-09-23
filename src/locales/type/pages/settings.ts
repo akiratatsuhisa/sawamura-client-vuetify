@@ -55,7 +55,6 @@ export type LocalePagesSettings = {
         verified: string;
         unverified: string;
       };
-      message: string;
       form: { submit: string };
     };
     changeEmail: {
@@ -64,7 +63,6 @@ export type LocalePagesSettings = {
        * @param {Component} email
        */
       subtitle: string;
-      message: string;
       form: {
         email: { label: string; hint: string };
         submit: string;
@@ -82,7 +80,6 @@ export type LocalePagesSettings = {
     changePassword: {
       title: string;
       subtitle: string;
-      message: string;
       forgotPassword: string;
       form: {
         currentPassword: { label: string };

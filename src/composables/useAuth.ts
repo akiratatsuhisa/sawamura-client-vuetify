@@ -10,7 +10,7 @@ import _ from 'lodash';
 import { computed, reactive, unref } from 'vue';
 import { useRoute } from 'vue-router';
 
-import { useAxios, useLayoutLocale, useSnackbar } from '@/composables';
+import { useAxios, useSnackbar } from '@/composables';
 import { Jwt } from '@/helpers';
 import {
   IAuthOptions,
@@ -18,6 +18,7 @@ import {
   IdentityUser,
   ILoginRequest,
 } from '@/interfaces';
+import i18n from '@/locales';
 import { config, services } from '@/services';
 
 const NO_AVATAR_URL = import.meta.env.VITE_NO_AVATAR_URL as string;
@@ -98,15 +99,22 @@ export const useAuth = createSharedComposable(() => {
       });
       updateTokens(data);
 
-      createSnackbarSuccess('Login Successfully');
+      createSnackbarSuccess(i18n.global.t('common.messages.success.login'));
     } catch (error: any) {
-      createSnackbarError(error?.response?.data?.message ?? 'Error');
+      const data = error?.response?.data;
+      if (data && data.message) {
+        createSnackbarError(
+          i18n.global.t(`common.messages.${data.message}`, data.params as any),
+        );
+      } else {
+        alert('Error');
+      }
     }
   }
 
   async function logout(config?: AxiosRequestConfig) {
     try {
-      createSnackbarSuccess('Logout Successfully');
+      createSnackbarSuccess(i18n.global.t('common.messages.success.logout'));
 
       await axiosInstacne.request<IAuthResponse>({
         url: '/auth/refreshToken',
@@ -120,7 +128,14 @@ export const useAuth = createSharedComposable(() => {
         ...config,
       });
     } catch (error: any) {
-      createSnackbarError(error?.response?.data?.message ?? 'Error');
+      const data = error?.response?.data;
+      if (data && data.message) {
+        createSnackbarError(
+          i18n.global.t(`common.messages.${data.message}`, data.params as any),
+        );
+      } else {
+        alert('Error');
+      }
     } finally {
       updateTokens({
         accessToken: '',
@@ -131,7 +146,7 @@ export const useAuth = createSharedComposable(() => {
 
   async function oauthLogin(data: IAuthResponse) {
     updateTokens(data);
-    createSnackbarSuccess('Login Successfully');
+    createSnackbarSuccess(i18n.global.t('common.messages.success.login'));
   }
 
   const fullName = computed(() =>
@@ -254,13 +269,9 @@ export function useOauth(isLinkProvider?: MaybeRef<boolean>) {
     challenge(rootUrl, options);
   }
 
-  const { translate } = useLayoutLocale({
-    prefix: 'default.oauth',
-  });
-
   const { excute: excuteUnlinkProvider, isLoading: isLoadingUnlinkProvider } =
     useAxios(services.oauth, 'unlinkProvider', {
-      message: computed(() => translate('messages.unlink')),
+      translateMessage: 'success.oauthUnlink',
     });
 
   async function linkProvider(provider: string) {

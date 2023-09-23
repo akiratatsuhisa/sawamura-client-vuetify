@@ -117,7 +117,7 @@ const form = reactive<IUpdatePasswordRequest & { confirmPassword: string }>({
 
 const { excute: requestUpdatePassword, isLoading: isLoadingUpdatePassword } =
   useAxios(services.auth, 'updatePassword', {
-    message: computed(() => translateChangePassword('message')),
+    translateMessage: 'success.updatePassword',
   });
 
 const [v$, { handleSubmit, isLoading, submitable }] = useVuelidate<

@@ -2,6 +2,8 @@ import { v4 as uuidv4 } from 'uuid';
 import { Component, inject } from 'vue';
 
 import { KEYS } from '@/constants';
+import { IExceptionResponse } from '@/interfaces';
+import i18n from '@/locales';
 
 export type SnackbarProps = {
   id: string;
@@ -92,12 +94,26 @@ export function useSnackbar() {
     createSnackbar(messageOrComponent, options);
   }
 
+  function createSnackbarByException(exception: IExceptionResponse) {
+    createSnackbar(
+      i18n.global.t(
+        `common.messages.${exception.message}`,
+        exception.params as any,
+      ),
+      {
+        isOnce: true,
+        color: exception.message.split('.')[0],
+      },
+    );
+  }
+
   return {
     createSnackbar,
     createSnackbarSuccess,
     createSnackbarInfo,
     createSnackbarWarning,
     createSnackbarError,
+    createSnackbarByException,
     clear,
   };
 }

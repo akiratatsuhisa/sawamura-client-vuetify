@@ -60,13 +60,11 @@ export const settings: LocalePagesSettings = {
         unverified:
           '全ての機能を完全にご利用いただくために、この{0}メールを確認してください',
       },
-      message: '確認メールが送信されました',
       form: { submit: '送信' },
     },
     changeEmail: {
       title: 'メールの変更',
       subtitle: '現在のメールは{0}です。何に更新しますか？',
-      message: 'メールアドレスが変更されました、確認メールが送信されました',
       form: {
         email: {
           label: '現在メール',
@@ -88,7 +86,6 @@ export const settings: LocalePagesSettings = {
       title: 'パスワードの変更',
       subtitle:
         'パスワードを変更すると、現在利用中のセッション以外のすべての澤村セッションからログアウトされます。',
-      message: 'パスワードが変更されました',
       forgotPassword: 'パスワードをお忘れですか？',
       form: {
         currentPassword: { label: '現在パスワード' },

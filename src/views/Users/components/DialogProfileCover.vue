@@ -27,6 +27,7 @@
         inset
         hide-details
       />
+      <div v-else style="height: 40px"></div>
     </div>
 
     <v-cropper-container
@@ -122,6 +123,6 @@ function onOpen() {
 <style lang="scss" scoped>
 .cropper-wrapper {
   width: 100%;
-  height: calc(100vh - 270px);
+  height: calc(100vh - 260px);
 }
 </style>

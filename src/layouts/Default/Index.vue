@@ -10,6 +10,8 @@
 
     <router-view />
 
+    <router-view name="fab" />
+
     <router-view name="bottom" />
   </v-app>
 </template>

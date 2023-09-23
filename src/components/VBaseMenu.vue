@@ -7,18 +7,20 @@
     :close-on-content-click="false"
   >
     <v-card rounded="xl">
-      <v-toolbar v-if="!hideTopbar" density="comfortable">
-        <v-app-bar-nav-icon :icon="closeIcon" @click="close" />
+      <template v-if="!hideTopbar">
+        <v-toolbar density="comfortable">
+          <v-app-bar-nav-icon :icon="closeIcon" @click="close" />
 
-        <slot name="title">
-          <v-toolbar-title>
-            {{ title }}
-          </v-toolbar-title>
-        </slot>
-      </v-toolbar>
-      <v-divider />
+          <slot name="title">
+            <v-toolbar-title>
+              {{ title }}
+            </v-toolbar-title>
+          </slot>
+        </v-toolbar>
+        <v-divider />
+      </template>
 
-      <v-card-text class="overflow-y-auto pa-0">
+      <v-card-text class="pa-0" :class="{ 'overflow-y-auto': autoScroll }">
         <slot name="dialog-content" :close="close">
           <slot :is-dialog="isDialog" :is-menu="!isDialog" :close="close" />
         </slot>
@@ -64,8 +66,14 @@ withDefaults(
     width?: string | number | undefined;
     offset?: string | number | number[] | undefined;
     closeIcon?: string;
+    autoScroll?: boolean;
   }>(),
-  { location: 'bottom', width: '400px', closeIcon: 'mdi-close' },
+  {
+    location: 'bottom',
+    width: '400px',
+    closeIcon: 'mdi-close',
+    autoScroll: true,
+  },
 );
 
 const model = ref(false);

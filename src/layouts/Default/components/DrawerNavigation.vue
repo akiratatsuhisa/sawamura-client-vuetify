@@ -1,9 +1,9 @@
 <template>
   <v-navigation-drawer
     :model-value="subNavigationItems.length > 0 && drawer"
+    @update:model-value="drawer = $event"
     :touchless="!subNavigationItems.length"
     floating
-    @update:model-value="drawer = $event"
     class="bg-surface-container text-on-surface rounded-e-xl rounded-e-md-0"
   >
     <template #prepend>
