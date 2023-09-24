@@ -101,6 +101,40 @@ export const dashboard: LocalePagesDashboard = {
     },
   },
   messages: {
-    subchart: 'Chart Messages',
+    mainchart: {
+      title: 'Chart Rooms',
+      xAxis: {
+        groupRooms: 'Group Rooms',
+        privateRooms: 'Private Rooms',
+        groupRoomMembers: 'Group Room Members',
+        privateRoomMembers: 'Private Room Members',
+      },
+      yAxis: {
+        rooms: 'Rooms',
+        roomMembers: 'Room Members',
+      },
+    },
+    subchart: {
+      title: 'Chart Messages',
+      labels: {
+        messages: 'Messages',
+        images: 'Images',
+        audios: 'Audios',
+        videos: 'Videos',
+        files: 'Files',
+      },
+    },
+  },
+  shared: {
+    cards: {
+      dropbox: 'Dropbox Storage',
+      cache: 'Cache',
+      posts: 'Posts',
+      users: 'Users',
+      pdf: 'PDF',
+      reports: 'Report',
+      bugs: 'Bugs',
+      revenue: 'Revenue',
+    },
   },
 };

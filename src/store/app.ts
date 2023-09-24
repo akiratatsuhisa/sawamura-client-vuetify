@@ -30,9 +30,9 @@ export const useAppStore = defineStore('app', () => {
       },
       {
         type: 'navigation',
-        key: 'Search',
-        value: { name: 'Search' },
-        translate: 'menus.search.title',
+        key: 'Explore',
+        value: { name: 'Explore' },
+        translate: 'menus.explore.title',
         icon: 'mdi-magnify',
         mobile: true,
         onClick() {

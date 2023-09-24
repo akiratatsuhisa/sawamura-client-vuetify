@@ -4,8 +4,8 @@
     :class="[offsetX ? `px-${offsetX}` : '', offsetY ? `py-${offsetY}` : '']"
   >
     <div
-      class="v-search bg-surface-container-high text-on-surface d-flex flex-row align-center cursor-pointer rounded-pill"
-      :class="[`v-search-${density}`]"
+      class="v-search text-on-surface d-flex flex-row align-center cursor-pointer rounded-pill"
+      :class="[`v-search-${density}`, `bg-${fieldBgColor}`]"
       @click.stop="model = !model"
     >
       <slot name="prepend-icon">
@@ -16,14 +16,20 @@
 
       <div class="px-2 flex-grow-1">
         <input
-          :value="search"
+          v-model="search"
           class="v-search-input"
           type="text"
-          readonly
+          :readonly="readonly"
           spellcheck="false"
           :placeholder="placeholder"
         />
       </div>
+      <v-icon
+        v-if="!readonly && searchClearable"
+        class="mr-2"
+        icon="mdi-close"
+        @click="search = ''"
+      />
       <slot name="append-icon">
         <template v-if="appendIcon">
           <v-icon class="mr-2" :icon="appendIcon" />
@@ -35,15 +41,16 @@
       <div
         v-if="model"
         ref="searchFieldContainerRef"
-        class="position-absolute v-search-container d-flex flex-column bg-surface-container-high elevation-1 rounded-xl"
+        class="position-absolute v-search-container d-flex flex-column elevation-1 rounded-xl"
         :class="[
           offsetX ? `mx-${offsetX}` : '',
           offsetY ? `my-${offsetY}` : '',
+          `bg-${dropdownBgColor}`,
         ]"
       >
         <div
-          class="v-search flex-shrink-0 bg-surface-container-high text-on-surface d-flex flex-row align-center cursor-pointer rounded-pill rounded-b-0"
-          :class="[`v-search-${density}`]"
+          class="v-search flex-shrink-0 text-on-surface d-flex flex-row align-center cursor-pointer rounded-pill rounded-b-0"
+          :class="[`v-search-${density}`, `bg-${dropdownBgColor}`]"
         >
           <v-icon class="ml-2" icon="mdi-arrow-left" @click="model = !model" />
           <div class="px-2 flex-grow-1">
@@ -75,13 +82,20 @@
     </v-slide-y-transition>
 
     <v-dialog
-      v-else
+      v-if="dialog"
       :model-value="model"
       fullscreen
       transition="slide-y-transition"
     >
-      <v-card rounded="none" class="bg-surface-container-high text-on-surface">
-        <v-toolbar class="px-3 bg-surface-container-high text-on-surface">
+      <v-card
+        rounded="none"
+        class="text-on-surface"
+        :class="[`bg-${dialogBgColor}`]"
+      >
+        <v-toolbar
+          class="px-3 text-on-surface"
+          :class="[`bg-${dialogBgColor}`]"
+        >
           <v-input
             prepend-icon="mdi-arrow-left"
             @click:prepend="model = !model"
@@ -116,22 +130,34 @@ import { computed, ref, watch } from 'vue';
 
 const props = withDefaults(
   defineProps<{
-    modelValue: boolean;
+    modelValue?: boolean;
     placeholder?: string;
-    search: string;
+    search?: string;
     prependIcon?: string;
     appendIcon?: string;
     offsetX?: string | number;
     offsetY?: string | number;
     dropdown?: boolean;
+    dialog?: boolean;
+    readonly?: boolean;
     density?: 'compact' | 'default';
+    clearable?: boolean;
+    fieldBgColor?: string;
+    dropdownBgColor?: string;
+    dialogBgColor?: string;
   }>(),
   {
     appendIcon: 'mdi-magnify',
     offsetX: 3,
     offsetY: 3,
     dropdown: false,
+    dialog: false,
+    readonly: true,
     density: 'default',
+    clearable: true,
+    fieldBgColor: 'surface-container-high',
+    dropdownBgColor: 'surface-container-high',
+    dialogBgColor: 'surface-container-high',
   },
 );
 
@@ -146,12 +172,14 @@ const model = computed({
   set: (value) => emit('update:modelValue', value),
 });
 
-const search = computed({
-  get: () => props.search,
-  set: (value) => emit('update:search', value),
+const search = computed<string>({
+  get: () => props.search ?? '',
+  set: (value: string) => emit('update:search', value),
 });
 
-const searchClearable = computed(() => !!_.trim(search.value).length);
+const searchClearable = computed(
+  () => props.clearable && !!_.trim(search.value).length,
+);
 
 const searchFieldContainerRef = ref<HTMLDivElement>();
 const searchFieldRef = ref<HTMLInputElement>();

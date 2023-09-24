@@ -127,7 +127,7 @@ export function useSearchForm<F extends Record<string, any>>(
 
   function setRouteQuery() {
     const query = options?.encodeQuery?.(form) ?? form;
-    router.push({ name: route.name!, params: route.params, query: query });
+    router.replace({ name: route.name!, params: route.params, query: query });
   }
 
   return { form, reset, setRouteQuery };

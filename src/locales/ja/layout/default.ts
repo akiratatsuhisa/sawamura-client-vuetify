@@ -28,7 +28,7 @@ export const defaultLayout: LocaleLayoutDefault = {
       home: {
         title: 'ホーム',
       },
-      search: {
+      explore: {
         title: '検索',
       },
       messages: {

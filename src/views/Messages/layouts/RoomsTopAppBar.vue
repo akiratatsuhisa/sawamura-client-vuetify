@@ -4,6 +4,7 @@
       class="h-100 w-100"
       v-model="isSearchFieldOpen"
       v-model:search="search"
+      dialog
       :placeholder="$t('pages.messages.shared.searchPlaceholder')"
       offset-x="3"
       offset-y="3"

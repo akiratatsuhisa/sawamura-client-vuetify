@@ -6,12 +6,11 @@ import VDefaultLayout from '@/layouts/Default/Index.vue';
 import VLeftAppBar from '@/layouts/Default/LeftAppBar.vue';
 import VTopAppBar from '@/layouts/Default/TopAppBar.vue';
 import VHome from '@/views/Home/Index.vue';
-import VSearch from '@/views/Search/Index.vue';
-import VSearchTopAppBar from '@/views/Search/layouts/SearchTopAppBar.vue';
 
 import authRoutes, { defaultAuthRoutes } from './auth';
 import { defaultCommonRoutes } from './common';
 import dashboardRoutes from './dashboard';
+import exploreRoutes from './explore';
 import messagesRoutes from './messages';
 import oauthRoutes from './oauth';
 import usersRoutes from './users';
@@ -40,17 +39,7 @@ const routes: Array<RouteRecordRaw> = [
           default: () => import('@/views/Compose/Whinny/Index.vue'),
         },
       },
-      {
-        path: 'search',
-        name: 'Search',
-        meta: { requiresAuth: true },
-        components: {
-          left: VLeftAppBar,
-          top: VSearchTopAppBar,
-          bottom: VBottomAppBar,
-          default: VSearch,
-        },
-      },
+      exploreRoutes,
       ...messagesRoutes,
       ...usersRoutes,
       dashboardRoutes,

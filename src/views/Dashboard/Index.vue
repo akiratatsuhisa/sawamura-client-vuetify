@@ -25,7 +25,7 @@
         <v-col cols="12" sm="6" md="3">
           <v-info-card v-bind="statisticalData.dropbox">
             <v-progress-linear
-              height="24"
+              height="20"
               :model-value="statisticalData.dropbox.value"
               :max="statisticalData.dropbox.max as number"
               rounded="pill"
@@ -36,8 +36,8 @@
                 {{ value.toFixed(2) }} %
               </strong>
             </v-progress-linear>
-            <span class="text-caption text-end"
-              >{{
+            <span class="text-caption text-end info-text-caption">
+              {{
                 Format.binaryUnit(statisticalData.dropbox.value, {
                   outputUnit: BinaryUnit.Gibibyte,
                 })
@@ -47,15 +47,15 @@
                 Format.binaryUnit(statisticalData.dropbox.max as number, {
                   outputUnit: BinaryUnit.Gibibyte,
                 })
-              }}</span
-            >
+              }}
+            </span>
           </v-info-card>
         </v-col>
 
         <v-col cols="12" sm="6" md="3">
           <v-info-card v-bind="statisticalData.cache">
             <v-progress-linear
-              height="24"
+              height="20"
               :model-value="statisticalData.cache.value"
               :max="statisticalData.cache.max as number"
               rounded="pill"
@@ -66,7 +66,7 @@
                 {{ value.toFixed(4) }} %
               </strong>
             </v-progress-linear>
-            <span class="text-caption text-end">
+            <span class="text-caption text-end info-text-caption">
               {{
                 Format.binaryUnit(statisticalData.cache.value, {
                   outputUnit: BinaryUnit.Gibibyte,
@@ -83,11 +83,11 @@
         </v-col>
 
         <v-col cols="12" sm="6" md="3">
-          <v-info-card v-bind="statisticalData.posts"></v-info-card>
+          <v-info-card v-bind="statisticalData.posts" />
         </v-col>
 
         <v-col cols="12" sm="6" md="3">
-          <v-info-card v-bind="statisticalData.users"></v-info-card>
+          <v-info-card v-bind="statisticalData.users" />
         </v-col>
       </v-row>
 
@@ -142,29 +142,29 @@ const statisticalData = reactive<
   >
 >({
   dropbox: {
+    name: 'dropbox',
     color: 'blue',
     icon: 'mdi-dropbox',
-    name: 'Dropbox Storage',
     value: 0,
     max: 0,
   },
   cache: {
+    name: 'cache',
     color: 'purple',
     icon: 'mdi-server',
-    name: 'Cache Storage',
     value: 0,
     max: 8_589_934_592,
   },
   posts: {
+    name: 'posts',
     color: 'yellow',
     icon: 'mdi-post',
-    name: 'Posts',
     value: 0,
   },
   users: {
+    name: 'users',
     color: 'green',
     icon: 'mdi-account-group',
-    name: 'Users',
     value: 0,
   },
 });
@@ -199,6 +199,11 @@ useIntervalFn(
 </script>
 
 <style lang="scss" scoped>
+.info-text-caption {
+  font-size: 10px !important;
+  line-height: 12px !important;
+}
+
 .fade-enter-active {
   transition: opacity 0.3s ease;
 }

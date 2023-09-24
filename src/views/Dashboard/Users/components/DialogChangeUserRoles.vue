@@ -2,8 +2,8 @@
   <v-base-dialog
     desktop-width="500"
     :model-value="modelValue"
-    :disabled-submit="isLoading"
     @update:model-value="emit('update:modelValue', $event)"
+    :disabled-submit="isLoading"
     @submit="onSubmit"
     @open="onOpen"
   >
@@ -131,9 +131,10 @@ const { excute: requestChangeRoles, isLoading: isLoadingChangeRoles } =
   });
 
 async function onSubmit() {
+  emit('update:modelValue', false);
+
   await requestChangeRoles(form);
   emit('submit');
-  emit('update:modelValue', false);
 }
 
 const isLoading = computed(

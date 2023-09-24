@@ -14,7 +14,7 @@
       {{ $t('common.app.title') }}
     </v-app-bar-title>
 
-    <v-dashboard-menu v-if="$vuetify.display.smAndDown" />
+    <v-dashboard-menu v-if="$vuetify.display.xs" />
     <v-messages-menu />
     <v-profile-menu />
   </v-app-bar>

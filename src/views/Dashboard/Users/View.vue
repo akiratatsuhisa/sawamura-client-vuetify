@@ -332,7 +332,7 @@ const onSubmitThrottle = useThrottleFn(
   1000,
   true,
 );
-onSubmitThrottle();
+onSubmitThrottle(true);
 
 watch(
   [() => form.roleIds?.length, () => form.roleMode, () => form.sort],

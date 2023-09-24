@@ -71,6 +71,7 @@ export default defineConfig({
             './src/views/Oauth/Error.vue',
           ],
           home: ['./src/views/Home/Index.vue'],
+          explore: ['./src/views/Explore/Index.vue'],
           users: ['./src/views/Users/Index.vue'],
           rooms: ['./src/views/Messages/Index.vue'],
           messages: ['./src/views/Messages/Detail/Index.vue'],

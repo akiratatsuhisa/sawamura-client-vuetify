@@ -28,8 +28,8 @@ export const defaultLayout: LocaleLayoutDefault = {
       home: {
         title: 'Home',
       },
-      search: {
-        title: 'Search',
+      explore: {
+        title: 'Explore',
       },
       messages: {
         title: 'Messages',

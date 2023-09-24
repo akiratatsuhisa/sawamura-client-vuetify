@@ -186,8 +186,8 @@ export const messages: LocalePagesMessages = {
       types: {
         images: '{length}枚の画像',
         files: '{length}件のファイル',
-        audios: '{length}件のオーディオ',
-        videos: '{length}件のビデオ',
+        audios: '{length}件の音声',
+        videos: '{length}件の動画',
         none: 'メッセージが削除されました',
       },
     },

@@ -101,6 +101,40 @@ export const dashboard: LocalePagesDashboard = {
     },
   },
   messages: {
-    subchart: 'グラフのメッセージ',
+    mainchart: {
+      title: 'グラフのルーム',
+      xAxis: {
+        groupRooms: 'グループルーム',
+        privateRooms: 'プライベートルーム',
+        privateRoomMembers: 'プライベートルームメンバー',
+        groupRoomMembers: 'グループルームメンバー',
+      },
+      yAxis: {
+        rooms: 'ルーム',
+        roomMembers: 'ルームメンバー',
+      },
+    },
+    subchart: {
+      title: 'グラフのメッセージ',
+      labels: {
+        messages: 'メッセージ',
+        images: '画像',
+        audios: '音声',
+        videos: '動画',
+        files: 'ファイル',
+      },
+    },
+  },
+  shared: {
+    cards: {
+      dropbox: 'ドロップボック',
+      cache: 'キャッシュ',
+      posts: 'ポスト',
+      users: 'ユーザー',
+      pdf: 'PDF',
+      reports: 'レポート',
+      bugs: 'バグ',
+      revenue: '収益',
+    },
   },
 };

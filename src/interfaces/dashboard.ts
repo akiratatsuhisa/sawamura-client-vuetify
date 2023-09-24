@@ -32,6 +32,22 @@ export interface IChartMessgesResponse {
   }>;
 }
 
+export interface IChartMessgesRoomsRequest {
+  fromDate: string;
+  toDate: string;
+}
+
+export interface IChartMessgesRoomsResponse {
+  records: Array<{
+    label: string;
+    value: number;
+    countGroupRooms: number;
+    countPrivateRooms: number;
+    countGroupRoomMembers: number;
+    countPrivateRoomMembers: number;
+  }>;
+}
+
 export interface IChartUserRolesRequest {
   data?: null;
 }

@@ -1,15 +1,11 @@
 <template>
   <v-row class="flex-column-reverse flex-md-row">
     <v-col cols="12" sm="12" md="7" lg="8">
-      <v-card class="bg-surface" variant="flat" rounded="xl">
-        <v-card-title>Infomation</v-card-title>
-        <v-card-text>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Reiciendis,
-          et totam? Doloremque dolorem id nobis, unde beatae explicabo
-          reiciendis iure soluta ipsa! Perferendis fugit laboriosam debitis
-          eligendi, velit quod quam.
-        </v-card-text>
-      </v-card>
+      <v-default
+        :loading="isLoadingChartMessagesRooms"
+        :labels="mainLabels"
+        :series="mainSeries"
+      />
     </v-col>
     <v-col cols="12" sm="12" md="5" lg="4">
       <v-card class="bg-surface" variant="flat" rounded="xl">
@@ -20,7 +16,7 @@
             @click="isActive ? pause() : resume()"
           />
 
-          <v-toolbar-title>{{ translate('subchart') }}</v-toolbar-title>
+          <v-toolbar-title>{{ translate('subchart.title') }}</v-toolbar-title>
 
           <v-btn
             size="small"
@@ -40,9 +36,9 @@
         <apexchart
           v-if="isExpand"
           class="mt-3 messages-chart"
-          height="600"
-          :options="options"
-          :series="series"
+          height="1000"
+          :options="subOptions"
+          :series="subSeries"
         />
       </v-card>
     </v-col>
@@ -62,15 +58,21 @@ import {
   useSocketDashboard,
   useSocketEventListener,
 } from '@/composables';
-import { IChartMessgesRequest, IChartMessgesResponse } from '@/interfaces';
+import {
+  IChartMessgesRequest,
+  IChartMessgesResponse,
+  IChartMessgesRoomsRequest,
+  IChartMessgesRoomsResponse,
+} from '@/interfaces';
+import VDefault from '@/views/Dashboard/Messages/components/Default.vue';
 
 const theme = useTheme();
-
 const { translate } = usePageLocale({ prefix: 'dashboard.messages' });
 
-const isExpand = ref<boolean>(true);
+const socket = useSocketDashboard();
 
-const options = computed<ApexOptions>(() => ({
+const isExpand = ref<boolean>(true);
+const subOptions = computed<ApexOptions>(() => ({
   chart: {
     type: 'bar',
     background: theme.current.value.colors['surface'],
@@ -78,15 +80,6 @@ const options = computed<ApexOptions>(() => ({
   },
   theme: {
     mode: theme.name.value === 'dark ' ? 'dark' : 'light',
-  },
-  plotOptions: {
-    bar: {
-      horizontal: true,
-      borderRadius: 4,
-      dataLabels: {
-        position: 'center',
-      },
-    },
   },
   dataLabels: {
     style: {
@@ -98,14 +91,25 @@ const options = computed<ApexOptions>(() => ({
     width: 1,
     colors: [theme.name.value === 'dark' ? 'dark' : 'light'],
   },
+  plotOptions: {
+    bar: {
+      horizontal: true,
+      borderRadius: 4,
+      dataLabels: {
+        position: 'center',
+      },
+    },
+  },
 }));
-
 const series = ref<
   Array<{ name: string; data: Array<{ x: string; y: number }> }>
 >([]);
-
-const socket = useSocketDashboard();
-
+const subSeries = computed(() =>
+  _.map(series.value, (object) => ({
+    name: translate(`subchart.labels.${object.name}`),
+    data: object.data,
+  })),
+);
 const { isLoading: isLoadingChartMessages, request: requestChartMessages } =
   useSocketEventListener<IChartMessgesResponse, IChartMessgesRequest>(
     socket,
@@ -149,15 +153,67 @@ const { isLoading: isLoadingChartMessages, request: requestChartMessages } =
             })),
           },
         ];
+
+        console.log(series.value);
       },
     },
   );
 
+const mainLabels = ref<Array<string>>();
+const mainSeries = ref<
+  Array<{ name: string; type: string; data: Array<number> }>
+>([]);
+
+const {
+  isLoading: isLoadingChartMessagesRooms,
+  request: requestChartMessagesRooms,
+} = useSocketEventListener<
+  IChartMessgesRoomsResponse,
+  IChartMessgesRoomsRequest
+>(socket, 'chart:messages:rooms', {
+  response({ records }) {
+    mainLabels.value = _.map(records, 'label');
+
+    mainSeries.value = [
+      {
+        name: 'groupRooms',
+        type: 'column',
+        data: _.map(records, 'countGroupRooms'),
+      },
+      {
+        name: 'privateRooms',
+        type: 'column',
+        data: _.map(records, 'countPrivateRooms'),
+      },
+      {
+        name: 'groupRoomMembers',
+        type: 'line',
+        data: _.map(records, 'countGroupRoomMembers'),
+      },
+      {
+        name: 'privateRoomMembers',
+        type: 'line',
+        data: _.map(records, 'countPrivateRoomMembers'),
+      },
+    ];
+  },
+});
+
 const { isActive, pause, resume } = useIntervalFn(
   () => {
+    const fromDate = dayjs()
+      .subtract(11, 'months')
+      .startOf('month')
+      .toISOString();
+    const toDate = dayjs().endOf('month').toISOString();
+
     requestChartMessages({
-      fromDate: dayjs().subtract(11, 'months').startOf('month').toISOString(),
-      toDate: dayjs().endOf('month').toISOString(),
+      fromDate,
+      toDate,
+    });
+    requestChartMessagesRooms({
+      fromDate,
+      toDate,
     });
   },
   300000,

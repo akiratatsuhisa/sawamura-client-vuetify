@@ -29,7 +29,7 @@ export type LocaleLayoutDefault = {
       home: {
         title: string;
       };
-      search: {
+      explore: {
         title: string;
       };
       messages: {

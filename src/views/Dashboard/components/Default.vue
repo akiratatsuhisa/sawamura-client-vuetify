@@ -15,16 +15,19 @@
     <v-col cols="12" md="6">
       <v-row>
         <v-col cols="12" sm="6">
-          <v-info-card v-bind="statisticalData.print"></v-info-card>
+          <v-info-card v-bind="statisticalData.pdf" />
         </v-col>
+
         <v-col cols="12" sm="6">
-          <v-info-card v-bind="statisticalData.report"></v-info-card>
+          <v-info-card v-bind="statisticalData.reports" />
         </v-col>
+
         <v-col cols="12" sm="6">
-          <v-info-card v-bind="statisticalData.bugs"></v-info-card>
+          <v-info-card v-bind="statisticalData.bugs" />
         </v-col>
+
         <v-col cols="12" sm="6">
-          <v-info-card v-bind="statisticalData.revenue"></v-info-card>
+          <v-info-card v-bind="statisticalData.revenue" />
         </v-col>
       </v-row>
     </v-col>
@@ -40,32 +43,32 @@ import VInfoCard, {
 
 const statisticalData = reactive<
   Record<
-    'print' | 'report' | 'bugs' | 'revenue',
+    'pdf' | 'reports' | 'bugs' | 'revenue',
     InfoCardProps & Record<string, unknown>
   >
 >({
-  print: {
+  pdf: {
+    name: 'pdf',
     color: 'indigo',
     icon: 'mdi-printer',
-    name: 'PDF',
     value: 0,
   },
-  report: {
+  reports: {
+    name: 'reports',
     color: 'orange',
     icon: 'mdi-file-chart',
-    name: 'Report',
     value: 0,
   },
   bugs: {
+    name: 'bugs',
     color: 'red',
     icon: 'mdi-bug',
-    name: 'Bugs',
     value: 0,
   },
   revenue: {
+    name: 'revenue',
     color: 'light-green',
     icon: 'mdi-cash-multiple',
-    name: 'Revenue',
     value: 0,
   },
 });

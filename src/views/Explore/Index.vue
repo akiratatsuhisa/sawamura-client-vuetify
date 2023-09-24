@@ -9,7 +9,9 @@
         class="bg-surface h-100 d-flex align-center justify-center"
         :class="[$vuetify?.display.smAndDown ? 'rounded-0' : 'rounded-lg']"
       >
-        <h1>Search</h1>
+        <h1>
+          {{ $t('pages.explore.content') }}
+        </h1>
       </v-responsive>
     </v-container>
 

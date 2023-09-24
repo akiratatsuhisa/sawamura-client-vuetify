@@ -23,10 +23,10 @@
           "
         >
           <v-window-item :value="tabs.Information.name">
-            <v-user-view />
+            <v-user-view v-if="tab === 'Dashboard:Users'" />
           </v-window-item>
           <v-window-item :value="tabs.Roles.name">
-            <v-role-view />
+            <v-role-view v-if="tab === 'Dashboard:Users:Roles'" />
           </v-window-item>
         </v-window>
       </v-card>

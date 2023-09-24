@@ -13,7 +13,9 @@
       <v-icon :icon="icon" size="24"></v-icon>
     </v-avatar>
     <div class="pa-2 d-flex flex-column flex-grow-1 flex-shrink-1">
-      <div class="text-subtitle-2">{{ name }}</div>
+      <div class="text-subtitle-2">
+        {{ $t(`pages.dashboard.shared.cards.${name}`) }}
+      </div>
       <slot>
         <div class="text-h5 my-auto">
           {{ Format.number(value) }}

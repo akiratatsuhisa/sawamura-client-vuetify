@@ -100,6 +100,40 @@ export type LocalePagesDashboard = {
     };
   };
   messages: {
-    subchart: string;
+    mainchart: {
+      title: string;
+      xAxis: {
+        groupRooms: string;
+        privateRooms: string;
+        groupRoomMembers: string;
+        privateRoomMembers: string;
+      };
+      yAxis: {
+        rooms: string;
+        roomMembers: string;
+      };
+    };
+    subchart: {
+      title: string;
+      labels: {
+        messages: string;
+        images: string;
+        audios: string;
+        videos: string;
+        files: string;
+      };
+    };
+  };
+  shared: {
+    cards: {
+      dropbox: string;
+      cache: string;
+      posts: string;
+      users: string;
+      pdf: string;
+      reports: string;
+      bugs: string;
+      revenue: string;
+    };
   };
 };

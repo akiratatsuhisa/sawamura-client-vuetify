@@ -1,5 +1,14 @@
 import _ from 'lodash';
-import { computed, MaybeRef, Ref, unref, watch } from 'vue';
+import {
+  computed,
+  MaybeRef,
+  onBeforeUnmount,
+  onMounted,
+  Ref,
+  ref,
+  unref,
+  watch,
+} from 'vue';
 import {
   LocationQuery,
   LocationQueryRaw,
@@ -78,11 +87,11 @@ export function useRouterTab(options: IUseRouterTabOptions) {
 
   const tab = computed(() => route.params[options.param] as string | undefined);
 
-  function changeTab(
+  async function changeTab(
     value?: string,
     args?: { query?: LocationQueryRaw; params?: RouteParamsRaw },
   ) {
-    router.replace({
+    await router.replace({
       name: options.name,
       params: {
         ...defaultParams.value,
@@ -122,16 +131,31 @@ export function useRouterDialog(options: IUseRouterDialogOptions) {
   const route = useRoute();
   const router = useRouter();
   const defaultParams = computed(() => unref(options.defaultParams));
+  const backgroundRoute =
+    ref<
+      Pick<
+        RouteLocationNormalizedLoaded,
+        'fullPath' | 'name' | 'hash' | 'params' | 'query'
+      >
+    >();
 
   const dialog = computed(
     () => route.params[options.param] as string | undefined,
   );
 
-  function openDialog(
+  async function openDialog(
     value: string,
     args?: { query?: LocationQueryRaw; params?: RouteParamsRaw },
   ) {
-    router.push({
+    backgroundRoute.value = _.pick(route, [
+      'fullPath',
+      'name',
+      'hash',
+      'params',
+      'query',
+    ]);
+
+    await router.replace({
       name: options.name,
       params: {
         ...defaultParams.value,
@@ -142,8 +166,22 @@ export function useRouterDialog(options: IUseRouterDialogOptions) {
     });
   }
 
-  function closeDialog() {
-    router.back();
+  async function closeDialog() {
+    if (!backgroundRoute.value) {
+      await router.replace({
+        name: options.name,
+        params: { ...defaultParams.value, [options.param]: undefined },
+      });
+      return;
+    }
+    await router.replace({
+      name: backgroundRoute.value.name!,
+      hash: backgroundRoute.value.hash,
+      params: backgroundRoute.value.params,
+      query: backgroundRoute.value.query,
+    });
+
+    backgroundRoute.value = undefined;
   }
 
   function isActiveDialog(value?: string): boolean;
@@ -161,6 +199,20 @@ export function useRouterDialog(options: IUseRouterDialogOptions) {
     return dialog.value === arg;
   }
 
+  async function onPopstate() {
+    if (backgroundRoute.value?.fullPath) {
+      await router.push(backgroundRoute.value.fullPath);
+      backgroundRoute.value = undefined;
+    }
+  }
+
+  onMounted(() => {
+    window.addEventListener('popstate', onPopstate);
+  });
+  onBeforeUnmount(() => {
+    window.removeEventListener('popstate', onPopstate);
+  });
+
   return { dialog, openDialog, closeDialog, isActiveDialog };
 }
 
@@ -176,7 +228,7 @@ export function useRouterModal<P extends Record<string, any>>(
   const router = useRouter();
   const historyState = useHistoryState();
 
-  function openModal(
+  async function openModal(
     to: {
       name: string;
       hash?: string;
@@ -197,7 +249,7 @@ export function useRouterModal<P extends Record<string, any>>(
             query: route.query,
           };
 
-    router.push({
+    await router.push({
       ...to,
       state: {
         background,

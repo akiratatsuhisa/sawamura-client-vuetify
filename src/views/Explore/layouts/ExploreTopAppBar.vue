@@ -4,8 +4,10 @@
       class="h-100 w-100"
       v-model="isSearchFieldOpen"
       v-model:search="search"
+      dialog
       offset-x="3"
       offset-y="3"
+      :placeholder="$t('pages.explore.search.placeholder')"
     >
       <template #prepend-icon>
         <v-btn
@@ -24,19 +26,30 @@
       </template>
 
       <template #append-icon>
-        <v-profile-menu class="ma-2" size="40" />
+        <v-settings-menu />
       </template>
     </v-search>
   </v-app-bar>
 
   <v-app-bar v-else class="bg-surface-container text-on-surface">
-    <v-app-bar-title
-      class="cursor-pointer prevent-select"
-      @click="$router.push({ name: 'Home' })"
-    >
-      {{ $t('common.app.title') }}
-    </v-app-bar-title>
+    <div class="w-100">
+      <v-search
+        class="w-50 mx-auto"
+        v-model:search="search"
+        :readonly="false"
+        offset-x="1"
+        offset-y="1"
+        density="compact"
+        field-bg-color="surface"
+        :placeholder="$t('pages.explore.search.placeholder')"
+      >
+        <template #prepend-icon>
+          <div class="px-2" />
+        </template>
+      </v-search>
+    </div>
 
+    <v-settings-menu />
     <v-profile-menu />
   </v-app-bar>
 </template>
@@ -46,6 +59,7 @@ import { ref } from 'vue';
 
 import VSearch from '@/components/VSearch.vue';
 import VProfileMenu from '@/layouts/Default/ProfileMenu.vue';
+import VSettingsMenu from '@/views/Explore/layouts/SettingsMenu.vue';
 
 const isSearchFieldOpen = ref(false);
 const search = ref('');
