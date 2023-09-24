@@ -93,6 +93,7 @@
 </template>
 
 <script lang="ts" setup>
+import { Regex } from '@akiratatsuhisa/sawamura-utils';
 import { onKeyStroke } from '@vueuse/core';
 import _ from 'lodash';
 import { computed, reactive, ref } from 'vue';
@@ -105,7 +106,6 @@ import {
   useShowPassword,
   useVuelidate,
 } from '@/composables';
-import { AUTH_REGEX } from '@/constants';
 import { IRegisterRequest } from '@/interfaces';
 import { services } from '@/services';
 import {
@@ -153,7 +153,7 @@ const [v$, { handleSubmit }] = useVuelidate<
       required: required(pathFormField('username')),
       minLength: minLength(pathFormField('username'), 4),
       maxLength: maxLength(pathFormField('username'), 16),
-      regex: regex(pathFormField('username'), AUTH_REGEX.USERNAME),
+      regex: regex(pathFormField('username'), Regex.Validate.USERNAME),
     },
     displayName: {
       required: required(pathFormField('displayName')),
@@ -164,7 +164,7 @@ const [v$, { handleSubmit }] = useVuelidate<
       required: required(pathFormField('password')),
       minLength: minLength(pathFormField('password'), 8),
       maxLength: maxLength(pathFormField('password'), 64),
-      regex: regex(pathFormField('password'), AUTH_REGEX.PASSWORD),
+      regex: regex(pathFormField('password'), Regex.Validate.PASSWORD),
     },
     confirmPassword: {
       required: required(pathFormField('confirmPassword')),

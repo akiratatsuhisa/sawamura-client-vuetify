@@ -1,6 +1,6 @@
+import { Regex } from '@akiratatsuhisa/sawamura-utils';
 import { RouteRecordRaw } from 'vue-router';
 
-import { Regex } from '@/helpers';
 import VBottomAppBar from '@/layouts/Default/BottomAppBar.vue';
 import VLeftAppBar from '@/layouts/Default/LeftAppBar.vue';
 import VLeftInnerAppBar from '@/layouts/Default/LeftInnerAppBar.vue';
@@ -26,7 +26,7 @@ export default {
   },
   children: [
     {
-      path: `/dashboard/users/:id(${Regex.Uuid.source})?/:dialog(changeRoles)?`,
+      path: `/dashboard/users/:id(${Regex.Url.UUID.source})?/:dialog(changeRoles)?`,
       name: 'Dashboard:Users',
       meta: {
         breadcrumb: {
@@ -51,7 +51,7 @@ export default {
       component: () => import('@/views/Dashboard/Users/Index.vue'),
       children: [
         {
-          path: `/dashboard/users/roles/:dialog(create|update|delete)?/:id(${Regex.Uuid.source})?`,
+          path: `/dashboard/users/roles/:dialog(create|update|delete)?/:id(${Regex.Url.UUID.source})?`,
           name: 'Dashboard:Users:Roles',
           meta: {
             breadcrumb: {

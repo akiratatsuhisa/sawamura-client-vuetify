@@ -42,15 +42,19 @@
 import { useElementSize } from '@vueuse/core';
 import { storeToRefs } from 'pinia';
 import { computed } from 'vue';
-import { useRoute } from 'vue-router';
 import { useDisplay } from 'vuetify';
 
-import { useAuth, useScrollBehavior, useUserImage } from '@/composables';
+import {
+  useAuth,
+  useBackgroundRoute,
+  useScrollBehavior,
+  useUserImage,
+} from '@/composables';
 import VMessagesMenu from '@/layouts/Default/MessagesMenu.vue';
 import VProfileMenu from '@/layouts/Default/ProfileMenu.vue';
 import { useProfileUserStore } from '@/store';
 
-const route = useRoute();
+const route = useBackgroundRoute();
 const { user: identityUser } = useAuth();
 
 const profileUserStore = useProfileUserStore();
@@ -65,7 +69,7 @@ const { isTopbarElevation } = useScrollBehavior({
 const coverUrl = useUserImage(
   'cover',
   computed(() => {
-    if (route.params.username === identityUser.value?.username) {
+    if (route.value.params.username === identityUser.value?.username) {
       return identityUser.value!;
     }
     return user.value!;

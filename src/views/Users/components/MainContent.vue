@@ -2,8 +2,16 @@
   <v-sheet
     v-for="index in 10"
     :key="index"
-    :rounded="$vuetify.display.xs ? '0' : 'xl'"
+    v-ripple
+    class="cursor-pointer"
     :class="[$vuetify.display.smAndUp ? 'my-4' : '']"
+    :rounded="$vuetify.display.xs ? '0' : 'xl'"
+    @click="
+      $router.push({
+        name: 'Users:Status',
+        params: { id: uuidv4(), username: route.params.username },
+      })
+    "
   >
     <v-card-text>Main Content</v-card-text>
     <v-card-text>
@@ -14,3 +22,11 @@
     <v-divider v-if="$vuetify.display.xs" />
   </v-sheet>
 </template>
+
+<script lang="ts" setup>
+import { v4 as uuidv4 } from 'uuid';
+
+import { useBackgroundRoute } from '@/composables';
+
+const route = useBackgroundRoute();
+</script>

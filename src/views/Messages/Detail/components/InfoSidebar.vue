@@ -1,6 +1,7 @@
 <template>
   <v-navigation-drawer
     v-model="drawer"
+    touchless
     location="right"
     :width="$vuetify.display.smAndDown ? $vuetify.display.width : '320'"
   >

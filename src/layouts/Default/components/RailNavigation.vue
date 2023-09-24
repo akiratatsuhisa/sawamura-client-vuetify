@@ -3,6 +3,7 @@
     permanent
     rail
     rail-width="80"
+    touchless
     floating
     class="bg-surface-container text-on-surface"
   >

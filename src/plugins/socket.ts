@@ -6,6 +6,7 @@ import { KEYS } from '@/constants';
 const plugin: Plugin = {
   install(app: App) {
     const manager = new Manager(import.meta.env.VITE_WS_URL, {
+      path: import.meta.env.VITE_HANDSHAKE_PATH,
       autoConnect: false,
     });
 

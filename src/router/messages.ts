@@ -1,7 +1,7 @@
+import { Regex } from '@akiratatsuhisa/sawamura-utils';
 import _ from 'lodash';
 import { RouteRecordRaw } from 'vue-router';
 
-import { Regex } from '@/helpers';
 import VBottomAppBar from '@/layouts/Default/BottomAppBar.vue';
 import VLeftAppBar from '@/layouts/Default/LeftAppBar.vue';
 import VRoomDetailLeftAppBar from '@/views/Messages/layouts/RoomDetailLeftAppBar.vue';
@@ -22,7 +22,7 @@ export default [
     },
   },
   {
-    path: `/messages/:roomId(${Regex.Uuid.source})/:dialog(update|photo|cover|theme|delete|icon|members)?/:memberDialog(create|update|role|delete)?/:memberId(${Regex.Uuid.source})?`,
+    path: `/messages/:roomId(${Regex.Url.UUID.source})/:dialog(update|photo|cover|theme|delete|icon|members)?/:memberDialog(create|update|role|delete)?/:memberId(${Regex.Url.UUID.source})?`,
     name: 'Messages:Room',
     components: {
       left: VRoomDetailLeftAppBar,

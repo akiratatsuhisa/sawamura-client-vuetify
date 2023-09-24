@@ -55,6 +55,7 @@ Next, create an `.env` file with the following contents:
 | KEY                    | DESCRIPTION                                                                        | EXAMPLE VALUE             |
 | ---------------------- | ---------------------------------------------------------------------------------- | ------------------------- |
 | VITE_WS_URL            | WebSockets URL used for connecting to the backend server.                          | ws://localhost:4000       |
+| VITE_HANDSHAKE_PATH    | WebSockets handshake path used for connecting to the backend server.               | /socket.io                |
 | VITE_API_URL           | URL for making API requests to the backend server.                                 | http://localhost:4000     |
 | VITE_NO_AVATAR_URL     | URL for a default avatar image when a user does not have a profile picture.        | /images/no-avatar.png     |
 | VITE_NO_BACKGROUND_URL | URL for a default background image when a image does not have a custom background. | /images/no-background.png |

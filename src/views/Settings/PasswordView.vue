@@ -76,6 +76,7 @@
 </template>
 
 <script lang="ts" setup>
+import { Regex } from '@akiratatsuhisa/sawamura-utils';
 import { computed, reactive } from 'vue';
 
 import {
@@ -86,7 +87,6 @@ import {
   useShowPassword,
   useVuelidate,
 } from '@/composables';
-import { AUTH_REGEX } from '@/constants';
 import { IUpdatePasswordRequest } from '@/interfaces';
 import { services } from '@/services';
 import { maxLength, minLength, regex, required, sameAs } from '@/validators';
@@ -136,7 +136,7 @@ const [v$, { handleSubmit, isLoading, submitable }] = useVuelidate<
       maxLength: maxLength(pathChangePasswordFormField('newPassword'), 64),
       regex: regex(
         pathChangePasswordFormField('newPassword'),
-        AUTH_REGEX.PASSWORD,
+        Regex.Validate.PASSWORD,
       ),
     },
     confirmPassword: {
