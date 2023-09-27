@@ -67,7 +67,5 @@ export type LocalePagesAuth = {
      * @param {Component} 0
      */
     returnToLogin: string;
-    usernameHint: string;
-    passwordHint: string;
   };
 };

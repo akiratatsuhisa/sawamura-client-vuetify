@@ -7,4 +7,8 @@ export const validators: LocaleValidators = {
   email: 'メールアドレスの形式で入力してください',
   sameAs: '{firstField}と{secondField}は一致する必要があります',
   regex: '有効な{label}の形式で入力してください',
+  username:
+    '{label}はアルファベットで始まり、英数字、アンダースコア、ハイフンのみを含めることができます',
+  password:
+    "{label}は少なくとも1つの大文字、1つの小文字、1つの数字、および1つの特殊文字「{'@'} $ ! % * # ? &」を含める必要があります",
 };

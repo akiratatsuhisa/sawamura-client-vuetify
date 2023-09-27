@@ -153,8 +153,6 @@ const { isLoading: isLoadingChartMessages, request: requestChartMessages } =
             })),
           },
         ];
-
-        console.log(series.value);
       },
     },
   );

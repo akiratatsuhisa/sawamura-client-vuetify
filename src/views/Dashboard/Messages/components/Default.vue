@@ -79,7 +79,6 @@ const options = computed<ApexOptions>(() => ({
   },
   plotOptions: {
     bar: {
-      columnWidth: '20%',
       borderRadius: 2,
     },
   },

@@ -23,4 +23,12 @@ export type LocaleValidators = {
    * @param {string} label
    */
   regex: string;
+  /**
+   * @param {string} label
+   */
+  username: string;
+  /**
+   * @param {string} label
+   */
+  password: string;
 };

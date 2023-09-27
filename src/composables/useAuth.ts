@@ -7,7 +7,7 @@ import {
 import axios, { AxiosRequestConfig } from 'axios';
 import dayjs from 'dayjs';
 import _ from 'lodash';
-import { computed, reactive, unref } from 'vue';
+import { computed, nextTick, reactive, ref, unref } from 'vue';
 import { useRoute } from 'vue-router';
 
 import { useAxios, useSnackbar } from '@/composables';
@@ -25,6 +25,15 @@ const NO_AVATAR_URL = import.meta.env.VITE_NO_AVATAR_URL as string;
 const NO_BACKGROUND_URL = import.meta.env.VITE_NO_BACKGROUND_URL as string;
 
 export const useAuth = createSharedComposable(() => {
+  const cacheImages: Record<
+    'photo' | 'cover',
+    | { url: string; promise: Promise<string> }
+    | { url: null; promise: undefined }
+  > = {
+    photo: { url: null, promise: undefined },
+    cover: { url: null, promise: undefined },
+  };
+
   const accessToken = useLocalStorage('auth:profile:accessToken', '');
   const refreshToken = useLocalStorage('auth:profile:refreshToken', '');
 
@@ -46,6 +55,16 @@ export const useAuth = createSharedComposable(() => {
   }
 
   function updateTokens(tokens: { accessToken: string; refreshToken: string }) {
+    // clear cache images
+    cacheImages.cover = {
+      url: null,
+      promise: undefined,
+    };
+    cacheImages.photo = {
+      url: null,
+      promise: undefined,
+    };
+
     accessToken.value = tokens.accessToken;
     refreshToken.value = tokens.refreshToken;
   }
@@ -69,11 +88,31 @@ export const useAuth = createSharedComposable(() => {
     }
   }
 
+  const isFetchingAccessToken = ref(false);
+
   async function getAccessTokenSilently(options?: IAuthOptions) {
     const { seconds } = options ?? {};
 
-    if (isExpires(seconds)) {
-      await fetchAccessToken();
+    if (!isExpires(seconds)) {
+      return accessToken.value;
+    }
+
+    if (!isFetchingAccessToken.value) {
+      console.debug('auth:fetching access token');
+      try {
+        isFetchingAccessToken.value = true;
+        await fetchAccessToken();
+      } finally {
+        await nextTick();
+        isFetchingAccessToken.value = false;
+      }
+    } else {
+      // wait until fetch access token completed
+      console.debug('auth:waiting access token');
+      while (isFetchingAccessToken.value) {
+        await new Promise((resolve) => _.delay(resolve, 200));
+      }
+      console.debug('auth:waiting access token completed');
     }
 
     return accessToken.value;
@@ -153,29 +192,44 @@ export const useAuth = createSharedComposable(() => {
     _.trim(`${user.value?.lastName ?? ''} ${user.value?.firstName ?? ''}`),
   );
 
+  async function requestImageByType(username: string, type: 'photo' | 'cover') {
+    return axiosInstacne
+      .request<string>({
+        url: `/profileUsers/${username}/${type}`,
+      })
+      .then((data) => data.data)
+      .catch(() => (type === 'photo' ? NO_AVATAR_URL : NO_BACKGROUND_URL));
+  }
+
   const photoUrl = computedAsync(async () => {
     if (!user.value || !user.value?.photoUrl) {
       return NO_AVATAR_URL;
     }
 
-    return await axiosInstacne
-      .request<string>({
-        url: `/profileUsers/${user.value.username}/photo`,
-      })
-      .then((data) => data.data)
-      .catch(() => NO_AVATAR_URL);
+    if (cacheImages.photo.url === user.value.photoUrl) {
+      return await cacheImages.photo.promise;
+    }
+
+    cacheImages.photo = {
+      url: user.value.photoUrl,
+      promise: requestImageByType(user.value.username, 'photo'),
+    };
+    return await cacheImages.photo.promise;
   }, NO_AVATAR_URL);
   const coverUrl = computedAsync(async () => {
     if (!user.value || !user.value?.coverUrl) {
       return NO_BACKGROUND_URL;
     }
 
-    return await axiosInstacne
-      .request<string>({
-        url: `/profileUsers/${user.value.username}/cover`,
-      })
-      .then((data) => data.data)
-      .catch(() => NO_BACKGROUND_URL);
+    if (cacheImages.cover.url === user.value.coverUrl) {
+      return await cacheImages.cover.promise;
+    }
+
+    cacheImages.cover = {
+      url: user.value.coverUrl,
+      promise: requestImageByType(user.value.username, 'cover'),
+    };
+    return await cacheImages.cover.promise;
   }, NO_BACKGROUND_URL);
 
   return {

@@ -65,9 +65,5 @@ export const auth: LocalePagesAuth = {
     privacy:
       'By continuing, you are setting up account and agree to our User Agreement and Privacy Policy.',
     returnToLogin: 'Return to {0}.',
-    usernameHint:
-      'The username must start with an alphabet character and can only contain alphanumeric characters, underscores, and hyphens',
-    passwordHint:
-      "The password must be contain at least one upper case letter, one lower case letter, one digit, and one special character ({'@'} $ ! % * # ? &)",
   },
 };

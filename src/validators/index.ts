@@ -70,3 +70,16 @@ export const regex = (label: string, regex: RegExp) =>
     () => i18n.global.t('validators.regex', { label: i18n.global.t(label) }),
     helpers.regex(regex),
   );
+
+export const regexCustomMessage = (
+  translateMessageKey: string,
+  label: string,
+  regex: RegExp,
+) =>
+  helpers.withMessage(
+    () =>
+      i18n.global.t(`validators.${translateMessageKey}`, {
+        label: i18n.global.t(label),
+      }),
+    helpers.regex(regex),
+  );

@@ -35,11 +35,11 @@ export default [
     },
   },
   {
-    path: `/users/:username(${Regex.Url.USERNAME.source})/status/:id(${Regex.Url.UUID.source})`,
+    path: `/users/:username(${Regex.Url.USERNAME.source})/status/:id(\\d{1,18})`,
     alias: [
-      `/users/:username(${Regex.Url.USERNAME.source})/s/:id(${Regex.Url.UUID.source})`,
-      `/u/:username(${Regex.Url.USERNAME.source})/status/:id(${Regex.Url.UUID.source})`,
-      `/u/:username(${Regex.Url.USERNAME.source})/s/:id(${Regex.Url.UUID.source})`,
+      `/users/:username(${Regex.Url.USERNAME.source})/s/:id(\\d{1,18})`,
+      `/u/:username(${Regex.Url.USERNAME.source})/status/:id(\\d{1,18})`,
+      `/u/:username(${Regex.Url.USERNAME.source})/s/:id(\\d{1,18})`,
     ],
     name: 'Users:Status',
     meta: { requiresAuth: true },

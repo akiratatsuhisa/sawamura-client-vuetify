@@ -9,7 +9,7 @@
     @click="
       $router.push({
         name: 'Users:Status',
-        params: { id: uuidv4(), username: route.params.username },
+        params: { id: index + 1, username: route.params.username },
       })
     "
   >
@@ -24,8 +24,6 @@
 </template>
 
 <script lang="ts" setup>
-import { v4 as uuidv4 } from 'uuid';
-
 import { useBackgroundRoute } from '@/composables';
 
 const route = useBackgroundRoute();

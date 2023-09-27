@@ -89,7 +89,13 @@ import {
 } from '@/composables';
 import { IUpdatePasswordRequest } from '@/interfaces';
 import { services } from '@/services';
-import { maxLength, minLength, regex, required, sameAs } from '@/validators';
+import {
+  maxLength,
+  minLength,
+  regexCustomMessage,
+  required,
+  sameAs,
+} from '@/validators';
 
 const {
   translate: translateChangePassword,
@@ -134,7 +140,8 @@ const [v$, { handleSubmit, isLoading, submitable }] = useVuelidate<
       required: required(pathChangePasswordFormField('newPassword')),
       minLength: minLength(pathChangePasswordFormField('newPassword'), 8),
       maxLength: maxLength(pathChangePasswordFormField('newPassword'), 64),
-      regex: regex(
+      regex: regexCustomMessage(
+        'password',
         pathChangePasswordFormField('newPassword'),
         Regex.Validate.PASSWORD,
       ),
@@ -142,8 +149,8 @@ const [v$, { handleSubmit, isLoading, submitable }] = useVuelidate<
     confirmPassword: {
       required: required(pathChangePasswordFormField('confirmPassword')),
       sameAsRef: sameAs(
-        pathChangePasswordFormField('newPassword'),
         pathChangePasswordFormField('confirmPassword'),
+        pathChangePasswordFormField('newPassword'),
         computed(() => form.newPassword),
       ),
     },

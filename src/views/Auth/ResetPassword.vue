@@ -18,7 +18,6 @@
                 @blur="v$.password.$validate"
                 clearable
                 persistent-hint
-                :hint="translateShared('passwordHint')"
                 v-bind="bindShowPassword('new')"
               />
               <v-text-field
@@ -78,19 +77,20 @@ import {
 } from '@/composables';
 import { IResetPasswordRequest } from '@/interfaces';
 import { services } from '@/services';
-import { maxLength, minLength, regex, required, sameAs } from '@/validators';
+import {
+  maxLength,
+  minLength,
+  regexCustomMessage,
+  required,
+  sameAs,
+} from '@/validators';
 
 const router = useRouter();
 const route = useRoute();
-const {
-  translate,
-  pathShared,
-  translateShared,
-  pathFormField,
-  translateFormField,
-} = usePageLocale({
-  prefix: 'auth.resetPassword',
-});
+const { translate, pathShared, pathFormField, translateFormField } =
+  usePageLocale({
+    prefix: 'auth.resetPassword',
+  });
 
 const redirectUrl = computed(() =>
   _.isArray(route.query.redirectUrl)
@@ -122,13 +122,17 @@ const [v$, { handleSubmit }] = useVuelidate<
       required: required(pathFormField('password')),
       minLength: minLength(pathFormField('password'), 8),
       maxLength: maxLength(pathFormField('password'), 64),
-      regex: regex(pathFormField('password'), Regex.Validate.PASSWORD),
+      regex: regexCustomMessage(
+        'password',
+        pathFormField('password'),
+        Regex.Validate.PASSWORD,
+      ),
     },
     confirmPassword: {
       required: required(pathFormField('confirmPassword')),
       sameAsRef: sameAs(
-        pathFormField('password'),
         pathFormField('confirmPassword'),
+        pathFormField('password'),
         computed(() => form.password),
       ),
     },

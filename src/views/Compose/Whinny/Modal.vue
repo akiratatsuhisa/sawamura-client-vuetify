@@ -9,8 +9,6 @@
       </v-app-bar-nav-icon>
     </v-toolbar>
 
-    <v-divider />
-
     <v-card-text class="overflow-y-auto">
       <v-text-field v-model="text" label="Whinny" />
     </v-card-text>

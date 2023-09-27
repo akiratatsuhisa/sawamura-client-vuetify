@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router';
 
-import { useAuth } from '@/composables';
+import { clearCacheUserImages, useAuth } from '@/composables';
 import VBottomAppBar from '@/layouts/Default/BottomAppBar.vue';
 import VDefaultLayout from '@/layouts/Default/Index.vue';
 import VLeftAppBar from '@/layouts/Default/LeftAppBar.vue';
@@ -57,6 +57,8 @@ const router = createRouter({
 });
 
 router.beforeEach(async (to, from) => {
+  clearCacheUserImages();
+
   const { requiresAuth, requiresRoles } = to.meta;
 
   const { isAuthenticated, user, getAccessTokenSilently } = useAuth();

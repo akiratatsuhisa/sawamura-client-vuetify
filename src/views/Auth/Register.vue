@@ -17,7 +17,6 @@
                 @blur="v$.username.$validate"
                 clearable
                 persistent-hint
-                :hint="translateShared('usernameHint')"
                 autocomplete="username"
               />
               <v-text-field
@@ -47,7 +46,6 @@
                 @blur="v$.password.$validate"
                 clearable
                 persistent-hint
-                :hint="translateShared('passwordHint')"
                 v-bind="bindShowPassword('new')"
               />
               <v-text-field
@@ -112,7 +110,7 @@ import {
   email,
   maxLength,
   minLength,
-  regex,
+  regexCustomMessage,
   required,
   sameAs,
 } from '@/validators';
@@ -153,7 +151,11 @@ const [v$, { handleSubmit }] = useVuelidate<
       required: required(pathFormField('username')),
       minLength: minLength(pathFormField('username'), 4),
       maxLength: maxLength(pathFormField('username'), 16),
-      regex: regex(pathFormField('username'), Regex.Validate.USERNAME),
+      regex: regexCustomMessage(
+        'username',
+        pathFormField('username'),
+        Regex.Validate.USERNAME,
+      ),
     },
     displayName: {
       required: required(pathFormField('displayName')),
@@ -164,13 +166,17 @@ const [v$, { handleSubmit }] = useVuelidate<
       required: required(pathFormField('password')),
       minLength: minLength(pathFormField('password'), 8),
       maxLength: maxLength(pathFormField('password'), 64),
-      regex: regex(pathFormField('password'), Regex.Validate.PASSWORD),
+      regex: regexCustomMessage(
+        'password',
+        pathFormField('password'),
+        Regex.Validate.PASSWORD,
+      ),
     },
     confirmPassword: {
       required: required(pathFormField('confirmPassword')),
       sameAsRef: sameAs(
-        pathFormField('password'),
         pathFormField('confirmPassword'),
+        pathFormField('password'),
         computed(() => form.password),
       ),
     },
