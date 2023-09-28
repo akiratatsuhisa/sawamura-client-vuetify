@@ -126,7 +126,8 @@ export const useAuth = createSharedComposable(() => {
     return user.value;
   }
 
-  const { createSnackbarSuccess, createSnackbarError } = useSnackbar();
+  const { createSnackbarNormal, createSnackbarSuccess, createSnackbarError } =
+    useSnackbar();
 
   async function login(dto: ILoginRequest, config?: AxiosRequestConfig) {
     try {
@@ -146,7 +147,7 @@ export const useAuth = createSharedComposable(() => {
           i18n.global.t(`common.messages.${data.message}`, data.params as any),
         );
       } else {
-        alert('Error');
+        createSnackbarNormal(i18n.global.t(`common.messages.error.unknown`));
       }
     }
   }
@@ -173,7 +174,7 @@ export const useAuth = createSharedComposable(() => {
           i18n.global.t(`common.messages.${data.message}`, data.params as any),
         );
       } else {
-        alert('Error');
+        createSnackbarNormal(i18n.global.t(`common.messages.error.unknown`));
       }
     } finally {
       updateTokens({

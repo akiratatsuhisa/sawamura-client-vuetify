@@ -62,6 +62,14 @@ export function useSnackbar() {
     snackbarShow(items, messageOrComponent, options);
   }
 
+  function createSnackbarNormal(
+    messageOrComponent: string | Component,
+    options: SnackbarOptionsWithoutColor = { isOnce: true },
+  ) {
+    (options as SnackbarOptions).color = 'inverse-surface';
+    createSnackbar(messageOrComponent, options);
+  }
+
   function createSnackbarSuccess(
     messageOrComponent: string | Component,
     options: SnackbarOptionsWithoutColor = { isOnce: true },
@@ -109,6 +117,7 @@ export function useSnackbar() {
 
   return {
     createSnackbar,
+    createSnackbarNormal,
     createSnackbarSuccess,
     createSnackbarInfo,
     createSnackbarWarning,

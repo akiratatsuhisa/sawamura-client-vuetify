@@ -8,7 +8,16 @@
     </template>
 
     <template v-if="contentIsString" #actions>
-      <v-btn variant="text" color="on-primary" @click="onClose">Close</v-btn>
+      <v-btn
+        variant="text"
+        :color="
+          props.color === 'inverse-surface'
+            ? 'primary-container'
+            : `on-${props.color}`
+        "
+        @click="onClose"
+        >Close</v-btn
+      >
     </template>
   </v-snackbar>
 </template>
