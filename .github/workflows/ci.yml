@@ -56,3 +56,20 @@ jobs:
 
       - name: Run build
         run: npm run build
+       
+  deploy:
+    needs:
+      - test
+      - build
+    runs-on: ubuntu-latest
+    if: "startsWith(github.event.head_commit.message, '[DEPLOY]')"
+    steps:
+      - name: executing remote ssh commands using password
+        uses: appleboy/ssh-action@v1.0.0
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          password: ${{ secrets.SSH_PASSWORD }}
+          script: |
+            ${{ vars.SSH_PATH }}
+            ${{ vars.SSH_DEPLOY_COMMAND }}
