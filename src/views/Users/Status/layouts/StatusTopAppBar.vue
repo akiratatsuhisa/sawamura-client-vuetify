@@ -15,10 +15,13 @@
       <v-messages-menu />
       <v-profile-menu />
     </template>
+
+    <v-top-app-bar-loading />
   </v-app-bar>
 </template>
 
 <script lang="ts" setup>
-import VMessagesMenu from '@/layouts/Default/MessagesMenu.vue';
-import VProfileMenu from '@/layouts/Default/ProfileMenu.vue';
+import VMessagesMenu from '@/layouts/Default/components/MessagesMenu.vue';
+import VProfileMenu from '@/layouts/Default/components/ProfileMenu.vue';
+import VTopAppBarLoading from '@/layouts/Default/components/TopAppBarLoading.vue';
 </script>

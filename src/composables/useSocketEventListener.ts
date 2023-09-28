@@ -4,7 +4,10 @@ import { Socket } from 'socket.io-client';
 import { v4 as uuidv4 } from 'uuid';
 import { isRef, onBeforeUnmount, readonly, ref, unref, watch } from 'vue';
 
+import { LoadingState } from '@/constants';
 import { IWsExceptionResponse } from '@/interfaces';
+
+import { useLoading } from './useLoading';
 
 type EmitId = {
   __emit_id__?: string;
@@ -14,6 +17,7 @@ export type UseSocketEventListenerOptions<D, R, E> = {
   response?: (data: D) => void | Promise<void>;
   listener?: (data: D) => void | Promise<void>;
   exception?: (error: E) => void | Promise<void>;
+  loadingState?: LoadingState;
 } & (
   | {
       immediate: true;
@@ -34,7 +38,12 @@ export function useSocketEventListener<
   event: string,
   options?: UseSocketEventListenerOptions<WsResponse, WsRequest, WsException>,
 ) {
-  const { response, exception, listener } = options ?? {};
+  const {
+    loadingState = LoadingState.Loading,
+    response,
+    exception,
+    listener,
+  } = options ?? {};
 
   const emitId = uuidv4();
 
@@ -109,6 +118,17 @@ export function useSocketEventListener<
 
   if (options?.immediate) {
     request(options.paramsOrData);
+  }
+
+  switch (loadingState) {
+    case LoadingState.Loading:
+      useLoading(isLoading);
+      break;
+    case LoadingState.Percent:
+      break;
+    case LoadingState.None:
+    default:
+      break;
   }
 
   return {

@@ -43,7 +43,6 @@ export function useUserImage(
       return await cacheUserImages.get(url);
     }
 
-    console.info(url);
     const promise = request(unwrapUser.username, type);
     cacheUserImages.set(url, promise);
     return await promise;

@@ -13,6 +13,7 @@ import VBaseMenu from '@/components/VBaseMenu.vue';
 import VFloatingActionButton from '@/components/VFloatingActionButton.vue';
 import i18n from '@/locales';
 import axios from '@/plugins/axios';
+import loading from '@/plugins/loading';
 import notification from '@/plugins/notification';
 import socket from '@/plugins/socket';
 import vuetify from '@/plugins/vuetify';
@@ -25,6 +26,7 @@ export function registerPlugins(app: App) {
   app
     .use(router)
     .use(pinia)
+    .use(loading)
     .use(axios)
     .use(socket)
     .use(vuetify)

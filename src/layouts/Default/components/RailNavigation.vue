@@ -9,8 +9,8 @@
   >
     <template #prepend>
       <v-list-item
-        height="56"
-        nav
+        height="68"
+        class="pa-0"
         @click="
           $router.push({
             name: 'Users:Detail',
@@ -23,6 +23,7 @@
             :image="photoUrl"
             color="secondary-container"
             class="ma-1 elevation-2"
+            size="48"
           />
         </div>
       </v-list-item>

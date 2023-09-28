@@ -20,14 +20,17 @@
     <v-messages-menu />
 
     <v-profile-menu />
+
+    <v-top-app-bar-loading />
   </v-app-bar>
 </template>
 
 <script lang="ts" setup>
 import { storeToRefs } from 'pinia';
 
-import VMessagesMenu from '@/layouts/Default/MessagesMenu.vue';
-import VProfileMenu from '@/layouts/Default/ProfileMenu.vue';
+import VMessagesMenu from '@/layouts/Default/components/MessagesMenu.vue';
+import VProfileMenu from '@/layouts/Default/components/ProfileMenu.vue';
+import VTopAppBarLoading from '@/layouts/Default/components/TopAppBarLoading.vue';
 import { useAppStore } from '@/store';
 
 const appStore = useAppStore();

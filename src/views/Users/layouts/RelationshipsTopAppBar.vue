@@ -9,7 +9,7 @@
         {{ user?.displayName }}
       </h1>
       <h2 class="text-subtitle-2 font-weight-light text-truncate">
-        @{{ user?.username }}
+        {{ user?.username ? `@${user.username}` : '' }}
       </h2>
     </v-app-bar-title>
     <v-app-bar-title
@@ -24,14 +24,17 @@
       <v-messages-menu />
       <v-profile-menu />
     </template>
+
+    <v-top-app-bar-loading />
   </v-app-bar>
 </template>
 
 <script lang="ts" setup>
 import { storeToRefs } from 'pinia';
 
-import VMessagesMenu from '@/layouts/Default/MessagesMenu.vue';
-import VProfileMenu from '@/layouts/Default/ProfileMenu.vue';
+import VMessagesMenu from '@/layouts/Default/components/MessagesMenu.vue';
+import VProfileMenu from '@/layouts/Default/components/ProfileMenu.vue';
+import VTopAppBarLoading from '@/layouts/Default/components/TopAppBarLoading.vue';
 import { useProfileUserStore } from '@/store';
 
 const profileUserStore = useProfileUserStore();

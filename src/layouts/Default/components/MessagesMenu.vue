@@ -36,7 +36,7 @@
 import { storeToRefs } from 'pinia';
 
 import { useFetchIntersection, useLayoutLocale } from '@/composables';
-import VMessageListItem from '@/layouts/Default/MessageListItem.vue';
+import VMessageListItem from '@/layouts/Default/components/MessageListItem.vue';
 import { useRoomsStore } from '@/store';
 
 const { translate } = useLayoutLocale({

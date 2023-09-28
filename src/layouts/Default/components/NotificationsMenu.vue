@@ -53,7 +53,7 @@ import {
   IUpdateNotificationRequest,
   NotificationStatus,
 } from '@/interfaces';
-import VNotificationListItem from '@/layouts/Default/NotificationListItem.vue';
+import VNotificationListItem from '@/layouts/Default/components/NotificationListItem.vue';
 
 const { translate, makeTranslateAlert } = useLayoutLocale({
   prefix: 'default.topAppBar.notification',

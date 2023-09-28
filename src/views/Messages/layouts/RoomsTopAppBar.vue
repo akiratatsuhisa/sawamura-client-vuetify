@@ -51,6 +51,8 @@
         </v-list-item>
       </v-list>
     </v-search>
+
+    <v-top-app-bar-loading />
   </v-app-bar>
 
   <v-app-bar v-else class="bg-surface-container text-on-surface">
@@ -62,6 +64,8 @@
     </v-app-bar-title>
 
     <v-profile-menu />
+
+    <v-top-app-bar-loading />
   </v-app-bar>
 </template>
 
@@ -71,7 +75,8 @@ import { ref } from 'vue';
 
 import VAvancedRoomListItem from '@/components/Rooms/AvancedRoomListItem.vue';
 import VSearch from '@/components/VSearch.vue';
-import VProfileMenu from '@/layouts/Default/ProfileMenu.vue';
+import VProfileMenu from '@/layouts/Default/components/ProfileMenu.vue';
+import VTopAppBarLoading from '@/layouts/Default/components/TopAppBarLoading.vue';
 import { useRoomsStore } from '@/store';
 
 const isSearchFieldOpen = ref(false);

@@ -8,11 +8,18 @@ import axios, {
 } from 'axios';
 import { Component, ref, unref } from 'vue';
 
-import { useAuth, useLayoutLocale, useSnackbar } from '@/composables';
+import {
+  useAuth,
+  useLayoutLocale,
+  useLoading,
+  useSnackbar,
+} from '@/composables';
+import { LoadingState } from '@/constants';
 import { IExceptionResponseDetail } from '@/interfaces';
 import { config, Service } from '@/services';
 
 export type UseAxiosOptions<T> = {
+  loadingState?: LoadingState;
   unauth?: boolean;
 
   displayMessageFromResponse?: boolean;
@@ -42,6 +49,7 @@ export function useAxios<
   type Res = Awaited<ReturnType<S[A]>>['data'];
 
   const {
+    loadingState = LoadingState.Loading,
     unauth,
     displayMessageFromResponse = false,
     displayMessageFromException = true,
@@ -68,9 +76,14 @@ export function useAxios<
     percent.value = Math.round((event.loaded / (event.total ?? 0)) * 100);
   }
 
+  let percentTimeout: NodeJS.Timeout;
+
   async function excute(paramsOrData: Req): Promise<Res> {
     if (isLoading.value) {
       throw new Error('on progress');
+    }
+    if (percentTimeout) {
+      clearTimeout(percentTimeout);
     }
 
     isLoading.value = true;
@@ -149,11 +162,24 @@ export function useAxios<
       throw exception;
     } finally {
       isLoading.value = false;
+      percentTimeout = setTimeout(() => (percent.value = undefined), 250);
     }
   }
 
   if (options?.immediate) {
     excute(options.paramsOrData);
+  }
+
+  switch (loadingState) {
+    case LoadingState.Loading:
+      useLoading(isLoading);
+      break;
+    case LoadingState.Percent:
+      useLoading(percent);
+      break;
+    case LoadingState.None:
+    default:
+      break;
   }
 
   return {

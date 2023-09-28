@@ -2,6 +2,7 @@
   <div
     class="d-flex flex-nowrap mt-2"
     :class="[isCurrentUserMessage ? 'flex-row-reverse' : 'flex-row']"
+    @click="isShowTooltip = !isShowTooltip"
   >
     <v-avatar
       color="secondary-container"
@@ -12,6 +13,7 @@
     </v-avatar>
 
     <v-tooltip
+      v-model="isShowTooltip"
       :text="timeAgo"
       :location="isCurrentUserMessage ? 'left center' : 'right center'"
     >
@@ -104,7 +106,7 @@
 <script setup lang="ts">
 import { useTimeAgo } from '@vueuse/core';
 import _ from 'lodash';
-import { computed, inject } from 'vue';
+import { computed, inject, ref } from 'vue';
 
 import { usePageLocale, useUserImage } from '@/composables';
 import { KEYS } from '@/constants';
@@ -133,6 +135,8 @@ const currentUser = inject(KEYS.CHAT.CURRENT_MEMBER)!;
 const isCurrentUserMessage = computed(
   () => currentUser.value?.member.id === props.message.user.id,
 );
+
+const isShowTooltip = ref(false);
 
 const photoUrl = useUserImage(
   'photo',

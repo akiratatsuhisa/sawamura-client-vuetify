@@ -7,6 +7,7 @@ export * from '@/composables/useColor';
 export * from '@/composables/useFetchIntersection';
 export * from '@/composables/useFileDialog';
 export * from '@/composables/useImageCropper';
+export * from '@/composables/useLoading';
 export * from '@/composables/useLocale';
 export * from '@/composables/useRoom';
 export * from '@/composables/useRouter';

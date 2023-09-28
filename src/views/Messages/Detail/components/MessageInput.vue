@@ -142,6 +142,7 @@
 <script lang="ts" setup>
 import 'emoji-mart-vue-fast/css/emoji-mart.css';
 
+import { Regex } from '@akiratatsuhisa/sawamura-utils';
 import { useDropZone } from '@vueuse/core';
 import data from 'emoji-mart-vue-fast/data/twitter.json';
 // @ts-ignore
@@ -161,7 +162,7 @@ import { VTextField } from 'vuetify/components';
 
 import VBaseMenu from '@/components/VBaseMenu.vue';
 import { useOpenFileDialog, usePageLocale, useSnackbar } from '@/composables';
-import { KEYS, MESSAGE_FILE } from '@/constants';
+import { KEYS, MessageFile } from '@/constants';
 import { BinaryUnit, Format } from '@/helpers';
 import {
   BasicFile,
@@ -189,10 +190,10 @@ const isShowRecord = ref<boolean>(false);
 const filesInput = shallowReactive<Array<BasicFile>>([]);
 
 function pushFile(file: File): BasicFile | undefined {
-  if (!file || file.size > MESSAGE_FILE.MAX_FILE_SIZE) {
+  if (!file || file.size > MessageFile.MAX_FILE_SIZE) {
     createSnackbarWarning(
       t('common.messages.warning.fileExceededLimit', {
-        size: Format.binaryUnit(MESSAGE_FILE.MAX_FILE_SIZE, {
+        size: Format.binaryUnit(MessageFile.MAX_FILE_SIZE, {
           outputUnit: BinaryUnit.Mebibyte,
         }),
       }),
@@ -200,15 +201,15 @@ function pushFile(file: File): BasicFile | undefined {
     return;
   }
 
-  const type: BasicFileType | null = MESSAGE_FILE.IMAGE_MIME_TYPES.test(
+  const type: BasicFileType | null = Regex.MessageFile.IMAGE_MIME_TYPES.test(
     file.type,
   )
     ? 'images'
-    : MESSAGE_FILE.AUDIO_MIME_TYPES.test(file.type)
+    : Regex.MessageFile.AUDIO_MIME_TYPES.test(file.type)
     ? 'audios'
-    : MESSAGE_FILE.VIDEO_MIME_TYPES.test(file.type)
+    : Regex.MessageFile.VIDEO_MIME_TYPES.test(file.type)
     ? 'videos'
-    : MESSAGE_FILE.OFFICE_MIME_TYPES.test(file.type)
+    : Regex.MessageFile.OFFICE_MIME_TYPES.test(file.type)
     ? 'files'
     : null;
 
