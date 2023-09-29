@@ -41,6 +41,7 @@
 </template>
 
 <script lang="ts" setup>
+import { SOCKET_EVENTS } from '@akiratatsuhisa/sawamura-utils';
 import { useSortable } from '@vueuse/integrations/useSortable';
 import { computed, defineAsyncComponent, onMounted, provide, ref } from 'vue';
 
@@ -66,11 +67,15 @@ const { excute: requestRoles } = useAxios(services.roles, 'getAll');
 
 onMounted(async () => (roles.value = await requestRoles({})));
 
-useSocketEventListener<{ roles: Array<IRoleResponse> }>(socket, 'list:role', {
-  listener({ roles: data }) {
-    roles.value = data;
+useSocketEventListener<{ roles: Array<IRoleResponse> }>(
+  socket,
+  SOCKET_EVENTS.DASHBOARD_EVENTS.LIST_ROLE,
+  {
+    listener({ roles: data }) {
+      roles.value = data;
+    },
   },
-});
+);
 
 const { excute: requestSortRole } = useAxios(services.roles, 'sort');
 

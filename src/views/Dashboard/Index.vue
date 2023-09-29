@@ -101,6 +101,7 @@
 </template>
 
 <script lang="ts" setup>
+import { SOCKET_EVENTS } from '@akiratatsuhisa/sawamura-utils';
 import { useIntervalFn } from '@vueuse/core';
 import _ from 'lodash';
 import { computed, reactive } from 'vue';
@@ -172,7 +173,7 @@ const statisticalData = reactive<
 const { request: requestStorageDropbox } = useSocketEventListener<
   IStorageDropboxResponse,
   IStorageDropboxRequest
->(socket, 'read:storage:dropbox', {
+>(socket, SOCKET_EVENTS.DASHBOARD_EVENTS.READ_STORAGE_DROPBOX, {
   response(data) {
     statisticalData.dropbox.value = data.used;
     statisticalData.dropbox.max = data.allocated;
@@ -182,7 +183,7 @@ const { request: requestStorageDropbox } = useSocketEventListener<
 const { request: requestCountUsers } = useSocketEventListener<
   ICountUsersResponse,
   ICountUsersRequest
->(socket, 'read:count:users', {
+>(socket, SOCKET_EVENTS.DASHBOARD_EVENTS.READ_COUNT_USERS, {
   response(data) {
     statisticalData.users.value = data.count;
   },

@@ -36,6 +36,7 @@
 </template>
 
 <script lang="ts" setup>
+import { SOCKET_EVENTS } from '@akiratatsuhisa/sawamura-utils';
 import _ from 'lodash';
 import { ref, watch } from 'vue';
 
@@ -70,7 +71,7 @@ const { isLoading, request: requestNotifications } = useSocketEventListener<
     notifications: Array<INotificationResponse>;
   },
   ISearchNotificationsRequest
->(socket, 'list:notification', {
+>(socket, SOCKET_EVENTS.NOTIFICATION_EVENTS.LIST_NOTIFICATION, {
   response({ notifications: data }) {
     notifications.value = _.uniqBy(
       [...notifications.value, ...data],
@@ -88,7 +89,7 @@ const { isLoading, request: requestNotifications } = useSocketEventListener<
 const { request: requestDeleteNotification } = useSocketEventListener<
   INotificationResponse,
   IDeleteNotificationRequest
->(socket, 'delete:notification', {
+>(socket, SOCKET_EVENTS.NOTIFICATION_EVENTS.DELETE_NOTIFICATION, {
   response(data) {
     notifications.value = _.filter(
       notifications.value,
@@ -100,21 +101,25 @@ const { request: requestDeleteNotification } = useSocketEventListener<
 const { request: requestUpdateNotification } = useSocketEventListener<
   INotificationResponse,
   IUpdateNotificationRequest
->(socket, 'update:notification', {
+>(socket, SOCKET_EVENTS.NOTIFICATION_EVENTS.UPDATE_NOTIFICATION, {
   response(data) {
     const index = _.findIndex(notifications.value, { id: data.id });
     notifications.value.splice(index, 1, data);
   },
 });
 
-useSocketEventListener<INotificationResponse>(socket, 'create:notification', {
-  response(data) {
-    notifications.value = _.uniqBy(
-      [data, ...notifications.value],
-      (notification) => notification.id,
-    );
+useSocketEventListener<INotificationResponse>(
+  socket,
+  SOCKET_EVENTS.NOTIFICATION_EVENTS.CREATE_NOTIFICATION,
+  {
+    response(data) {
+      notifications.value = _.uniqBy(
+        [data, ...notifications.value],
+        (notification) => notification.id,
+      );
+    },
   },
-});
+);
 
 function fetchMoreNotifications() {
   const excludeIds = _.map(notifications.value, (room) => room.id);

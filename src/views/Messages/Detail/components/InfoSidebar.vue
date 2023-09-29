@@ -229,6 +229,7 @@
 </template>
 
 <script lang="ts" setup>
+import { SOCKET_EVENTS } from '@akiratatsuhisa/sawamura-utils';
 import _ from 'lodash';
 import { computed, defineAsyncComponent, inject } from 'vue';
 import { useRouter } from 'vue-router';
@@ -330,29 +331,37 @@ function handleDeleteRoom(data: IRoomResponse) {
 
 const socket = useSocketChat();
 
-useSocketEventListener<IRoomResponse>(socket, 'update:room:photo', {
-  listener(data) {
-    updateListRoom(data);
-    if (data.id !== room.value?.id) {
-      return;
-    }
-    room.value = data;
+useSocketEventListener<IRoomResponse>(
+  socket,
+  SOCKET_EVENTS.ROOM_EVENTS.UPDATE_ROOM_PHOTO,
+  {
+    listener(data) {
+      updateListRoom(data);
+      if (data.id !== room.value?.id) {
+        return;
+      }
+      room.value = data;
+    },
   },
-});
+);
 
-useSocketEventListener<IRoomResponse>(socket, 'update:room:cover', {
-  listener(data) {
-    if (data.id !== room.value?.id) {
-      return;
-    }
-    room.value = data;
+useSocketEventListener<IRoomResponse>(
+  socket,
+  SOCKET_EVENTS.ROOM_EVENTS.UPDATE_ROOM_COVER,
+  {
+    listener(data) {
+      if (data.id !== room.value?.id) {
+        return;
+      }
+      room.value = data;
+    },
   },
-});
+);
 
 const { request: requestUpdateRoom, isLoading: isLoadingUpdateRoom } =
   useSocketEventListener<IRoomResponse, IUpdateRoomRequest>(
     socket,
-    'update:room',
+    SOCKET_EVENTS.ROOM_EVENTS.UPDATE_ROOM,
     {
       response(data) {
         updateListRoom(data);
@@ -372,7 +381,7 @@ const { request: requestUpdateRoom, isLoading: isLoadingUpdateRoom } =
 const { request: requestDeleteRoom, isLoading: isLoadingDeleteRoom } =
   useSocketEventListener<IRoomResponse, IDeleteRoomRequest>(
     socket,
-    'delete:room',
+    SOCKET_EVENTS.ROOM_EVENTS.DELETE_ROOM,
     {
       response: handleDeleteRoom,
       listener: handleDeleteRoom,
@@ -389,7 +398,7 @@ const { request: requestDeleteRoom, isLoading: isLoadingDeleteRoom } =
 const { request: requestCreateMember, isLoading: isLoadingCreateMember } =
   useSocketEventListener<IRoomResponse, ICreateRoomMemberRequest>(
     socket,
-    'create:member',
+    SOCKET_EVENTS.ROOM_EVENTS.CREATE_MEMBER,
     {
       response: setRoom,
       listener: setRoom,
@@ -406,7 +415,7 @@ const { request: requestCreateMember, isLoading: isLoadingCreateMember } =
 const { request: requestUpdateMember, isLoading: isLoadingUpdateMember } =
   useSocketEventListener<IRoomResponse, IUpdateRoomMemberRequest>(
     socket,
-    'update:member',
+    SOCKET_EVENTS.ROOM_EVENTS.UPDATE_MEMBER,
     {
       response: setRoom,
       listener: setRoom,
@@ -423,7 +432,7 @@ const { request: requestUpdateMember, isLoading: isLoadingUpdateMember } =
 const { request: requestDeleteMember, isLoading: isLoadingDeleteMember } =
   useSocketEventListener<IRoomResponse, IDeleteRoomMemberRequest>(
     socket,
-    'delete:member',
+    SOCKET_EVENTS.ROOM_EVENTS.DELETE_MEMBER,
     {
       response: setRoom,
       listener: setRoom,

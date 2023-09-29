@@ -69,6 +69,7 @@
 </template>
 
 <script lang="ts" setup>
+import { SOCKET_EVENTS } from '@akiratatsuhisa/sawamura-utils';
 import { useIntervalFn } from '@vueuse/core';
 import { ApexOptions } from 'apexcharts';
 import _ from 'lodash';
@@ -126,7 +127,7 @@ const socket = useSocketDashboard();
 const { isLoading: isLoadingChartUserRoles, request: requestChartUserRoles } =
   useSocketEventListener<IChartUserRolesResponse, IChartUserRolesRequest>(
     socket,
-    'chart:userRoles',
+    SOCKET_EVENTS.DASHBOARD_EVENTS.CHART_USER_ROLES,
     {
       response({ records }) {
         labels.value = _.map(records, 'name');

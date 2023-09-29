@@ -60,6 +60,7 @@
 </template>
 
 <script lang="ts" setup>
+import { SOCKET_EVENTS } from '@akiratatsuhisa/sawamura-utils';
 import { storeToRefs } from 'pinia';
 import { computed, defineAsyncComponent } from 'vue';
 import { useRouter } from 'vue-router';
@@ -95,7 +96,7 @@ const socket = useSocketChat();
 const { request: requestCreateRoom, isLoading: isLoadingCreateRoom } =
   useSocketEventListener<IRoomResponse, ICreateRoomRequest>(
     socket,
-    'create:room',
+    SOCKET_EVENTS.ROOM_EVENTS.CREATE_ROOM,
     {
       response: (data) => {
         updateListRoom(data);

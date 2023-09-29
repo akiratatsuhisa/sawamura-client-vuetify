@@ -41,6 +41,7 @@
 </template>
 
 <script lang="ts" setup>
+import { SOCKET_EVENTS } from '@akiratatsuhisa/sawamura-utils';
 import { useLocalStorage, useStyleTag } from '@vueuse/core';
 import { computed, provide, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
@@ -138,7 +139,7 @@ provide(KEYS.CHAT.TARGET_MEMBER, targetMember);
 const { request: requestRoom, isLoading } = useSocketEventListener<
   IRoomResponse,
   IRoomRequest
->(socket, 'read:room', {
+>(socket, SOCKET_EVENTS.ROOM_EVENTS.READ_ROOM, {
   response(data) {
     room.value = data;
   },

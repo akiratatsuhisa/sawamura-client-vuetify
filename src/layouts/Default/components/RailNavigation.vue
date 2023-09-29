@@ -9,7 +9,7 @@
   >
     <template #prepend>
       <v-list-item
-        height="68"
+        height="64"
         class="pa-0"
         @click="
           $router.push({

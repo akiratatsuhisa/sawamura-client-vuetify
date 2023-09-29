@@ -48,6 +48,7 @@
 </template>
 
 <script lang="ts" setup>
+import { SOCKET_EVENTS } from '@akiratatsuhisa/sawamura-utils';
 import { useStyleTag } from '@vueuse/core';
 import { computed, inject } from 'vue';
 import { useRouter } from 'vue-router';
@@ -93,7 +94,7 @@ const socket = useSocketChat();
 const { request: requestPrivateChat, isLoading: isLoadingPrivateChat } =
   useSocketEventListener<IRoomResponse, IRoomPrivateRequest>(
     socket,
-    'read:room:private',
+    SOCKET_EVENTS.ROOM_EVENTS.READ_ROOM_PRIVATE,
     {
       response(data) {
         router.push({ name: 'Messages:Room', params: { roomId: data.id } });

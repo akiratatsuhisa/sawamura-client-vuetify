@@ -65,6 +65,7 @@
 </template>
 
 <script lang="ts" setup>
+import { SOCKET_EVENTS } from '@akiratatsuhisa/sawamura-utils';
 import { useScroll } from '@vueuse/core';
 import findIndex from 'lodash/findIndex';
 import uniqBy from 'lodash/uniqBy';
@@ -123,7 +124,7 @@ const socket = useSocketChat();
 const { request: requestMessages, isLoading } = useSocketEventListener<
   { messages: Array<IRoomMessageResponse> },
   ISearchRoomMessagesRequest
->(socket, 'list:message', {
+>(socket, SOCKET_EVENTS.ROOM_EVENTS.LIST_MESSAGE, {
   response({ messages: data }) {
     messages.value = uniqBy(
       [...messages.value, ...data],
@@ -205,7 +206,7 @@ function removeMessage(data: IRoomMessageResponse) {
 const { request: requestCreateMessage } = useSocketEventListener<
   IRoomMessageResponse,
   ICreateRoomMessageRequest
->(socket, 'create:message', {
+>(socket, SOCKET_EVENTS.ROOM_EVENTS.CREATE_MESSAGE, {
   response(data) {
     updateListRoom(data.room);
     createMessage(data);
@@ -223,7 +224,7 @@ const { request: requestCreateMessage } = useSocketEventListener<
 const { request: requestDeleteMessage, isLoading: isLoadingDeleteMessage } =
   useSocketEventListener<IRoomMessageResponse, IDeleteRoomMessageRequest>(
     socket,
-    'delete:message',
+    SOCKET_EVENTS.ROOM_EVENTS.DELETE_MESSAGE,
     {
       response(data) {
         updateListRoom(data.room);

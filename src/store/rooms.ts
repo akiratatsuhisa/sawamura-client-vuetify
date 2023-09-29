@@ -1,3 +1,4 @@
+import { SOCKET_EVENTS } from '@akiratatsuhisa/sawamura-utils';
 import { useThrottleFn } from '@vueuse/core';
 import _ from 'lodash';
 import { defineStore } from 'pinia';
@@ -29,7 +30,7 @@ export const useRoomsStore = defineStore('rooms', () => {
     useSocketEventListener<
       { rooms: Array<IRoomResponse> },
       ISearchRoomsRequest
-    >(socket, 'list:room', {
+    >(socket, SOCKET_EVENTS.ROOM_EVENTS.LIST_ROOM, {
       response({ rooms: data }) {
         if (!data.length) {
           isRoomsAllLoaded.value = true;
@@ -83,21 +84,41 @@ export const useRoomsStore = defineStore('rooms', () => {
       .value();
   }
 
-  useSocketEventListener<IRoomResponse>(socket, 'create:room', {
-    listener: updateListRoom,
-  });
-  useSocketEventListener<IRoomResponse>(socket, 'update:room:photo', {
-    listener: updateListRoom,
-  });
-  useSocketEventListener<IRoomResponse>(socket, 'update:room', {
-    listener: updateListRoom,
-  });
-  useSocketEventListener<IRoomMessageResponse>(socket, 'create:message', {
-    listener: (data) => updateListRoom(data.room),
-  });
-  useSocketEventListener<IRoomMessageResponse>(socket, 'delete:message', {
-    listener: (data) => updateListRoom(data.room),
-  });
+  useSocketEventListener<IRoomResponse>(
+    socket,
+    SOCKET_EVENTS.ROOM_EVENTS.CREATE_ROOM,
+    {
+      listener: updateListRoom,
+    },
+  );
+  useSocketEventListener<IRoomResponse>(
+    socket,
+    SOCKET_EVENTS.ROOM_EVENTS.UPDATE_ROOM_PHOTO,
+    {
+      listener: updateListRoom,
+    },
+  );
+  useSocketEventListener<IRoomResponse>(
+    socket,
+    SOCKET_EVENTS.ROOM_EVENTS.UPDATE_ROOM,
+    {
+      listener: updateListRoom,
+    },
+  );
+  useSocketEventListener<IRoomMessageResponse>(
+    socket,
+    SOCKET_EVENTS.ROOM_EVENTS.CREATE_MESSAGE,
+    {
+      listener: (data) => updateListRoom(data.room),
+    },
+  );
+  useSocketEventListener<IRoomMessageResponse>(
+    socket,
+    SOCKET_EVENTS.ROOM_EVENTS.DELETE_MESSAGE,
+    {
+      listener: (data) => updateListRoom(data.room),
+    },
+  );
 
   const searchResult = ref<Array<IAdvancedRoomResponse>>([]);
   const search = ref<string>('');

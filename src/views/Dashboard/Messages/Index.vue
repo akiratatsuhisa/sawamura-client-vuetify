@@ -45,6 +45,7 @@
 </template>
 
 <script lang="ts" setup>
+import { SOCKET_EVENTS } from '@akiratatsuhisa/sawamura-utils';
 import { useIntervalFn } from '@vueuse/core';
 import { ApexOptions } from 'apexcharts';
 import dayjs from 'dayjs';
@@ -112,7 +113,7 @@ const subSeries = computed(() =>
 const { isLoading: isLoadingChartMessages, request: requestChartMessages } =
   useSocketEventListener<IChartMessgesResponse, IChartMessgesRequest>(
     socket,
-    'chart:messages',
+    SOCKET_EVENTS.DASHBOARD_EVENTS.CHART_MESSAGES,
     {
       response({ records }) {
         series.value = [
@@ -167,7 +168,7 @@ const {
 } = useSocketEventListener<
   IChartMessgesRoomsResponse,
   IChartMessgesRoomsRequest
->(socket, 'chart:messages:rooms', {
+>(socket, SOCKET_EVENTS.DASHBOARD_EVENTS.CHART_MESSAGES_ROOMS, {
   response({ records }) {
     mainLabels.value = _.map(records, 'label');
 
