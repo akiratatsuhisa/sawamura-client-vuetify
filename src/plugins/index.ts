@@ -9,6 +9,7 @@ import type { App } from 'vue';
 import VueApexCharts from 'vue3-apexcharts';
 
 import VBaseDialog from '@/components/VBaseDialog.vue';
+import VBaseLoading from '@/components/VBaseLoading.vue';
 import VBaseMenu from '@/components/VBaseMenu.vue';
 import VFloatingActionButton from '@/components/VFloatingActionButton.vue';
 import i18n from '@/locales';
@@ -34,6 +35,7 @@ export function registerPlugins(app: App) {
     .use(i18n)
     .use(VueApexCharts);
 
+  app.component('VBaseLoading', VBaseLoading);
   app.component('VBaseDialog', VBaseDialog);
   app.component('VBaseMenu', VBaseMenu);
   app.component('VFloatingActionButton', VFloatingActionButton);

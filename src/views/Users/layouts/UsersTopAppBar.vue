@@ -30,13 +30,12 @@
     >
       {{ $t('common.app.title') }}
     </v-app-bar-title>
+    <v-base-loading />
 
     <template v-if="$vuetify.display.mdAndUp">
       <v-messages-menu />
       <v-profile-menu />
     </template>
-
-    <v-top-app-bar-loading />
   </v-app-bar>
 </template>
 
@@ -54,7 +53,6 @@ import {
 } from '@/composables';
 import VMessagesMenu from '@/layouts/Default/components/MessagesMenu.vue';
 import VProfileMenu from '@/layouts/Default/components/ProfileMenu.vue';
-import VTopAppBarLoading from '@/layouts/Default/components/TopAppBarLoading.vue';
 import { useProfileUserStore } from '@/store';
 
 const route = useBackgroundRoute();

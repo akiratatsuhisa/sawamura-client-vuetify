@@ -49,7 +49,7 @@
         ]"
       >
         <div
-          class="v-search flex-shrink-0 text-on-surface d-flex flex-row align-center cursor-pointer rounded-pill rounded-b-0"
+          class="position-relative v-search flex-shrink-0 text-on-surface d-flex flex-row align-center cursor-pointer rounded-pill rounded-b-0"
           :class="[`v-search-${density}`, `bg-${dropdownBgColor}`]"
         >
           <v-icon class="ml-2" icon="mdi-arrow-left" @click="model = !model" />
@@ -70,6 +70,13 @@
             @click="search = ''"
           />
           <v-icon class="mr-2" icon="mdi-magnify" @click="emit('submit')" />
+          <v-progress-linear
+            v-if="loading"
+            absolute
+            location="bottom"
+            color="primary"
+            indeterminate
+          />
         </div>
         <v-divider />
 
@@ -92,16 +99,14 @@
         class="text-on-surface"
         :class="[`bg-${dialogBgColor}`]"
       >
-        <v-toolbar
-          class="px-3 text-on-surface"
-          :class="[`bg-${dialogBgColor}`]"
-        >
+        <v-toolbar class="text-on-surface" :class="[`bg-${dialogBgColor}`]">
           <v-input
+            class="px-3"
+            hide-details
             prepend-icon="mdi-arrow-left"
             @click:prepend="model = !model"
             :append-icon="searchClearable ? 'mdi-close' : undefined"
             @click:append="search = ''"
-            hide-details
           >
             <input
               v-model="search"
@@ -112,6 +117,14 @@
               :placeholder="placeholder"
             />
           </v-input>
+
+          <v-progress-linear
+            v-if="loading"
+            absolute
+            location="bottom"
+            color="primary"
+            indeterminate
+          />
         </v-toolbar>
         <v-divider />
 
@@ -131,6 +144,7 @@ import { computed, ref, watch } from 'vue';
 const props = withDefaults(
   defineProps<{
     modelValue?: boolean;
+    loading?: boolean;
     placeholder?: string;
     search?: string;
     prependIcon?: string;

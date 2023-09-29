@@ -7,11 +7,9 @@ const plugin: Plugin = {
   install(app: App) {
     app.config.globalProperties.$axios = axiosInstacne;
 
-    const anyLoading = ref<Set<string>>(new Set());
-    const loadingPercents = ref<Array<[string, number]>>([]);
+    const loadings = ref<Array<[string, number | boolean]>>([]);
 
-    app.provide(KEYS.ANY_LOADING, anyLoading);
-    app.provide(KEYS.LOADING_PERCENTS, loadingPercents);
+    app.provide(KEYS.LOADINGS, loadings);
   },
 };
 

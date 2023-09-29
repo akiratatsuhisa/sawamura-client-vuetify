@@ -24,10 +24,8 @@ export enum LoadingState {
 export namespace KEYS {
   export const AXIOS: InjectionKey<AxiosInstance> = Symbol('axios');
 
-  export const ANY_LOADING: InjectionKey<Ref<Set<string>>> =
-    Symbol('anyLoading');
-  export const LOADING_PERCENTS: InjectionKey<Ref<Array<[string, number]>>> =
-    Symbol('loadingPercent');
+  export const LOADINGS: InjectionKey<Ref<Array<[string, number | boolean]>>> =
+    Symbol('loadings');
 
   export const ALERTS: InjectionKey<Array<AlertProps>> = Symbol('alerts');
   export const SNACKBARS: InjectionKey<Array<SnackbarProps>> =

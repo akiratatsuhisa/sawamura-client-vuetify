@@ -4,6 +4,7 @@
       class="h-100 w-100"
       v-model="isSearchFieldOpen"
       v-model:search="search"
+      :loading="isLoadingSearchAdvanced"
       dialog
       :placeholder="$t('pages.messages.shared.searchPlaceholder')"
       offset-x="3"
@@ -52,7 +53,7 @@
       </v-list>
     </v-search>
 
-    <v-top-app-bar-loading />
+    <v-base-loading />
   </v-app-bar>
 
   <v-app-bar v-else class="bg-surface-container text-on-surface">
@@ -62,10 +63,9 @@
     >
       {{ $t('common.app.title') }}
     </v-app-bar-title>
+    <v-base-loading />
 
     <v-profile-menu />
-
-    <v-top-app-bar-loading />
   </v-app-bar>
 </template>
 
@@ -76,7 +76,6 @@ import { ref } from 'vue';
 import VAvancedRoomListItem from '@/components/Rooms/AvancedRoomListItem.vue';
 import VSearch from '@/components/VSearch.vue';
 import VProfileMenu from '@/layouts/Default/components/ProfileMenu.vue';
-import VTopAppBarLoading from '@/layouts/Default/components/TopAppBarLoading.vue';
 import { useRoomsStore } from '@/store';
 
 const isSearchFieldOpen = ref(false);

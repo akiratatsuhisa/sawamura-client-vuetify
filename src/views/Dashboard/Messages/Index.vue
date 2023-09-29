@@ -17,20 +17,19 @@
           />
 
           <v-toolbar-title>{{ translate('subchart.title') }}</v-toolbar-title>
-
-          <v-btn
-            size="small"
-            :icon="isExpand ? 'mdi-chevron-up' : 'mdi-chevron-down'"
-            @click="isExpand = !isExpand"
-          />
-
           <v-progress-linear
             v-if="isLoadingChartMessages"
             absolute
             location="bottom"
             color="primary"
             indeterminate
-          ></v-progress-linear>
+          />
+
+          <v-btn
+            size="small"
+            :icon="isExpand ? 'mdi-chevron-up' : 'mdi-chevron-down'"
+            @click="isExpand = !isExpand"
+          />
         </v-toolbar>
 
         <apexchart

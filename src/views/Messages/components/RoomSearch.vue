@@ -4,6 +4,7 @@
     class="flex-grow-1"
     v-model="model"
     v-model:search="search"
+    :loading="isLoadingSearchAdvanced"
     dropdown
     density="compact"
     :placeholder="$t('pages.messages.shared.searchPlaceholder')"

@@ -19,8 +19,9 @@ import { IExceptionResponseDetail } from '@/interfaces';
 import { config, Service } from '@/services';
 
 export type UseAxiosOptions<T> = {
-  loadingState?: LoadingState;
   unauth?: boolean;
+  loadingState?: LoadingState;
+  delayPercentFinished?: number;
 
   displayMessageFromResponse?: boolean;
   displayMessageFromException?: boolean;
@@ -49,8 +50,9 @@ export function useAxios<
   type Res = Awaited<ReturnType<S[A]>>['data'];
 
   const {
-    loadingState = LoadingState.Loading,
     unauth,
+    loadingState = LoadingState.Loading,
+    delayPercentFinished = 0,
     displayMessageFromResponse = false,
     displayMessageFromException = true,
     translateMessage,
@@ -162,7 +164,10 @@ export function useAxios<
       throw exception;
     } finally {
       isLoading.value = false;
-      percentTimeout = setTimeout(() => (percent.value = undefined), 250);
+      percentTimeout = setTimeout(
+        () => (percent.value = undefined),
+        delayPercentFinished,
+      );
     }
   }
 

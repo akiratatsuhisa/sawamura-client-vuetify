@@ -16,6 +16,7 @@
       <v-search
         v-model="isSearchFieldOpen"
         v-model:search="search"
+        :loading="isLoadingSearchAdvanced"
         dropdown
         density="compact"
         :placeholder="$t('pages.messages.shared.searchPlaceholder')"

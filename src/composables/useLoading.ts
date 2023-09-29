@@ -6,8 +6,13 @@ import { KEYS } from '@/constants';
 export function useLoading(
   ...loadings: Array<Ref<boolean> | Ref<undefined | number>>
 ) {
-  const anyLoading = inject(KEYS.ANY_LOADING)!;
-  const loadingPercents = inject(KEYS.LOADING_PERCENTS)!;
+  const loadingsContainer = inject(KEYS.LOADINGS)!;
+
+  function clearId(uuid: string) {
+    loadingsContainer.value = loadingsContainer.value.filter(
+      ([id]) => id !== uuid,
+    );
+  }
 
   for (const loading of loadings) {
     const uuid = uuidv4();
@@ -17,13 +22,11 @@ export function useLoading(
         loading,
         (loading, _prev, onCleanup) => {
           if (loading) {
-            anyLoading.value.add(uuid);
+            loadingsContainer.value.push([uuid, loading]);
           } else {
-            anyLoading.value.delete(uuid);
+            clearId(uuid);
           }
-          onCleanup(() => {
-            anyLoading.value.delete(uuid);
-          });
+          onCleanup(() => clearId(uuid));
         },
         { immediate: true },
       );
@@ -31,18 +34,12 @@ export function useLoading(
       watch(
         loading,
         (loading, _prev, onCleanup) => {
-          if (typeof loading === 'undefined') {
-            loadingPercents.value = loadingPercents.value.filter(
-              ([id]) => id !== uuid,
-            );
+          if (typeof loading === 'number') {
+            loadingsContainer.value.push([uuid, loading]);
           } else {
-            loadingPercents.value.push([uuid, loading]);
+            clearId(uuid);
           }
-          onCleanup(() => {
-            loadingPercents.value = loadingPercents.value.filter(
-              ([id]) => id !== uuid,
-            );
-          });
+          onCleanup(() => clearId(uuid));
         },
         { immediate: true },
       );

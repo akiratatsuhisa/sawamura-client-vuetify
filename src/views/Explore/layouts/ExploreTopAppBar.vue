@@ -30,7 +30,7 @@
       </template>
     </v-search>
 
-    <v-top-app-bar-loading />
+    <v-base-loading />
   </v-app-bar>
 
   <v-app-bar v-else class="bg-surface-container text-on-surface">
@@ -50,11 +50,10 @@
         </template>
       </v-search>
     </div>
+    <v-base-loading />
 
     <v-settings-menu />
     <v-profile-menu />
-
-    <v-top-app-bar-loading />
   </v-app-bar>
 </template>
 
@@ -63,7 +62,6 @@ import { ref } from 'vue';
 
 import VSearch from '@/components/VSearch.vue';
 import VProfileMenu from '@/layouts/Default/components/ProfileMenu.vue';
-import VTopAppBarLoading from '@/layouts/Default/components/TopAppBarLoading.vue';
 import VSettingsMenu from '@/views/Explore/layouts/SettingsMenu.vue';
 
 const isSearchFieldOpen = ref(false);

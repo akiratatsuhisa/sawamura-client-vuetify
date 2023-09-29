@@ -9,14 +9,12 @@
     >
       {{ $t('common.app.title') }}
     </v-app-bar-title>
+    <v-base-loading />
 
     <v-profile-menu />
-
-    <v-top-app-bar-loading />
   </v-app-bar>
 </template>
 
 <script lang="ts" setup>
 import VProfileMenu from '@/layouts/Default/components/ProfileMenu.vue';
-import VTopAppBarLoading from '@/layouts/Default/components/TopAppBarLoading.vue';
 </script>

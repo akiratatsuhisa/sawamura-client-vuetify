@@ -25,7 +25,7 @@
       <v-profile-menu />
     </template>
 
-    <v-top-app-bar-loading />
+    <v-base-loading />
   </v-app-bar>
 </template>
 
@@ -34,7 +34,6 @@ import { storeToRefs } from 'pinia';
 
 import VMessagesMenu from '@/layouts/Default/components/MessagesMenu.vue';
 import VProfileMenu from '@/layouts/Default/components/ProfileMenu.vue';
-import VTopAppBarLoading from '@/layouts/Default/components/TopAppBarLoading.vue';
 import { useProfileUserStore } from '@/store';
 
 const profileUserStore = useProfileUserStore();

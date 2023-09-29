@@ -4,20 +4,19 @@
       <v-btn size="small" icon="mdi-chart-multiple" />
 
       <v-toolbar-title>{{ translate('mainchart.title') }}</v-toolbar-title>
-
-      <v-btn
-        size="small"
-        :icon="isExpand ? 'mdi-chevron-up' : 'mdi-chevron-down'"
-        @click="isExpand = !isExpand"
-      />
-
       <v-progress-linear
         v-if="loading"
         absolute
         location="bottom"
         color="primary"
         indeterminate
-      ></v-progress-linear>
+      />
+
+      <v-btn
+        size="small"
+        :icon="isExpand ? 'mdi-chevron-up' : 'mdi-chevron-down'"
+        @click="isExpand = !isExpand"
+      />
     </v-toolbar>
 
     <apexchart
