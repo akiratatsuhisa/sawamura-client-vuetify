@@ -15,33 +15,33 @@
       </v-responsive>
     </v-container>
 
-    <v-fade-transition>
-      <v-floating-action-button
-        icon="mdi-pencil-plus-outline"
-        :is-fab-show="display.smAndDown.value"
-        :style="{ bottom: display.xs.value ? '80px' : '0' }"
-        @click="openModal({ name: 'Compose:Whinny' })"
-      />
-    </v-fade-transition>
+    <v-floating-action-button-wrapper>
+      <template #default>
+        <v-floating-action-button
+          icon="mdi-pencil-plus-outline"
+          :is-fab-show="$vuetify.display.smAndDown"
+          :style="{ bottom: $vuetify.display.xs ? '80px' : '0' }"
+          @click="openModalComposeWhinny"
+        />
+      </template>
+
+      <template #rail>
+        <v-floating-action-button
+          icon="mdi-pencil-plus-outline"
+          :is-fab-show="$vuetify.display.mdAndUp"
+          @click="openModalComposeWhinny"
+          :screen-fab="false"
+        />
+      </template>
+    </v-floating-action-button-wrapper>
   </v-main>
 </template>
 
 <script lang="ts" setup>
-import { computed } from 'vue';
-import { useDisplay } from 'vuetify';
-
-import { useNavigationRailFab, useRouterModal } from '@/composables';
+import { useRouterModal } from '@/composables';
 
 const { openModal } = useRouterModal();
-
-const display = useDisplay();
-useNavigationRailFab(
-  computed(() => ({
-    isFabShow: display.mdAndUp.value,
-    icon: 'mdi-pencil-plus-outline',
-    onClick: () => {
-      openModal({ name: 'Compose:Whinny' });
-    },
-  })),
-);
+function openModalComposeWhinny() {
+  openModal({ name: 'Compose:Whinny' }, { type: 'Owner' });
+}
 </script>

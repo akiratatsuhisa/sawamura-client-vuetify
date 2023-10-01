@@ -1,6 +1,6 @@
 <template>
   <v-custom-modal
-    :desktop-width="historyState?.props?.desktopWidth || 500"
+    :desktop-width="historyState?.props?.desktopWidth || '50%'"
     v-model="modal"
     #default="{ fullscreen, close }"
   >

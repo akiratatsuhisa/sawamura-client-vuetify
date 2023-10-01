@@ -1,5 +1,5 @@
 <template>
-  <template v-for="whinny in whinnies" :key="whinny.id">
+  <template v-for="whinny in comments" :key="whinny.id">
     <v-whinny-content
       :data="whinny"
       class="bg-surface cursor-pointer"
@@ -17,28 +17,24 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, ref, watch } from 'vue';
+import { ref, watch } from 'vue';
 
 import VWhinnyContent from '@/components/Whinnies/WhinnyContent.vue';
-import { useAxios, useBackgroundRoute } from '@/composables';
+import { useAxios } from '@/composables';
 import { IWhinnyResponse } from '@/interfaces';
 import { services } from '@/services';
 
-const whinnies = ref<Array<IWhinnyResponse>>([]);
+const props = defineProps<{ sourceId: string }>();
 
-const route = useBackgroundRoute();
-const username = computed(() => route.value.params.username);
+const comments = ref<Array<IWhinnyResponse>>([]);
+
 const { excute: requestWhinnies } = useAxios(services.whinnies, 'getAll');
 
 watch(
-  username,
-  async (username) => {
-    if (typeof username !== 'string') {
-      return;
-    }
-
-    const data = await requestWhinnies({ username, take: 10 });
-    whinnies.value = data;
+  () => props.sourceId,
+  async (sourceId) => {
+    const data = await requestWhinnies({ sourceId, take: 10 });
+    comments.value = data;
   },
   { immediate: true },
 );

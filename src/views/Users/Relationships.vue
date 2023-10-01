@@ -90,7 +90,7 @@
           :style="{ width: $vuetify.display.lgAndDown ? '300px' : '450px' }"
           class="flex-grow-0 flex-shrink-0 ml-0 ml-md-4 ml-lg-12 mt-n4"
         >
-          <v-trends />
+          <v-trendings />
         </div>
       </div>
     </v-container>
@@ -100,18 +100,15 @@
 <script lang="ts" setup>
 import { useStyleTag, useWindowScroll, useWindowSize } from '@vueuse/core';
 import { storeToRefs } from 'pinia';
-import { computed, defineAsyncComponent, h, watch } from 'vue';
+import { computed, h, watch } from 'vue';
 import { useRoute } from 'vue-router';
 
+import VTrendings from '@/components/Trendings/Index.vue';
 import { useAuth, useAxios, usePageLocale, useRouterTab } from '@/composables';
 import { ProfileUserRelationshipTabs } from '@/interfaces';
 import { services } from '@/services';
 import { useProfileUserStore } from '@/store';
 import VRelationshipList from '@/views/Users/components/RelationshipList.vue';
-
-const VTrends = defineAsyncComponent(
-  () => import('@/views/Users/components/Trends.vue'),
-);
 
 const { height: windowHeight } = useWindowSize();
 const { y: threshold } = useWindowScroll();

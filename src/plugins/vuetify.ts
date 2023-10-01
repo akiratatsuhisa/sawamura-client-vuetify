@@ -9,9 +9,11 @@ import '@/scss/styles.scss';
 
 import { createVuetify } from 'vuetify';
 import { md3 } from 'vuetify/blueprints';
+import { VBottomSheet } from 'vuetify/labs/VBottomSheet';
 
 export default createVuetify({
   blueprint: md3,
+  components: { VBottomSheet },
   theme: {
     defaultTheme: localStorage.getItem('theme:mode') ?? 'light',
     themes: {

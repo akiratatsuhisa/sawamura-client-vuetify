@@ -37,16 +37,28 @@
       </v-sheet>
     </v-container>
 
-    <v-fade-transition>
-      <v-floating-action-button
-        :title="translate('createGroup')"
-        icon="mdi-account-group"
-        :is-fab-show="display.smAndDown.value && isFabShow"
-        :is-fab-show-detail="isFabShowDetail"
-        :style="{ bottom: $vuetify.display.xs ? '80px' : '0' }"
-        @click="openDialog('create')"
-      />
-    </v-fade-transition>
+    <v-floating-action-button-wrapper>
+      <template #default>
+        <v-floating-action-button
+          :title="translate('createGroup')"
+          icon="mdi-account-group"
+          :is-fab-show="$vuetify.display.smAndDown && isFabShow"
+          :is-fab-show-detail="isFabShowDetail"
+          :style="{ bottom: $vuetify.display.xs ? '80px' : '0' }"
+          @click="openDialog('create')"
+        />
+      </template>
+
+      <template #rail>
+        <v-floating-action-button
+          :title="translate('createGroup')"
+          icon="mdi-account-group"
+          :is-fab-show="$vuetify.display.mdAndUp && isFabShow"
+          @click="openDialog('create')"
+          :screen-fab="false"
+        />
+      </template>
+    </v-floating-action-button-wrapper>
   </v-main>
 
   <template v-for="(dialog, name) in dialogs" :key="name">
@@ -64,10 +76,8 @@ import { SOCKET_EVENTS } from '@akiratatsuhisa/sawamura-utils';
 import { storeToRefs } from 'pinia';
 import { computed, defineAsyncComponent } from 'vue';
 import { useRouter } from 'vue-router';
-import { useDisplay } from 'vuetify';
 
 import {
-  useNavigationRailFab,
   usePageLocale,
   useRouterDialog,
   useSnackbar,
@@ -130,14 +140,4 @@ const isLoading = computed(
 );
 
 const { isFabShow, isFabShowDetail } = useScrollBehavior();
-const display = useDisplay();
-useNavigationRailFab(
-  computed(() => ({
-    isFabShow: display.mdAndUp.value && isFabShow.value,
-    icon: 'mdi-account-group',
-    onClick: () => {
-      openDialog('create');
-    },
-  })),
-);
 </script>

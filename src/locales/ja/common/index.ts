@@ -2,6 +2,7 @@ import { LocaleCommon } from '@/locales/type/common';
 
 import { messages } from './messages';
 import { user } from './user';
+import { whinny } from './whinny';
 
 export const common: LocaleCommon = {
   app: {
@@ -55,6 +56,22 @@ export const common: LocaleCommon = {
     show: '{limit}件表示',
     showing: 'レコード{from}から{to}までを表示中（全{totalCount}件）',
   },
+  share: {
+    repost: 'リポスト',
+    quote: '引用',
+    copyLink: 'リンクをコピー',
+    copyLinkSuccessfully: 'リンクのコピーに成功しました',
+    copyLinkFailed: 'リンクのコピーに失敗しました',
+    shareVia: 'その他の方法でポストを共有する...',
+    unsupported: 'ブラウザは共有方法をサポートしていません',
+  },
+  recommendFollows: {
+    title: 'おすすめのフォロー',
+  },
+  trends: {
+    title: 'トレンド',
+  },
   user,
   messages,
+  whinny,
 };

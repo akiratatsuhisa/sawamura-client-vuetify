@@ -40,7 +40,7 @@ export function useUserImage(
     }
 
     if (cacheUserImages.has(url)) {
-      return await cacheUserImages.get(url);
+      return await cacheUserImages.get(url)!;
     }
 
     const promise = request(unwrapUser.username, type);

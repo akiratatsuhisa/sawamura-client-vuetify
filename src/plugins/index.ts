@@ -8,10 +8,12 @@
 import type { App } from 'vue';
 import VueApexCharts from 'vue3-apexcharts';
 
+import VBaseBottomSheet from '@/components/VBaseBottomSheet.vue';
 import VBaseDialog from '@/components/VBaseDialog.vue';
 import VBaseLoading from '@/components/VBaseLoading.vue';
 import VBaseMenu from '@/components/VBaseMenu.vue';
 import VFloatingActionButton from '@/components/VFloatingActionButton.vue';
+import VFloatingActionButtonWrapper from '@/components/VFloatingActionButtonWrapper.vue';
 import i18n from '@/locales';
 import axios from '@/plugins/axios';
 import loading from '@/plugins/loading';
@@ -38,5 +40,7 @@ export function registerPlugins(app: App) {
   app.component('VBaseLoading', VBaseLoading);
   app.component('VBaseDialog', VBaseDialog);
   app.component('VBaseMenu', VBaseMenu);
+  app.component('VBaseBottomSheet', VBaseBottomSheet);
   app.component('VFloatingActionButton', VFloatingActionButton);
+  app.component('VFloatingActionButtonWrapper', VFloatingActionButtonWrapper);
 }

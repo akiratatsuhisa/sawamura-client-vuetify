@@ -1,57 +1,120 @@
 <template>
-  <v-main class="bg-surface-container">
-    <v-container
-      fluid
-      class="fill-height text-center"
-      :class="[$vuetify?.display.smAndDown ? 'pa-0' : 'pa-4']"
-    >
-      <v-responsive
-        class="bg-surface h-100 d-flex align-center justify-center"
-        :class="[$vuetify?.display.smAndDown ? 'rounded-0' : 'rounded-lg']"
-      >
-        <h1>Status {{ route.params.id }}</h1>
-      </v-responsive>
+  <v-main
+    :class="[$vuetify.display.xs ? 'bg-surface' : 'bg-surface-container']"
+  >
+    <div v-if="!data" class="fill-height d-flex align-center justify-center">
+      <v-progress-circular size="88" width="6" color="primary" indeterminate />
+    </div>
+    <v-container v-else fluid class="pa-0 pa-sm-4">
+      <div class="d-flex">
+        <div class="flex-grow-1 flex-shrink-1">
+          <v-whinny-content
+            :key="data.id"
+            detail
+            :data="data"
+            :user="data.user"
+            class="bg-surface"
+            :class="[
+              { 'my-4': $vuetify.display.smAndUp },
+              $vuetify.display.xs ? 'rounded-0' : 'rounded-xl',
+            ]"
+          />
+          <v-main-content :source-id="data.id" />
+        </div>
+        <div
+          v-if="$vuetify.display.mdAndUp"
+          :style="{ width: $vuetify.display.lgAndDown ? '300px' : '450px' }"
+          class="flex-grow-0 flex-shrink-0 ml-0 ml-sm-4 ml-lg-12"
+        >
+          <v-recommend-follows class="my-4" />
+          <v-trendings class="my-4" />
+        </div>
+      </div>
     </v-container>
 
-    <v-fade-transition>
-      <v-floating-action-button
-        icon="mdi-chat-plus-outline"
-        :is-fab-show="display.smAndDown.value"
-        @click="openModalComposeWhinny"
-      />
-    </v-fade-transition>
+    <v-floating-action-button-wrapper>
+      <template #default>
+        <v-floating-action-button
+          icon="mdi-chat-plus-outline"
+          :is-fab-show="$vuetify.display.smAndDown"
+          @click="openModalComposeWhinny"
+        />
+      </template>
+
+      <template #rail>
+        <v-floating-action-button
+          icon="mdi-chat-plus-outline"
+          :is-fab-show="$vuetify.display.mdAndUp"
+          @click="openModalComposeWhinny"
+          :screen-fab="false"
+        />
+      </template>
+    </v-floating-action-button-wrapper>
   </v-main>
 </template>
 
 <script lang="ts" setup>
-import { computed } from 'vue';
-import { useDisplay } from 'vuetify';
+import _ from 'lodash';
+import { watch } from 'vue';
+import { useRouter } from 'vue-router';
 
-import {
-  useBackgroundRoute,
-  useNavigationRailFab,
-  useRouterModal,
-} from '@/composables';
+import VRecommendFollows from '@/components/RecommendFollows/Index.vue';
+import VTrendings from '@/components/Trendings/Index.vue';
+import VWhinnyContent from '@/components/Whinnies/WhinnyContent.vue';
+import { useAxios, useBackgroundRoute, useRouterModal } from '@/composables';
+import { services } from '@/services';
+import VMainContent from '@/views/Users/Status/components/MainContent.vue';
 
+const router = useRouter();
 const route = useBackgroundRoute();
 
-const { openModal } = useRouterModal();
+const { excute, data } = useAxios(services.whinnies, 'getByUrlId');
 
+watch(
+  () => route.value.params.urlId as string,
+  async (urlId) => {
+    if (!urlId) {
+      return;
+    }
+
+    const whinny = await excute({ urlId });
+    if (router.currentRoute.value.name === 'Users:Status') {
+      const route = router.currentRoute.value;
+      router.replace({
+        name: route.name!,
+        params: { urlId: whinny.urlId, username: whinny.user.username },
+      });
+    }
+  },
+  { immediate: true },
+);
+
+const { openModal } = useRouterModal();
 function openModalComposeWhinny() {
   openModal(
     { name: 'Compose:Whinny' },
     {
-      username: route.value.params.username,
+      type: 'Comment',
+      whinny: {
+        ..._.pick(data.value, [
+          'id',
+          'urlId',
+          'type',
+          'content',
+          'publishDate',
+          'createdAt',
+          'updatedAt',
+        ]),
+        user: {
+          ..._.pick(data.value?.user, [
+            'id',
+            'username',
+            'displayName',
+            'photoUrl',
+          ]),
+        },
+      },
     },
   );
 }
-
-const display = useDisplay();
-useNavigationRailFab(
-  computed(() => ({
-    isFabShow: display.mdAndUp.value,
-    icon: 'mdi-chat-plus-outline',
-    onClick: openModalComposeWhinny,
-  })),
-);
 </script>

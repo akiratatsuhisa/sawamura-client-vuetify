@@ -1,17 +1,15 @@
 import _ from 'lodash';
 import { defineStore } from 'pinia';
-import { computed, ref } from 'vue';
+import { Component, computed, ref, shallowRef } from 'vue';
 import { RouteLocationNamedRaw, useRoute, useRouter } from 'vue-router';
 
-import { IUseNavigationRailFabProps, useAuth } from '@/composables';
+import { useAuth } from '@/composables';
 import { INavigationMenuItem } from '@/interfaces';
 
 export const useAppStore = defineStore('app', () => {
   const router = useRouter();
   const route = useRoute();
   const { user } = useAuth();
-
-  const navigationRailFabProps = ref<IUseNavigationRailFabProps>();
 
   const drawer = ref<boolean>(false);
 
@@ -132,12 +130,18 @@ export const useAppStore = defineStore('app', () => {
     router.push(routeLocation);
   }
 
+  const navigationRailFabComponent = shallowRef<Component>();
+  const bottomSheetProps = shallowRef<Record<string, unknown>>();
+  const bottomSheetComponent = shallowRef<Component>();
+
   return {
-    navigationRailFabProps,
     drawer,
     mainNavigationItems,
     subNavigationItems,
     isNavigationActive,
     handleNavigationSelect,
+    navigationRailFabComponent,
+    bottomSheetProps,
+    bottomSheetComponent,
   };
 });

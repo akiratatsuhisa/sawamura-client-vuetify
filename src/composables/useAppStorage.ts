@@ -1,48 +1,7 @@
-import {
-  createSharedComposable,
-  MaybeRef,
-  useLocalStorage,
-} from '@vueuse/core';
-import { storeToRefs } from 'pinia';
-import { computed, isRef, reactive, watch } from 'vue';
+import { createSharedComposable, useLocalStorage } from '@vueuse/core';
+import { computed, reactive, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useTheme } from 'vuetify';
-
-import { useAppStore } from '@/store';
-
-export interface IUseNavigationRailFabProps {
-  color?: string;
-  icon: string;
-  title?: string;
-  isFabShow: boolean;
-  isFabShowDetail?: boolean;
-  size?: number | string;
-  screenFab?: boolean;
-  onClick: (event: Event) => void;
-}
-
-export function useNavigationRailFab(
-  props: MaybeRef<IUseNavigationRailFabProps>,
-) {
-  const appStore = useAppStore();
-  const { navigationRailFabProps } = storeToRefs(appStore);
-
-  watch(
-    () => (isRef(props) ? props.value : props),
-    (props, _prev, onCleanup) => {
-      if (!props) {
-        return;
-      }
-
-      navigationRailFabProps.value = props;
-
-      onCleanup(() => {
-        navigationRailFabProps.value = undefined;
-      });
-    },
-    { immediate: true },
-  );
-}
 
 export type ThemeModeType = 'light' | 'dark' | 'coffee';
 

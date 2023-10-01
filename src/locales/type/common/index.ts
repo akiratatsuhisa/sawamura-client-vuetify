@@ -1,5 +1,6 @@
 import { LocaleCommonMessages } from './messages';
 import { LocaleCommonUser } from './user';
+import { LocaleCommonWhinny } from './whinny';
 
 export type LocaleCommon = {
   app: {
@@ -60,6 +61,22 @@ export type LocaleCommon = {
      */
     showing: string;
   };
+  share: {
+    repost: string;
+    quote: string;
+    copyLink: string;
+    copyLinkSuccessfully: string;
+    copyLinkFailed: string;
+    shareVia: string;
+    unsupported: string;
+  };
+  recommendFollows: {
+    title: string;
+  };
+  trends: {
+    title: string;
+  };
   user: LocaleCommonUser;
   messages: LocaleCommonMessages;
+  whinny: LocaleCommonWhinny;
 };

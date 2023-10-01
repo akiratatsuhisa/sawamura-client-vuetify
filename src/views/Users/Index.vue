@@ -18,52 +18,54 @@
           :style="{ width: $vuetify.display.lgAndDown ? '300px' : '450px' }"
           class="flex-grow-0 flex-shrink-0 ml-0 ml-sm-4 ml-lg-12"
         >
-          <v-display-last-images />
-          <v-recommend-follows />
-          <v-trends />
+          <v-display-last-medias />
+          <v-recommend-follows class="my-4" />
+          <v-trendings class="my-4" />
         </div>
       </div>
     </v-container>
 
-    <v-fade-transition>
-      <v-floating-action-button
-        icon="mdi-pencil-plus-outline"
-        :is-fab-show="display.smAndDown.value"
-        @click="openModalComposeWhinny"
-      />
-    </v-fade-transition>
+    <v-floating-action-button-wrapper>
+      <template #default>
+        <v-floating-action-button
+          icon="mdi-pencil-plus-outline"
+          :is-fab-show="$vuetify.display.smAndDown"
+          @click="openModalComposeWhinny"
+        />
+      </template>
+
+      <template #rail>
+        <v-floating-action-button
+          icon="mdi-pencil-plus-outline"
+          :is-fab-show="$vuetify.display.mdAndUp"
+          @click="openModalComposeWhinny"
+          :screen-fab="false"
+        />
+      </template>
+    </v-floating-action-button-wrapper>
   </v-main>
 </template>
 
 <script lang="ts" setup>
 import { storeToRefs } from 'pinia';
-import { computed, defineAsyncComponent, provide, Ref, ref, watch } from 'vue';
-import { useDisplay } from 'vuetify';
+import { provide, Ref, ref, watch } from 'vue';
 
+import VRecommendFollows from '@/components/RecommendFollows/Index.vue';
+import VTrendings from '@/components/Trendings/Index.vue';
 import {
   useAuth,
   useAxios,
   useBackgroundRoute,
-  useNavigationRailFab,
   useRouterModal,
 } from '@/composables';
 import { KEYS } from '@/constants';
 import { IProfileUserResponse } from '@/interfaces';
 import { services } from '@/services';
 import { useProfileUserStore } from '@/store';
+import VDisplayLastMedias from '@/views/Users/components/DisplayLastMedias.vue';
 import VMainContent from '@/views/Users/components/MainContent.vue';
 import VSource from '@/views/Users/Source.vue';
 import VTarget from '@/views/Users/Target.vue';
-
-const VDisplayLastImages = defineAsyncComponent(
-  () => import('@/views/Users/components/DisplayLastImages.vue'),
-);
-const VRecommendFollows = defineAsyncComponent(
-  () => import('@/views/Users/components/RecommendFollows.vue'),
-);
-const VTrends = defineAsyncComponent(
-  () => import('@/views/Users/components/Trends.vue'),
-);
 
 const profileUserStore = useProfileUserStore();
 const { user } = storeToRefs(profileUserStore);
@@ -104,6 +106,7 @@ function openModalComposeWhinny() {
   openModal(
     { name: 'Compose:Whinny' },
     {
+      type: 'Owner',
       username:
         route.value.params.username !== identityUser.value?.username
           ? route.value.params.username
@@ -111,13 +114,4 @@ function openModalComposeWhinny() {
     },
   );
 }
-
-const display = useDisplay();
-useNavigationRailFab(
-  computed(() => ({
-    isFabShow: display.mdAndUp.value,
-    icon: 'mdi-pencil-plus-outline',
-    onClick: openModalComposeWhinny,
-  })),
-);
 </script>

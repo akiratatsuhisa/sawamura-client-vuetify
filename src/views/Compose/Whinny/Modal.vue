@@ -8,25 +8,25 @@
       >
       </v-app-bar-nav-icon>
     </v-toolbar>
+    <v-divider />
 
-    <v-card-text class="overflow-y-auto">
-      <v-text-field v-model="text" label="Whinny" />
+    <v-card-text class="pa-0 overflow-y-auto">
+      <v-whinny-input
+        :type="state.props.type"
+        :reference-username="
+          state.props.username ? state.props.username : undefined
+        "
+        :reference-whinny="state.props.whinny"
+      />
     </v-card-text>
   </v-card>
 </template>
 
 <script lang="ts" setup>
-import { ref } from 'vue';
-
+import VWhinnyInput from '@/components/Whinnies/WhinnyInput.vue';
 import { useHistoryState } from '@/composables';
 
 defineProps<{ fullscreen?: boolean; close: Function }>();
 
 const state = useHistoryState();
-
-const text = ref('');
-
-text.value = state.value.props?.username
-  ? `@${state.value.props.username}`
-  : '';
 </script>

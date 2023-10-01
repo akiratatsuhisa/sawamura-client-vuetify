@@ -23,6 +23,7 @@ export const messages: LocaleCommonMessages = {
     fileExceededLimit: 'File exceeds the ${size} limit',
     requestVeriyEmail:
       'The account do not have an email or it already verification',
+    invalidRepostRequest: 'This whinny limits some actions',
   },
   error: {
     unknown: 'Unknown Error',

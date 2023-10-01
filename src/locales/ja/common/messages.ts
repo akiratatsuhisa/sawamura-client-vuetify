@@ -22,6 +22,7 @@ export const messages: LocaleCommonMessages = {
     unsupportedFileType: 'サポートされていないファイル形式',
     fileExceededLimit: 'ファイルは${size}制限を超えています',
     requestVeriyEmail: 'アカウントにメールが存在しないか、既に確認されています',
+    invalidRepostRequest: 'このウィニーは一部の行動を制限します',
   },
   error: {
     unknown: '不明なエラー',

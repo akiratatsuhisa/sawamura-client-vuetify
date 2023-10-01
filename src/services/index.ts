@@ -8,6 +8,8 @@ import { RolesService } from '@/services/roles';
 import { RoomsService } from '@/services/rooms';
 import { UsersService } from '@/services/users';
 
+import { WhinniesService } from './whinnies';
+
 export { Service };
 
 export const config: CreateAxiosDefaults = {
@@ -23,4 +25,5 @@ export const services = {
   profileUsers: new ProfileUsersService(),
   roles: new RolesService(),
   rooms: new RoomsService(),
+  whinnies: new WhinniesService(),
 };

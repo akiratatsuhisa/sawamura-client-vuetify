@@ -10,3 +10,4 @@ export * from '@/interfaces/roles';
 export * from '@/interfaces/rooms';
 export * from '@/interfaces/settings';
 export * from '@/interfaces/users';
+export * from '@/interfaces/whinnies';

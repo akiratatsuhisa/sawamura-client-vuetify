@@ -28,13 +28,8 @@
         </div>
       </v-list-item>
 
-      <template v-if="navigationRailFabProps">
-        <v-fade-transition>
-          <v-floating-action-button
-            v-bind="navigationRailFabProps"
-            :screen-fab="false"
-          />
-        </v-fade-transition>
+      <template v-if="navigationRailFabComponent">
+        <component :is="navigationRailFabComponent" />
       </template>
     </template>
 
@@ -62,7 +57,8 @@ import VRailMenuItem from '@/layouts/Default/components/RailMenuItem.vue';
 import { useAppStore } from '@/store';
 
 const appStore = useAppStore();
-const { mainNavigationItems, navigationRailFabProps } = storeToRefs(appStore);
+const { mainNavigationItems, navigationRailFabComponent } =
+  storeToRefs(appStore);
 const { handleNavigationSelect } = appStore;
 
 const { user, photoUrl } = useAuth();
