@@ -2,9 +2,8 @@ import { useFileDialog, useObjectUrl } from '@vueuse/core';
 import { ref, shallowRef, watch } from 'vue';
 import { Cropper as VCropper } from 'vue-advanced-cropper';
 
+import { useThemeModeStorage } from '@/composables';
 import { FileHelper } from '@/helpers';
-
-import { useThemeModeStorage } from './useAppStorage';
 
 export function useImageCropper() {
   const { isThemeSelectable } = useThemeModeStorage();

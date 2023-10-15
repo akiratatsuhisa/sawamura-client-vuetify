@@ -80,11 +80,11 @@ import { useRouter } from 'vue-router';
 import {
   usePageLocale,
   useRouterDialog,
+  useScrollBehavior,
   useSnackbar,
   useSocketChat,
   useSocketEventListener,
 } from '@/composables';
-import { useScrollBehavior } from '@/composables/useBehavior';
 import { ICreateRoomRequest, IRoomResponse } from '@/interfaces';
 import { useRoomsStore } from '@/store';
 import VRoomList from '@/views/Messages/components/RoomList.vue';

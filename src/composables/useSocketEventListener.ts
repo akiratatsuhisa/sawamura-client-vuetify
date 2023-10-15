@@ -4,10 +4,9 @@ import { Socket } from 'socket.io-client';
 import { v4 as uuidv4 } from 'uuid';
 import { isRef, onBeforeUnmount, readonly, ref, unref, watch } from 'vue';
 
+import { useLoading } from '@/composables';
 import { LoadingState } from '@/constants';
 import { IWsExceptionResponse } from '@/interfaces';
-
-import { useLoading } from './useLoading';
 
 type EmitId = {
   __emit_id__?: string;

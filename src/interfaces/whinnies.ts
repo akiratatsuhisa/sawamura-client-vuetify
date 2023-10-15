@@ -1,4 +1,4 @@
-import { IPaginationCursor } from './common';
+import { IPaginationCursor } from '@/interfaces/common';
 
 export interface IWhinnyResponse {
   id: string;

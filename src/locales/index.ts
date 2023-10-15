@@ -2,8 +2,7 @@ import { createI18n } from 'vue-i18n';
 
 import { en } from '@/locales/en';
 import { ja } from '@/locales/ja';
-
-import { LocaleMessages } from './type';
+import { LocaleMessages } from '@/locales/type';
 
 const messages: { [key: string]: LocaleMessages } = { en, ja };
 

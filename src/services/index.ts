@@ -7,8 +7,7 @@ import { ProfileUsersService } from '@/services/profileUsers';
 import { RolesService } from '@/services/roles';
 import { RoomsService } from '@/services/rooms';
 import { UsersService } from '@/services/users';
-
-import { WhinniesService } from './whinnies';
+import { WhinniesService } from '@/services/whinnies';
 
 export { Service };
 
