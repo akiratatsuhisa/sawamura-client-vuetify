@@ -1,4 +1,4 @@
-import decode from 'jwt-decode';
+import { jwtDecode } from 'jwt-decode';
 import _ from 'lodash';
 
 import { IdentityUser } from '@/interfaces';
@@ -11,7 +11,7 @@ export namespace Jwt {
       return null;
     }
 
-    const payload = decode(token) as Record<string, unknown>;
+    const payload = jwtDecode(token) as Record<string, unknown>;
 
     if (!payload || !payload.exp) {
       return null;
@@ -90,7 +90,7 @@ export namespace Jwt {
       return null;
     }
 
-    const payload = decode(token) as Record<string, unknown>;
+    const payload = jwtDecode(token) as Record<string, unknown>;
 
     if (!payload) {
       return null;
