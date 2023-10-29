@@ -18,6 +18,7 @@ export * from '@/composables/useSocketChat';
 export * from '@/composables/useSocketDashboard';
 export * from '@/composables/useSocketEventListener';
 export * from '@/composables/useSocketNotifications';
+export * from '@/composables/useStyle';
 export * from '@/composables/useUser';
 export * from '@/composables/useVuelidate';
 export * from '@/composables/useWaveSurfer';

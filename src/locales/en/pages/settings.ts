@@ -30,6 +30,11 @@ export const settings: LocalePagesSettings = {
     },
   },
   display: {
+    themeStyle: {
+      title: 'Theme Style',
+      subtitle:
+        'Manage your display style. These settings affect all the Sawamura accounts on this browser.',
+    },
     themeMode: {
       title: 'Theme Mode',
       subtitle:

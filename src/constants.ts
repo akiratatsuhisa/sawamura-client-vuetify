@@ -22,6 +22,9 @@ export enum LoadingState {
 }
 
 export namespace KEYS {
+  export const THEME_STYLE: InjectionKey<Ref<string | undefined>> =
+    Symbol('themeStyle');
+
   export const AXIOS: InjectionKey<AxiosInstance> = Symbol('axios');
 
   export const LOADINGS: InjectionKey<Ref<Array<[string, number | boolean]>>> =

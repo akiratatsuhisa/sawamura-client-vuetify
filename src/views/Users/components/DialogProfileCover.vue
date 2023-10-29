@@ -17,7 +17,7 @@
       </div>
 
       <v-switch
-        v-if="isThemeSelectable"
+        v-if="isAuthThemeSelectable"
         v-model="isThemeModeGenerate"
         density="compact"
         color="tertiary"
@@ -65,6 +65,7 @@ import {
   useAuth,
   useAxios,
   useImageCropper,
+  useIsAuthThemeSelectable,
   usePageLocale,
 } from '@/composables';
 import { IMAGE_FILE } from '@/helpers';
@@ -80,8 +81,9 @@ const emit = defineEmits<{
 
 const { translateShared } = usePageLocale({ prefix: 'users.profile' });
 const { fetchAccessToken } = useAuth();
+
+const isAuthThemeSelectable = useIsAuthThemeSelectable();
 const {
-  isThemeSelectable,
   isThemeModeGenerate,
   submitable,
   cropperRef,
@@ -107,7 +109,7 @@ async function onSubmit() {
   (async () => {
     await updateCover({
       image,
-      theme: isThemeSelectable.value && isThemeModeGenerate.value,
+      theme: isAuthThemeSelectable.value && isThemeModeGenerate.value,
     });
     await fetchAccessToken();
   })();

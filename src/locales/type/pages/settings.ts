@@ -26,6 +26,10 @@ export type LocalePagesSettings = {
     };
   };
   display: {
+    themeStyle: {
+      title: string;
+      subtitle: string;
+    };
     themeMode: {
       title: string;
       subtitle: string;

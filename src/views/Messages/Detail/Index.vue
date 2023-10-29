@@ -42,12 +42,17 @@
 
 <script lang="ts" setup>
 import { SOCKET_EVENTS } from '@akiratatsuhisa/sawamura-utils';
-import { useLocalStorage, useStyleTag } from '@vueuse/core';
+import { useLocalStorage } from '@vueuse/core';
 import { computed, provide, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useDisplay } from 'vuetify';
 
-import { useRoom, useSocketChat, useSocketEventListener } from '@/composables';
+import {
+  useRoom,
+  useSocketChat,
+  useSocketEventListener,
+  useThemeStyle,
+} from '@/composables';
 import { KEYS } from '@/constants';
 import { IRoomRequest, IRoomResponse } from '@/interfaces';
 import VInfoSidebar from '@/views/Messages/Detail/components/InfoSidebar.vue';
@@ -162,8 +167,5 @@ watch(
   { immediate: true },
 );
 
-useStyleTag(
-  computed(() => room.value.themeStyle ?? ''),
-  { id: 'vuetify-room-style' },
-);
+useThemeStyle(computed(() => room.value.themeStyle));
 </script>

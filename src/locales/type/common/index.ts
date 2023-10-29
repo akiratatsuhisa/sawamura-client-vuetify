@@ -10,6 +10,7 @@ export type LocaleCommon = {
     chooseImage: string;
     generateTheme: string;
   };
+  styles: { default: string; mixed: string; override: string; none: string };
   themes: { light: string; dark: string; coffee: string };
   providers: { google: string; github: string };
   languages: { en: string; ja: string };

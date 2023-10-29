@@ -30,6 +30,11 @@ export const settings: LocalePagesSettings = {
     },
   },
   display: {
+    themeStyle: {
+      title: 'テーマスタイル',
+      subtitle:
+        '表示スタイルを管理します。これらの設定はこのブラウザ上の全ての澤村アカウントに影響します。',
+    },
     themeMode: {
       title: 'テーマモード',
       subtitle:

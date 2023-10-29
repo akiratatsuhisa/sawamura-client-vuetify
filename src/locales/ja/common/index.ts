@@ -12,6 +12,12 @@ export const common: LocaleCommon = {
     chooseImage: '画像を選択',
     generateTheme: 'テーマを生成',
   },
+  styles: {
+    default: 'デフォルト',
+    mixed: 'ミックス',
+    override: 'オーバーライド',
+    none: 'なし',
+  },
   themes: {
     light: 'ライト',
     dark: 'ダーク',

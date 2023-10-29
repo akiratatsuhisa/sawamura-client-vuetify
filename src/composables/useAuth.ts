@@ -10,7 +10,14 @@ import _ from 'lodash';
 import { computed, nextTick, reactive, ref, unref } from 'vue';
 import { useRoute } from 'vue-router';
 
-import { useAxios, useSnackbar } from '@/composables';
+import {
+  ThemeModeType,
+  ThemeStyleType,
+  useAxios,
+  useSnackbar,
+  useThemeModeStorage,
+  useThemeStyleStorage,
+} from '@/composables';
 import { Jwt } from '@/helpers';
 import {
   IAuthOptions,
@@ -348,4 +355,19 @@ export function useOauth(isLinkProvider?: MaybeRef<boolean>) {
     unlinkProvider,
     isLoadingUnlinkProvider,
   };
+}
+
+export function useIsAuthThemeSelectable() {
+  const { selectedThemeStyle } = useThemeStyleStorage();
+  const { selectedThemeMode } = useThemeModeStorage();
+
+  return computed(
+    () =>
+      (['default', 'mixed', 'override'] as Array<ThemeStyleType>).includes(
+        selectedThemeStyle.value,
+      ) &&
+      (['light', 'dark'] as Array<ThemeModeType>).includes(
+        selectedThemeMode.value,
+      ),
+  );
 }

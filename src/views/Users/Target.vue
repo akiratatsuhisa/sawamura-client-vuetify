@@ -49,11 +49,15 @@
 
 <script lang="ts" setup>
 import { SOCKET_EVENTS } from '@akiratatsuhisa/sawamura-utils';
-import { useStyleTag } from '@vueuse/core';
 import { computed, inject } from 'vue';
 import { useRouter } from 'vue-router';
 
-import { useAxios, useSocketChat, useSocketEventListener } from '@/composables';
+import {
+  useAxios,
+  useSocketChat,
+  useSocketEventListener,
+  useThemeStyle,
+} from '@/composables';
 import { KEYS } from '@/constants';
 import {
   IRoomPrivateRequest,
@@ -106,8 +110,5 @@ async function openPrivateChat() {
   await requestPrivateChat({ otherUserId: profileUser.value.id });
 }
 
-useStyleTag(
-  computed(() => profileUser.value?.themeStyle ?? ''),
-  { id: 'vuetify-profile-style' },
-);
+useThemeStyle(computed(() => profileUser.value?.themeStyle));
 </script>

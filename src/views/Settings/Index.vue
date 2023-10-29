@@ -51,11 +51,15 @@
 </template>
 
 <script lang="ts" setup>
-import { useStyleTag } from '@vueuse/core';
 import { computed, defineAsyncComponent } from 'vue';
 import { useDisplay } from 'vuetify';
 
-import { useAuth, usePageLocale, useRouterTab } from '@/composables';
+import {
+  useAuth,
+  usePageLocale,
+  useRouterTab,
+  useThemeStyle,
+} from '@/composables';
 import { SettingsTabs } from '@/interfaces';
 
 const display = useDisplay();
@@ -117,8 +121,5 @@ const { translate, translateShared } = usePageLocale({ prefix: 'settings' });
 
 const { user } = useAuth();
 
-useStyleTag(
-  computed(() => user.value?.themeStyle ?? ''),
-  { id: 'vuetify-auth-profile-style' },
-);
+useThemeStyle(computed(() => user.value?.themeStyle));
 </script>

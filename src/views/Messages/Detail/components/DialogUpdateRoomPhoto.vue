@@ -17,7 +17,7 @@
       </div>
 
       <v-switch
-        v-if="isThemeSelectable"
+        v-if="isRoomThemeSelectable"
         v-model="isThemeModeGenerate"
         density="compact"
         color="tertiary"
@@ -63,7 +63,12 @@ import { inject } from 'vue';
 import { CircleStencil, Cropper as VCropper } from 'vue-advanced-cropper';
 
 import VCropperContainer from '@/components/VCropperContainer.vue';
-import { useAxios, useImageCropper, usePageLocale } from '@/composables';
+import {
+  useAxios,
+  useImageCropper,
+  useIsRoomThemeSelectable,
+  usePageLocale,
+} from '@/composables';
 import { KEYS } from '@/constants';
 import { IMAGE_FILE } from '@/helpers';
 import { services } from '@/services';
@@ -83,8 +88,8 @@ const { translate } = usePageLocale({
 
 const room = inject(KEYS.CHAT.ROOM)!;
 
+const isRoomThemeSelectable = useIsRoomThemeSelectable();
 const {
-  isThemeSelectable,
   isThemeModeGenerate,
   submitable,
   cropperRef,
@@ -111,7 +116,7 @@ async function onSubmit() {
   updatePhoto({
     id: room.value!.id,
     image,
-    theme: isThemeSelectable.value && isThemeModeGenerate.value,
+    theme: isRoomThemeSelectable.value && isThemeModeGenerate.value,
   });
 
   emit('update:modelValue', false);

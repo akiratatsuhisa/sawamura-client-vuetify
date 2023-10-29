@@ -1,38 +1,65 @@
 <template>
+  <h3 class="text-h5">{{ translateStyleMode('title') }}</h3>
+  <span class="text-subtitle-2 font-weight-light text-high-emphasis">
+    {{ translateStyleMode('subtitle') }}
+  </span>
+
+  <v-radio-group v-model="selectedThemeStyle" hide-details>
+    <div
+      class="v-picker ma-0 mt-3 mx-md-6"
+      :style="{
+        'grid-template-columns': `repeat(${
+          $vuetify.display.smAndDown ? '1' : '3'
+        }, 1fr)`,
+      }"
+    >
+      <div
+        v-for="(detail, style) in themeStyles"
+        :key="style"
+        class="d-flex justify-space-between align-center pa-2 rounded-pill elevation-1 cursor-pointer"
+        :class="[
+          isActiveThemeStyle(style) ? 'bg-tertiary' : 'bg-tertiary-container',
+        ]"
+        @click.stop.prevent="() => (selectedThemeStyle = style)"
+      >
+        <v-radio :label="$t(`common.styles.${detail.name}`)" :value="style" />
+      </div>
+    </div>
+  </v-radio-group>
+
+  <v-divider class="my-3" />
+
   <h3 class="text-h5">{{ translateThemeMode('title') }}</h3>
   <span class="text-subtitle-2 font-weight-light text-high-emphasis">
     {{ translateThemeMode('subtitle') }}
   </span>
 
   <v-radio-group v-model="selectedThemeMode" hide-details>
-    <v-row no-gutters class="ma-0 mt-3 mx-md-6">
-      <v-col
-        cols="12"
-        md="4"
-        v-for="(detail, mode, index) in themeModes"
+    <div
+      class="v-picker ma-0 mt-3 mx-md-6"
+      :style="{
+        'grid-template-columns': `repeat(${
+          $vuetify.display.smAndDown ? '1' : '3'
+        }, 1fr)`,
+      }"
+    >
+      <div
+        v-for="(detail, mode) in themeModes"
         :key="mode"
+        class="d-flex justify-space-between align-center pa-2 rounded-pill elevation-1 cursor-pointer"
+        :class="[
+          isActiveThemeMode(mode) ? 'bg-tertiary' : 'bg-tertiary-container',
+        ]"
+        @click.stop.prevent="() => (selectedThemeMode = mode)"
       >
-        <div
-          class="d-flex justify-space-between align-center pa-2 rounded-pill elevation-1 cursor-pointer"
-          :class="[
-            isActiveThemeMode(mode) ? 'bg-tertiary' : 'bg-tertiary-container',
-            index !== 0 ? 'ml-0 ml-md-3' : 'ml-0',
-            index !== 0 ? 'mt-3 mt-md-0' : 'mt-md-0',
-          ]"
-          @click.stop.prevent="() => (selectedThemeMode = mode)"
-        >
-          <v-radio
-            :label="$t(`common.themes.${detail.name}`)"
-            :value="mode"
-          ></v-radio>
-          <v-icon size="30" class="pr-5">{{ detail.icon }}</v-icon>
-        </div>
-      </v-col>
-    </v-row>
+        <v-radio :label="$t(`common.themes.${detail.name}`)" :value="mode" />
+        <v-icon size="30" class="pr-5">{{ detail.icon }}</v-icon>
+      </div>
+    </div>
   </v-radio-group>
 
   <v-expand-transition>
-    <div v-if="isThemeSelectable">
+    <div v-if="isAuthThemeSelectable">
       <v-divider class="my-3" />
 
       <h3 class="text-h5">{{ translatePersonalTheme('title') }}</h3>
@@ -67,10 +94,10 @@
             class="overflow-hidden"
             mode="rgb"
             hide-inputs
-          ></v-color-picker>
+          />
         </v-menu>
 
-        <v-spacer></v-spacer>
+        <v-spacer />
 
         <v-btn
           :loading="isLoadingTheme"
@@ -93,12 +120,17 @@ import { watch } from 'vue';
 import {
   useAuth,
   useAxios,
+  useIsAuthThemeSelectable,
   usePageLocale,
   useThemeModeStorage,
   useThemePicker,
+  useThemeStyleStorage,
 } from '@/composables';
 import { services } from '@/services';
 
+const { translate: translateStyleMode } = usePageLocale({
+  prefix: 'settings.display.themeStyle',
+});
 const { translate: translateThemeMode } = usePageLocale({
   prefix: 'settings.display.themeMode',
 });
@@ -109,8 +141,11 @@ const {
   prefix: 'settings.display.personalTheme',
 });
 
-const { themeModes, selectedThemeMode, isThemeSelectable, isActiveThemeMode } =
+const { themeStyles, selectedThemeStyle, isActiveThemeStyle } =
+  useThemeStyleStorage();
+const { themeModes, selectedThemeMode, isActiveThemeMode } =
   useThemeModeStorage();
+const isAuthThemeSelectable = useIsAuthThemeSelectable();
 
 const { fetchAccessToken, user } = useAuth();
 
@@ -132,3 +167,10 @@ watch(themeSource, (themeSource) => {
   onThemeSourceChangeDebounce(themeSource);
 });
 </script>
+
+<style lang="scss" scoped>
+.v-picker {
+  display: grid;
+  gap: 12px;
+}
+</style>

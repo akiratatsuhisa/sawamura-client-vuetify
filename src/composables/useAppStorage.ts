@@ -3,6 +3,37 @@ import { computed, reactive, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useTheme } from 'vuetify';
 
+export type ThemeStyleType = 'default' | 'mixed' | 'override' | 'none';
+
+export const useThemeStyleStorage = createSharedComposable(() => {
+  const themeStyles = reactive<Record<ThemeStyleType, { name: string }>>({
+    default: { name: 'default' },
+    mixed: { name: 'mixed' },
+    override: { name: 'override' },
+    none: { name: 'none' },
+  });
+
+  const selectedThemeStyle = useLocalStorage<ThemeStyleType>(
+    'theme:style',
+    'default',
+  );
+
+  const selectedThemeStyleDetail = computed(
+    () => themeStyles[selectedThemeStyle.value],
+  );
+
+  function isActiveThemeStyle(style: ThemeStyleType) {
+    return selectedThemeStyle.value === style;
+  }
+
+  return {
+    themeStyles,
+    selectedThemeStyle,
+    selectedThemeStyleDetail,
+    isActiveThemeStyle,
+  };
+});
+
 export type ThemeModeType = 'light' | 'dark' | 'coffee';
 
 export const useThemeModeStorage = createSharedComposable(() => {
@@ -25,12 +56,6 @@ export const useThemeModeStorage = createSharedComposable(() => {
     () => themeModes[selectedThemeMode.value],
   );
 
-  const isThemeSelectable = computed(() =>
-    (['light', 'dark'] as Array<ThemeModeType>).includes(
-      selectedThemeMode.value,
-    ),
-  );
-
   watch(selectedThemeMode, (selectedTheme) => {
     theme.global.name.value = selectedTheme;
   });
@@ -43,7 +68,6 @@ export const useThemeModeStorage = createSharedComposable(() => {
     themeModes,
     selectedThemeMode,
     selectedThemeModeDetail,
-    isThemeSelectable,
     isActiveThemeMode,
   };
 });

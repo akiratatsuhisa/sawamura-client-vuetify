@@ -16,8 +16,13 @@ import VAlertsContainer from '@/components/VAlertsContainer.vue';
 import VBottomSheetContainer from '@/components/VBottomSheetContainer.vue';
 import VModalsContainer from '@/components/VModalsContainer.vue';
 import VSnackbarsContainer from '@/components/VSnackbarsContainer.vue';
-import { useHistoryState, useRouteWithModal } from '@/composables';
+import {
+  initThemeStyle,
+  useHistoryState,
+  useRouteWithModal,
+} from '@/composables';
 
+initThemeStyle();
 const historyState = useHistoryState();
 const route = useRouteWithModal(historyState);
 

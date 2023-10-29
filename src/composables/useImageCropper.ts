@@ -2,12 +2,9 @@ import { useFileDialog, useObjectUrl } from '@vueuse/core';
 import { ref, shallowRef, watch } from 'vue';
 import { Cropper as VCropper } from 'vue-advanced-cropper';
 
-import { useThemeModeStorage } from '@/composables';
 import { FileHelper } from '@/helpers';
 
 export function useImageCropper() {
-  const { isThemeSelectable } = useThemeModeStorage();
-
   const isThemeModeGenerate = ref<boolean>(false);
 
   const submitable = ref(false);
@@ -63,7 +60,6 @@ export function useImageCropper() {
   }
 
   return {
-    isThemeSelectable,
     isThemeModeGenerate,
     submitable,
     cropperRef,

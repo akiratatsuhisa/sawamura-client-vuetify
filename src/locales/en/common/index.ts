@@ -12,6 +12,12 @@ export const common: LocaleCommon = {
     chooseImage: 'Choose image',
     generateTheme: 'Generate theme',
   },
+  styles: {
+    default: 'Default',
+    mixed: 'Mixed',
+    override: 'Override',
+    none: 'None',
+  },
   themes: {
     light: 'Light',
     dark: 'Dark',

@@ -98,13 +98,19 @@
 </template>
 
 <script lang="ts" setup>
-import { useStyleTag, useWindowScroll, useWindowSize } from '@vueuse/core';
+import { useWindowScroll, useWindowSize } from '@vueuse/core';
 import { storeToRefs } from 'pinia';
 import { computed, h, watch } from 'vue';
 import { useRoute } from 'vue-router';
 
 import VTrendings from '@/components/Trendings/Index.vue';
-import { useAuth, useAxios, usePageLocale, useRouterTab } from '@/composables';
+import {
+  useAuth,
+  useAxios,
+  usePageLocale,
+  useRouterTab,
+  useThemeStyle,
+} from '@/composables';
 import { ProfileUserRelationshipTabs } from '@/interfaces';
 import { services } from '@/services';
 import { useProfileUserStore } from '@/store';
@@ -179,8 +185,5 @@ watch(
   { immediate: true },
 );
 
-useStyleTag(
-  computed(() => user.value?.themeStyle ?? ''),
-  { id: 'vuetify-auth-profile-style' },
-);
+useThemeStyle(computed(() => user.value?.themeStyle));
 </script>

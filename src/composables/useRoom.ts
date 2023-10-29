@@ -2,7 +2,14 @@ import { computedAsync, MaybeRef, useTimeAgo } from '@vueuse/core';
 import _ from 'lodash';
 import { computed, unref } from 'vue';
 
-import { useAuth, usePageLocale } from '@/composables';
+import {
+  ThemeModeType,
+  ThemeStyleType,
+  useAuth,
+  usePageLocale,
+  useThemeModeStorage,
+  useThemeStyleStorage,
+} from '@/composables';
 import {
   IAdvancedRoomResponse,
   IRoomMemberResponse,
@@ -252,4 +259,19 @@ export function useRoom(room: MaybeRef<IRoomResponse>) {
     roomPhotoUrl,
     roomCoverUrl,
   };
+}
+
+export function useIsRoomThemeSelectable() {
+  const { selectedThemeStyle } = useThemeStyleStorage();
+  const { selectedThemeMode } = useThemeModeStorage();
+
+  return computed(
+    () =>
+      (['default', 'mixed'] as Array<ThemeStyleType>).includes(
+        selectedThemeStyle.value,
+      ) &&
+      (['light', 'dark'] as Array<ThemeModeType>).includes(
+        selectedThemeMode.value,
+      ),
+  );
 }

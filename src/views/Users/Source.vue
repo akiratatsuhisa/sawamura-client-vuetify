@@ -25,10 +25,9 @@
 </template>
 
 <script lang="ts" setup>
-import { useStyleTag } from '@vueuse/core';
 import { computed, reactive } from 'vue';
 
-import { useAuth, usePageLocale } from '@/composables';
+import { useAuth, usePageLocale, useThemeStyle } from '@/composables';
 import VDialogProfileCover from '@/views/Users/components/DialogProfileCover.vue';
 import VDialogProfilePhoto from '@/views/Users/components/DialogProfilePhoto.vue';
 import VDisplayProfile from '@/views/Users/components/DisplayProfile.vue';
@@ -42,8 +41,5 @@ const dialogs = reactive({
   photo: false,
 });
 
-useStyleTag(
-  computed(() => user.value?.themeStyle ?? ''),
-  { id: 'vuetify-profile-style' },
-);
+useThemeStyle(computed(() => user.value?.themeStyle));
 </script>

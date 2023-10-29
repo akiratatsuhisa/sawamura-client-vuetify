@@ -101,7 +101,7 @@
               </v-list-item-title>
             </v-list-item>
             <v-list-item
-              v-if="isThemeSelectable && currentMember?.role !== 'Member'"
+              v-if="isRoomThemeSelectable && currentMember?.role !== 'Member'"
               rounded="pill"
               @click="openDialog('theme')"
             >
@@ -237,13 +237,13 @@ import { useRouter } from 'vue-router';
 import {
   useAuth,
   useDisplayThemeColor,
+  useIsRoomThemeSelectable,
   usePageLocale,
   useRoom,
   useRouterDialog,
   useSnackbar,
   useSocketChat,
   useSocketEventListener,
-  useThemeModeStorage,
 } from '@/composables';
 import { KEYS } from '@/constants';
 import {
@@ -295,7 +295,8 @@ const {
   lastActivatedAgo,
 } = useRoom(room);
 
-const { isThemeSelectable } = useThemeModeStorage();
+const isRoomThemeSelectable = useIsRoomThemeSelectable();
+
 const displayThemeColor = useDisplayThemeColor(
   computed(() => room.value.themeSource),
 );
