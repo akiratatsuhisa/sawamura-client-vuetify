@@ -51,7 +51,7 @@ const isExpand = ref<boolean>(true);
 const options = computed<ApexOptions>(() => ({
   chart: {
     type: 'line',
-    background: theme.current.value.colors['surface'],
+    background: 'rgb(var(--v-theme-surface))',
     foreColor: theme.current.value.colors['on-surface'],
     toolbar: {
       tools: {

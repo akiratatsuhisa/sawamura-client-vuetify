@@ -15,14 +15,17 @@
     </v-app-bar-title>
     <v-base-loading />
 
-    <v-dashboard-menu v-if="$vuetify.display.xs" />
+    <v-dashboard-menu v-if="$vuetify.display.xs && hasRoles('Administrator')" />
     <v-messages-menu />
     <v-profile-menu />
   </v-app-bar>
 </template>
 
 <script lang="ts" setup>
+import { useAuth } from '@/composables';
 import VDashboardMenu from '@/layouts/Default/components/DashboardMenu.vue';
 import VMessagesMenu from '@/layouts/Default/components/MessagesMenu.vue';
 import VProfileMenu from '@/layouts/Default/components/ProfileMenu.vue';
+
+const { hasRoles } = useAuth();
 </script>

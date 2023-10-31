@@ -2,6 +2,8 @@ import dayjs from 'dayjs';
 import Decimal from 'decimal.js';
 import _ from 'lodash';
 
+import i18n from '@/locales';
+
 type localesType = undefined | string | string[];
 
 type dateTimeDataType = undefined | null | string | Date | dayjs.Dayjs;
@@ -30,7 +32,12 @@ export namespace Format {
       timeZone?: string;
     },
   ): string {
-    const { locales, dateStyle, timeStyle, timeZone } = options ?? {};
+    const {
+      locales = i18n.global.locale.value,
+      dateStyle,
+      timeStyle,
+      timeZone,
+    } = options ?? {};
 
     if (
       _.isNil(data) ||

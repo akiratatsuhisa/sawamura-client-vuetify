@@ -9,6 +9,7 @@ export const dashboard: LocalePagesDashboard = {
       messages: 'Messages',
     },
     import: 'Import CSV',
+    mainchart: { title: 'Revenue' },
   },
   users: {
     tabs: {

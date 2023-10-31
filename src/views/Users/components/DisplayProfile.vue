@@ -101,7 +101,6 @@
           <span class="ml-1">
             {{
               Format.date(user.birthDate, {
-                locales: $i18n.locale,
                 dateStyle: 'long',
               })
             }}
@@ -124,7 +123,6 @@
           <span class="ml-1">
             {{
               Format.date(user.createdAt, {
-                locales: $i18n.locale,
                 dateStyle: 'long',
               })
             }}

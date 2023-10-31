@@ -111,7 +111,7 @@ const labels = ref<Array<string>>([]);
 const options = computed<ApexOptions>(() => ({
   chart: {
     type: 'donut',
-    background: theme.current.value.colors['surface'],
+    background: 'rgb(var(--v-theme-surface))',
     foreColor: theme.current.value.colors['on-surface'],
   },
   theme: {

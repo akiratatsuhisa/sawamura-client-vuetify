@@ -106,7 +106,6 @@
     >
       {{
         Format.date(record.birthDate, {
-          locales: $i18n.locale,
           dateStyle: 'medium',
         })
       }}
@@ -130,7 +129,6 @@
     >
       {{
         Format.dateTime(record.createdAt, {
-          locales: $i18n.locale,
           dateStyle: 'short',
           timeStyle: 'short',
         })

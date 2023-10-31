@@ -9,6 +9,7 @@ export const dashboard: LocalePagesDashboard = {
       messages: 'メッセージ',
     },
     import: '入力CSV',
+    mainchart: { title: '収益' },
   },
   users: {
     tabs: {

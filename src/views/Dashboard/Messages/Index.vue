@@ -75,7 +75,7 @@ const isExpand = ref<boolean>(true);
 const subOptions = computed<ApexOptions>(() => ({
   chart: {
     type: 'bar',
-    background: theme.current.value.colors['surface'],
+    background: 'rgb(var(--v-theme-surface))',
     foreColor: theme.current.value.colors['on-surface'],
   },
   theme: {

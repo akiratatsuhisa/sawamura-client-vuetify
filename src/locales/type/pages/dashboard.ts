@@ -7,6 +7,7 @@ export type LocalePagesDashboard = {
       messages: string;
     };
     import: string;
+    mainchart: { title: string };
   };
   users: {
     tabs: {

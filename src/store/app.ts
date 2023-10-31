@@ -9,7 +9,7 @@ import { INavigationMenuItem } from '@/interfaces';
 export const useAppStore = defineStore('app', () => {
   const router = useRouter();
   const route = useRoute();
-  const { user } = useAuth();
+  const { hasRoles } = useAuth();
 
   const drawer = ref<boolean>(false);
 
@@ -50,9 +50,7 @@ export const useAppStore = defineStore('app', () => {
       },
     ];
 
-    if (
-      _.some(['Administrator'], (role) => _.includes(user.value?.roles, role))
-    ) {
+    if (hasRoles('Administrator')) {
       values.push({
         type: 'navigation',
         key: 'Dashboard',

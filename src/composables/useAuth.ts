@@ -52,6 +52,10 @@ export const useAuth = createSharedComposable(() => {
   const isAuthenticated = computed(() => !_.isNull(user.value));
   const identityId = computed(() => user.value?.id ?? null);
 
+  function hasRoles(...roles: Array<string>) {
+    return _.some(roles, (role) => _.includes(user.value?.roles, role));
+  }
+
   const axiosInstacne = axios.create(config);
 
   function isExpires(seconds: number = 60) {
@@ -245,6 +249,7 @@ export const useAuth = createSharedComposable(() => {
     expires,
     user,
     identityId,
+    hasRoles,
     login,
     logout,
     oauthLogin,
