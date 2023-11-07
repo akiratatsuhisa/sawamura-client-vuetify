@@ -26,6 +26,7 @@ import { onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 
 import { useAuth, usePageLocale } from '@/composables';
+import { Oauth } from '@/helpers';
 
 const { translate } = usePageLocale({ prefix: 'oauth.callback' });
 
@@ -34,19 +35,21 @@ const router = useRouter();
 
 const { oauthLogin } = useAuth();
 
-onMounted(() => {
-  const { accessToken, refreshToken, redirectUrl } = route.query;
-  if (typeof accessToken !== 'string' || typeof refreshToken !== 'string') {
+onMounted(async () => {
+  try {
+    await oauthLogin({
+      provider: route.params.provider as string,
+      params: route.query,
+    });
+    const { redirectUrl } = Oauth.parseState(route.query.state) ?? {};
+
+    router.replace(
+      typeof redirectUrl === 'string' && redirectUrl.length
+        ? { path: redirectUrl }
+        : { name: 'Home' },
+    );
+  } catch (error) {
     return router.push({ name: 'Oauth:Error' });
   }
-  oauthLogin({
-    accessToken,
-    refreshToken,
-  });
-  router.push(
-    typeof redirectUrl === 'string' && redirectUrl.length
-      ? { path: redirectUrl }
-      : { name: 'Home' },
-  );
 });
 </script>

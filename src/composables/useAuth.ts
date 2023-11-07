@@ -195,7 +195,20 @@ export const useAuth = createSharedComposable(() => {
     }
   }
 
-  async function oauthLogin(data: IAuthResponse) {
+  async function oauthLogin({
+    provider,
+    params,
+  }: {
+    provider: string;
+    params?: Record<string, any>;
+  }) {
+    const { data } = await axiosInstacne.get<IAuthResponse>(
+      `/oauth/${provider}`,
+      {
+        params,
+      },
+    );
+
     updateTokens(data);
     createSnackbarSuccess(i18n.global.t('common.messages.success.login'));
   }
@@ -341,7 +354,7 @@ export function useOauth(isLinkProvider?: MaybeRef<boolean>) {
       translateMessage: 'success.oauthUnlink',
     });
 
-  async function linkProvider(provider: string) {
+  function linkProvider(provider: string) {
     switch (provider) {
       case 'google':
         return challengeGoogleOauth();

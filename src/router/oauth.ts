@@ -5,7 +5,7 @@ export default {
   component: () => import('@/layouts/Auth/Index.vue'),
   children: [
     {
-      path: 'callback',
+      path: ':provider(github|google)',
       name: 'Oauth:Callback',
       component: () => import('@/views/Oauth/Callback.vue'),
     },

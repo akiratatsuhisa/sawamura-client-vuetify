@@ -65,9 +65,9 @@ OAuth2 variables:
 | KEY                      | DESCRIPTION                                                        | EXAMPLE VALUE                      |
 | ------------------------ | ------------------------------------------------------------------ | ---------------------------------- |
 | VITE_GOOGLE_CLIENT_ID    | Client ID provided by Google for OAuth2 authentication.            |                                    |
-| VITE_GOOGLE_CALLBACK_URL | The callback URL registered with Google for OAuth2 authentication. | http://localhost:4000/oauth/google |
+| VITE_GOOGLE_CALLBACK_URL | The callback URL registered with Google for OAuth2 authentication. | http://localhost:3000/oauth/google |
 | VITE_GITHUB_CLIENT_ID    | Client ID provided by GitHub for OAuth2 authentication.            |                                    |
-| VITE_GITHUB_CALLBACK_URL | The callback URL registered with GitHub for OAuth2 authentication. | http://localhost:4000/oauth/github |
+| VITE_GITHUB_CALLBACK_URL | The callback URL registered with GitHub for OAuth2 authentication. | http://localhost:3000/oauth/github |
 
 ## Running the app
 
