@@ -30,7 +30,7 @@ export default [
       leftInner: VRoomDetailLeftInnerAppBar,
       default: () => import('@/views/Messages/Detail/Index.vue'),
     },
-    beforeEnter: (to) => {
+    beforeEnter(to) {
       const dialog = to.params.dialog as string | undefined;
       const memberDialog = to.params.memberDialog as string | undefined;
       const memberId = to.params.memberId as string | undefined;

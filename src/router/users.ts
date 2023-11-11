@@ -11,7 +11,7 @@ import VStatusTopAppBar from '@/views/Users/Status/layouts/StatusTopAppBar.vue';
 
 export default [
   {
-    path: `/users/:username(${Regex.Url.USERNAME.source})`,
+    path: `/users/:username(${Regex.Url.USERNAME.source})/:dialog(photo|cover)?`,
     alias: `/u/:username(${Regex.Url.USERNAME.source})`,
     name: 'Users:Detail',
     meta: { requiresAuth: true },

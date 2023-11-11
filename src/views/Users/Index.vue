@@ -49,6 +49,7 @@
 <script lang="ts" setup>
 import { storeToRefs } from 'pinia';
 import { provide, Ref, ref, watch } from 'vue';
+import { useRouter } from 'vue-router';
 
 import VRecommendFollows from '@/components/RecommendFollows/Index.vue';
 import VTrendings from '@/components/Trendings/Index.vue';
@@ -70,6 +71,7 @@ import VTarget from '@/views/Users/Target.vue';
 const profileUserStore = useProfileUserStore();
 const { user } = storeToRefs(profileUserStore);
 
+const router = useRouter();
 const route = useBackgroundRoute();
 const { user: identityUser } = useAuth();
 
@@ -85,6 +87,15 @@ watch(
   async (username, _prev, onCleanup) => {
     if (!username) {
       return;
+    }
+    if (
+      route.value.params.dialog &&
+      username !== identityUser.value?.username
+    ) {
+      router.replace({
+        name: 'Users:Detail',
+        params: { username },
+      });
     }
 
     const result = await excute({ username });

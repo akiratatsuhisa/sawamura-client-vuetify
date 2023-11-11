@@ -88,7 +88,7 @@
         <div
           v-if="$vuetify.display.mdAndUp"
           :style="{ width: $vuetify.display.lgAndDown ? '300px' : '450px' }"
-          class="flex-grow-0 flex-shrink-0 ml-0 ml-md-4 ml-lg-12 mt-n4"
+          class="flex-grow-0 flex-shrink-0 ml-0 ml-md-4 ml-lg-12"
         >
           <v-trendings />
         </div>

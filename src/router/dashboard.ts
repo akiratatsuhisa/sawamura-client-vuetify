@@ -34,7 +34,7 @@ export default {
           to: { name: 'Dashboard:Users' },
         },
       },
-      beforeEnter: (to) => {
+      beforeEnter(to) {
         const dialog = to.params.dialog as string | undefined;
         const id = to.params.id as string | undefined;
 
@@ -59,7 +59,7 @@ export default {
               to: { name: 'Dashboard:Users:Roles' },
             },
           },
-          beforeEnter: (to) => {
+          beforeEnter(to) {
             const dialog = to.params.dialog as string | undefined;
             const id = to.params.id as string | undefined;
 
