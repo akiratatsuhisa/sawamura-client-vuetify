@@ -41,7 +41,7 @@
           <div v-else-if="isFileType">
             <div
               v-if="files.length"
-              class="files"
+              class="d-flex ga-2 flex-row flex-wrap"
               :class="[isCurrentUserMessage ? 'justify-end' : 'justify-start']"
             >
               <v-message-content-file
@@ -207,12 +207,3 @@ function removeMessage() {
   });
 }
 </script>
-
-<style lang="scss" scoped>
-.files {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-}
-</style>

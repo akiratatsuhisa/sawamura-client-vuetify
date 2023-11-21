@@ -3,7 +3,9 @@
 
   <v-card ref="messageZoneRef" color="surface" variant="flat" rounded="0">
     <div v-show="!isShowRecord && filesInput.length">
-      <v-sheet class="pa-2 pt-3 files bg-surface-container-lowest">
+      <v-sheet
+        class="d-flex flex-nowrap ga-2 pa-2 pt-3 bg-surface-container-lowest overflow-x-auto overflow-y-hidden"
+      >
         <v-message-input-file
           v-for="file in filesInput"
           :key="file.id"

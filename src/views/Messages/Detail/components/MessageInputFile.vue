@@ -72,25 +72,23 @@ const selectMessageImageSrc = inject(KEYS.CHAT.SELECT_MESSAGE_IMAGE_SRC)!;
 </script>
 
 <style lang="scss" scoped>
-.files {
-  .file-images {
-    img {
-      height: 6rem;
-    }
-  }
-  .file-audios {
+.file-images {
+  img {
     height: 6rem;
-    width: 6rem;
   }
+}
+.file-audios {
+  height: 6rem;
+  width: 6rem;
+}
 
-  .file-videos {
-    height: 6rem;
-    width: 6rem;
-  }
+.file-videos {
+  height: 6rem;
+  width: 6rem;
+}
 
-  .file-files {
-    height: 6rem;
-    width: 6rem;
-  }
+.file-files {
+  height: 6rem;
+  width: 6rem;
 }
 </style>

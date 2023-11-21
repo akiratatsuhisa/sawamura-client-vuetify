@@ -11,7 +11,7 @@
 
   <v-radio-group v-model="selectedLanguage" hide-details>
     <div
-      class="v-picker ma-0 mt-3 mx-md-6"
+      class="d-grid ga-3 ma-0 mt-3 mx-md-6"
       :style="{
         'grid-template-columns': `repeat(${
           $vuetify.display.smAndDown ? '1' : '3'
@@ -59,10 +59,3 @@ const { translate: translateInterfaceLanguage } = usePageLocale({
 
 const { languages, selectedLanguage, isActiveLanguage } = useLanguageStorage();
 </script>
-
-<style lang="scss" scoped>
-.v-picker {
-  display: grid;
-  gap: 12px;
-}
-</style>
