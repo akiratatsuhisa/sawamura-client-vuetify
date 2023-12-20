@@ -42,7 +42,7 @@ const model = computed({
   padding-left: 1.5rem;
   padding-right: 1.5rem;
   padding-bottom: 1.5rem;
-  height: calc(100vh);
-  width: calc(100vw);
+  height: calc(100dvh);
+  width: calc(100dvw);
 }
 </style>

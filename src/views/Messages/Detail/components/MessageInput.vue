@@ -99,7 +99,7 @@
               @select="selectEmoji"
               :style="{
                 width: isDialog ? 'auto' : '350px',
-                height: isDialog ? 'calc(100vh - 48px)' : '420px',
+                height: isDialog ? 'calc(100dvh - 48px)' : '420px',
                 maxHeight: '420px',
               }"
             />

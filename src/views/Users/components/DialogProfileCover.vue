@@ -125,6 +125,6 @@ function onOpen() {
 <style lang="scss" scoped>
 .cropper-wrapper {
   width: 100%;
-  height: calc(100vh - 260px);
+  height: calc(100dvh - 260px);
 }
 </style>
