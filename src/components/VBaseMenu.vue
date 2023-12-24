@@ -76,6 +76,13 @@ withDefaults(
   },
 );
 
+defineSlots<{
+  default(props: { isDialog: boolean; isMenu: boolean; close(): void }): any;
+  title(): any;
+  'dialog-content'(props: { close(): void }): any;
+  'menu-content'(props: { close(): void }): any;
+}>();
+
 const model = ref(false);
 
 const display = useDisplay();

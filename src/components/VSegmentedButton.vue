@@ -27,21 +27,28 @@
 import _ from 'lodash';
 import { computed } from 'vue';
 
+interface IItem {
+  icon?: string;
+  value: any;
+  title?: string;
+  translate?: string;
+}
+
 const props = defineProps<{
   modelValue?: any;
   mandatory?: boolean;
   multiple?: boolean;
   block?: boolean;
-  items?: Array<{
-    icon?: string;
-    value: any;
-    title?: string;
-    translate?: string;
-  }>;
+  items?: Array<IItem>;
 }>();
 
 const emit = defineEmits<{
   (event: 'update:modelValue', payload: any): void;
+}>();
+
+defineSlots<{
+  default(): any;
+  item(props: { item: IItem; isActive: boolean }): any;
 }>();
 
 const model = computed({

@@ -56,15 +56,18 @@
   </v-menu>
 </template>
 
-<script lang="ts">
-export default {
-  inheritAttrs: false,
-};
-</script>
-
 <script lang="ts" setup>
 import _ from 'lodash';
 import { computed, useAttrs } from 'vue';
+
+interface IItem {
+  icon?: string;
+  value: any;
+  title?: string;
+  translate?: string;
+}
+
+defineOptions({ inheritAttrs: false });
 
 const attrs = useAttrs();
 
@@ -75,16 +78,22 @@ const props = defineProps<{
   label?: string;
   icon?: string;
   filterIcon?: string;
-  items?: Array<{
-    icon?: string;
-    value: any;
-    title?: string;
-    translate?: string;
-  }>;
+  items?: Array<IItem>;
 }>();
 
 const emit = defineEmits<{
   (event: 'update:modelValue', payload: any): void;
+}>();
+
+defineSlots<{
+  default(): any;
+  content(props: { selected: any }): any;
+  label(): any;
+  item(props: {
+    item: IItem;
+    isActive: boolean;
+    selectItem(value: any): void;
+  }): any;
 }>();
 
 const model = computed({

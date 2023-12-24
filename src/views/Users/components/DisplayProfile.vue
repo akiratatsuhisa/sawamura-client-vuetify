@@ -72,7 +72,7 @@
       </v-hover>
 
       <div v-if="$vuetify.display.smAndUp" class="actions d-flex align-center">
-        <slot name="actions"></slot>
+        <slot name="actions" />
       </div>
     </div>
 
@@ -80,7 +80,7 @@
       v-if="$vuetify.display.xs"
       class="pl-5 pr-4 actions d-flex align-center"
     >
-      <slot name="actions"></slot>
+      <slot name="actions" />
     </div>
 
     <v-card-title tag="h1" class="py-0">
@@ -202,6 +202,11 @@ import { Format } from '@/helpers';
 const LAZY_BACKGROUND = import.meta.env.VITE_NO_BACKGROUND_URL;
 
 const props = defineProps<{ coverUrl?: string; photoUrl?: string }>();
+
+defineSlots<{
+  default(): any;
+  actions(): any;
+}>();
 
 const user = inject(KEYS.USERS.PAGE.PROFILE_USER)!;
 const userPhotoUrl = useUserImage('photo', user);

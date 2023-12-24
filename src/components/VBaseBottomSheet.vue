@@ -4,7 +4,6 @@
 
 <script lang="ts" setup>
 import { storeToRefs } from 'pinia';
-import { useSlots } from 'vue';
 
 import { useAppStore } from '@/store';
 
@@ -12,7 +11,10 @@ const props = withDefaults(defineProps<{ closeOnContentClick?: boolean }>(), {
   closeOnContentClick: true,
 });
 
-const slots = useSlots();
+const slots = defineSlots<{
+  default(): any;
+  activator(props: { props: { onClick(): void } }): any;
+}>();
 
 const appStore = useAppStore();
 const { bottomSheetProps, bottomSheetComponent } = storeToRefs(appStore);

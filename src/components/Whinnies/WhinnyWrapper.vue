@@ -59,4 +59,13 @@
 defineProps<{ direction: 'horizontal' | 'vertical'; photoUrl?: string }>();
 
 defineEmits<{ (event: 'gotoUser'): void }>();
+
+defineSlots<{
+  default(): any;
+  reference(): any;
+  userInfo(): any;
+  medias(): any;
+  detail(): any;
+  action(): any;
+}>();
 </script>

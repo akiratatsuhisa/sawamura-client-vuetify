@@ -6,11 +6,14 @@
 
 <script lang="ts" setup>
 import { storeToRefs } from 'pinia';
-import { onBeforeMount, onBeforeUnmount, useSlots } from 'vue';
+import { onBeforeMount, onBeforeUnmount } from 'vue';
 
 import { useAppStore } from '@/store';
 
-const slots = useSlots();
+const slots = defineSlots<{
+  default(): any;
+  rail(): any;
+}>();
 
 const appStore = useAppStore();
 const { navigationRailFabComponent } = storeToRefs(appStore);

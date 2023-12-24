@@ -67,6 +67,12 @@ const emit = defineEmits<{
   (event: 'close'): void;
 }>();
 
+defineSlots<{
+  default(): any;
+  title(): any;
+  action(): any;
+}>();
+
 const display = useDisplay();
 
 const fullscreen = computed(() => props.fullscreen || display.smAndDown.value);

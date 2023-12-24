@@ -181,6 +181,8 @@ const emit = defineEmits<{
   (event: 'submit'): void;
 }>();
 
+defineSlots<{ default(): any; 'prepend-icon'(): any; 'append-icon'(): any }>();
+
 const model = computed({
   get: () => props.modelValue,
   set: (value) => emit('update:modelValue', value),

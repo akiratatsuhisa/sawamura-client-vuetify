@@ -28,6 +28,10 @@ const emit = defineEmits<{
   (event: 'close'): void;
 }>();
 
+defineSlots<{
+  default(props: { fullscreen: boolean; close(): void }): any;
+}>();
+
 const display = useDisplay();
 const fullscreen = computed(() => props.fullscreen || display.smAndDown.value);
 
