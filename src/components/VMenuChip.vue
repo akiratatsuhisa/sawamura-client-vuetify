@@ -132,7 +132,9 @@ const displaySelectedItem = computed(
     _.find(props.items, (o) =>
       _.isEqual(
         o.value,
-        props.multiple && _.isArray(model.value) ? model.value[0] : model.value,
+        props.multiple && _.isArray(model.value)
+          ? _.first(model.value)
+          : model.value,
       ),
     )!,
 );

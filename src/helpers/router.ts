@@ -10,16 +10,16 @@ export namespace Router {
   ];
 
   export const SKIP_DEFAULT = '0';
-  export const TAKE_DEFAULT = TAKE_LIMITS[0].value.toString();
+  export const TAKE_DEFAULT = _.first(TAKE_LIMITS)?.value.toString();
 
   export function getQuery(
     value: LocationQueryValue | LocationQueryValue[],
   ): string | undefined {
     return _.isArray(value)
-      ? (value[0] as string)
+      ? _.first(value)!
       : _.isNil(value) || value === ''
       ? undefined
-      : (value as string);
+      : value;
   }
 
   export function getQueryAll(

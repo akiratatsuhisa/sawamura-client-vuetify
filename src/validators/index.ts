@@ -19,11 +19,11 @@ export const required = (label: string) =>
 
 export const requiredIf = (
   label: string,
-  prop: Parameters<typeof originRequiredIf>[0],
+  ...prop: Parameters<typeof originRequiredIf>
 ) =>
   helpers.withMessage(
     () => i18n.global.t('validators.required', { label: i18n.global.t(label) }),
-    originRequiredIf(prop),
+    originRequiredIf(...prop),
   );
 
 export const maxLength = (label: string, max: number | Ref<number>) =>

@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import { v4 as uuidv4 } from 'uuid';
 import { Component, inject } from 'vue';
 
@@ -110,7 +111,7 @@ export function useSnackbar() {
       ),
       {
         isOnce: true,
-        color: exception.message.split('.')[0],
+        color: _.first(exception.message.split('.')),
       },
     );
   }

@@ -297,7 +297,7 @@ export function useOauth(isLinkProvider?: MaybeRef<boolean>) {
     const isLink = unref(isLinkProvider);
 
     if (isLink) {
-      const data = await excuteLinkProvider({});
+      const data = await excuteLinkProvider();
 
       return {
         redirectUrl: route.fullPath,

@@ -6,6 +6,7 @@ import axios, {
   AxiosResponse,
   isAxiosError,
 } from 'axios';
+import _ from 'lodash';
 import { Component, ref, unref } from 'vue';
 
 import {
@@ -18,7 +19,14 @@ import { LoadingState } from '@/constants';
 import { IExceptionResponseDetail } from '@/interfaces';
 import { config, Service } from '@/services';
 
-export type UseAxiosOptions<T> = {
+type OmitFirstArg<F> = F extends (
+  config: AxiosRequestConfig,
+  ...params: infer P
+) => Promise<AxiosResponse<infer R>>
+  ? (...params: P) => Promise<R>
+  : never;
+
+export type UseAxiosOptions<Req> = {
   unauth?: boolean;
   loadingState?: LoadingState;
   delayPercentFinished?: number;
@@ -31,7 +39,7 @@ export type UseAxiosOptions<T> = {
 } & (
   | {
       immediate: true;
-      paramsOrData: T;
+      paramsOrData: Req;
     }
   | {
       immediate?: false;
@@ -41,14 +49,13 @@ export type UseAxiosOptions<T> = {
 export function useAxios<
   S extends Record<
     A,
-    (config: AxiosRequestConfig, dataOrParams: any) => Promise<any>
+    (config: AxiosRequestConfig, ...dataOrParams: any) => Promise<any>
   > &
     Service,
   A extends Exclude<keyof S, keyof Service>,
->(service: S, action: A, options?: UseAxiosOptions<Parameters<S[A]>['1']>) {
-  type Req = Parameters<S[A]>['1'];
-  type Res = Awaited<ReturnType<S[A]>>['data'];
-
+  Req extends Parameters<OmitFirstArg<S[A]>>,
+  Res extends Awaited<ReturnType<OmitFirstArg<S[A]>>>,
+>(service: S, action: A, options?: UseAxiosOptions<Req>) {
   const {
     unauth,
     loadingState = LoadingState.Loading,
@@ -80,7 +87,7 @@ export function useAxios<
 
   let percentTimeout: NodeJS.Timeout;
 
-  async function excute(paramsOrData: Req): Promise<Res> {
+  async function excute(...paramsOrData: Req): Promise<Res> {
     if (isLoading.value) {
       throw new Error('on progress');
     }
@@ -107,7 +114,7 @@ export function useAxios<
           onUploadProgress: onProgress,
           onDownloadProgress: onProgress,
         },
-        paramsOrData,
+        ...(paramsOrData as any),
       )) satisfies AxiosResponse<Res>;
 
       data.value = response.data === '' ? undefined : response.data;
@@ -125,7 +132,7 @@ export function useAxios<
 
         createSnackbar(t(`common.messages.${message}`, params as any), {
           isOnce: true,
-          color: message.split('.')[0],
+          color: _.first(message.split('.')),
         });
       } else if (unwrapTranslateMessage) {
         const unwrapTranslateParams = unref(translateMessageParams);
@@ -135,7 +142,7 @@ export function useAxios<
             `common.messages.${unwrapTranslateMessage}`,
             unwrapTranslateParams as any,
           ),
-          { isOnce: true, color: unwrapTranslateMessage.split('.')[0] },
+          { isOnce: true, color: _.first(unwrapTranslateMessage.split('.')) },
         );
       } else if (unwrapMessage) {
         createSnackbarSuccess(unwrapMessage);
@@ -157,7 +164,7 @@ export function useAxios<
         const params = error.value.params;
         createSnackbar(
           t(`common.messages.${error.value.message}`, params as any),
-          { isOnce: true, color: error.value.message.split('.')[0] },
+          { isOnce: true, color: _.first(error.value.message.split('.')) },
         );
       }
 
@@ -172,7 +179,7 @@ export function useAxios<
   }
 
   if (options?.immediate) {
-    excute(options.paramsOrData);
+    excute(...options.paramsOrData);
   }
 
   switch (loadingState) {

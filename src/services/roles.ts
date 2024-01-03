@@ -11,12 +11,11 @@ import {
 import { Service } from '@/services/common';
 
 export class RolesService extends Service {
-  getAll(config: AxiosRequestConfig, params: {}) {
+  getAll(config: AxiosRequestConfig) {
     return this.fetch<Array<IRoleResponse>>({
       ...config,
       url: 'roles',
       method: 'GET',
-      params,
     });
   }
 

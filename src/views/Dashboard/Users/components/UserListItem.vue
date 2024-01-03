@@ -74,7 +74,7 @@
       prepend-icon="mdi-account-cog-outline"
       @click="openDialog(record.id)"
     >
-      {{ record.userRoles[0].role.name }}
+      {{ _.first(record.userRoles)!.role.name }}
     </v-chip>
     <v-chip
       v-else

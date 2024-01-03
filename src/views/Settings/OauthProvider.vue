@@ -97,7 +97,7 @@ const {
   data,
 } = useAxios(services.oauth, 'getProviders', {
   immediate: true,
-  paramsOrData: {},
+  paramsOrData: [],
 });
 
 function isProviderLinked(provider: string) {
@@ -109,7 +109,7 @@ watch(isLoadingUnlinkProvider, (current) => {
     return;
   }
 
-  excuteFindProviders({});
+  excuteFindProviders();
 });
 
 const isLoading = computed(

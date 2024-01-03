@@ -234,7 +234,7 @@ const {
   data: roles,
 } = useAxios(services.roles, 'getAll', {
   immediate: true,
-  paramsOrData: {},
+  paramsOrData: [],
 });
 
 const roleList = computed<
@@ -305,7 +305,7 @@ const [v$, { isLoading: isLoadingForm }] = useVuelidate<ISearchUsersRequest>(
 const { excute: refetchUsers, data } = useAxios(services.users, 'getAll');
 
 async function onReset() {
-  await refetchRoles({});
+  await refetchRoles();
   v$.value.$reset();
   reset();
 }

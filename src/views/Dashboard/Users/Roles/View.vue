@@ -65,7 +65,7 @@ const roles = ref<Array<IRoleResponse>>([]);
 
 const { excute: requestRoles } = useAxios(services.roles, 'getAll');
 
-onMounted(async () => (roles.value = await requestRoles({})));
+onMounted(async () => (roles.value = await requestRoles()));
 
 useSocketEventListener<{ roles: Array<IRoleResponse> }>(
   socket,

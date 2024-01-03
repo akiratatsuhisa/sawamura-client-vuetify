@@ -1,30 +1,26 @@
 import { AxiosRequestConfig } from 'axios';
 
 import {
-  IOauthFindProvidersRequest,
   IOauthGenerateTokenResponse,
-  IOauthLinkProviderRequest,
   IOauthProviderResponse,
   IOauthUnlinkProviderRequest,
 } from '@/interfaces';
 import { Service } from '@/services/common';
 
 export class OauthService extends Service {
-  getProviders(config: AxiosRequestConfig, params: IOauthFindProvidersRequest) {
+  getProviders(config: AxiosRequestConfig) {
     return this.fetch<Array<IOauthProviderResponse>>({
       ...config,
       url: 'oauth/providers',
       method: 'GET',
-      params,
     });
   }
 
-  linkProvider(config: AxiosRequestConfig, data: IOauthLinkProviderRequest) {
+  linkProvider(config: AxiosRequestConfig) {
     return this.fetch<IOauthGenerateTokenResponse>({
       ...config,
       url: 'oauth/linkProvider',
       method: 'POST',
-      data,
     });
   }
 
