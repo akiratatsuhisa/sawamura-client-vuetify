@@ -6,6 +6,7 @@ import {
   IReactWhinnyRequest,
   ISearchWhinniesRequest,
   ISearchWhinnyReactionsRequest,
+  IWhinnyReactionResponse,
   IWhinnyRequest,
   IWhinnyResponse,
 } from '@/interfaces';
@@ -39,7 +40,7 @@ export class WhinniesService extends Service {
   }
 
   delete(config: AxiosRequestConfig, data: IDeleteWhinnyRequest) {
-    return this.fetch<IWhinnyResponse>({
+    return this.fetch<void>({
       ...config,
       url: `whinnies/${data.urlId}`,
       method: 'DELETE',
@@ -51,7 +52,7 @@ export class WhinniesService extends Service {
     config: AxiosRequestConfig,
     params: ISearchWhinnyReactionsRequest,
   ) {
-    return this.fetch<IWhinnyResponse>({
+    return this.fetch<Array<IWhinnyReactionResponse>>({
       ...config,
       url: `whinnies/${params.urlId}/reactions`,
       method: 'GET',
@@ -59,7 +60,7 @@ export class WhinniesService extends Service {
   }
 
   react(config: AxiosRequestConfig, data: IReactWhinnyRequest) {
-    return this.fetch<IWhinnyResponse>({
+    return this.fetch<void>({
       ...config,
       url: `whinnies/${data.urlId}/reactions`,
       method: 'PATCH',

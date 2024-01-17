@@ -37,9 +37,10 @@
 
 <script lang="ts" setup>
 import { useRouterModal } from '@/composables';
+import { IComposeWhinnyProps } from '@/interfaces';
 import HelloWorld from '@/views/Home/components/HelloWorld.vue';
 
-const { openModal } = useRouterModal();
+const { openModal } = useRouterModal<IComposeWhinnyProps>();
 function openModalComposeWhinny() {
   openModal({ name: 'Compose:Whinny' }, { type: 'Owner' });
 }

@@ -13,6 +13,7 @@ import {
   IProfileUserResponse,
   IRoomMemberResponse,
   IRoomResponse,
+  IWhinnyResponse,
 } from '@/interfaces';
 
 export enum LoadingState {
@@ -93,6 +94,13 @@ export namespace KEYS {
         'users:page:hasFollowing',
       );
     }
+  }
+
+  export namespace WHINNY {
+    export const ON_CREATE: InjectionKey<(data: IWhinnyResponse) => void> =
+      Symbol('whinny:onDelete');
+    export const ON_DELETE: InjectionKey<(data: IWhinnyResponse) => void> =
+      Symbol('whinny:onDelete');
   }
 }
 

@@ -17,29 +17,40 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, ref, watch } from 'vue';
+import _ from 'lodash';
+import { ref, watch } from 'vue';
 
 import VWhinnyContent from '@/components/Whinnies/WhinnyContent.vue';
-import { useAxios, useBackgroundRoute } from '@/composables';
+import { useAxios } from '@/composables';
 import { IWhinnyResponse } from '@/interfaces';
 import { services } from '@/services';
 
 const whinnies = ref<Array<IWhinnyResponse>>([]);
 
-const route = useBackgroundRoute();
-const username = computed(() => route.value.params.username);
+const props = defineProps<{
+  query: { username: string } | { sourceId: string };
+}>();
+
 const { excute: requestWhinnies } = useAxios(services.whinnies, 'getAll');
 
 watch(
-  username,
-  async (username) => {
-    if (typeof username !== 'string') {
-      return;
-    }
-
-    const data = await requestWhinnies({ username, take: 10 });
+  () => props.query,
+  async (query) => {
+    const data = await requestWhinnies({ ...query, take: 10 });
     whinnies.value = data;
   },
   { immediate: true },
 );
+
+defineExpose({
+  insertWhinny(data: IWhinnyResponse) {
+    whinnies.value.unshift(data);
+  },
+  deleteWhinny(data: IWhinnyResponse) {
+    whinnies.value = _.filter(
+      whinnies.value,
+      (whinny) => whinny.id !== data.id,
+    );
+  },
+});
 </script>

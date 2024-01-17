@@ -202,7 +202,7 @@
     </template>
 
     <template #default>
-      {{ isRepost ? whinny.source.content : whinny.content }}
+      {{ isRepost ? whinny.source?.content : whinny.content }}
     </template>
   </v-whinny-wrapper>
 </template>
@@ -210,7 +210,7 @@
 <script lang="ts" setup>
 import { UseTimeAgo } from '@vueuse/components';
 import _ from 'lodash';
-import { computed, reactive } from 'vue';
+import { computed, inject, reactive } from 'vue';
 import { useRouter } from 'vue-router';
 
 import VWhinnyContentAction from '@/components/Whinnies/WhinnyContentAction.vue';
@@ -224,7 +224,8 @@ import {
   useSnackbar,
   useUserImage,
 } from '@/composables';
-import { IWhinnyResponse } from '@/interfaces';
+import { KEYS } from '@/constants';
+import { IComposeWhinnyProps, IWhinnyResponse } from '@/interfaces';
 import { services } from '@/services';
 
 const props = defineProps<{
@@ -240,7 +241,7 @@ const router = useRouter();
 const isRepost = computed(() => whinny.type === 'Repost');
 const user = computed(() => {
   if (isRepost.value) {
-    return whinny.source.user!;
+    return whinny.source!.user!;
   }
 
   return whinny.user;
@@ -265,8 +266,8 @@ function gotoStatus() {
     name: 'Users:Status',
     params: isRepost.value
       ? {
-          urlId: whinny.source.urlId,
-          username: whinny.source.user!.username,
+          urlId: whinny.source?.urlId,
+          username: whinny.source?.user!.username,
         }
       : {
           urlId: whinny.urlId,
@@ -275,7 +276,12 @@ function gotoStatus() {
   });
 }
 
-const { openModal } = useRouterModal();
+const onCreateWhinny = inject(KEYS.WHINNY.ON_CREATE)!;
+
+const { openModal } = useRouterModal<IComposeWhinnyProps, IWhinnyResponse>({
+  key: computed(() => `Components:WhinnyContent:${props.data.id}`),
+  onSuccess: onCreateWhinny,
+});
 function openModalComposeWhinny(type: 'Comment' | 'Quote') {
   const data = isRepost.value ? whinny.source : whinny;
   openModal(
@@ -295,7 +301,7 @@ function openModalComposeWhinny(type: 'Comment' | 'Quote') {
         user: {
           ..._.pick(data?.user, ['id', 'username', 'displayName', 'photoUrl']),
         },
-      },
+      } as IWhinnyResponse,
     },
   );
 }
@@ -304,6 +310,8 @@ const { t } = useLayoutLocale({ prefix: '' });
 
 const { createSnackbarNormal } = useSnackbar();
 const alert = useAlert();
+
+const onDeleteWhinny = inject(KEYS.WHINNY.ON_DELETE)!;
 
 const { excute: requestDeleteWhinny } = useAxios(services.whinnies, 'delete');
 
@@ -325,6 +333,7 @@ async function deleteWhinny() {
   }
 
   await requestDeleteWhinny({ urlId: whinny.urlId });
+  onDeleteWhinny(props.data);
 }
 
 const { excute: requestReactWhinny } = useAxios(services.whinnies, 'react', {
@@ -376,8 +385,8 @@ async function getLink() {
     name: 'Users:Status',
     params: isRepost.value
       ? {
-          urlId: whinny.source.urlId,
-          username: whinny.source.user!.username,
+          urlId: whinny.source?.urlId,
+          username: whinny.source?.user!.username,
         }
       : {
           urlId: whinny.urlId,
@@ -406,7 +415,7 @@ async function sharePost() {
 
   const shareData = {
     title: user.value.displayName,
-    text: (isRepost.value ? whinny.source.content : whinny.content) ?? '',
+    text: (isRepost.value ? whinny.source?.content : whinny.content) ?? '',
     url: link,
   };
 

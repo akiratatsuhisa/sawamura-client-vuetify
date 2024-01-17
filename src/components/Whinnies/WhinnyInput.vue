@@ -31,14 +31,14 @@ import { useRouter } from 'vue-router';
 
 import VWhinnyInputAction from '@/components/Whinnies/WhinnyInputAction.vue';
 import VWhinnyWrapper from '@/components/Whinnies/WhinnyWrapper.vue';
-import { useAuth, useAxios } from '@/composables';
+import { useAuth, useAxios, useModalCallback } from '@/composables';
 import { IWhinnyResponse } from '@/interfaces';
 import { services } from '@/services';
 
 const props = defineProps<{
   type: 'Owner' | 'Quote' | 'Comment';
-  referenceWhinny?: IWhinnyResponse;
   referenceUsername?: string;
+  referenceWhinny?: IWhinnyResponse;
 }>();
 
 const router = useRouter();
@@ -63,13 +63,18 @@ const { excute: requestCreateWhinny, isLoading } = useAxios(
   'create',
 );
 
+const { onSuccess } = useModalCallback<IWhinnyResponse>();
+
 async function onSubmit() {
-  await requestCreateWhinny({
+  const data = await requestCreateWhinny({
     type: props.type,
     sourceId: props.type !== 'Owner' ? props.referenceWhinny?.id : undefined,
     content: text.value,
     publishDate: undefined,
   });
+
+  onSuccess(data);
+
   router.back();
 }
 </script>

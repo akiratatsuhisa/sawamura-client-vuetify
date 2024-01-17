@@ -1,6 +1,7 @@
 import _ from 'lodash';
 import {
   computed,
+  isRef,
   MaybeRef,
   onBeforeUnmount,
   onMounted,
@@ -19,6 +20,8 @@ import {
   useRouter,
 } from 'vue-router';
 
+import { useModalsStore } from '@/store';
+
 export interface IHistoryStateBackground {
   name: string;
   hash: string;
@@ -29,6 +32,7 @@ export interface IHistoryStateBackground {
 export interface IHistoryState<
   P extends Record<string, any> = Record<string, any>,
 > {
+  key?: string;
   background?: IHistoryStateBackground;
   props: P;
 }
@@ -216,17 +220,73 @@ export function useRouterDialog(options: IUseRouterDialogOptions) {
   return { dialog, openDialog, closeDialog, isActiveDialog };
 }
 
-export interface IUseRouterModalOptions {
+export interface IUseRouterModalOptions<
+  TSuccess = any,
+  TError = any,
+  TPickedData = any,
+> {
   keepBackground?: MaybeRef<boolean>;
+  key?: MaybeRef<string>;
+  onClose?: () => void;
+  onSuccess?: (data: TSuccess) => void;
+  onError?: (error: TError) => void;
+  onPick?: (data: TPickedData) => void;
 }
 
-export function useRouterModal<P extends Record<string, any>>(
-  options?: IUseRouterModalOptions,
-) {
-  const { keepBackground } = options ?? {};
+export function useRouterModal<
+  Props extends Record<string, any>,
+  TSuccess = any,
+  TError = any,
+  TPickedData = any,
+>(options?: IUseRouterModalOptions<TSuccess, TError, TPickedData>) {
+  const {
+    keepBackground = true,
+    key,
+    onClose,
+    onSuccess,
+    onError,
+    onPick,
+  } = options ?? {};
   const route = useBackgroundRoute();
   const router = useRouter();
   const historyState = useHistoryState();
+  const { modalEventsContainer } = useModalsStore();
+
+  if (isRef(key)) {
+    watch(
+      key,
+      (key, _prev, onCleanup) => {
+        if (!key) {
+          return;
+        }
+
+        modalEventsContainer[key] = {
+          onClose,
+          onSuccess,
+          onError,
+          onPick,
+        };
+
+        onCleanup(() => {
+          delete modalEventsContainer[key];
+        });
+      },
+      { immediate: true },
+    );
+  } else if (!_.isUndefined(key)) {
+    onMounted(() => {
+      modalEventsContainer[key] = {
+        onClose,
+        onSuccess,
+        onError,
+        onPick,
+      };
+    });
+
+    onBeforeUnmount(() => {
+      delete modalEventsContainer[key];
+    });
+  }
 
   async function openModal(
     to: {
@@ -235,7 +295,7 @@ export function useRouterModal<P extends Record<string, any>>(
       params?: RouteParams;
       query?: LocationQuery;
     },
-    props?: P,
+    props?: Props,
   ) {
     const route = router.currentRoute.value;
 
@@ -252,6 +312,7 @@ export function useRouterModal<P extends Record<string, any>>(
     await router.push({
       ...to,
       state: {
+        key: unref(key),
         background,
         props: props ?? {},
       },

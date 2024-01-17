@@ -11,7 +11,10 @@
           <v-source v-if="identityUser?.username === data?.username" />
           <v-target v-else />
 
-          <v-main-content />
+          <v-main-content
+            ref="mainContentRef"
+            :query="{ username: route.params.username as string }"
+          />
         </div>
         <div
           v-if="$vuetify.display.mdAndUp"
@@ -48,7 +51,7 @@
 
 <script lang="ts" setup>
 import { storeToRefs } from 'pinia';
-import { provide, Ref, ref, watch } from 'vue';
+import { computed, provide, Ref, ref, watch } from 'vue';
 import { useRouter } from 'vue-router';
 
 import VRecommendFollows from '@/components/RecommendFollows/Index.vue';
@@ -60,7 +63,11 @@ import {
   useRouterModal,
 } from '@/composables';
 import { KEYS } from '@/constants';
-import { IProfileUserResponse } from '@/interfaces';
+import {
+  IComposeWhinnyProps,
+  IProfileUserResponse,
+  IWhinnyResponse,
+} from '@/interfaces';
 import { services } from '@/services';
 import { useProfileUserStore } from '@/store';
 import VDisplayLastMedias from '@/views/Users/components/DisplayLastMedias.vue';
@@ -112,17 +119,57 @@ watch(
 provide(KEYS.USERS.PAGE.PROFILE_USER, data as Ref<IProfileUserResponse>);
 provide(KEYS.USERS.PAGE.HAS_FOLLOWING, hasFollowing);
 
-const { openModal } = useRouterModal();
+const isIdentityUserPage = computed(
+  () => route.value.params.username === identityUser.value?.username,
+);
+
+const mainContentRef = ref<InstanceType<typeof VMainContent>>();
+
+const { openModal } = useRouterModal<IComposeWhinnyProps, IWhinnyResponse>({
+  key: 'Users:Detail',
+  onSuccess(data) {
+    if (!isIdentityUserPage.value) {
+      setTimeout(() => {
+        router.push({
+          name: 'Users:Status',
+          params: { username: data.user.username, urlId: data.urlId },
+        });
+      }, 100);
+      return;
+    }
+
+    mainContentRef.value?.insertWhinny(data);
+  },
+});
+
 function openModalComposeWhinny() {
   openModal(
     { name: 'Compose:Whinny' },
     {
       type: 'Owner',
-      username:
-        route.value.params.username !== identityUser.value?.username
-          ? route.value.params.username
-          : undefined,
+      username: !isIdentityUserPage.value
+        ? (route.value.params.username as string)
+        : undefined,
     },
   );
 }
+
+provide(KEYS.WHINNY.ON_CREATE, (data) => {
+  setTimeout(() => {
+    router.push({
+      name: 'Users:Status',
+      params:
+        data.type === 'Quote'
+          ? { username: data.user.username, urlId: data.urlId }
+          : {
+              username: data.source!.user!.username,
+              urlId: data.source!.urlId,
+            },
+    });
+  }, 100);
+});
+
+provide(KEYS.WHINNY.ON_DELETE, (data) => {
+  mainContentRef.value?.deleteWhinny(data);
+});
 </script>

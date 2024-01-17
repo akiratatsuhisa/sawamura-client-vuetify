@@ -38,9 +38,24 @@
 </template>
 
 <script lang="ts" setup>
-import { useRouterModal } from '@/composables';
+import { useRouter } from 'vue-router';
 
-const { openModal } = useRouterModal();
+import { useRouterModal } from '@/composables';
+import { IComposeWhinnyProps, IWhinnyResponse } from '@/interfaces';
+
+const router = useRouter();
+
+const { openModal } = useRouterModal<IComposeWhinnyProps, IWhinnyResponse>({
+  key: 'Explore',
+  onSuccess(data) {
+    setTimeout(() => {
+      router.push({
+        name: 'Users:Status',
+        params: { username: data.user.username, urlId: data.urlId },
+      });
+    }, 100);
+  },
+});
 function openModalComposeWhinny() {
   openModal({ name: 'Compose:Whinny' }, { type: 'Owner' });
 }

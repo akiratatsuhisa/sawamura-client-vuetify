@@ -9,6 +9,7 @@ export * from '@/composables/useFileDialog';
 export * from '@/composables/useImageCropper';
 export * from '@/composables/useLoading';
 export * from '@/composables/useLocale';
+export * from '@/composables/useModalCallback';
 export * from '@/composables/useRoom';
 export * from '@/composables/useRouter';
 export * from '@/composables/useSearch';
