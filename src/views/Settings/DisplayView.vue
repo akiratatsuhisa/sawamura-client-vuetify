@@ -153,13 +153,13 @@ const { themeSource, themePicker, displayThemeColor, clearThemeSource } =
   useThemePicker();
 themeSource.value = user.value?.themeSource ?? null;
 
-const { isLoading: isLoadingTheme, excute: updateTheme } = useAxios(
+const { isLoading: isLoadingTheme, request: requestUpdateTheme } = useAxios(
   services.auth,
   'updateTheme',
 );
 
 const onThemeSourceChangeDebounce = useDebounceFn(async (source) => {
-  await updateTheme({ source });
+  await requestUpdateTheme({ source });
   await fetchAccessToken();
 }, 500);
 

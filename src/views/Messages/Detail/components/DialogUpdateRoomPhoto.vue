@@ -99,7 +99,7 @@ const {
   getImage,
 } = useImageCropper();
 
-const { isLoading, excute: updatePhoto } = useAxios(
+const { isLoading, request: requestUpdatePhoto } = useAxios(
   services.rooms,
   'updatePhoto',
 );
@@ -113,7 +113,7 @@ async function onSubmit() {
     },
   });
 
-  updatePhoto({
+  requestUpdatePhoto({
     id: room.value!.id,
     image,
     theme: isRoomThemeSelectable.value && isThemeModeGenerate.value,

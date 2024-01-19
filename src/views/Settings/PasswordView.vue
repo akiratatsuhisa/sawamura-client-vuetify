@@ -121,7 +121,7 @@ const form = reactive<IUpdatePasswordRequest & { confirmPassword: string }>({
   confirmPassword: '',
 });
 
-const { excute: requestUpdatePassword, isLoading: isLoadingUpdatePassword } =
+const { request: requestUpdatePassword, isLoading: isLoadingUpdatePassword } =
   useAxios(services.auth, 'updatePassword', {
     translateMessage: 'success.updatePassword',
   });

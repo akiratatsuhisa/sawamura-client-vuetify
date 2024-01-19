@@ -163,7 +163,7 @@ const { translate } = usePageLocale({
 
 const { user: identityUser } = useAuth();
 
-const { excute, data } = useAxios(
+const { request, data } = useAxios(
   services.profileUsers,
   'searchProfileByUsername',
 );
@@ -175,7 +175,7 @@ watch(
       return;
     }
 
-    const result = await excute({ username });
+    const result = await request({ username });
     user.value = result;
 
     onCleanup(() => {

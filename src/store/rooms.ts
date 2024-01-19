@@ -124,7 +124,7 @@ export const useRoomsStore = defineStore('rooms', () => {
   const search = ref<string>('');
   const searchClearable = computed(() => _.trim(search.value).length);
 
-  const { excute: excuteSearchAdvanced, isLoading: isLoadingSearchAdvanced } =
+  const { request: requestSearchAdvanced, isLoading: isLoadingSearchAdvanced } =
     useAxios(services.rooms, 'searchAdvanced');
 
   const requestSearchAdvancedThrottle = useThrottleFn(
@@ -134,7 +134,7 @@ export const useRoomsStore = defineStore('rooms', () => {
         return;
       }
 
-      searchResult.value = await excuteSearchAdvanced({ search: text });
+      searchResult.value = await requestSearchAdvanced({ search: text });
     },
     500,
     true,
@@ -152,7 +152,7 @@ export const useRoomsStore = defineStore('rooms', () => {
       (room) => !room.isGroup,
     )?.id;
 
-    const newResult = await excuteSearchAdvanced({
+    const newResult = await requestSearchAdvanced({
       search: search.value,
       groupRoomId,
       privateRoomId,

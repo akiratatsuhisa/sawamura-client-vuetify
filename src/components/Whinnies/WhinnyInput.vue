@@ -58,7 +58,7 @@ watch(
   { immediate: true },
 );
 
-const { excute: requestCreateWhinny, isLoading } = useAxios(
+const { request: requestCreateWhinny, isLoading } = useAxios(
   services.whinnies,
   'create',
 );

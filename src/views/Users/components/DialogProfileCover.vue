@@ -92,7 +92,7 @@ const {
   resetSelectImage,
   getImage,
 } = useImageCropper();
-const { isLoading, excute: updateCover } = useAxios(
+const { isLoading, request: requestUpdateCover } = useAxios(
   services.auth,
   'updateCover',
 );
@@ -107,7 +107,7 @@ async function onSubmit() {
   });
 
   (async () => {
-    await updateCover({
+    await requestUpdateCover({
       image,
       theme: isAuthThemeSelectable.value && isThemeModeGenerate.value,
     });

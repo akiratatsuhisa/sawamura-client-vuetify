@@ -25,19 +25,19 @@ export enum BinaryUnit {
 export namespace Format {
   export function dateTime(
     data: dateTimeDataType,
-    options?: {
+    options: {
       locales?: localesType;
       dateStyle?: dateTimeStyle;
       timeStyle?: dateTimeStyle;
       timeZone?: string;
-    },
+    } = {},
   ): string {
     const {
       locales = i18n.global.locale.value,
       dateStyle,
       timeStyle,
       timeZone,
-    } = options ?? {};
+    } = options;
 
     if (
       _.isNil(data) ||
@@ -58,11 +58,13 @@ export namespace Format {
 
   export function date(
     data: dateTimeDataType,
-    options?: { locales?: localesType; dateStyle?: dateTimeStyle },
+    options: { locales?: localesType; dateStyle?: dateTimeStyle } = {},
   ): string {
+    const { locales, dateStyle } = options;
+
     return dateTime(data, {
-      locales: options?.locales,
-      dateStyle: options?.dateStyle ?? 'long',
+      locales: locales,
+      dateStyle: dateStyle ?? 'long',
       timeStyle: undefined,
       timeZone: undefined,
     });
@@ -70,9 +72,9 @@ export namespace Format {
 
   export function number(
     data: unknown,
-    options?: { locales?: localesType },
+    options: { locales?: localesType } = {},
   ): string {
-    const { locales } = options ?? {};
+    const { locales } = options;
 
     if (_.isNil(data) || _.trim(String(data)) === '') {
       return '';
@@ -87,9 +89,9 @@ export namespace Format {
 
   export function currency(
     data: unknown,
-    options?: { locales?: localesType; currency?: string },
+    options: { locales?: localesType; currency?: string } = {},
   ): string {
-    const { locales, currency = 'USD' } = options ?? {};
+    const { locales, currency = 'USD' } = options;
 
     if (_.isNil(data) || _.trim(String(data)) === '') {
       return '';
@@ -107,7 +109,7 @@ export namespace Format {
 
   export function binaryUnit(
     data?: Decimal.Value,
-    options?: { outputUnit?: BinaryUnit; inputUnit?: BinaryUnit },
+    options: { outputUnit?: BinaryUnit; inputUnit?: BinaryUnit } = {},
   ): string {
     if (_.isNil(data) || _.trim(String(data)) === '') {
       return '';
@@ -120,7 +122,7 @@ export namespace Format {
     const bytes = new Decimal(data);
 
     const { outputUnit = BinaryUnit.Byte, inputUnit = BinaryUnit.Byte } =
-      options ?? {};
+      options;
 
     const units = _.values(BinaryUnit);
 

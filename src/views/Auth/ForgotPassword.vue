@@ -89,7 +89,7 @@ const [v$, { handleSubmit }] = useVuelidate<IForgotPasswordRequest>(
   form,
 );
 
-const { excute: forgotPassword, isLoading } = useAxios(
+const { request: requestForgotPassword, isLoading } = useAxios(
   services.auth,
   'forgotPassword',
   {
@@ -98,7 +98,7 @@ const { excute: forgotPassword, isLoading } = useAxios(
 );
 
 const onSubmit = handleSubmit(async (data) => {
-  await forgotPassword(data);
+  await requestForgotPassword(data);
 
   router.push({
     name: 'Auth:Login',

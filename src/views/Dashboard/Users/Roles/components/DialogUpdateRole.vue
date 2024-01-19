@@ -72,11 +72,11 @@ const onSubmit = handleSubmit((data) => {
 });
 
 const route = useRoute();
-const { excute } = useAxios(services.roles, 'getById');
+const { request } = useAxios(services.roles, 'getById');
 
 async function onOpen() {
   try {
-    const result = await excute({ id: route.params.id as string });
+    const result = await request({ id: route.params.id as string });
 
     form.id = result.id;
     form.name = result.name;

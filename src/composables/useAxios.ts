@@ -4,14 +4,17 @@ import axios, {
   AxiosProgressEvent,
   AxiosRequestConfig,
   AxiosResponse,
+  HttpStatusCode,
   isAxiosError,
 } from 'axios';
 import _ from 'lodash';
 import { Component, ref, unref } from 'vue';
+import { useRouter } from 'vue-router';
 
 import {
   useAuth,
   useLayoutLocale,
+  useLifecycleState,
   useLoading,
   useSnackbar,
 } from '@/composables';
@@ -33,6 +36,7 @@ export type UseAxiosOptions<Req> = {
 
   displayMessageFromResponse?: boolean;
   displayMessageFromException?: boolean;
+  autoRedirectByHttpStatus?: Array<HttpStatusCode>;
   translateMessage?: MaybeRef<string>;
   translateMessageParams?: MaybeRef<Record<string, any> | Array<any>>;
   message?: MaybeRef<Component | string>;
@@ -55,19 +59,28 @@ export function useAxios<
   A extends Exclude<keyof S, keyof Service>,
   Req extends Parameters<OmitFirstArg<S[A]>>,
   Res extends Awaited<ReturnType<OmitFirstArg<S[A]>>>,
->(service: S, action: A, options?: UseAxiosOptions<Req>) {
+>(service: S, action: A, options: UseAxiosOptions<Req> = {}) {
   const {
     unauth,
     loadingState = LoadingState.Loading,
     delayPercentFinished = 0,
     displayMessageFromResponse = false,
     displayMessageFromException = true,
+    autoRedirectByHttpStatus = [
+      HttpStatusCode.Unauthorized,
+      HttpStatusCode.Forbidden,
+      HttpStatusCode.NotFound,
+      HttpStatusCode.InternalServerError,
+    ],
     translateMessage,
     translateMessageParams,
     message,
-  } = options ?? {};
+  } = options;
 
   const { getAccessTokenSilently } = useAuth();
+
+  const { isMounted } = useLifecycleState();
+  const router = useRouter();
 
   const { t } = useLayoutLocale({ prefix: 'default' });
   const { createSnackbar, createSnackbarSuccess } = useSnackbar();
@@ -87,7 +100,7 @@ export function useAxios<
 
   let percentTimeout: NodeJS.Timeout;
 
-  async function excute(...paramsOrData: Req): Promise<Res> {
+  async function request(...paramsOrData: Req): Promise<Res> {
     if (isLoading.value) {
       throw new Error('on progress');
     }
@@ -152,15 +165,54 @@ export function useAxios<
     } catch (exception: unknown) {
       percent.value = undefined;
       data.value = undefined;
-      if (isAxiosError(exception)) {
-        error.value = exception.response?.data as IExceptionResponseDetail;
-        headers.value = exception.response?.headers as AxiosHeaders;
-      } else {
+      if (!isAxiosError<IExceptionResponseDetail>(exception)) {
         error.value = undefined;
         headers.value = new AxiosHeaders();
+
+        throw exception;
       }
 
-      if (displayMessageFromException && error.value?.message) {
+      error.value = exception.response!.data;
+      headers.value = exception.response!.headers as AxiosHeaders;
+
+      const isAutoRedirect = _.includes(
+        autoRedirectByHttpStatus,
+        exception.response?.status ?? 500,
+      );
+
+      if (isAutoRedirect && isMounted.value) {
+        switch (exception.response!.status) {
+          case HttpStatusCode.Unauthorized:
+            router.push({
+              name: 'Login',
+              query: { redirectUrl: router.currentRoute.value.fullPath },
+            });
+            break;
+          case HttpStatusCode.Forbidden:
+            router.push({
+              name: 'AccessDenied',
+            });
+            break;
+          case HttpStatusCode.NotFound:
+            router.push({
+              name: 'NotFound',
+            });
+            break;
+          case HttpStatusCode.InternalServerError:
+          default:
+            router.push({
+              name: 'InternalServer',
+            });
+            break;
+        }
+        throw exception;
+      }
+
+      if (
+        !isAutoRedirect &&
+        displayMessageFromException &&
+        error.value?.message
+      ) {
         const params = error.value.params;
         createSnackbar(
           t(`common.messages.${error.value.message}`, params as any),
@@ -178,8 +230,8 @@ export function useAxios<
     }
   }
 
-  if (options?.immediate) {
-    excute(...options.paramsOrData);
+  if (options.immediate) {
+    request(...options.paramsOrData);
   }
 
   switch (loadingState) {
@@ -200,6 +252,6 @@ export function useAxios<
     data,
     error,
     headers,
-    excute,
+    request,
   };
 }

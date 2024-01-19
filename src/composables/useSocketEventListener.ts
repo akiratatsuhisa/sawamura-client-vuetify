@@ -35,14 +35,18 @@ export function useSocketEventListener<
 >(
   socket: MaybeRef<Socket>,
   event: string,
-  options?: UseSocketEventListenerOptions<WsResponse, WsRequest, WsException>,
+  options: UseSocketEventListenerOptions<
+    WsResponse,
+    WsRequest,
+    WsException
+  > = {},
 ) {
   const {
     loadingState = LoadingState.Loading,
     response,
     exception,
     listener,
-  } = options ?? {};
+  } = options;
 
   const emitId = uuidv4();
 
@@ -115,7 +119,7 @@ export function useSocketEventListener<
     );
   }
 
-  if (options?.immediate) {
+  if (options.immediate) {
     request(options.paramsOrData);
   }
 

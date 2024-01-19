@@ -65,7 +65,7 @@ import VMainStatus from '@/views/Users/Status/components/MainStatus.vue';
 const router = useRouter();
 const route = useBackgroundRoute();
 
-const { excute, data: whinny } = useAxios(services.whinnies, 'getByUrlId');
+const { request, data: whinny } = useAxios(services.whinnies, 'getByUrlId');
 
 watch(
   () => route.value.params.urlId as string,
@@ -74,7 +74,7 @@ watch(
       return;
     }
 
-    const whinny = await excute({ urlId });
+    const whinny = await request({ urlId });
     if (router.currentRoute.value.name === 'Users:Status') {
       const route = router.currentRoute.value;
       router.replace({
@@ -91,6 +91,9 @@ const mainContentRef = ref<InstanceType<typeof VMainContent>>();
 const { openModal } = useRouterModal<IComposeWhinnyProps, IWhinnyResponse>({
   key: 'Users:Status',
   onSuccess(data) {
+    if (whinny.value) {
+      whinny.value.countComments += 1;
+    }
     mainContentRef.value?.insertWhinny(data);
   },
 });
@@ -123,8 +126,14 @@ function openModalComposeWhinny() {
 }
 
 provide(KEYS.WHINNY.ON_CREATE, (data) => {
-  if (whinny.value && whinny.value.id === data.source!.id) {
-    whinny.value.countComments++;
+  if (whinny.value && whinny.value.id === data.source?.id) {
+    if (data.type === 'Quote') {
+      whinny.value.countQuotes += 1;
+
+      return;
+    }
+
+    whinny.value.countComments += 1;
 
     mainContentRef.value?.insertWhinny(data);
     return;
@@ -145,25 +154,28 @@ provide(KEYS.WHINNY.ON_CREATE, (data) => {
 });
 
 provide(KEYS.WHINNY.ON_DELETE, (data) => {
-  if (data.urlId === route.value.params.urlId) {
-    const to: RouteLocationRaw = data.source?.id
-      ? {
-          name: 'Users:Status',
-          params: {
-            username: data.source.user!.username,
-            urlId: data.source.urlId,
-          },
-        }
-      : {
-          name: 'Users:Detail',
-          params: {
-            username: data.user.username,
-          },
-        };
+  if (whinny.value && whinny.value.id === data.source?.id) {
+    whinny.value.countComments -= 1;
 
-    return router.push(to);
+    mainContentRef.value?.deleteWhinny(data);
+    return;
   }
 
-  mainContentRef.value?.deleteWhinny(data);
+  const to: RouteLocationRaw = data.source?.id
+    ? {
+        name: 'Users:Status',
+        params: {
+          username: data.source.user!.username,
+          urlId: data.source.urlId,
+        },
+      }
+    : {
+        name: 'Users:Detail',
+        params: {
+          username: data.user.username,
+        },
+      };
+
+  router.push(to);
 });
 </script>

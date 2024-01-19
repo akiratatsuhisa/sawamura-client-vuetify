@@ -48,14 +48,14 @@ const route = useRoute();
 const isAllLoaded = ref<boolean>(false);
 const items = ref<Array<IProfileUserRelationshipResponse>>([]);
 
-const { excute, isLoading } = useAxios(
+const { request, isLoading } = useAxios(
   services.profileUsers,
   'searchRelationships',
 );
 
 async function fetchMore() {
   const cursor = _.last(items.value)?.id;
-  const data = await excute({
+  const data = await request({
     username: route.params.username as string,
     type: props.type,
     take: 10,

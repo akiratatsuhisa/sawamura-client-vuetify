@@ -99,7 +99,7 @@ const form = reactive<IChangeUserRolesRequest>({ id: '', roleIds: [] });
 
 const route = useRoute();
 const {
-  excute: requestUser,
+  request: requestUser,
   isLoading: isLoadingUser,
   data: user,
 } = useAxios(services.users, 'getById');
@@ -122,7 +122,7 @@ async function onOpen() {
   }
 }
 
-const { excute: requestChangeRoles, isLoading: isLoadingChangeRoles } =
+const { request: requestChangeRoles, isLoading: isLoadingChangeRoles } =
   useAxios(services.users, 'changeRoles', {
     translateMessage: 'success.changeUserRoles',
     translateMessageParams: computed(() => ({

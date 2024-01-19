@@ -79,13 +79,13 @@ const room = inject(KEYS.CHAT.ROOM)!;
 const { themeSource, themePicker, displayThemeColor, clearThemeSource } =
   useThemePicker();
 
-const { isLoading, excute: updateTheme } = useAxios(
+const { isLoading, request: requestUpdateTheme } = useAxios(
   services.rooms,
   'updateTheme',
 );
 
 async function onSubmit() {
-  await updateTheme({ id: room.value.id, source: themeSource.value });
+  await requestUpdateTheme({ id: room.value.id, source: themeSource.value });
 
   emit('update:modelValue', false);
 }

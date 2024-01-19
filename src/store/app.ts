@@ -1,3 +1,4 @@
+import { useEventListener } from '@vueuse/core';
 import _ from 'lodash';
 import { defineStore } from 'pinia';
 import { Component, computed, ref, shallowRef } from 'vue';
@@ -129,8 +130,15 @@ export const useAppStore = defineStore('app', () => {
   }
 
   const navigationRailFabComponent = shallowRef<Component>();
+
   const bottomSheetProps = shallowRef<Record<string, unknown>>();
   const bottomSheetComponent = shallowRef<Component>();
+
+  const isPageVisible = ref(true);
+
+  useEventListener(document, 'visibilitychange', () => {
+    isPageVisible.value = document.visibilityState === 'visible';
+  });
 
   return {
     drawer,
@@ -141,5 +149,6 @@ export const useAppStore = defineStore('app', () => {
     navigationRailFabComponent,
     bottomSheetProps,
     bottomSheetComponent,
+    isPageVisible,
   };
 });

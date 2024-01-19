@@ -1,16 +1,16 @@
 import {
   useFileDialog as useDefault,
-  UseFileDialogOptions as UseDefaultOptions,
+  UseFileDialogOptions as IUseDefaultOptions,
 } from '@vueuse/core';
 import _ from 'lodash';
 import { watch } from 'vue';
 
-export interface UseFileDialogOptions extends UseDefaultOptions {
+export interface IUseFileDialogOptions extends IUseDefaultOptions {
   onFileSelected?: (files: FileList | File[] | null) => void;
   onFileCancel?: () => void;
 }
 
-export function useOpenFileDialog(options: UseFileDialogOptions = {}) {
+export function useOpenFileDialog(options: IUseFileDialogOptions = {}) {
   const { onFileSelected, onFileCancel } = options;
 
   const { files, open, reset } = useDefault({

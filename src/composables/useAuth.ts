@@ -101,8 +101,8 @@ export const useAuth = createSharedComposable(() => {
 
   const isFetchingAccessToken = ref(false);
 
-  async function getAccessTokenSilently(options?: IAuthOptions) {
-    const { seconds } = options ?? {};
+  async function getAccessTokenSilently(options: IAuthOptions = {}) {
+    const { seconds } = options;
 
     if (!isExpires(seconds)) {
       return accessToken.value;
@@ -129,8 +129,10 @@ export const useAuth = createSharedComposable(() => {
     return accessToken.value;
   }
 
-  async function getUserSilently(options?: IAuthOptions) {
-    if (isExpires(options?.seconds)) {
+  async function getUserSilently(options: IAuthOptions = {}) {
+    const { seconds } = options;
+
+    if (isExpires(seconds)) {
       await getAccessTokenSilently(options);
     }
 
@@ -288,7 +290,7 @@ export function useOauth(isLinkProvider?: MaybeRef<boolean>) {
     github: { name: 'github', image: '/logos/github.svg' },
   });
 
-  const { excute: excuteLinkProvider } = useAxios(
+  const { request: requestLinkProvider } = useAxios(
     services.oauth,
     'linkProvider',
   );
@@ -297,7 +299,7 @@ export function useOauth(isLinkProvider?: MaybeRef<boolean>) {
     const isLink = unref(isLinkProvider);
 
     if (isLink) {
-      const data = await excuteLinkProvider();
+      const data = await requestLinkProvider();
 
       return {
         redirectUrl: route.fullPath,
@@ -349,7 +351,7 @@ export function useOauth(isLinkProvider?: MaybeRef<boolean>) {
     challenge(rootUrl, options);
   }
 
-  const { excute: excuteUnlinkProvider, isLoading: isLoadingUnlinkProvider } =
+  const { request: requestUnlinkProvider, isLoading: isLoadingUnlinkProvider } =
     useAxios(services.oauth, 'unlinkProvider', {
       translateMessage: 'success.oauthUnlink',
     });
@@ -364,7 +366,7 @@ export function useOauth(isLinkProvider?: MaybeRef<boolean>) {
   }
 
   async function unlinkProvider(provider: string) {
-    await excuteUnlinkProvider({ provider });
+    await requestUnlinkProvider({ provider });
   }
 
   return {

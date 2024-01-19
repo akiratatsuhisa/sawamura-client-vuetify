@@ -71,7 +71,7 @@ const profileUser = inject(KEYS.USERS.PAGE.PROFILE_USER)!;
 const hasFollowing = inject(KEYS.USERS.PAGE.HAS_FOLLOWING)!;
 
 const {
-  excute: reuqestChangeRelationship,
+  request: reuqestChangeRelationship,
   isLoading: isLoadingChangeRelationship,
 } = useAxios(services.profileUsers, 'changeRelationship', {
   displayMessageFromException: false,

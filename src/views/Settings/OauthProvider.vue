@@ -92,7 +92,7 @@ async function onRequestUnlinkProvider(provider: string) {
 }
 
 const {
-  excute: excuteFindProviders,
+  request: requestFindProviders,
   isLoading: isLoadingFindProviders,
   data,
 } = useAxios(services.oauth, 'getProviders', {
@@ -109,7 +109,7 @@ watch(isLoadingUnlinkProvider, (current) => {
     return;
   }
 
-  excuteFindProviders();
+  requestFindProviders();
 });
 
 const isLoading = computed(

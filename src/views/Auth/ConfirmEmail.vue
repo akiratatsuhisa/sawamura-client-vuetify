@@ -69,7 +69,7 @@ const form = reactive<IConfirmEmailRequest>({
 
 const [_v$, { handleSubmit }] = useVuelidate<IConfirmEmailRequest>({}, form);
 
-const { excute: confirmEmail, isLoading } = useAxios(
+const { request: requestConfirmEmail, isLoading } = useAxios(
   services.auth,
   'confirmEmail',
   {
@@ -78,7 +78,7 @@ const { excute: confirmEmail, isLoading } = useAxios(
 );
 
 const onSubmit = handleSubmit(async (data) => {
-  await confirmEmail(data);
+  await requestConfirmEmail(data);
 
   router.push({
     name: 'Auth:Login',

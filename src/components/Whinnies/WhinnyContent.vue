@@ -313,7 +313,7 @@ const alert = useAlert();
 
 const onDeleteWhinny = inject(KEYS.WHINNY.ON_DELETE)!;
 
-const { excute: requestDeleteWhinny } = useAxios(services.whinnies, 'delete');
+const { request: requestDeleteWhinny } = useAxios(services.whinnies, 'delete');
 
 async function deleteWhinny() {
   const { isConfirm } = await alert.fire({
@@ -336,7 +336,7 @@ async function deleteWhinny() {
   onDeleteWhinny(props.data);
 }
 
-const { excute: requestReactWhinny } = useAxios(services.whinnies, 'react', {
+const { request: requestReactWhinny } = useAxios(services.whinnies, 'react', {
   displayMessageFromException: false,
 });
 
@@ -358,7 +358,7 @@ async function reactWhinny() {
   }
 }
 
-const { excute: requestCreateWhinny } = useAxios(services.whinnies, 'create');
+const { request: requestCreateWhinny } = useAxios(services.whinnies, 'create');
 
 async function repostWhinny() {
   const sourceId = isRepost.value ? whinny.source!.id : whinny!.id;

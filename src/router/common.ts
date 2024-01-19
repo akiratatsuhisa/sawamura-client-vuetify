@@ -20,17 +20,6 @@ export const defaultCommonRoutes = [
     },
   },
   {
-    path: '/internal-server',
-    name: 'InternalServer',
-    meta: { requiresAuth: true },
-    components: {
-      left: VLeftAppBar,
-      top: VTopAppBar,
-      bottom: VBottomAppBar,
-      default: InternalServer,
-    },
-  },
-  {
     path: '/:pathMatch(.*)*',
     name: 'NotFound',
     meta: { requiresAuth: true },
@@ -39,6 +28,17 @@ export const defaultCommonRoutes = [
       top: VTopAppBar,
       bottom: VBottomAppBar,
       default: NotFound,
+    },
+  },
+  {
+    path: '/internal-server',
+    name: 'InternalServer',
+    meta: { requiresAuth: true },
+    components: {
+      left: VLeftAppBar,
+      top: VTopAppBar,
+      bottom: VBottomAppBar,
+      default: InternalServer,
     },
   },
 ] as Array<RouteRecordRaw>;

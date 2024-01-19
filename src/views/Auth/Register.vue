@@ -184,12 +184,16 @@ const [v$, { handleSubmit }] = useVuelidate<
   form,
 );
 
-const { excute: register, isLoading } = useAxios(services.auth, 'register', {
-  unauth: true,
-});
+const { request: requestRegister, isLoading } = useAxios(
+  services.auth,
+  'register',
+  {
+    unauth: true,
+  },
+);
 
 const onSubmit = handleSubmit(async (data) => {
-  const { username } = await register(data);
+  const { username } = await requestRegister(data);
 
   router.push({
     name: 'Auth:Login',

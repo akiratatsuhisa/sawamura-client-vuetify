@@ -77,7 +77,10 @@ const emit = defineEmits<{
 
 const router = useRouter();
 
-const photoUrl = useUserImage('photo', props.item.sourceUser);
+const photoUrl = useUserImage(
+  'photo',
+  computed(() => props.item.sourceUser),
+);
 
 const redirectUrl = computed<RouteLocationRaw | undefined>(() => {
   switch (props.item.entity) {

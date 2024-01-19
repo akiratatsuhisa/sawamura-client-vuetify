@@ -82,7 +82,7 @@ const router = useRouter();
 const route = useBackgroundRoute();
 const { user: identityUser } = useAuth();
 
-const { excute, data, headers } = useAxios(
+const { request, data, headers } = useAxios(
   services.profileUsers,
   'searchProfileByUsername',
 );
@@ -105,7 +105,7 @@ watch(
       });
     }
 
-    const result = await excute({ username });
+    const result = await request({ username });
     hasFollowing.value = headers.value.get('Has-Following') === 'true';
     user.value = result;
 

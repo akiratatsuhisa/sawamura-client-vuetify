@@ -140,7 +140,7 @@ const [v$, { handleSubmit }] = useVuelidate<
   form,
 );
 
-const { excute: resetPassword, isLoading } = useAxios(
+const { request: requestResetPassword, isLoading } = useAxios(
   services.auth,
   'resetPassword',
   {
@@ -149,7 +149,7 @@ const { excute: resetPassword, isLoading } = useAxios(
 );
 
 const onSubmit = handleSubmit(async (data) => {
-  await resetPassword(data);
+  await requestResetPassword(data);
 
   router.push({
     name: 'Auth:Login',

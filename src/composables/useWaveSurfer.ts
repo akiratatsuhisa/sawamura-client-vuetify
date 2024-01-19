@@ -15,7 +15,7 @@ export enum PlayerState {
   Finished,
 }
 
-export interface UseWaveSurferOptions {
+export interface IUseWaveSurferOptions {
   onStateChanged?: (value: PlayerState) => void;
   onIsPlayingChanged?: (value: boolean) => void;
 }
@@ -53,8 +53,10 @@ const includeProps: Array<keyof WaveSurferOptionsProps> = [
 export function useWaveSurfer<R extends HTMLElement>(
   containerRef: Ref<R | undefined>,
   props: WaveSurferOptionsProps,
-  options?: UseWaveSurferOptions,
+  options: IUseWaveSurferOptions = {},
 ) {
+  const { onStateChanged, onIsPlayingChanged } = options;
+
   const theme = useTheme();
 
   const state = ref<PlayerState>(PlayerState.Init);
@@ -69,9 +71,9 @@ export function useWaveSurfer<R extends HTMLElement>(
 
   function changeState(value: PlayerState, playing: boolean) {
     state.value = value;
-    options?.onStateChanged?.(value);
+    onStateChanged?.(value);
     isPlaying.value = playing;
-    options?.onIsPlayingChanged?.(playing);
+    onIsPlayingChanged?.(playing);
   }
 
   watch(
@@ -166,7 +168,7 @@ export enum RecordState {
   Recorded,
 }
 
-export interface UseWaveSurferRecordOptions {
+export interface IUseWaveSurferRecordOptions {
   onStateChanged?: (value: RecordState) => void;
   onIsRecordinghanged?: (value: boolean) => void;
   onRecorded?: (value: Blob) => void;
@@ -175,8 +177,10 @@ export interface UseWaveSurferRecordOptions {
 export function useWaveSurferRecord<R extends HTMLElement>(
   containerRef: Ref<R | undefined>,
   props: WaveSurferOptionsProps,
-  options?: UseWaveSurferRecordOptions,
+  options: IUseWaveSurferRecordOptions = {},
 ) {
+  const { onStateChanged, onIsRecordinghanged, onRecorded } = options;
+
   const { wavesurfer } = useWaveSurfer(containerRef, props);
 
   const record = shallowRef<RecordPlugin>();
@@ -185,9 +189,9 @@ export function useWaveSurferRecord<R extends HTMLElement>(
 
   function changeState(value: RecordState, recoring: boolean) {
     state.value = value;
-    options?.onStateChanged?.(value);
+    onStateChanged?.(value);
     isRecording.value = recoring;
-    options?.onIsRecordinghanged?.(recoring);
+    onIsRecordinghanged?.(recoring);
   }
 
   watch(
@@ -203,7 +207,7 @@ export function useWaveSurferRecord<R extends HTMLElement>(
       });
       r.on('record-end', (value) => {
         changeState(RecordState.Recorded, false);
-        options?.onRecorded?.(value);
+        onRecorded?.(value);
       });
 
       record.value = r;
@@ -222,14 +226,14 @@ export function useWaveSurferRecord<R extends HTMLElement>(
   };
 }
 
-export interface UseRecordTimeOptions {
+export interface IUseRecordTimeOptions {
   currentRecord?: MaybeRef<number>;
   immediate?: boolean;
 }
 
 export function useRecordTime(
   isRecording: Ref<boolean>,
-  options: UseRecordTimeOptions,
+  options: IUseRecordTimeOptions,
 ) {
   const { currentRecord = 0, immediate } = options;
 

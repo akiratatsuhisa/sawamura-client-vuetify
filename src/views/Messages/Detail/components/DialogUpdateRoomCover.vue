@@ -100,15 +100,11 @@ const {
   getImage,
 } = useImageCropper();
 
-const { isLoading: isLoadingUpdateCover, excute: updateCover } = useAxios(
-  services.rooms,
-  'updateCover',
-);
+const { isLoading: isLoadingUpdateCover, request: requestUpdateCover } =
+  useAxios(services.rooms, 'updateCover');
 
-const { isLoading: isLoadingDeleteCover, excute: deleteCover } = useAxios(
-  services.rooms,
-  'deleteCover',
-);
+const { isLoading: isLoadingDeleteCover, request: requestDeleteCover } =
+  useAxios(services.rooms, 'deleteCover');
 
 const isLoading = computed(
   () => isLoadingUpdateCover.value || isLoadingDeleteCover.value,
@@ -124,7 +120,7 @@ async function onSubmit() {
     },
   });
 
-  updateCover({
+  requestUpdateCover({
     id: room.value!.id,
     image,
     theme: isRoomThemeSelectable.value && isThemeModeGenerate.value,
@@ -148,7 +144,7 @@ async function onRequestDelete() {
     return true;
   }
 
-  deleteCover({ id: room.value!.id });
+  requestDeleteCover({ id: room.value!.id });
   emit('update:modelValue', false);
 }
 

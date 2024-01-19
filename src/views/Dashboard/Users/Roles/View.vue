@@ -63,7 +63,7 @@ const socket = useSocketDashboard();
 
 const roles = ref<Array<IRoleResponse>>([]);
 
-const { excute: requestRoles } = useAxios(services.roles, 'getAll');
+const { request: requestRoles } = useAxios(services.roles, 'getAll');
 
 onMounted(async () => (roles.value = await requestRoles()));
 
@@ -77,7 +77,7 @@ useSocketEventListener<{ roles: Array<IRoleResponse> }>(
   },
 );
 
-const { excute: requestSortRole } = useAxios(services.roles, 'sort');
+const { request: requestSortRole } = useAxios(services.roles, 'sort');
 
 const draggedRole = ref<IRoleResponse>();
 
@@ -105,19 +105,19 @@ useSortable(sortableRef, roles, {
   onEnd,
 });
 
-const { excute: requestCreateRole, isLoading: isLoadingCreateRole } = useAxios(
+const { request: requestCreateRole, isLoading: isLoadingCreateRole } = useAxios(
   services.roles,
   'create',
   { translateMessage: 'success.createRole' },
 );
 
-const { excute: requestUpdateRole, isLoading: isLoadingUpdateRole } = useAxios(
+const { request: requestUpdateRole, isLoading: isLoadingUpdateRole } = useAxios(
   services.roles,
   'update',
   { translateMessage: 'success.updateRole' },
 );
 
-const { excute: requestDeleteRole, isLoading: isLoadingDeleteRole } = useAxios(
+const { request: requestDeleteRole, isLoading: isLoadingDeleteRole } = useAxios(
   services.roles,
   'delete',
   { translateMessage: 'success.deleteRole' },

@@ -121,7 +121,7 @@ const onSubmit = handleSubmit((formData) => {
   emit('update:modelValue', false);
 });
 
-const { excute: excuteSearchUsers } = useAxios(
+const { request: requestSearchUsers } = useAxios(
   services.profileUsers,
   'searchAdvanced',
 );
@@ -133,7 +133,7 @@ const isLoadingSearch = ref<boolean>(false);
 
 const excuteSearchUsersDebounce = useDebounceFn(
   async (params: ISearchAdvancedUsersRequest) => {
-    usersResult.value = await excuteSearchUsers(params);
+    usersResult.value = await requestSearchUsers(params);
     isLoadingSearch.value = false;
   },
   250,

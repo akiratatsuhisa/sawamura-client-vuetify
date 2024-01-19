@@ -48,7 +48,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
 
 import { useAxios, useUserImage } from '@/composables';
 import {
@@ -59,9 +59,12 @@ import { services } from '@/services';
 
 const props = defineProps<{ item: IProfileUserRelationshipResponse }>();
 
-const photoUrl = useUserImage('photo', props.item.user);
+const photoUrl = useUserImage(
+  'photo',
+  computed(() => props.item.user),
+);
 
-const { excute: reuqestChangeRelationship, isLoading } = useAxios(
+const { request: reuqestChangeRelationship, isLoading } = useAxios(
   services.profileUsers,
   'changeRelationship',
   {

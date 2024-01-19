@@ -117,7 +117,7 @@ export function useRouterTab(options: IUseRouterTabOptions) {
         return;
       }
 
-      changeTab(options?.defaultTab);
+      changeTab(options.defaultTab);
     },
     { immediate: true },
   );
@@ -238,7 +238,7 @@ export function useRouterModal<
   TSuccess = any,
   TError = any,
   TPickedData = any,
->(options?: IUseRouterModalOptions<TSuccess, TError, TPickedData>) {
+>(options: IUseRouterModalOptions<TSuccess, TError, TPickedData> = {}) {
   const {
     keepBackground = true,
     key,
@@ -246,7 +246,7 @@ export function useRouterModal<
     onSuccess,
     onError,
     onPick,
-  } = options ?? {};
+  } = options;
   const route = useBackgroundRoute();
   const router = useRouter();
   const historyState = useHistoryState();

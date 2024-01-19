@@ -9,6 +9,8 @@ import _ from 'lodash';
 import { computed, ComputedRef, isProxy, reactive, Ref, ref, unref } from 'vue';
 import { LocationQuery, useRoute, useRouter } from 'vue-router';
 
+import { useLifecycleState } from '@/composables';
+
 export function getErrorMessage(
   field: { $errors: ErrorObject[] },
   all: true,
@@ -106,15 +108,19 @@ export function useShowPassword(fields: Record<string, boolean>) {
 
   return { fields, bindShowPassword };
 }
-export interface UseSearchFormOptions<F extends Record<string, any>> {
+export interface IUseSearchFormOptions<F extends Record<string, any>> {
   decodeQuery?: (query: LocationQuery) => F;
   encodeQuery?: (form: F) => any;
 }
 
 export function useSearchForm<F extends Record<string, any>>(
   initForm: F,
-  options?: UseSearchFormOptions<F>,
+  options: IUseSearchFormOptions<F> = {},
 ) {
+  const { encodeQuery, decodeQuery } = options;
+
+  const { isSetup, isMounted } = useLifecycleState();
+
   const form = reactive<F>(_.cloneDeep(initForm));
 
   function reset() {
@@ -123,10 +129,14 @@ export function useSearchForm<F extends Record<string, any>>(
 
   const route = useRoute();
   const router = useRouter();
-  Object.assign(form, options?.decodeQuery?.(route.query) ?? initForm);
+  Object.assign(form, decodeQuery?.(route.query) ?? initForm);
 
   function setRouteQuery() {
-    const query = options?.encodeQuery?.(form) ?? form;
+    if (!isSetup.value || !isMounted.value) {
+      return;
+    }
+
+    const query = encodeQuery?.(form) ?? form;
     router.replace({ name: route.name!, params: route.params, query: query });
   }
 

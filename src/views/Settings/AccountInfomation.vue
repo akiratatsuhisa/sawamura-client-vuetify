@@ -58,7 +58,7 @@ const { translate: translateDeleteAccount, makeTranslateAlert } = usePageLocale(
 const router = useRouter();
 
 const { user, fullName, photoUrl, logout } = useAuth();
-const { isLoading, excute: requestDeleteUser } = useAxios(
+const { isLoading, request: requestDeleteUser } = useAxios(
   services.auth,
   'deleteAccount',
 );

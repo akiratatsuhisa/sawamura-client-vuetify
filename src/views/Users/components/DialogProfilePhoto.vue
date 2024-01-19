@@ -93,7 +93,7 @@ const {
   resetSelectImage,
   getImage,
 } = useImageCropper();
-const { isLoading, excute: updatePhoto } = useAxios(
+const { isLoading, request: requestUpdatePhoto } = useAxios(
   services.auth,
   'updatePhoto',
 );
@@ -108,7 +108,7 @@ async function onSubmit() {
   });
 
   (async () => {
-    await updatePhoto({
+    await requestUpdatePhoto({
       image,
       theme: isAuthThemeSelectable.value && isThemeModeGenerate.value,
     });

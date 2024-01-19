@@ -229,7 +229,7 @@ const sortList: Array<{
 ];
 
 const {
-  excute: refetchRoles,
+  request: requestRefetchRoles,
   isLoading: isLoadingRoles,
   data: roles,
 } = useAxios(services.roles, 'getAll', {
@@ -302,10 +302,13 @@ const [v$, { isLoading: isLoadingForm }] = useVuelidate<ISearchUsersRequest>(
   form,
 );
 
-const { excute: refetchUsers, data } = useAxios(services.users, 'getAll');
+const { request: requestRefetchUsers, data } = useAxios(
+  services.users,
+  'getAll',
+);
 
 async function onReset() {
-  await refetchRoles();
+  await requestRefetchRoles();
   v$.value.$reset();
   reset();
 }
@@ -322,7 +325,7 @@ async function onSubmit(pagination: boolean = false) {
 
   const params = Router.parseSearchForm(form);
   setRouteQuery();
-  await refetchUsers(params);
+  await requestRefetchUsers(params);
 }
 
 const onSubmitThrottle = useThrottleFn(

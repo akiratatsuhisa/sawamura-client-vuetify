@@ -147,7 +147,7 @@ const {
 
 const { user, fetchAccessToken } = useAuth();
 
-const { excute: requestVerifyEmail, isLoading: isLoadingVerifyEmail } =
+const { request: requestVerifyEmail, isLoading: isLoadingVerifyEmail } =
   useAxios(services.auth, 'verifyEmail', {
     translateMessage: 'success.verifyEmail',
   });
@@ -163,7 +163,7 @@ async function onSubmitRequestVerifyEmail() {
   hasSent.value = true;
 }
 
-const { excute: requestUpdateEmail, isLoading: isLoadingUpdateEmail } =
+const { request: requestUpdateEmail, isLoading: isLoadingUpdateEmail } =
   useAxios(services.auth, 'updateEmail', {
     translateMessage: 'success.updateEmail',
   });
