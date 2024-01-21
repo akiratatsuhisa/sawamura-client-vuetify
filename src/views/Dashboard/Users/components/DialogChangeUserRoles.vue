@@ -41,7 +41,13 @@
 
     <template v-else>
       <v-divider class="my-3" />
-      <v-chip-group v-model="form.roleIds" filter multiple class="d-inline">
+      <v-chip-group
+        v-model="form.roleIds"
+        class="d-inline"
+        column
+        filter
+        multiple
+      >
         <v-chip
           v-for="{ id, name, ...value } in roleList"
           :key="id"

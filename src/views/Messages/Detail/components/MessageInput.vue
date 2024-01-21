@@ -208,12 +208,12 @@ function pushFile(file: File): BasicFile | undefined {
   )
     ? 'images'
     : Regex.MessageFile.AUDIO_MIME_TYPES.test(file.type)
-    ? 'audios'
-    : Regex.MessageFile.VIDEO_MIME_TYPES.test(file.type)
-    ? 'videos'
-    : Regex.MessageFile.OFFICE_MIME_TYPES.test(file.type)
-    ? 'files'
-    : null;
+      ? 'audios'
+      : Regex.MessageFile.VIDEO_MIME_TYPES.test(file.type)
+        ? 'videos'
+        : Regex.MessageFile.OFFICE_MIME_TYPES.test(file.type)
+          ? 'files'
+          : null;
 
   if (_.isNull(type)) {
     createSnackbarWarning(t('common.messages.warning.unsupportedFileType'));
@@ -269,8 +269,8 @@ const { isOverDropZone: isOverDropMessage } = useDropZone(
 
 const messageInput = ref('');
 const messageInputRef = ref<InstanceType<typeof VTextField>>();
-const messageTextAreaElement = computed(
-  () => (messageInputRef.value?.$el as HTMLElement)?.querySelector('textarea'),
+const messageTextAreaElement = computed(() =>
+  (messageInputRef.value?.$el as HTMLElement)?.querySelector('textarea'),
 );
 const isShowActions = computed(() => !_.trim(messageInput.value));
 

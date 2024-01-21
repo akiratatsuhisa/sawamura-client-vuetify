@@ -38,10 +38,10 @@ export function getDisplayRoomMemberNameByUser(
   return !roomMember
     ? translateShared('displayMessage.removedMember')
     : roomMember.member.id === identityId.value
-    ? translateShared('displayMessage.you')
-    : roomMember.nickName
-    ? roomMember.nickName
-    : roomMember.member.displayName;
+      ? translateShared('displayMessage.you')
+      : roomMember.nickName
+        ? roomMember.nickName
+        : roomMember.member.displayName;
 }
 
 export function getDisplayRoomMessage(
@@ -146,8 +146,8 @@ export function useAdvancedRoom(room: MaybeRef<IAdvancedRoomResponse>) {
     return unwrapRoom.isGroup
       ? unwrapRoom.name
       : targetMember.value?.nickName
-      ? targetMember.value.nickName
-      : targetMember.value?.member.displayName;
+        ? targetMember.value.nickName
+        : targetMember.value?.member.displayName;
   });
 
   const lastActivatedAgo = useTimeAgo(
@@ -239,8 +239,8 @@ export function useRoom(room: MaybeRef<IRoomResponse>) {
     return unwrapRoom.isGroup
       ? unwrapRoom.name
       : targetMember.value?.nickName
-      ? targetMember.value.nickName
-      : targetMember.value?.member.displayName;
+        ? targetMember.value.nickName
+        : targetMember.value?.member.displayName;
   });
 
   const lastActivatedAgo = useTimeAgo(

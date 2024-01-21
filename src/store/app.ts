@@ -107,8 +107,8 @@ export const useAppStore = defineStore('app', () => {
     return prefix
       ? routeName.startsWith(itemName)
       : _.isEmpty(route.params)
-      ? routeName === itemName
-      : routeName === itemName && _.isEqual(route.params, item.params);
+        ? routeName === itemName
+        : routeName === itemName && _.isEqual(route.params, item.params);
   }
 
   function handleNavigationSelect(

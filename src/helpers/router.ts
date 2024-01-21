@@ -18,8 +18,8 @@ export namespace Router {
     return _.isArray(value)
       ? _.first(value)!
       : _.isNil(value) || value === ''
-      ? undefined
-      : value;
+        ? undefined
+        : value;
   }
 
   export function getQueryAll(
@@ -28,8 +28,8 @@ export namespace Router {
     return _.isArray(value)
       ? (value as Array<string> | undefined)
       : _.isNil(value) || value === ''
-      ? ([] as Array<string>)
-      : ([value] as Array<string>);
+        ? ([] as Array<string>)
+        : ([value] as Array<string>);
   }
 
   export function parseSearchForm<F extends Object>(form: F) {
@@ -68,9 +68,8 @@ export namespace Router {
     from: RouteLocationNormalized,
   ) {
     if (
-      !_.some(
-        ExcludeBackRouteNames,
-        (name) => from.name?.toString().startsWith(name),
+      !_.some(ExcludeBackRouteNames, (name) =>
+        from.name?.toString().startsWith(name),
       )
     ) {
       to.meta.backRoute = from;

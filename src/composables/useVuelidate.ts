@@ -132,11 +132,11 @@ export function useSearchForm<F extends Record<string, any>>(
   Object.assign(form, decodeQuery?.(route.query) ?? initForm);
 
   function setRouteQuery() {
-    if (!isSetup.value || !isMounted.value) {
+    if (!isSetup.value && !isMounted.value) {
       return;
     }
 
-    const query = encodeQuery?.(form) ?? form;
+    const query = encodeQuery?.(form as F) ?? form;
     router.replace({ name: route.name!, params: route.params, query: query });
   }
 

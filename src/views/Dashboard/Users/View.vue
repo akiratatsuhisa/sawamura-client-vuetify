@@ -73,15 +73,18 @@
     <v-divider />
     <v-card-text>
       <v-base-limit-page v-model:skip="form.skip" v-model:take="form.take" />
+
       <v-menu-chip
         v-model="v$.sort.$model"
         icon="mdi-sort"
         :label="translateFormField('sort')"
         :items="sortList"
       />
+
       <v-chip-group
         v-model="v$.roleIds.$model"
         class="d-inline"
+        column
         filter
         multiple
         :max="10"
@@ -97,7 +100,8 @@
           {{ name }}
         </v-chip>
       </v-chip-group>
-      <v-chip-group v-model="v$.roleMode.$model" class="d-inline">
+
+      <v-chip-group v-model="v$.roleMode.$model" class="d-inline" column>
         <v-chip
           value="all"
           rounded="lg"
