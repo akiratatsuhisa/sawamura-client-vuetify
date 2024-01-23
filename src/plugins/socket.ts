@@ -11,6 +11,7 @@ const plugin: Plugin = {
     });
 
     app.config.globalProperties.$socketManager = manager;
+
     app.provide(KEYS.MANAGER_SOCKETS, manager);
   },
 };

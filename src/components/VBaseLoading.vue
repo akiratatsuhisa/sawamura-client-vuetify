@@ -6,6 +6,7 @@
     color="primary"
     :model-value="firstLoading"
   />
+
   <v-progress-linear
     v-else-if="typeof firstLoading === 'boolean'"
     absolute

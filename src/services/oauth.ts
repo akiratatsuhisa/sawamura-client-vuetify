@@ -4,6 +4,7 @@ import {
   IOauthGenerateTokenResponse,
   IOauthProviderResponse,
   IOauthUnlinkProviderRequest,
+  IOauthUnlinkProviderResponse,
 } from '@/interfaces';
 import { Service } from '@/services/common';
 
@@ -28,7 +29,7 @@ export class OauthService extends Service {
     config: AxiosRequestConfig,
     data: IOauthUnlinkProviderRequest,
   ) {
-    return this.fetch<void>({
+    return this.fetch<IOauthUnlinkProviderResponse>({
       ...config,
       url: 'oauth/unlinkProvider',
       method: 'DELETE',

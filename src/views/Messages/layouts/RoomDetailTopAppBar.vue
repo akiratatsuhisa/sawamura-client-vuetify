@@ -9,6 +9,7 @@
     >
       {{ $t('common.app.title') }}
     </v-app-bar-title>
+
     <v-base-loading />
 
     <v-profile-menu />

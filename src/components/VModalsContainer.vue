@@ -13,6 +13,7 @@
         >
         </v-app-bar-nav-icon>
       </v-toolbar>
+
       <v-divider />
 
       <v-card-text class="py-12 d-flex align-center justify-center">
@@ -24,6 +25,7 @@
         />
       </v-card-text>
     </v-card>
+
     <v-compose-whinny
       v-else-if="router.currentRoute.value.name === 'Compose:Whinny'"
       :fullscreen="fullscreen"

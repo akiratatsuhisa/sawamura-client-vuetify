@@ -34,6 +34,10 @@ export interface IRoomMessageFileResponse {
   extension: string;
 }
 
+export interface IRoomRequest {
+  id: string;
+}
+
 export interface IRoomResponse {
   id: string;
   name: string;
@@ -46,10 +50,6 @@ export interface IRoomResponse {
   createdAt: string;
   roomMembers: Array<IRoomMemberResponse>;
   roomMessages: Array<Omit<IRoomMessageResponse, 'room'>>;
-}
-
-export interface IRoomRequest {
-  id: string;
 }
 
 export interface IRoomPrivateRequest {

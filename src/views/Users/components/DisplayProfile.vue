@@ -22,8 +22,8 @@
           :class="{
             'rounded-xl': $vuetify.display.smAndUp,
           }"
-        >
-        </v-img>
+        />
+
         <v-overlay
           :model-value="isHovering"
           contained
@@ -86,10 +86,13 @@
     <v-card-title tag="h1" class="py-0">
       {{ user.displayName }}
     </v-card-title>
+
     <v-card-subtitle tag="h2">@{{ user.username }}</v-card-subtitle>
+
     <v-card-subtitle tag="h3" class="font-weight-medium">
       {{ user.firstName }} {{ user.lastName }}
     </v-card-subtitle>
+
     <v-card-text>
       <p v-if="user.biography" class="mb-3">
         {{ user.biography }}
@@ -106,10 +109,12 @@
             }}
           </span>
         </div>
+
         <div v-if="user.location">
           <v-icon color="primary" icon="mdi-map-marker-radius" />
           <span class="ml-1">{{ user.location }}</span>
         </div>
+
         <div v-if="user.websiteLink">
           <v-icon color="primary" icon="mdi-link-variant" />
           <span class="ml-1">
@@ -118,6 +123,7 @@
             </a>
           </span>
         </div>
+
         <div>
           <v-icon color="primary" icon="mdi-calendar-month" />
           <span class="ml-1">
@@ -130,7 +136,9 @@
         </div>
       </div>
     </v-card-text>
+
     <v-divider />
+
     <v-card-text class="py-1">
       <v-chip
         variant="outlined"
@@ -157,6 +165,7 @@
           )
         }}
       </v-chip>
+
       <v-chip
         variant="outlined"
         rounded="lg"

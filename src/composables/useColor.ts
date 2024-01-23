@@ -6,6 +6,7 @@ import { Color } from '@/helpers';
 export function useDisplayThemeColor(source: MaybeRef<number | null>) {
   return computed<string>(() => {
     const value = unref(source);
+
     if (!value) {
       return '';
     }

@@ -12,7 +12,8 @@
       variant="flat"
       class="ma-2"
       @click="model = undefined"
-    ></v-btn>
+    />
+
     <div class="wrapper-image" @click="model = undefined">
       <v-img :src="model" />
     </div>
@@ -42,7 +43,7 @@ const model = computed({
   padding-left: 1.5rem;
   padding-right: 1.5rem;
   padding-bottom: 1.5rem;
-  height: calc(100dvh);
-  width: calc(100dvw);
+  height: 100dvh;
+  width: 100dvw;
 }
 </style>

@@ -6,6 +6,7 @@ export function useSearchField() {
   const searchFieldRef = ref<HTMLInputElement>();
 
   const isSearchFieldOpen = ref(false);
+
   watch([isSearchFieldOpen, searchFieldRef], ([isOpened, searchFieldRef]) => {
     if (!searchFieldRef) {
       return;
@@ -21,5 +22,5 @@ export function useSearchField() {
     () => (isSearchFieldOpen.value = !isSearchFieldOpen.value),
   );
 
-  return { isSearchFieldOpen, searchFieldContainerRef, searchFieldRef };
+  return { searchFieldContainerRef, searchFieldRef, isSearchFieldOpen };
 }

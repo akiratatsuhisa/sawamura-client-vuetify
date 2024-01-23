@@ -24,6 +24,7 @@
           :placeholder="placeholder"
         />
       </div>
+
       <v-icon
         v-if="!readonly && searchClearable"
         class="mr-2"
@@ -53,6 +54,7 @@
           :class="[`v-search-${density}`, `bg-${dropdownBgColor}`]"
         >
           <v-icon class="ml-2" icon="mdi-arrow-left" @click="model = !model" />
+
           <div class="px-2 flex-grow-1">
             <input
               v-model="search"
@@ -63,13 +65,16 @@
               :placeholder="placeholder"
             />
           </div>
+
           <v-icon
             v-if="searchClearable"
             class="mr-2"
             icon="mdi-close"
             @click="search = ''"
           />
+
           <v-icon class="mr-2" icon="mdi-magnify" @click="emit('submit')" />
+
           <v-progress-linear
             v-if="loading"
             absolute
@@ -81,7 +86,7 @@
         <v-divider />
 
         <div class="overflow-y-auto flex-grow-1">
-          <slot></slot>
+          <slot />
         </div>
 
         <div class="py-2 flex-shrink-0"></div>
@@ -129,7 +134,7 @@
         <v-divider />
 
         <div class="overflow-y-auto">
-          <slot></slot>
+          <slot />
         </div>
       </v-card>
     </v-dialog>

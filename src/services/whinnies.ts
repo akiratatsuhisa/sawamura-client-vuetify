@@ -2,8 +2,11 @@ import { AxiosRequestConfig } from 'axios';
 
 import {
   ICreateWhinnyRequest,
+  ICreateWhinnyResponse,
   IDeleteWhinnyRequest,
+  IDeleteWhinnyResponse,
   IReactWhinnyRequest,
+  IReactWhinnyResponse,
   ISearchWhinniesRequest,
   ISearchWhinnyReactionsRequest,
   IWhinnyReactionResponse,
@@ -31,7 +34,7 @@ export class WhinniesService extends Service {
   }
 
   create(config: AxiosRequestConfig, data: ICreateWhinnyRequest) {
-    return this.fetch<IWhinnyResponse>({
+    return this.fetch<ICreateWhinnyResponse>({
       ...config,
       url: `whinnies`,
       method: 'POST',
@@ -40,7 +43,7 @@ export class WhinniesService extends Service {
   }
 
   delete(config: AxiosRequestConfig, data: IDeleteWhinnyRequest) {
-    return this.fetch<void>({
+    return this.fetch<IDeleteWhinnyResponse>({
       ...config,
       url: `whinnies/${data.urlId}`,
       method: 'DELETE',
@@ -60,7 +63,7 @@ export class WhinniesService extends Service {
   }
 
   react(config: AxiosRequestConfig, data: IReactWhinnyRequest) {
-    return this.fetch<void>({
+    return this.fetch<IReactWhinnyResponse>({
       ...config,
       url: `whinnies/${data.urlId}/reactions`,
       method: 'PATCH',

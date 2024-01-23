@@ -6,12 +6,14 @@
       class="elevation-1"
       :size="$vuetify.display.mobile ? 'default' : 'x-large'"
     />
+
     <div
       class="h-100 px-2 flex-grow-1 text-subtitle-1 d-flex flex-column align-content-lg-space-between"
     >
       <div class="text-subtitle-1 font-weight-medium">
         {{ record.displayName }}
       </div>
+
       <i18n-t
         keypath="pages.dashboard.users.list.username"
         tag="div"
@@ -20,9 +22,12 @@
       >
         {{ record.username }}
       </i18n-t>
+
       <div class="text-body-2">{{ fullName }}</div>
+
       <div class="text-subtitle-2 font-weight-light">
         <v-icon size="x-small" icon="mdi-clock-outline" />
+
         <i18n-t
           keypath="pages.dashboard.users.list.timeAgo"
           tag="span"
@@ -33,6 +38,7 @@
         </i18n-t>
       </div>
     </div>
+
     <v-btn
       v-if="$vuetify.display.mobile"
       variant="tonal"
@@ -41,6 +47,7 @@
       :to="{ name: 'Users:Detail', params: { username: record.username } }"
       target="_blank"
     />
+
     <v-btn
       v-else
       variant="tonal"
@@ -51,7 +58,9 @@
       {{ $t('common.data.view') }}
     </v-btn>
   </div>
+
   <v-divider class="my-1 mx-2" />
+
   <div class="px-1 d-flex flex-wrap align-end">
     <v-chip
       :prepend-icon="emailStateIcon"
@@ -66,6 +75,7 @@
           : $t('common.verifyStates.none')
       }}
     </v-chip>
+
     <v-chip
       v-if="record.userRoles.length"
       rounded="lg"
@@ -76,6 +86,7 @@
     >
       {{ _.first(record.userRoles)!.role.name }}
     </v-chip>
+
     <v-chip
       v-else
       rounded="lg"
@@ -86,6 +97,7 @@
     >
       {{ $t('common.verifyStates.none') }}
     </v-chip>
+
     <v-chip
       v-if="record.userRoles.length > 1"
       rounded="lg"
@@ -96,6 +108,7 @@
     >
       +{{ record.userRoles.length - 1 }}
     </v-chip>
+
     <v-chip
       v-if="record.birthDate"
       rounded="lg"
@@ -110,6 +123,7 @@
         })
       }}
     </v-chip>
+
     <v-chip
       v-if="record.salary"
       rounded="lg"
@@ -120,6 +134,7 @@
     >
       {{ Format.currency(record.salary, { locales: $i18n.locale }) }}
     </v-chip>
+
     <v-chip
       rounded="lg"
       variant="outlined"

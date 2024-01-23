@@ -1,7 +1,7 @@
 <template>
   <v-list-item class="pa-1" @click="onClick">
     <template #prepend>
-      <v-avatar color="secondary" :image="photoUrl"></v-avatar>
+      <v-avatar color="secondary" :image="photoUrl" />
     </template>
 
     <v-list-item-title>{{ (item.params as any).content }}</v-list-item-title>
@@ -23,7 +23,7 @@
               ? 'mdi-star'
               : 'mdi-star-outline'
           "
-        ></v-icon>
+        />
       </v-btn>
       <v-btn
         size="small"
@@ -33,7 +33,7 @@
         icon
         @click.stop="emit('delete', { id: item.id })"
       >
-        <v-icon size="large" icon="mdi-trash-can"></v-icon>
+        <v-icon size="large" icon="mdi-trash-can" />
       </v-btn>
     </template>
   </v-list-item>

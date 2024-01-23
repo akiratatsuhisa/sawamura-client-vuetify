@@ -31,6 +31,7 @@
               {{ message.content }}
             </v-card-text>
           </v-card>
+
           <div
             v-else-if="message.type === 'Icon' || message.type === 'Icons'"
             class="text-pre-wrap text-break"
@@ -38,6 +39,7 @@
           >
             {{ message.content }}
           </div>
+
           <div v-else-if="isFileType">
             <div
               v-if="files.length"
@@ -52,6 +54,7 @@
                 :is-current-user-message="isCurrentUserMessage"
               />
             </div>
+
             <v-card
               v-else
               rounded="xl"
@@ -62,6 +65,7 @@
               <v-card-text>File(s) has error</v-card-text>
             </v-card>
           </div>
+
           <v-card
             v-else
             rounded="xl"
@@ -87,7 +91,7 @@
           size="x-small"
           v-bind="props"
           :loading="isLoadingAction"
-        ></v-btn>
+        />
       </template>
 
       <v-list class="bg-surface-container-high text-on-surface" rounded="xl">

@@ -1,6 +1,7 @@
 <template>
   <v-card class="bg-surface" variant="flat">
     <v-card-title>{{ translate('title') }}</v-card-title>
+
     <v-card-text>
       <form @submit.prevent="onSubmit()">
         <v-row class="mt-3">
@@ -14,6 +15,7 @@
               @blur="v$.username.$validate"
             />
           </v-col>
+
           <v-col lg="6" cols="12" class="pt-0">
             <v-text-field
               density="comfortable"
@@ -24,6 +26,7 @@
               @blur="v$.name.$validate"
             />
           </v-col>
+
           <v-col cols="12" class="pt-0">
             <v-text-field
               density="comfortable"
@@ -34,6 +37,7 @@
               @blur="v$.email.$validate"
             />
           </v-col>
+
           <v-col lg="6" xl="8" cols="12" class="pt-0">
             <v-segmented-button
               block
@@ -43,6 +47,7 @@
               :items="emailStateList"
             />
           </v-col>
+
           <v-col
             lg="6"
             xl="4"
@@ -58,6 +63,7 @@
             >
               {{ translate('form.clear') }}
             </v-btn>
+
             <v-btn
               type="submit"
               variant="flat"
@@ -70,7 +76,9 @@
         </v-row>
       </form>
     </v-card-text>
+
     <v-divider />
+
     <v-card-text>
       <v-base-limit-page v-model:skip="form.skip" v-model:take="form.take" />
 
@@ -83,7 +91,7 @@
 
       <v-chip-group
         v-model="v$.roleIds.$model"
-        class="d-inline"
+        class="v-chip-group--inline"
         column
         filter
         multiple
@@ -101,7 +109,11 @@
         </v-chip>
       </v-chip-group>
 
-      <v-chip-group v-model="v$.roleMode.$model" class="d-inline" column>
+      <v-chip-group
+        v-model="v$.roleMode.$model"
+        class="v-chip-group--inline"
+        column
+      >
         <v-chip
           value="all"
           rounded="lg"
@@ -125,6 +137,7 @@
     <v-user-list :data="data" />
 
     <v-divider v-if="data?.count" />
+
     <v-base-pagination
       v-if="data?.count"
       v-model:skip="form.skip"

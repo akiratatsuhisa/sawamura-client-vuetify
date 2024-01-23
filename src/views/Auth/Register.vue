@@ -4,9 +4,11 @@
       <v-col class="mx-auto" md="6" lg="4">
         <v-card class="bg-surface" variant="flat" rounded="xl">
           <v-card-title>{{ translate('title') }}</v-card-title>
+
           <v-card-subtitle class="text-wrap">
             {{ translateShared('privacy') }}
           </v-card-subtitle>
+
           <v-card-text>
             <form @submit.prevent="onSubmit">
               <v-text-field
@@ -19,6 +21,7 @@
                 persistent-hint
                 autocomplete="username"
               />
+
               <v-text-field
                 class="mb-3"
                 v-model="v$.displayName.$model"
@@ -29,6 +32,7 @@
                 persistent-hint
                 autocomplete="displayName"
               />
+
               <v-text-field
                 class="mb-3"
                 v-model="v$.email.$model"
@@ -38,6 +42,7 @@
                 clearable
                 autocomplete="email"
               />
+
               <v-text-field
                 class="mb-3"
                 v-model="v$.password.$model"
@@ -48,6 +53,7 @@
                 persistent-hint
                 v-bind="bindShowPassword('new')"
               />
+
               <v-text-field
                 class="mb-3"
                 v-model="v$.confirmPassword.$model"
@@ -117,6 +123,7 @@ import {
 
 const router = useRouter();
 const route = useRoute();
+
 const { path, translate, translateShared, pathFormField, translateFormField } =
   usePageLocale({
     prefix: 'auth.register',

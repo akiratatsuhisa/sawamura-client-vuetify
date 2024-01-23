@@ -9,7 +9,7 @@
         class="bg-surface h-100 d-flex align-center justify-center"
         :class="[$vuetify?.display.smAndDown ? 'rounded-0' : 'rounded-lg']"
       >
-        <HelloWorld />
+        <hello-world />
       </v-responsive>
     </v-container>
 
@@ -41,6 +41,7 @@ import { IComposeWhinnyProps } from '@/interfaces';
 import HelloWorld from '@/views/Home/components/HelloWorld.vue';
 
 const { openModal } = useRouterModal<IComposeWhinnyProps>();
+
 function openModalComposeWhinny() {
   openModal({ name: 'Compose:Whinny' }, { type: 'Owner' });
 }

@@ -5,16 +5,14 @@
     <div v-if="!data" class="fill-height d-flex align-center justify-center">
       <v-progress-circular size="88" width="6" color="primary" indeterminate />
     </div>
+
     <v-container v-else fluid class="pa-0 pa-sm-4">
       <div class="d-flex">
         <div class="flex-grow-1 flex-shrink-1">
           <v-source v-if="identityUser?.username === data?.username" />
           <v-target v-else />
 
-          <v-main-content
-            ref="mainContentRef"
-            :query="{ username: route.params.username as string }"
-          />
+          <v-main-content ref="mainContentRef" :query="{ username }" />
         </div>
         <div
           v-if="$vuetify.display.mdAndUp"
@@ -89,8 +87,10 @@ const { request, data, headers } = useAxios(
 
 const hasFollowing = ref<boolean>(false);
 
+const username = computed(() => route.value.params.username as string);
+
 watch(
-  () => route.value.params.username as string,
+  username,
   async (username, _prev, onCleanup) => {
     if (!username) {
       return;
@@ -120,7 +120,7 @@ provide(KEYS.USERS.PAGE.PROFILE_USER, data as Ref<IProfileUserResponse>);
 provide(KEYS.USERS.PAGE.HAS_FOLLOWING, hasFollowing);
 
 const isIdentityUserPage = computed(
-  () => route.value.params.username === identityUser.value?.username,
+  () => username.value === identityUser.value?.username,
 );
 
 const mainContentRef = ref<InstanceType<typeof VMainContent>>();
@@ -147,9 +147,7 @@ function openModalComposeWhinny() {
     { name: 'Compose:Whinny' },
     {
       type: 'Owner',
-      username: !isIdentityUserPage.value
-        ? (route.value.params.username as string)
-        : undefined,
+      username: !isIdentityUserPage.value ? username.value : undefined,
     },
   );
 }

@@ -1,11 +1,13 @@
 <template>
   <h3 class="text-h5">{{ translateChangePassword('title') }}</h3>
+
   <span class="text-subtitle-2 font-weight-light text-high-emphasis">
     {{ translateChangePassword('subtitle') }}
   </span>
 
   <form @submit.prevent="onSubmit" class="mt-6">
     <input hidden name="username" autocomplete="username" />
+
     <template v-if="user?.hasPassword">
       <v-row no-gutters>
         <v-col cols="12" md="8" lg="6">
@@ -58,7 +60,9 @@
         />
       </v-col>
     </v-row>
+
     <v-divider class="mb-3" />
+
     <v-row no-gutters>
       <v-col cols="12" md="8" lg="6" class="text-right">
         <v-btn

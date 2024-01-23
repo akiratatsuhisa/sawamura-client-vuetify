@@ -24,6 +24,7 @@
         </v-badge>
 
         <v-toolbar-title>{{ displayName }}</v-toolbar-title>
+
         <v-base-loading v-if="$vuetify.display.smAndDown" />
 
         <v-btn

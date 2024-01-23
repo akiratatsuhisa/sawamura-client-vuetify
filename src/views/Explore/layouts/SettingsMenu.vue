@@ -8,6 +8,7 @@
   >
     <v-icon class="mx-4" size="24" icon="mdi-cog" color="on-surface" />
   </v-btn>
+
   <v-btn v-else icon @click="openDialog('settings')">
     <v-avatar color="primary" icon="mdi-cog" />
   </v-btn>
@@ -20,6 +21,7 @@
     <template #title>
       {{ $t('pages.explore.menuSettings.title') }}
     </template>
+
     <template #action>
       {{ $t('pages.explore.menuSettings.form.submit') }}
     </template>

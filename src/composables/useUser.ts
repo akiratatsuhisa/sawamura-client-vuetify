@@ -44,7 +44,9 @@ export function useUserImage(
     }
 
     const promise = request(unwrapUser.username, type);
+
     cacheUserImages.set(url, promise);
+
     return await promise;
   }, defaultImage);
 }

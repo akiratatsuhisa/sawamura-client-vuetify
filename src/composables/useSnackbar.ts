@@ -28,7 +28,7 @@ export function snackbarShow(
   const id = uuidv4();
 
   function remove() {
-    const index = items.findIndex((item) => item.id === id);
+    const index = _.findIndex(items, (item) => item.id === id);
 
     if (index !== -1) {
       items.splice(index, 1);

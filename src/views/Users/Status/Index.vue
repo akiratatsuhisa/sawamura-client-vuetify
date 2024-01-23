@@ -5,6 +5,7 @@
     <div v-if="!whinny" class="fill-height d-flex align-center justify-center">
       <v-progress-circular size="88" width="6" color="primary" indeterminate />
     </div>
+
     <v-container v-else fluid class="pa-0 pa-sm-4">
       <div class="d-flex">
         <div class="flex-grow-1 flex-shrink-1">

@@ -155,6 +155,7 @@ export const useAuth = createSharedComposable(() => {
       createSnackbarSuccess(i18n.global.t('common.messages.success.login'));
     } catch (error: any) {
       const data = error?.response?.data;
+
       if (data && data.message) {
         createSnackbarError(
           i18n.global.t(`common.messages.${data.message}`, data.params as any),
@@ -182,6 +183,7 @@ export const useAuth = createSharedComposable(() => {
       });
     } catch (error: any) {
       const data = error?.response?.data;
+
       if (data && data.message) {
         createSnackbarError(
           i18n.global.t(`common.messages.${data.message}`, data.params as any),
@@ -204,15 +206,27 @@ export const useAuth = createSharedComposable(() => {
     provider: string;
     params?: Record<string, any>;
   }) {
-    const { data } = await axiosInstacne.get<IAuthResponse>(
-      `/oauth/${provider}`,
-      {
-        params,
-      },
-    );
+    try {
+      const { data } = await axiosInstacne.get<IAuthResponse>(
+        `/oauth/${provider}`,
+        {
+          params,
+        },
+      );
 
-    updateTokens(data);
-    createSnackbarSuccess(i18n.global.t('common.messages.success.login'));
+      updateTokens(data);
+      createSnackbarSuccess(i18n.global.t('common.messages.success.login'));
+    } catch (error: any) {
+      const data = error?.response?.data;
+
+      if (data && data.message) {
+        createSnackbarError(
+          i18n.global.t(`common.messages.${data.message}`, data.params as any),
+        );
+      } else {
+        createSnackbarNormal(i18n.global.t(`common.messages.error.unknown`));
+      }
+    }
   }
 
   const fullName = computed(() =>
@@ -233,29 +247,28 @@ export const useAuth = createSharedComposable(() => {
       return NO_AVATAR_URL;
     }
 
-    if (cacheImages.photo.url === user.value.photoUrl) {
-      return await cacheImages.photo.promise;
+    if (cacheImages.photo.url !== user.value.photoUrl) {
+      cacheImages.photo = {
+        url: user.value.photoUrl,
+        promise: requestImageByType(user.value.username, 'photo'),
+      };
     }
 
-    cacheImages.photo = {
-      url: user.value.photoUrl,
-      promise: requestImageByType(user.value.username, 'photo'),
-    };
     return await cacheImages.photo.promise;
   }, NO_AVATAR_URL);
+
   const coverUrl = computedAsync(async () => {
     if (!user.value || !user.value?.coverUrl) {
       return NO_BACKGROUND_URL;
     }
 
-    if (cacheImages.cover.url === user.value.coverUrl) {
-      return await cacheImages.cover.promise;
+    if (cacheImages.cover.url !== user.value.coverUrl) {
+      cacheImages.cover = {
+        url: user.value.coverUrl,
+        promise: requestImageByType(user.value.username, 'cover'),
+      };
     }
 
-    cacheImages.cover = {
-      url: user.value.coverUrl,
-      promise: requestImageByType(user.value.username, 'cover'),
-    };
     return await cacheImages.cover.promise;
   }, NO_BACKGROUND_URL);
 
@@ -371,9 +384,9 @@ export function useOauth(isLinkProvider?: MaybeRef<boolean>) {
 
   return {
     providers,
+    isLoadingUnlinkProvider,
     linkProvider,
     unlinkProvider,
-    isLoadingUnlinkProvider,
   };
 }
 

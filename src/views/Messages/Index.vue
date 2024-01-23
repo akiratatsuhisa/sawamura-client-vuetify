@@ -12,6 +12,7 @@
       >
         <div class="d-flex flex-column flex-md-row align-md-center">
           <v-card-title tag="h1">{{ translate('title') }}</v-card-title>
+
           <v-spacer v-if="$vuetify.display.smAndDown" />
 
           <v-room-search v-if="$vuetify.display.mdAndUp" />

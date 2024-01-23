@@ -58,6 +58,7 @@
 
   <template v-if="user?.email">
     <h3 class="text-h5">{{ translateChangeEmail('title') }}</h3>
+
     <i18n-t
       :keypath="pathChangeEmail('subtitle')"
       tag="span"
@@ -71,6 +72,7 @@
   </template>
   <template v-else>
     <h3 class="text-h5">{{ translateConfigureEmail('title') }}</h3>
+
     <span class="text-subtitle-2 font-weight-light text-high-emphasis">
       {{ translateConfigureEmail('subtitle') }}
     </span>
@@ -94,6 +96,7 @@
           :hint="translateChangeEmailFormField('email', 'hint')"
         />
       </v-col>
+
       <v-col cols="12" md="auto">
         <v-divider v-if="$vuetify.display.smAndDown" class="mb-3" />
 

@@ -6,8 +6,9 @@
         size="small"
         variant="tonal"
         @click="onCancel"
-      ></v-btn>
+      />
     </div>
+
     <div
       class="flex-grow-1 mx-2 bg-primary rounded-pill flex-row align-center"
       :style="{
@@ -23,7 +24,7 @@
         class="mx-2"
         @click="stopRecord"
       >
-        <v-icon size="x-large" color="primary">mdi-stop</v-icon>
+        <v-icon size="x-large" color="primary" icon="mdi-stop" />
       </v-btn>
 
       <div class="flex-grow-1">
@@ -74,7 +75,7 @@
         size="small"
         variant="text"
         @click="onSendRecord"
-      ></v-btn>
+      />
     </div>
   </div>
 </template>

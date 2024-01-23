@@ -189,18 +189,18 @@ export function useAxios<
             });
             break;
           case HttpStatusCode.Forbidden:
-            router.push({
+            router.replace({
               name: 'AccessDenied',
             });
             break;
           case HttpStatusCode.NotFound:
-            router.push({
+            router.replace({
               name: 'NotFound',
             });
             break;
           case HttpStatusCode.InternalServerError:
           default:
-            router.push({
+            router.replace({
               name: 'InternalServer',
             });
             break;

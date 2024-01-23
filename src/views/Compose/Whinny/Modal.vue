@@ -8,6 +8,7 @@
       >
       </v-app-bar-nav-icon>
     </v-toolbar>
+
     <v-divider />
 
     <v-card-text class="pa-0 overflow-y-auto">

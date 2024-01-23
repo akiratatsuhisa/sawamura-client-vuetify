@@ -1,12 +1,3 @@
-export interface IChangeUserRolesRequest {
-  id: string;
-  roleIds: Array<string>;
-}
-
-export interface IUserRequest {
-  id: string;
-}
-
 export interface ISearchUsersRequest {
   username?: string | null;
   name?: string | null;
@@ -17,6 +8,10 @@ export interface ISearchUsersRequest {
   sort?: { field: string; order: string } | null;
   skip?: string;
   take?: string;
+}
+
+export interface IUserRequest {
+  id: string;
 }
 
 export interface IUserResponse {
@@ -42,3 +37,10 @@ export interface IUserResponse {
     };
   }>;
 }
+
+export interface IChangeUserRolesRequest {
+  id: string;
+  roleIds: Array<string>;
+}
+
+export interface IChangeUserRolesResponse {}

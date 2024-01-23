@@ -56,6 +56,7 @@ const { openModal } = useRouterModal<IComposeWhinnyProps, IWhinnyResponse>({
     }, 100);
   },
 });
+
 function openModalComposeWhinny() {
   openModal({ name: 'Compose:Whinny' }, { type: 'Owner' });
 }

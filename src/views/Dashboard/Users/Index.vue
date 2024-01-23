@@ -14,6 +14,7 @@
             {{ translate(`tabs.${tab.title}`) }}
           </v-tab>
         </v-tabs>
+
         <v-divider />
 
         <v-window
@@ -25,6 +26,7 @@
           <v-window-item :value="tabs.Information.name">
             <v-user-view v-if="tab === 'Dashboard:Users'" />
           </v-window-item>
+
           <v-window-item :value="tabs.Roles.name">
             <v-role-view v-if="tab === 'Dashboard:Users:Roles'" />
           </v-window-item>
@@ -42,6 +44,7 @@
           />
 
           <v-toolbar-title>{{ translate('subchart') }}</v-toolbar-title>
+
           <v-progress-linear
             v-if="isLoadingChartUserRoles"
             absolute
@@ -90,6 +93,7 @@ const theme = useTheme();
 
 const route = useRoute();
 const router = useRouter();
+
 const { translate } = usePageLocale({ prefix: 'dashboard.users' });
 
 const tabs = {

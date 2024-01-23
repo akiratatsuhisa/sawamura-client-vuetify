@@ -5,12 +5,14 @@
       :key="item.id"
       :item="item"
     />
+
     <v-list-item v-if="!isAllLoaded" v-intersect="onIntersect">
       <v-btn :loading="isLoading" variant="plain" block @click="fetchMore">
         {{ $t('pages.users.relationships.fetchMore') }}
       </v-btn>
     </v-list-item>
   </v-list>
+
   <div v-else class="pa-4">
     <div class="text-h6 mb-2">
       {{
@@ -19,6 +21,7 @@
         })
       }}
     </div>
+
     <div class="text-subtitle-1 text-medium-emphasis">
       {{ $t(`pages.users.relationships.noData.${name}.subtitle`) }}
     </div>

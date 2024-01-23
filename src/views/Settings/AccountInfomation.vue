@@ -1,5 +1,6 @@
 <template>
   <h3 class="text-h5">{{ translateAccountInfomation('title') }}</h3>
+
   <span class="text-subtitle-2 font-weight-light text-high-emphasis">
     {{ translateAccountInfomation('subtitle') }}
   </span>
@@ -7,6 +8,7 @@
   <v-divider class="my-3" />
 
   <h3 class="text-h5">{{ translateDeleteAccount('title') }}</h3>
+
   <span class="text-subtitle-2 font-weight-light text-high-emphasis">
     {{ translateDeleteAccount('subtitle') }}
   </span>
@@ -18,8 +20,11 @@
       <template #prepend>
         <v-avatar size="64" :image="photoUrl" />
       </template>
+
       <template #title>{{ user?.displayName }}</template>
+
       <v-list-item-subtitle>@{{ user?.username }}</v-list-item-subtitle>
+
       <v-list-item-subtitle class="font-weight-medium">
         {{ fullName }}
       </v-list-item-subtitle>
@@ -55,6 +60,7 @@ const { translate: translateDeleteAccount, makeTranslateAlert } = usePageLocale(
     prefix: 'settings.account.deleteAccount',
   },
 );
+
 const router = useRouter();
 
 const { user, fullName, photoUrl, logout } = useAuth();

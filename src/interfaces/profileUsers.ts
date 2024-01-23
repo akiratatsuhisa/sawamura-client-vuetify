@@ -90,3 +90,5 @@ export interface IChangeProfileUserRelationshipRequest {
   username: string;
   relationshipState: ProfileUserRelationshipState;
 }
+
+export interface IChangeProfileUserRelationshipResponse {}

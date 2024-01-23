@@ -18,6 +18,7 @@
         />
       </v-badge>
     </template>
+
     <v-list-item-title>
       {{ displayName }}
     </v-list-item-title>
@@ -31,6 +32,7 @@
       {{ lastActivatedAgo ? '-' : undefined }}
       {{ lastActivatedAgo }}
     </v-list-item-subtitle>
+
     <v-list-item-subtitle v-if="lastMessage">
       {{ getDisplayRoomMemberNameByUser(room.roomMembers, lastMessage.user) }}
       -

@@ -20,7 +20,7 @@
         </v-app-bar-nav-icon>
 
         <v-toolbar-title>
-          <slot name="title"></slot>
+          <slot name="title" />
         </v-toolbar-title>
       </v-toolbar>
 
@@ -30,7 +30,7 @@
         class="overflow-y-auto"
         :class="contentClass?.(fullscreen) ?? contentClass"
       >
-        <slot></slot>
+        <slot />
       </v-card-text>
 
       <v-card-actions class="px-6 pb-4 pb-lg-2 justify-end">
@@ -41,7 +41,7 @@
           :block="fullscreen"
           :disabled="disabledSubmit"
         >
-          <slot name="action"></slot>
+          <slot name="action" />
         </v-btn>
       </v-card-actions>
     </v-card>

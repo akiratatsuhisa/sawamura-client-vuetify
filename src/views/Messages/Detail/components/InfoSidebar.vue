@@ -13,6 +13,7 @@
           @click="drawer = !drawer"
         />
       </v-toolbar>
+
       <v-sheet class="pa-4 text-center">
         <v-badge
           location="bottom end"
@@ -28,6 +29,7 @@
             size="80"
           />
         </v-badge>
+
         <v-card-subtitle tag="caption">
           {{
             room.isGroup
@@ -53,6 +55,7 @@
         <v-expansion-panel-title>
           {{ translate('menus.basicsInformation.index') }}
         </v-expansion-panel-title>
+
         <v-expansion-panel-text>
           <v-list density="compact" nav class="mx-n6">
             <v-list-item
@@ -70,6 +73,7 @@
                 {{ translate('menus.basicsInformation.editName') }}
               </v-list-item-title>
             </v-list-item>
+
             <v-list-item
               v-if="room?.isGroup && currentMember?.role !== 'Member'"
               rounded="pill"
@@ -85,6 +89,7 @@
                 {{ translate('menus.basicsInformation.changePhoto') }}
               </v-list-item-title>
             </v-list-item>
+
             <v-list-item
               v-if="currentMember?.role !== 'Member'"
               rounded="pill"
@@ -100,6 +105,7 @@
                 {{ translate('menus.basicsInformation.changeCover') }}
               </v-list-item-title>
             </v-list-item>
+
             <v-list-item
               v-if="isRoomThemeSelectable && currentMember?.role !== 'Member'"
               rounded="pill"
@@ -112,7 +118,7 @@
                     :color="displayThemeColor"
                     size="x-small"
                     class="elevation-1"
-                  ></v-avatar>
+                  />
                   <v-icon icon="mdi-palette" v-else />
                 </v-avatar>
               </template>
@@ -121,6 +127,7 @@
                 {{ translate('menus.basicsInformation.chooseTheme') }}
               </v-list-item-title>
             </v-list-item>
+
             <v-list-item
               v-if="room?.isGroup && currentMember?.role === 'Administrator'"
               rounded="pill"
@@ -136,6 +143,7 @@
                 {{ translate('menus.basicsInformation.deleteChat') }}
               </v-list-item-title>
             </v-list-item>
+
             <v-list-item rounded="pill" @click="openDialog('icon')">
               <template #prepend>
                 <v-avatar color="secondary-container">
@@ -150,10 +158,12 @@
           </v-list>
         </v-expansion-panel-text>
       </v-expansion-panel>
+
       <v-expansion-panel elevation="0" rounded="0">
         <v-expansion-panel-title>
           {{ translate('menus.support.index') }}
         </v-expansion-panel-title>
+
         <v-expansion-panel-text>
           <v-list density="compact" nav class="mx-n6">
             <v-list-item
@@ -178,10 +188,12 @@
           </v-list>
         </v-expansion-panel-text>
       </v-expansion-panel>
+
       <v-expansion-panel elevation="0" rounded="0">
         <v-expansion-panel-title>
           {{ translate('menus.members.index') }}
         </v-expansion-panel-title>
+
         <v-expansion-panel-text>
           <v-list density="compact" nav class="mx-n6">
             <v-list-item

@@ -4,9 +4,11 @@
       <v-col class="mx-auto" md="6" lg="4">
         <v-card class="bg-surface" variant="flat" rounded="xl">
           <v-card-title>{{ translate('title') }}</v-card-title>
+
           <v-card-subtitle class="text-wrap">
             {{ translate('subtitle') }}
           </v-card-subtitle>
+
           <v-card-text>
             <form @submit.prevent="onSubmit">
               <v-btn
@@ -50,6 +52,7 @@ import { services } from '@/services';
 
 const router = useRouter();
 const route = useRoute();
+
 const { translate, pathShared } = usePageLocale({
   prefix: 'auth.confirmEmail',
 });

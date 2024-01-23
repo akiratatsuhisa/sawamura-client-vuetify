@@ -25,7 +25,7 @@
                 :color="displayThemeColor"
                 size="x-small"
                 class="elevation-1"
-              ></v-avatar>
+              />
             </template>
           </v-btn>
         </template>
@@ -35,10 +35,10 @@
           class="overflow-hidden"
           mode="rgb"
           hide-inputs
-        ></v-color-picker>
+        />
       </v-menu>
 
-      <v-spacer></v-spacer>
+      <v-spacer />
 
       <v-btn
         color="primary"

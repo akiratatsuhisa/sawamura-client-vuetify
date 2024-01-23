@@ -39,11 +39,21 @@ export interface IHistoryState<
 
 export function useHistoryState<P extends Record<string, any>>() {
   const route = useRoute();
+  const state = ref<IHistoryState<P>>(window.history.state);
 
-  return computed<IHistoryState<P>>(() => {
-    // if fullPath channge then update history state
-    return route.fullPath && window.history.state;
-  });
+  watch(
+    () => route.fullPath,
+    () => {
+      if (_.isEqual(window.history.state, state)) {
+        return;
+      }
+
+      state.value = window.history.state;
+    },
+    { immediate: true },
+  );
+
+  return computed<IHistoryState<P>>(() => state.value as IHistoryState<P>);
 }
 
 export function useBackgroundRoute() {
@@ -51,9 +61,33 @@ export function useBackgroundRoute() {
   const route = useRoute();
 
   // if declare backgroudRoute then return it else route
-  return computed<IHistoryStateBackground>(() => {
-    return route.fullPath && (historyState.value.background || (route as any));
-  });
+  const backgroudRoute = ref<IHistoryStateBackground>(
+    historyState.value.background || (route as any),
+  );
+
+  watch(
+    () => route.fullPath,
+    () => {
+      if (
+        _.isEqual(
+          _.pick(historyState.value.background, [
+            'name',
+            'hash',
+            'params',
+            'query',
+          ]),
+          _.pick(route, ['name', 'hash', 'params', 'query']),
+        )
+      ) {
+        return;
+      }
+
+      backgroudRoute.value = historyState.value.background || (route as any);
+    },
+    { immediate: true },
+  );
+
+  return computed<IHistoryStateBackground>(() => backgroudRoute.value);
 }
 
 export function useRouteWithModal(historyState: Ref<IHistoryState>) {
@@ -87,6 +121,7 @@ export interface IUseRouterTabOptions {
 export function useRouterTab(options: IUseRouterTabOptions) {
   const route = useRoute();
   const router = useRouter();
+
   const defaultParams = computed(() => unref(options.defaultParams));
 
   const tab = computed(() => route.params[options.param] as string | undefined);
@@ -134,7 +169,9 @@ export interface IUseRouterDialogOptions {
 export function useRouterDialog(options: IUseRouterDialogOptions) {
   const route = useRoute();
   const router = useRouter();
+
   const defaultParams = computed(() => unref(options.defaultParams));
+
   const backgroundRoute =
     ref<
       Pick<
@@ -178,6 +215,7 @@ export function useRouterDialog(options: IUseRouterDialogOptions) {
       });
       return;
     }
+
     await router.replace({
       name: backgroundRoute.value.name!,
       hash: backgroundRoute.value.hash,
@@ -249,7 +287,9 @@ export function useRouterModal<
   } = options;
   const route = useBackgroundRoute();
   const router = useRouter();
+
   const historyState = useHistoryState();
+
   const { modalEventsContainer } = useModalsStore();
 
   if (isRef(key)) {

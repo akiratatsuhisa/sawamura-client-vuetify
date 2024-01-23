@@ -4,6 +4,7 @@
     :class="[isCurrentUserMessage ? 'flex-row-reverse' : 'flex-row']"
   >
     <v-chip size="small" rounded>{{ currentTime }}</v-chip>
+
     <v-wave-surfer-player
       ref="player"
       class="flex-grow-1 mx-1"

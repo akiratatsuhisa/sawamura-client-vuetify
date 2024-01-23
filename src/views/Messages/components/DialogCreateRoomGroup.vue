@@ -34,11 +34,11 @@
       @blur="v$.members.$validate"
     >
       <template #chip="{ props, item }">
-        <v-chip v-bind="props" :text="item.raw.username"></v-chip>
+        <v-chip v-bind="props" :text="item.raw.username" />
       </template>
 
       <template #item="{ props, item }">
-        <v-list-item v-bind="props" :title="item?.raw?.username"></v-list-item>
+        <v-list-item v-bind="props" :title="item?.raw?.username" />
       </template>
     </v-autocomplete>
 

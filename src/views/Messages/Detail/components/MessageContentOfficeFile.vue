@@ -27,7 +27,7 @@
     class="align-center justify-center"
   >
     <v-avatar color="secondary" @click="downloadFile">
-      <v-icon icon="mdi-download"></v-icon>
+      <v-icon icon="mdi-download" />
     </v-avatar>
   </v-overlay>
 </template>

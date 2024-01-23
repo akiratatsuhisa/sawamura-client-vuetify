@@ -13,7 +13,7 @@
             variant="text"
             icon="mdi-menu-open"
             @click="drawer = !drawer"
-          ></v-btn>
+          />
         </template>
 
         <v-app-bar-title class="text-primary pa-2">

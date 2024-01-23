@@ -21,6 +21,7 @@ import { services } from '@/services';
 
 export const useRoomsStore = defineStore('rooms', () => {
   const socket = useSocketChat();
+
   const { createSnackbarByException } = useSnackbar();
 
   const isRoomsAllLoaded = ref<boolean>(false);
@@ -54,6 +55,7 @@ export const useRoomsStore = defineStore('rooms', () => {
   }
 
   const { identityId } = useAuth();
+
   watch(
     identityId,
     () => {
@@ -91,6 +93,7 @@ export const useRoomsStore = defineStore('rooms', () => {
       listener: updateListRoom,
     },
   );
+
   useSocketEventListener<IRoomResponse>(
     socket,
     SOCKET_EVENTS.ROOM_EVENTS.UPDATE_ROOM_PHOTO,
@@ -98,6 +101,7 @@ export const useRoomsStore = defineStore('rooms', () => {
       listener: updateListRoom,
     },
   );
+
   useSocketEventListener<IRoomResponse>(
     socket,
     SOCKET_EVENTS.ROOM_EVENTS.UPDATE_ROOM,
@@ -105,6 +109,7 @@ export const useRoomsStore = defineStore('rooms', () => {
       listener: updateListRoom,
     },
   );
+
   useSocketEventListener<IRoomMessageResponse>(
     socket,
     SOCKET_EVENTS.ROOM_EVENTS.CREATE_MESSAGE,
@@ -112,6 +117,7 @@ export const useRoomsStore = defineStore('rooms', () => {
       listener: (data) => updateListRoom(data.room),
     },
   );
+
   useSocketEventListener<IRoomMessageResponse>(
     socket,
     SOCKET_EVENTS.ROOM_EVENTS.DELETE_MESSAGE,

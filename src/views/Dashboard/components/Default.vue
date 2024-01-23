@@ -10,6 +10,7 @@
           />
 
           <v-toolbar-title>{{ translate('mainchart.title') }}</v-toolbar-title>
+
           <v-progress-linear
             v-if="false"
             absolute

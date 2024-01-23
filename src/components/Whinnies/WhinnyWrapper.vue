@@ -3,6 +3,7 @@
     <div v-if="$slots.reference">
       <slot name="reference" />
     </div>
+
     <div class="d-flex">
       <div
         v-if="direction === 'horizontal'"
@@ -20,6 +21,7 @@
           </v-avatar>
         </v-hover>
       </div>
+
       <div class="flex-grow-1 flex-shrink-1">
         <div class="d-flex" :class="{ 'mb-3': $slots.userInfo }">
           <v-hover #default="{ isHovering, props }">
@@ -36,15 +38,19 @@
 
           <slot name="userInfo" />
         </div>
+
         <div>
           <slot />
         </div>
+
         <div v-if="$slots.medias">
           <slot name="medias" />
         </div>
+
         <div v-if="$slots.detail" class="mt-3">
           <slot name="detail" />
         </div>
+
         <div v-if="$slots.action" class="mt-3">
           <div class="d-flex justify-space-between align-center">
             <slot name="action" />

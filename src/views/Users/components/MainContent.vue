@@ -10,6 +10,7 @@
     />
     <v-divider v-if="$vuetify.display.xs" />
   </template>
+
   <div
     class="text-center mt-3 mt-sm-0"
     v-if="!isAllLoaded"
@@ -19,6 +20,7 @@
       {{ $t('pages.users.relationships.fetchMore') }}
     </v-btn>
   </div>
+
   <div
     v-if="$vuetify.display.smAndDown"
     :class="[$vuetify.display.xs ? 'py-10' : 'py-6']"
@@ -44,7 +46,11 @@ const { request, isLoading } = useAxios(services.whinnies, 'getAll');
 
 watch(
   () => props.query,
-  async (query) => {
+  async (query, prevQuery) => {
+    if (_.isEqual(query, prevQuery)) {
+      return;
+    }
+
     const data = await request({ ...query, take: 10 });
     items.value = data;
   },
@@ -55,6 +61,7 @@ const isAllLoaded = ref<boolean>(false);
 
 async function fetchMore() {
   const cursor = _.last(items.value)?.id;
+
   const data = await request({
     ...props.query,
     take: 10,

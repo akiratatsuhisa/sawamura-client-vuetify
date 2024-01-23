@@ -34,7 +34,7 @@
           icon="mdi-arrow-up"
           @click="fetchMoreMessages"
           :loading="isLoading"
-        ></v-btn>
+        />
       </v-sheet>
     </div>
 
@@ -50,7 +50,7 @@
           size="small"
           icon="mdi-arrow-down"
           @click="gotoLastMessage"
-        ></v-btn>
+        />
       </v-fab-transition>
     </v-sheet>
   </v-sheet>

@@ -173,6 +173,10 @@ export default createVuetify({
   defaults: {
     VTextField: {
       variant: 'outlined',
+      rounded: 'lg',
+    },
+    VChipGroup: {
+      column: true,
     },
   },
 });

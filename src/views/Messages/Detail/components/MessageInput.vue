@@ -47,6 +47,7 @@
                   <v-icon size="x-large" icon="mdi-dots-vertical-circle" />
                 </v-btn>
               </template>
+
               <v-list
                 class="bg-surface-container-high text-on-surface"
                 rounded="xl"
@@ -59,10 +60,12 @@
                   <template #prepend>
                     <v-icon :icon="icon" />
                   </template>
+
                   <v-list-item-title>{{ translate(title) }}</v-list-item-title>
                 </v-list-item>
               </v-list>
             </v-menu>
+
             <v-expand-x-transition
               v-for="{ key, icon, onClick } in actions"
               :key="key"

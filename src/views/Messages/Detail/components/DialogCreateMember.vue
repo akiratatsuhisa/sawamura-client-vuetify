@@ -24,7 +24,7 @@
       @blur="v$.member.$validate"
     >
       <template #item="{ props, item }">
-        <v-list-item v-bind="props" :title="item?.raw?.username"></v-list-item>
+        <v-list-item v-bind="props" :title="item?.raw?.username" />
       </template>
     </v-autocomplete>
 
@@ -39,6 +39,7 @@
         value="Moderator"
         :error="v$.role.$error"
       />
+
       <v-radio
         :label="$t('common.roomRoles.member')"
         value="Member"

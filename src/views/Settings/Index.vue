@@ -7,7 +7,9 @@
             {{ translate('title') }}
           </v-toolbar-title>
         </v-toolbar>
+
         <v-divider />
+
         <div class="d-flex" :class="[isMobile ? 'flex-column' : 'flex-row']">
           <v-tabs
             :model-value="tab"
@@ -25,6 +27,7 @@
               {{ translateShared(`menus.${detail.name}`) }}
             </v-tab>
           </v-tabs>
+
           <v-divider :vertical="!isMobile" />
 
           <v-window

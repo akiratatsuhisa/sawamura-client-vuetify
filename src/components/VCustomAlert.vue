@@ -18,6 +18,7 @@
             {{ props.icon.name }}
           </v-icon>
         </div>
+
         <v-img
           class="elevation-2 rounded-lg mb-3"
           v-else-if="props.image"
@@ -25,13 +26,15 @@
           :aspect-ratio="props.image.ratio"
           :src="props.image.url"
           :alt="props.image.alt"
-        ></v-img>
+        />
 
         <div>{{ props.message }}</div>
       </v-card-text>
+
       <v-card-text v-else-if="props.comp">
         <component :is="props.comp" />
       </v-card-text>
+
       <v-card-actions class="justify-end">
         <v-btn
           v-if="cancelButton?.show"
@@ -41,6 +44,7 @@
         >
           {{ cancelButton?.text ?? 'cancel' }}
         </v-btn>
+
         <v-btn
           v-if="denyButton?.show"
           color="primary"
@@ -49,6 +53,7 @@
         >
           {{ denyButton?.text ?? 'deny' }}
         </v-btn>
+
         <v-btn
           v-if="confirmButton?.show"
           color="primary"

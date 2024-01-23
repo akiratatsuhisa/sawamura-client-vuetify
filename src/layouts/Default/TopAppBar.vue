@@ -5,8 +5,8 @@
       @click="drawer = !drawer"
     >
       <v-fab-transition mode="out-in">
-        <v-icon icon="mdi-menu-open" v-if="drawer"></v-icon>
-        <v-icon icon="mdi-menu" v-else></v-icon>
+        <v-icon icon="mdi-menu-open" v-if="drawer" />
+        <v-icon icon="mdi-menu" v-else />
       </v-fab-transition>
     </v-app-bar-nav-icon>
 

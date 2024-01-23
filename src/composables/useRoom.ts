@@ -27,6 +27,7 @@ export function getDisplayRoomMemberNameByUser(
   user: IRoomUserResponse,
 ) {
   const { identityId } = useAuth();
+
   const { translateShared } = usePageLocale({
     prefix: 'messages',
   });
@@ -118,10 +119,12 @@ export function useAdvancedRoom(room: MaybeRef<IAdvancedRoomResponse>) {
 
   const roomPhotoUrl = computedAsync(async () => {
     const unwrapRoom = unref(room);
+
     if (!unwrapRoom.isGroup) {
       if (!targetMember.value?.member.photoUrl) {
         return NO_AVATAR_URL;
       }
+
       return await axiosInstacne
         .request<string>({
           url: `/profileUsers/${targetMember.value.member.username}/photo`,
@@ -132,6 +135,7 @@ export function useAdvancedRoom(room: MaybeRef<IAdvancedRoomResponse>) {
       if (!unwrapRoom.photoUrl) {
         return NO_BACKGROUND_URL;
       }
+
       return await axiosInstacne
         .request<string>({
           url: `/rooms/${unwrapRoom.id}/photo`,
@@ -143,6 +147,7 @@ export function useAdvancedRoom(room: MaybeRef<IAdvancedRoomResponse>) {
 
   const displayName = computed(() => {
     const unwrapRoom = unref(room);
+
     return unwrapRoom.isGroup
       ? unwrapRoom.name
       : targetMember.value?.nickName
@@ -178,6 +183,7 @@ export function useRoom(room: MaybeRef<IRoomResponse>) {
       (roomMember) => roomMember.role !== 'None',
     );
   });
+
   const currentMember = computed(() => {
     const unwrapRoom = unref(room);
 
@@ -186,6 +192,7 @@ export function useRoom(room: MaybeRef<IRoomResponse>) {
       (roomMember) => roomMember.member.id === identityId.value,
     );
   });
+
   const targetMember = computed(() => {
     const unwrapRoom = unref(room);
 
@@ -199,10 +206,12 @@ export function useRoom(room: MaybeRef<IRoomResponse>) {
 
   const roomPhotoUrl = computedAsync(async () => {
     const unwrapRoom = unref(room);
+
     if (!unwrapRoom.isGroup) {
       if (!targetMember.value?.member.photoUrl) {
         return NO_AVATAR_URL;
       }
+
       return await axiosInstacne
         .request<string>({
           url: `/profileUsers/${targetMember.value.member.username}/photo`,
@@ -213,6 +222,7 @@ export function useRoom(room: MaybeRef<IRoomResponse>) {
       if (!unwrapRoom.photoUrl) {
         return NO_BACKGROUND_URL;
       }
+
       return await axiosInstacne
         .request<string>({
           url: `/rooms/${unwrapRoom.id}/photo`,
@@ -221,8 +231,10 @@ export function useRoom(room: MaybeRef<IRoomResponse>) {
         .catch(() => NO_AVATAR_URL);
     }
   }, '');
+
   const roomCoverUrl = computedAsync(async () => {
     const unwrapRoom = unref(room);
+
     if (!unwrapRoom.coverUrl) {
       return '';
     }

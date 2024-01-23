@@ -81,6 +81,7 @@ const emit = defineEmits<{
 }>();
 
 const { translateShared } = usePageLocale({ prefix: 'users.profile' });
+
 const { fetchAccessToken } = useAuth();
 
 const isAuthThemeSelectable = useIsAuthThemeSelectable();

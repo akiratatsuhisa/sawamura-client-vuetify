@@ -14,6 +14,7 @@
         {{ $t('common.pagination.showing', { from, to, totalCount }) }}
       </div>
     </div>
+
     <v-pagination
       :model-value="page"
       @update:model-value="updatePage"
@@ -47,17 +48,22 @@ function parseStringToNumber(value?: string): number | undefined {
     ? undefined
     : Number(value);
 }
+
 function parseNumberToString(value?: number): string | undefined {
   return _.isNil(value) ? undefined : value.toString();
 }
+
 const skip = computed<number | undefined>({
   get: () => parseStringToNumber(props.skip),
   set: (value?: number) => emit('update:skip', parseNumberToString(value)),
 });
+
 const take = computed<number | undefined>({
   get: () => parseStringToNumber(props.take),
   set: (value?: number) => emit('update:take', parseNumberToString(value)),
 });
+
+const page = computed(() => _.ceil((skip.value ?? 0) / (take.value ?? 0) + 1));
 
 const from = computed(() => (skip.value ?? 0) + (props.count ? 1 : 0));
 const to = computed(() => (skip.value ?? 0) + (props.count ?? 0));
@@ -65,7 +71,7 @@ const to = computed(() => (skip.value ?? 0) + (props.count ?? 0));
 const length = computed(() =>
   _.ceil((props.totalCount ?? 0) / (take.value ?? 0)),
 );
-const page = computed(() => _.ceil((skip.value ?? 0) / (take.value ?? 0) + 1));
+
 function updatePage(value: number) {
   skip.value = (value - 1) * (take.value ?? 0);
 }

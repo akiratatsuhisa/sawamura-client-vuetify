@@ -1,5 +1,6 @@
 <template>
   <h3 class="text-h5">{{ translateStyleMode('title') }}</h3>
+
   <span class="text-subtitle-2 font-weight-light text-high-emphasis">
     {{ translateStyleMode('subtitle') }}
   </span>
@@ -30,6 +31,7 @@
   <v-divider class="my-3" />
 
   <h3 class="text-h5">{{ translateThemeMode('title') }}</h3>
+
   <span class="text-subtitle-2 font-weight-light text-high-emphasis">
     {{ translateThemeMode('subtitle') }}
   </span>
@@ -63,6 +65,7 @@
       <v-divider class="my-3" />
 
       <h3 class="text-h5">{{ translatePersonalTheme('title') }}</h3>
+
       <span class="text-subtitle-2 font-weight-light text-high-emphasis">
         {{ translatePersonalTheme('subtitle') }}
       </span>
@@ -84,7 +87,7 @@
                   :color="displayThemeColor"
                   size="x-small"
                   class="elevation-4"
-                ></v-avatar>
+                />
               </template>
             </v-btn>
           </template>

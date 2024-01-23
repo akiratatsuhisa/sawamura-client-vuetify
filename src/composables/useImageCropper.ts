@@ -5,12 +5,14 @@ import { Cropper as VCropper } from 'vue-advanced-cropper';
 import { FileHelper } from '@/helpers';
 
 export function useImageCropper() {
+  const cropperRef = ref<InstanceType<typeof VCropper>>();
+
   const isThemeModeGenerate = ref<boolean>(false);
 
   const submitable = ref(false);
+
   const imageFile = shallowRef<File>();
   const imageCropperSrc = useObjectUrl(imageFile);
-  const cropperRef = ref<InstanceType<typeof VCropper>>();
 
   const {
     files: selectFiles,
@@ -60,9 +62,9 @@ export function useImageCropper() {
   }
 
   return {
+    cropperRef,
     isThemeModeGenerate,
     submitable,
-    cropperRef,
     imageCropperSrc,
     openSelectImage,
     resetSelectImage,

@@ -21,11 +21,13 @@
         value="Administrator"
         :error="v$.role.$error"
       />
+
       <v-radio
         :label="$t('common.roomRoles.moderator')"
         value="Moderator"
         :error="v$.role.$error"
       />
+
       <v-radio
         :label="$t('common.roomRoles.member')"
         value="Member"

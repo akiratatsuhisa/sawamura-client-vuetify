@@ -24,6 +24,7 @@ export default [
   {
     path: `/messages/:roomId(${Regex.Url.UUID.source})/:dialog(update|photo|cover|theme|delete|icon|members)?/:memberDialog(create|update|role|delete)?/:memberId(${Regex.Url.UUID.source})?`,
     name: 'Messages:Room',
+    meta: { requiresAuth: true },
     components: {
       left: VRoomDetailLeftAppBar,
       top: VRoomDetailTopAppBar,

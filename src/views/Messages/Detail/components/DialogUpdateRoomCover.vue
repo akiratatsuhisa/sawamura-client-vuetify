@@ -14,7 +14,7 @@
         <v-btn color="primary" variant="flat" @click="openSelectImage">
           {{ $t('common.theme.chooseImage') }}
         </v-btn>
-        <v-spacer></v-spacer>
+        <v-spacer />
 
         <v-btn v-if="room.coverUrl" color="secondary" @click="onRequestDelete">
           {{ translate('delete') }}

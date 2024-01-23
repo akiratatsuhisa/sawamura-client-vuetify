@@ -36,7 +36,7 @@
             size="x-small"
             v-bind="props"
             :loading="isLoading"
-          ></v-btn>
+          />
         </template>
 
         <v-list class="bg-surface-container-high text-on-surface" rounded="xl">
@@ -48,17 +48,20 @@
               params: { username: roomMember.member.username },
             }"
           />
+
           <v-list-item
             append-icon="mdi-account-edit-outline"
             :title="translate('menus.members.changeNickName')"
             @click="onOpenDialog('update')"
           />
+
           <v-list-item
             v-if="isShow"
             append-icon="mdi-database-edit-outline"
             :title="translate('menus.members.changeRole')"
             @click="onOpenDialog('role')"
           />
+
           <v-list-item
             v-if="isShow"
             append-icon="mdi-account-minus-outline"

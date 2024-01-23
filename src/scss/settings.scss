@@ -10,6 +10,18 @@
   $tooltip-text-color: rgb(var(--v-theme-on-inverse-surface))
 );
 
+.v-chip-group {
+  &.v-chip-group--inline {
+    display: inline !important;
+    .v-slide-group__container {
+      display: inline !important;
+      .v-slide-group__content {
+        display: inline !important;
+      }
+    }
+  }
+}
+
 .v-chip {
   &.v-chip--selected {
     .v-chip__overlay,

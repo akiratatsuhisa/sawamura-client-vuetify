@@ -22,23 +22,32 @@ export function useScrollBehavior(options: UseScrollBehaviorOptions = {}) {
     options;
 
   const { y: threshold } = useWindowScroll();
+
+  const isFabShowDetailRef = ref(true);
+
+  watch(threshold, (current, prev) => {
+    if (current < unref(showDetailFabThreshold ?? 150)) {
+      isFabShowDetailRef.value = true;
+      return;
+    }
+    isFabShowDetailRef.value = current < prev;
+  });
+
   const isTopbarElevation = computed(
     () => threshold.value > unref(topbarElevationThreshold ?? 20),
   );
+
   const isFabShow = computed(
     () => threshold.value > unref(showfabThreshold ?? 100),
   );
 
-  const isFabShowDetail = ref(true);
-  watch(threshold, (current, prev) => {
-    if (current < unref(showDetailFabThreshold ?? 150)) {
-      isFabShowDetail.value = true;
-      return;
-    }
-    isFabShowDetail.value = current < prev;
-  });
+  const isFabShowDetail = computed(() => isFabShowDetailRef.value);
 
-  return { isTopbarElevation, isFabShow, isFabShowDetail };
+  return {
+    isTopbarElevation,
+    isFabShow,
+    isFabShowDetail,
+  };
 }
 
 export function useLifecycleState() {

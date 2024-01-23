@@ -1,6 +1,5 @@
 <template>
-  <v-custom-snackbar v-for="item in items" :key="item.id" v-bind="item">
-  </v-custom-snackbar>
+  <v-custom-snackbar v-for="item in items" :key="item.id" v-bind="item" />
 </template>
 
 <script setup lang="ts">

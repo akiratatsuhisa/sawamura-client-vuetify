@@ -11,16 +11,8 @@
         v-if="isLoading"
         class="h-100 px-2 d-flex justify-center align-center"
       >
-        <v-progress-linear
-          v-if="isAudios"
-          indeterminate
-          color="primary"
-        ></v-progress-linear>
-        <v-progress-circular
-          v-else
-          indeterminate
-          color="primary"
-        ></v-progress-circular>
+        <v-progress-linear v-if="isAudios" indeterminate color="primary" />
+        <v-progress-circular v-else indeterminate color="primary" />
       </div>
       <div
         v-else-if="!isLoading && !fileSrc"

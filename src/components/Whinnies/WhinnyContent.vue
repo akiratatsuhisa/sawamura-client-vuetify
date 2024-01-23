@@ -9,6 +9,7 @@
     <template v-if="data.type === 'Repost' || data.type === 'Quote'" #reference>
       <div class="pl-2 pb-2 text-subtitle-2">
         <v-icon color="tertiary" start>mdi-repeat-variant</v-icon>
+
         <span class="font-weight-medium">
           {{
             $t(
@@ -35,7 +36,9 @@
           >
             {{ user.displayName }}
           </div>
+
           <div class="mr-1" @click.stop="gotoUser">@{{ user.username }}</div>
+
           <div v-if="!detail" class="mr-1">
             <use-time-ago v-slot="{ timeAgo }" :time="whinny.publishDate">
               <span class="v-text-decoration-underline font-weight-medium">
@@ -69,6 +72,7 @@
 
     <template v-if="detail" #detail>
       <v-divider class="my-2" />
+
       <div class="d-flex flex-wrap">
         <v-chip
           v-if="whinny.countReactions"
@@ -84,6 +88,7 @@
               color="primary"
             />
           </template>
+
           {{
             $t(
               'common.whinny.actions.reactions.subtitle',
@@ -94,6 +99,7 @@
             )
           }}
         </v-chip>
+
         <v-chip
           v-if="whinny.countComments"
           variant="outlined"
@@ -104,6 +110,7 @@
           <template #prepend>
             <v-icon icon="mdi-chat-outline" start color="primary" />
           </template>
+
           {{
             $t(
               'common.whinny.actions.comments.subtitle',
@@ -114,6 +121,7 @@
             )
           }}
         </v-chip>
+
         <v-chip
           v-if="whinny.countQuotes"
           variant="outlined"
@@ -124,6 +132,7 @@
           <template #prepend>
             <v-icon icon="mdi-repeat-variant" start color="primary" />
           </template>
+
           {{
             $t(
               'common.whinny.actions.quotes.subtitle',
@@ -134,6 +143,7 @@
             )
           }}
         </v-chip>
+
         <v-chip
           variant="outlined"
           rounded="lg"
@@ -143,11 +153,13 @@
           <template #prepend>
             <v-icon icon="mdi-calendar-clock-outline" start color="primary" />
           </template>
+
           <use-time-ago v-slot="{ timeAgo }" :time="whinny.publishDate">
             {{ timeAgo }}
           </use-time-ago>
         </v-chip>
       </div>
+
       <v-divider class="my-2" />
     </template>
 
@@ -158,11 +170,13 @@
         :value="detail ? undefined : whinny.countReactions"
         @click="reactWhinny"
       />
+
       <v-whinny-content-action
         icon="mdi-chat-outline"
         :value="detail ? undefined : whinny.countComments"
         @click="openModalComposeWhinny('Comment')"
       />
+
       <v-base-bottom-sheet>
         <template #activator="{ props }">
           <v-whinny-content-action
@@ -177,6 +191,7 @@
           <v-list-item prepend-icon="mdi-repeat-variant" @click="repostWhinny">
             <template #title>{{ $t('common.share.repost') }}</template>
           </v-list-item>
+
           <v-list-item
             prepend-icon="mdi-pen"
             @click="openModalComposeWhinny('Quote')"
@@ -185,6 +200,7 @@
           </v-list-item>
         </v-list>
       </v-base-bottom-sheet>
+
       <v-base-bottom-sheet>
         <template #activator="{ props }">
           <v-whinny-content-action icon="mdi-share-outline" v-bind="props" />
@@ -194,6 +210,7 @@
           <v-list-item prepend-icon="mdi-link-variant" @click="copyLink">
             <template #title>{{ $t('common.share.copyLink') }}</template>
           </v-list-item>
+
           <v-list-item prepend-icon="mdi-tray-arrow-up" @click="sharePost">
             <template #title>{{ $t('common.share.shareVia') }}</template>
           </v-list-item>
@@ -282,6 +299,7 @@ const { openModal } = useRouterModal<IComposeWhinnyProps, IWhinnyResponse>({
   key: computed(() => `Components:WhinnyContent:${props.data.id}`),
   onSuccess: onCreateWhinny,
 });
+
 function openModalComposeWhinny(type: 'Comment' | 'Quote') {
   const data = isRepost.value ? whinny.source : whinny;
   openModal(

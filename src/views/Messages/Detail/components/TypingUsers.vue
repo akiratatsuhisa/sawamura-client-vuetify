@@ -7,6 +7,7 @@
       >
         <v-typing-users-avatar :name="name" :member="member" />
       </template>
+
       <v-sheet
         class="typing pa-2 ml-2 rounded-pill"
         :class="[

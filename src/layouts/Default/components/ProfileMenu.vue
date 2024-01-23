@@ -15,7 +15,7 @@
               color="secondary-container"
               class="elevation-1"
               :image="photoUrl"
-            ></v-avatar>
+            />
           </template>
           <v-list-item-title>
             {{ user?.displayName }}

@@ -10,7 +10,7 @@
     :location="screenFab ? 'bottom right' : undefined"
   >
     <v-slide-x-reverse-transition>
-      <v-icon :start="isFabShowDetail">{{ icon }}</v-icon>
+      <v-icon :start="isFabShowDetail" :icon="icon" />
     </v-slide-x-reverse-transition>
 
     <v-slide-x-transition>

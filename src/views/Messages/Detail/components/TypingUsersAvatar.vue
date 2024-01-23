@@ -7,7 +7,7 @@
         :image="photoUrl"
         v-bind="props"
         size="20"
-      ></v-avatar>
+      />
     </template>
   </v-tooltip>
 </template>

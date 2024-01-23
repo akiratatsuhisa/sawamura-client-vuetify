@@ -7,13 +7,16 @@
         icon="mdi-account-circle-outline"
         @click="openDialog('photo')"
       />
+
       <v-btn
         size="36"
         variant="tonal"
         icon="mdi-image-outline"
         @click="openDialog('cover')"
       />
-      <v-spacer></v-spacer>
+
+      <v-spacer />
+
       <v-btn variant="tonal" height="36">
         {{ translate('editButton') }}
       </v-btn>

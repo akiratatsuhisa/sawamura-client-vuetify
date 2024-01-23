@@ -7,6 +7,7 @@
         :series="mainSeries"
       />
     </v-col>
+
     <v-col cols="12" sm="12" md="5" lg="4">
       <v-card class="bg-surface" variant="flat" rounded="xl">
         <v-toolbar class="bg-surface">
@@ -17,6 +18,7 @@
           />
 
           <v-toolbar-title>{{ translate('subchart.title') }}</v-toolbar-title>
+
           <v-progress-linear
             v-if="isLoadingChartMessages"
             absolute

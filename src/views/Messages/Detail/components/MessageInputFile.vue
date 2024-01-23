@@ -38,7 +38,7 @@
           @click="selectMessageImageSrc(file.src)"
         >
           <v-avatar color="secondary">
-            <v-icon icon="mdi-image"></v-icon>
+            <v-icon icon="mdi-image" />
           </v-avatar>
         </v-overlay>
       </v-card>

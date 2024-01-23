@@ -81,6 +81,7 @@ router.beforeEach(async (to, from) => {
     return {
       name: 'AccessDenied',
       query: { redirectUrl: from.fullPath },
+      replace: true,
     };
   }
 });

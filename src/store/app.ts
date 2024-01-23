@@ -2,14 +2,15 @@ import { useEventListener } from '@vueuse/core';
 import _ from 'lodash';
 import { defineStore } from 'pinia';
 import { Component, computed, ref, shallowRef } from 'vue';
-import { RouteLocationNamedRaw, useRoute, useRouter } from 'vue-router';
+import { RouteLocationNamedRaw, useRouter } from 'vue-router';
 
-import { useAuth } from '@/composables';
+import { useAuth, useBackgroundRoute } from '@/composables';
 import { INavigationMenuItem } from '@/interfaces';
 
 export const useAppStore = defineStore('app', () => {
   const router = useRouter();
-  const route = useRoute();
+  const route = useBackgroundRoute();
+
   const { hasRoles } = useAuth();
 
   const drawer = ref<boolean>(false);
@@ -84,7 +85,7 @@ export const useAppStore = defineStore('app', () => {
   });
 
   const subNavigationItems = computed(() => {
-    const value = (route.name?.toString() ?? '').split(':').at(0);
+    const value = (route.value.name?.toString() ?? '').split(':').at(0);
 
     return value
       ? mainNavigationItems.value.find(
@@ -97,18 +98,18 @@ export const useAppStore = defineStore('app', () => {
     item: RouteLocationNamedRaw,
     prefix: boolean = false,
   ) {
-    if (!route.name || !item.name) {
+    if (!route.value.name || !item.name) {
       return false;
     }
 
-    const routeName = route.name.toString();
+    const routeName = route.value.name.toString();
     const itemName = item.name.toString();
 
     return prefix
       ? routeName.startsWith(itemName)
-      : _.isEmpty(route.params)
+      : _.isEmpty(route.value.params)
         ? routeName === itemName
-        : routeName === itemName && _.isEqual(route.params, item.params);
+        : routeName === itemName && _.isEqual(route.value.params, item.params);
   }
 
   function handleNavigationSelect(
@@ -119,10 +120,11 @@ export const useAppStore = defineStore('app', () => {
 
     if (
       isParent &&
-      route.name &&
+      route.value.name &&
       routeLocation.name &&
-      route.name.toString().length > routeLocation.name.toString().length &&
-      route.name.toString().startsWith(routeLocation.name.toString())
+      route.value.name.toString().length >
+        routeLocation.name.toString().length &&
+      route.value.name.toString().startsWith(routeLocation.name.toString())
     ) {
       return;
     }

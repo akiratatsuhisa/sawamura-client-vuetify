@@ -13,8 +13,10 @@ import {
   IResetPasswordRequest,
   IResetPasswordResponse,
   IUpdateEmailRequest,
+  IUpdateEmailResponse,
   IUpdatePasswordRequest,
   IVerifyEmailRequest,
+  IVerifyEmailResponse,
 } from '@/interfaces';
 import { Service } from '@/services/common';
 
@@ -47,7 +49,7 @@ export class AuthService extends Service {
   }
 
   verifyEmail(config: AxiosRequestConfig, data: IVerifyEmailRequest) {
-    return this.fetch<void>({
+    return this.fetch<IVerifyEmailResponse>({
       ...config,
       url: 'auth/verifyEmail',
       method: 'POST',
@@ -56,7 +58,7 @@ export class AuthService extends Service {
   }
 
   updateEmail(config: AxiosRequestConfig, data: IUpdateEmailRequest) {
-    return this.fetch<void>({
+    return this.fetch<IUpdateEmailResponse>({
       ...config,
       url: 'auth/email',
       method: 'PATCH',

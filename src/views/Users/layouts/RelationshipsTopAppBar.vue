@@ -8,10 +8,12 @@
       <h1 class="v-toolbar-title text-truncate">
         {{ user?.displayName }}
       </h1>
+
       <h2 class="text-subtitle-2 font-weight-light text-truncate">
         {{ user?.username ? `@${user.username}` : '' }}
       </h2>
     </v-app-bar-title>
+
     <v-app-bar-title
       v-else
       class="cursor-pointer prevent-select"

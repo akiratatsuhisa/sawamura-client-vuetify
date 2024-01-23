@@ -17,6 +17,7 @@
             </v-toolbar-title>
           </slot>
         </v-toolbar>
+
         <v-divider />
       </template>
 

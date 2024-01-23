@@ -3,6 +3,7 @@ import { AxiosRequestConfig } from 'axios';
 import {
   IAdvancedUserResponse,
   IChangeProfileUserRelationshipRequest,
+  IChangeProfileUserRelationshipResponse,
   IProfileUserRelationshipResponse,
   IProfileUserResponse,
   ISearchAdvancedUsersRequest,
@@ -51,7 +52,7 @@ export class ProfileUsersService extends Service {
     config: AxiosRequestConfig,
     data: IChangeProfileUserRelationshipRequest,
   ) {
-    return this.fetch<void>({
+    return this.fetch<IChangeProfileUserRelationshipResponse>({
       ...config,
       url: `profileUsers/${data.username}/relationships`,
       method: 'PATCH',

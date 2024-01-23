@@ -7,6 +7,7 @@
         <v-whinny-input-action icon="mdi-video-outline" />
         <v-whinny-input-action icon="mdi-calendar-clock-outline" />
       </div>
+
       <div>
         <v-btn @click="onSubmit" :loading="isLoading">
           {{ $t('common.whinny.compose.submit') }}
@@ -20,7 +21,7 @@
         variant="solo"
         hide-details
         :placeholder="$t('common.whinny.compose.placeholder')"
-      ></v-textarea>
+      />
     </template>
   </v-whinny-wrapper>
 </template>

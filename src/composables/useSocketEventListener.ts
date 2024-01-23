@@ -64,21 +64,25 @@ export function useSocketEventListener<
 
   async function responseCallback(data: WsResponse & EmitId) {
     const isSame = isSameEmitId(data);
+
     if (!isSame) {
       return;
     }
 
     await Promise.resolve(response ? response(data) : undefined);
+
     isLoading.value = false;
   }
 
   async function exceptionCallback(error: WsException & { data: EmitId }) {
     const isSame = isSameEmitId(error.data);
+
     if (!isSame) {
       return;
     }
 
     await Promise.resolve(exception ? exception(error) : undefined);
+
     isLoading.value = false;
   }
 

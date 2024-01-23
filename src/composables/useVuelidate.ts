@@ -97,12 +97,14 @@ export function useVuelidate<
 }
 
 export function useShowPassword(fields: Record<string, boolean>) {
-  function bindShowPassword(field: keyof typeof fields) {
+  function bindShowPassword(key: keyof typeof fields) {
+    const value = fields[key];
+
     return {
-      type: fields[field] ? 'text' : 'password',
-      appendInnerIcon: fields[field] ? 'mdi-eye' : 'mdi-eye-off',
-      'onClick:appendInner': () => (fields[field] = !fields[field]),
-      autocomplete: field === 'current' ? 'current-password' : 'new-password',
+      type: value ? 'text' : 'password',
+      appendInnerIcon: value ? 'mdi-eye' : 'mdi-eye-off',
+      'onClick:appendInner': () => (fields[key] = !value),
+      autocomplete: key === 'current' ? 'current-password' : 'new-password',
     };
   }
 
@@ -129,6 +131,7 @@ export function useSearchForm<F extends Record<string, any>>(
 
   const route = useRoute();
   const router = useRouter();
+
   Object.assign(form, decodeQuery?.(route.query) ?? initForm);
 
   function setRouteQuery() {

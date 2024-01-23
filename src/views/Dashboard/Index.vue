@@ -5,8 +5,9 @@
         <div>
           <v-breadcrumbs :items="breadcrumbs">
             <template #divider>
-              <v-icon icon="mdi-chevron-right"></v-icon>
+              <v-icon icon="mdi-chevron-right" />
             </template>
+
             <template #title="{ item: { title } }">
               {{ translate(`breadcrumbs.${title}`) }}
             </template>
@@ -14,6 +15,7 @@
         </div>
 
         <v-divider />
+
         <div class="pa-2 text-end">
           <v-btn size="small" append-icon="mdi-table-arrow-left">
             {{ translate('import') }}
@@ -36,6 +38,7 @@
                 {{ value.toFixed(2) }} %
               </strong>
             </v-progress-linear>
+
             <span class="text-caption text-end info-text-caption">
               {{
                 Format.binaryUnit(statisticalData.dropbox.value, {
@@ -66,6 +69,7 @@
                 {{ value.toFixed(4) }} %
               </strong>
             </v-progress-linear>
+
             <span class="text-caption text-end info-text-caption">
               {{
                 Format.binaryUnit(statisticalData.cache.value, {
@@ -125,6 +129,7 @@ import VInfoCard, {
 } from '@/views/Dashboard/components/InfoCard.vue';
 
 const route = useRoute();
+
 const { translate } = usePageLocale({ prefix: 'dashboard.index' });
 
 const breadcrumbs = computed(() =>

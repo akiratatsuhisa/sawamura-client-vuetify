@@ -8,7 +8,7 @@
       :style="{ backgroundImage: 'url(' + backgroundSrc + ')' }"
       class="image-background"
     ></div>
-    <slot></slot>
+    <slot />
   </div>
 </template>
 

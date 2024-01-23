@@ -2,6 +2,7 @@ import { AxiosRequestConfig } from 'axios';
 
 import {
   IChangeUserRolesRequest,
+  IChangeUserRolesResponse,
   ISearchUsersRequest,
   IUserRequest,
   IUserResponse,
@@ -31,7 +32,7 @@ export class UsersService extends Service {
   }
 
   changeRoles(config: AxiosRequestConfig, data: IChangeUserRolesRequest) {
-    return this.fetch<void>({
+    return this.fetch<IChangeUserRolesResponse>({
       ...config,
       url: `users/${data.id}/roles`,
       method: 'PATCH',

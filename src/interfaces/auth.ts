@@ -46,19 +46,23 @@ export interface IDeleteAccountRequest {}
 
 export interface IDeleteAccountResponse {}
 
-export interface IUpdateEmailRequest {
-  email: string;
-}
-
 export interface IConfirmEmailRequest {
   token: string;
 }
 
-export interface IVerifyEmailRequest {}
-
 export interface IConfirmEmailResponse {
   username: string;
 }
+
+export interface IVerifyEmailRequest {}
+
+export interface IVerifyEmailResponse {}
+
+export interface IUpdateEmailRequest {
+  email: string;
+}
+
+export interface IUpdateEmailResponse {}
 
 export interface IUpdatePasswordRequest {
   currentPassword?: string | null;

@@ -1,5 +1,6 @@
 <template>
   <h3 class="text-h5">{{ translateConnectedAccounts('title') }}</h3>
+
   <span class="text-subtitle-2 font-weight-light text-high-emphasis">
     {{ translateConnectedAccounts('subtitle') }}
   </span>
@@ -10,7 +11,9 @@
         <template #prepend>
           <v-avatar :image="detail.image" size="24" rounded="0" />
         </template>
+
         <template #title>{{ $t(`common.providers.${detail.name}`) }}</template>
+
         <template #subtitle>
           <div
             v-if="isProviderLinked(provider)"
@@ -35,6 +38,7 @@
         >
           {{ $t('common.activeStates.disable') }}
         </v-btn>
+
         <v-btn
           v-else
           variant="flat"
@@ -63,6 +67,7 @@ const {
 } = usePageLocale({
   prefix: 'settings.oauthProviders.connectedAccounts',
 });
+
 const alert = useAlert();
 
 const { providers, linkProvider, unlinkProvider, isLoadingUnlinkProvider } =

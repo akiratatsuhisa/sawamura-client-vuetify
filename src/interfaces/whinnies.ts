@@ -52,9 +52,13 @@ export interface ICreateWhinnyRequest {
   publishDate?: string | null;
 }
 
+export interface ICreateWhinnyResponse extends IWhinnyResponse {}
+
 export interface IDeleteWhinnyRequest {
   urlId: string;
 }
+
+export interface IDeleteWhinnyResponse {}
 
 export interface ISearchWhinnyReactionsRequest extends IPaginationCursor {
   urlId: string;
@@ -78,6 +82,8 @@ export interface IReactWhinnyRequest {
   urlId: string;
   kind: string;
 }
+
+export interface IReactWhinnyResponse {}
 
 export interface IComposeWhinnyProps {
   type: 'Owner' | 'Quote' | 'Comment';

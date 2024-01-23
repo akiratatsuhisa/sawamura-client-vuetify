@@ -2,6 +2,7 @@
   <v-display-profile>
     <template #actions>
       <v-btn size="36" variant="tonal" icon="mdi-dots-vertical" />
+
       <v-btn
         size="36"
         variant="tonal"
@@ -9,7 +10,9 @@
         :loading="isLoadingPrivateChat"
         @click="openPrivateChat"
       />
-      <v-spacer></v-spacer>
+
+      <v-spacer />
+
       <v-hover #default="{ isHovering, props }">
         <v-btn
           height="36"

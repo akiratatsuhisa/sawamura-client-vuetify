@@ -20,11 +20,13 @@
       <v-list-subheader v-if="searchResult.length">
         {{ $t('pages.messages.shared.results') }}
       </v-list-subheader>
+
       <v-avanced-room-list-item
         v-for="room in searchResult"
         :key="room.id"
         :room="room"
       />
+
       <v-list-item class="text-center">
         <v-btn
           v-if="searchResult.length"

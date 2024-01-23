@@ -17,12 +17,15 @@
       inset
       hide-details
     />
+
     <v-list-subheader>{{ translate('subtitle') }}</v-list-subheader>
 
     <template v-if="displayMode">
       <template v-for="(list, key) in roleListByTag" :key="key">
         <v-divider class="my-3" />
+
         <v-list-subheader>{{ translate(`tags.${key}`) }}</v-list-subheader>
+
         <v-checkbox
           v-for="{ id, name, ...value } in list"
           v-model="form.roleIds"
@@ -41,9 +44,10 @@
 
     <template v-else>
       <v-divider class="my-3" />
+
       <v-chip-group
         v-model="form.roleIds"
-        class="d-inline"
+        class="v-chip-group--inline"
         column
         filter
         multiple

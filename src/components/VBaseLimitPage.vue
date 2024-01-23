@@ -8,6 +8,7 @@
     <template #content>
       {{ $t('common.pagination.limit', { limit: take }) }}
     </template>
+
     <template #item="{ item, isActive }">
       <v-list-item
         :value="item.value"

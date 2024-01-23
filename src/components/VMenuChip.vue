@@ -19,6 +19,7 @@
                   : displaySelectedItem.title
               }}
             </span>
+
             <v-badge
               v-if="multiple && model.length > 1"
               color="secondary"
@@ -26,10 +27,12 @@
               inline
             />
           </template>
+
           <slot v-else name="label">{{ label }}</slot>
         </slot>
       </v-chip>
     </template>
+
     <slot>
       <v-list class="bg-surface-container-high bg-on-surface" density="compact">
         <template v-for="(item, index) in items" :key="index">
