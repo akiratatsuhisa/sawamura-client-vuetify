@@ -51,26 +51,36 @@
 
 <script lang="ts" setup>
 import _ from 'lodash';
-import { provide, ref, watch } from 'vue';
+import { storeToRefs } from 'pinia';
+import { computed, provide, ref, watch } from 'vue';
 import { RouteLocationRaw, useRouter } from 'vue-router';
 
 import VRecommendFollows from '@/components/RecommendFollows/Index.vue';
 import VTrendings from '@/components/Trendings/Index.vue';
-import { useAxios, useBackgroundRoute, useRouterModal } from '@/composables';
+import {
+  useAxios,
+  useBackgroundRoute,
+  useRouterModal,
+  useThemeStyle,
+} from '@/composables';
 import { KEYS } from '@/constants';
 import { IComposeWhinnyProps, IWhinnyResponse } from '@/interfaces';
 import { services } from '@/services';
+import { useProfileUserStore } from '@/store';
 import VMainContent from '@/views/Users/components/MainContent.vue';
 import VMainStatus from '@/views/Users/Status/components/MainStatus.vue';
 
 const router = useRouter();
 const route = useBackgroundRoute();
 
+const profileUserStore = useProfileUserStore();
+const { user } = storeToRefs(profileUserStore);
+
 const { request, data: whinny } = useAxios(services.whinnies, 'getByUrlId');
 
 watch(
   () => route.value.params.urlId as string,
-  async (urlId) => {
+  async (urlId, _prev, onCleanup) => {
     if (!urlId) {
       return;
     }
@@ -83,6 +93,12 @@ watch(
         params: { urlId: whinny.urlId, username: whinny.user.username },
       });
     }
+
+    user.value = whinny.user;
+
+    onCleanup(() => {
+      user.value = undefined;
+    });
   },
   { immediate: true },
 );
@@ -179,4 +195,6 @@ provide(KEYS.WHINNY.ON_DELETE, (data) => {
 
   router.push(to);
 });
+
+useThemeStyle(computed(() => user.value?.themeStyle));
 </script>

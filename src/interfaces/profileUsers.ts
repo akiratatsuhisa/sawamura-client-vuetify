@@ -37,7 +37,7 @@ export interface IProfileUserResponse {
   websiteLink: string | null;
   photoUrl: string | null;
   coverUrl: string | null;
-  themeSource: string | null;
+  themeSource: number | null;
   themeStyle: string | null;
   createdAt: string | null;
   updatedAt: string | null;

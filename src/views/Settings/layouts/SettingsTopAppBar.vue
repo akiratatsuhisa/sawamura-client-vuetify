@@ -1,5 +1,12 @@
 <template>
-  <v-app-bar class="bg-surface-container text-on-surface">
+  <v-app-bar
+    class="text-on-surface"
+    :class="[
+      isTopbarElevation
+        ? 'bg-surface-container-highest'
+        : 'bg-surface-container',
+    ]"
+  >
     <v-app-bar-nav-icon
       v-if="$vuetify.display.smAndDown"
       @click="$router.replace($route.meta.backRoute ?? { name: 'Home' })"
@@ -22,10 +29,12 @@
 </template>
 
 <script lang="ts" setup>
-import { useAuth } from '@/composables';
+import { useAuth, useScrollBehavior } from '@/composables';
 import VDashboardMenu from '@/layouts/Default/components/DashboardMenu.vue';
 import VMessagesMenu from '@/layouts/Default/components/MessagesMenu.vue';
 import VProfileMenu from '@/layouts/Default/components/ProfileMenu.vue';
 
 const { hasRoles } = useAuth();
+
+const { isTopbarElevation } = useScrollBehavior();
 </script>

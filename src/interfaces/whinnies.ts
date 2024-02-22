@@ -13,6 +13,9 @@ export interface IWhinnyResponse {
     username: string;
     displayName: string;
     photoUrl: string | null;
+    coverUrl: string | null;
+    themeSource: number | null;
+    themeStyle: string | null;
   };
   source: {
     id: string;
@@ -27,6 +30,9 @@ export interface IWhinnyResponse {
       username: string;
       displayName: string;
       photoUrl: string | null;
+      coverUrl: string | null;
+      themeSource: number | null;
+      themeStyle: string | null;
     } | null;
   } | null;
   countReactions: number;
@@ -73,6 +79,9 @@ export interface IWhinnyReactionResponse {
     username: string;
     displayName: string;
     photoUrl: string | null;
+    coverUrl: string | null;
+    themeSource: number | null;
+    themeStyle: string | null;
   };
   kind: string;
   icon: string | null;

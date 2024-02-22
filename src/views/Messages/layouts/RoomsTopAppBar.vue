@@ -82,6 +82,7 @@ import VProfileMenu from '@/layouts/Default/components/ProfileMenu.vue';
 import { useRoomsStore } from '@/store';
 
 const isSearchFieldOpen = ref(false);
+
 const roomsStore = useRoomsStore();
 const { search, searchResult, isLoadingSearchAdvanced } =
   storeToRefs(roomsStore);

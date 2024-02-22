@@ -1,5 +1,12 @@
 <template>
-  <v-app-bar class="bg-surface-container text-on-surface">
+  <v-app-bar
+    class="text-on-surface"
+    :class="[
+      isTopbarElevation
+        ? 'bg-surface-container-highest'
+        : 'bg-surface-container',
+    ]"
+  >
     <v-app-bar-nav-icon
       v-if="subNavigationItems.length"
       @click="drawer = !drawer"
@@ -27,10 +34,13 @@
 <script lang="ts" setup>
 import { storeToRefs } from 'pinia';
 
+import { useScrollBehavior } from '@/composables';
 import VMessagesMenu from '@/layouts/Default/components/MessagesMenu.vue';
 import VProfileMenu from '@/layouts/Default/components/ProfileMenu.vue';
 import { useAppStore } from '@/store';
 
 const appStore = useAppStore();
 const { drawer, subNavigationItems } = storeToRefs(appStore);
+
+const { isTopbarElevation } = useScrollBehavior();
 </script>
